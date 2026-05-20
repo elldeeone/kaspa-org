@@ -24,14 +24,7 @@ export function LoreRoadmapSection(): React.JSX.Element {
         <LoreLink href="https://medium.com/@michaelsuttonil/kaspa-covenants-toccata-hard-fork-outlook-a4d81a40900c">
           TN12
         </LoreLink>
-        .{" "}
-        <LoreLink href="https://github.com/kaspanet/kips/blob/master/kip-0010.md">
-          KIP-0010
-        </LoreLink>{" "}
-        ·{" "}
-        <LoreLink href="https://medium.com/@michaelsuttonil/kaspa-covenants-toccata-hard-fork-outlook-a4d81a40900c">
-          TN12
-        </LoreLink>
+        .
       </p>
 
       <hr className="my-6 border-t border-[var(--border-subtle)]" />

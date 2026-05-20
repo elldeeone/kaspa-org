@@ -114,7 +114,7 @@ Toccata hardfork
 
 The next hardfork is Toccata, introducing covenant-based base-layer programmability. Covenants are recursive spending rules that restrict who and how coins can be spent, opening the way to vaults, smart wallets, native assets, and ZK-assisted constructions.
 
-In Bitcoin, OP_CAT is the old opcode Satoshi disabled - proposed again, still debated, still not included. Toccata is closer to OP_CAT++, with a broader covenant surface and Silverscript as a dedicated compiler for writing covenants in Kaspa. A mature implementation is already up and running on TN12. KIP-0010 · TN12
+In Bitcoin, OP_CAT is the old opcode Satoshi disabled - proposed again, still debated, still not included. Toccata is closer to OP_CAT++, with a broader covenant surface and Silverscript as a dedicated compiler for writing covenants in Kaspa. A mature implementation is already up and running on TN12.
 
 DAGKnight hardfork
 
