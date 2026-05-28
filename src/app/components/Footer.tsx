@@ -2,7 +2,7 @@ import FooterGlyph from "./FooterGlyph";
 import { ArrowUpRightIcon } from "./icons";
 
 const footerLinks = [
-  { label: "Explorer", href: "https://explorer.kaspa.org/" },
+  { label: "Explorer", href: "https://kaspa.stream/" },
   { label: "GitHub", href: "https://github.com/kaspanet/rusty-kaspa/" },
   { label: "X", href: "https://x.com/search?q=kaspa" },
 ];
