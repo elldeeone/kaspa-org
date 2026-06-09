@@ -9,6 +9,7 @@ import {
   openKaspaAi,
   type OpenKaspaAiDetail,
 } from "./aiLauncherEvents";
+import { isKaspaAiEnabled } from "../aiFeature";
 
 const AiLauncher = dynamic(() => import("./AiLauncher"), {
   ssr: false,
@@ -23,6 +24,12 @@ type IdleWindow = Window & {
 };
 
 export default function AiLauncherEntry() {
+  if (!isKaspaAiEnabled) return null;
+
+  return <EnabledAiLauncherEntry />;
+}
+
+function EnabledAiLauncherEntry() {
   const [enabled, setEnabled] = useState(false);
   const [launcherReady, setLauncherReady] = useState(false);
   const pendingOpenRequestRef = useRef<OpenKaspaAiDetail | null>(null);

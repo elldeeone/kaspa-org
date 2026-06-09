@@ -14,9 +14,11 @@ import { ArrowUpRightIcon, ChevronRightIcon, SparklesIcon } from "../icons";
 import { GridSurface } from "../ui";
 
 export default function StartSection({
+  kaspaAiEnabled,
   onOpenAi,
   onHashClick,
 }: {
+  kaspaAiEnabled: boolean;
   onOpenAi: () => void;
   onHashClick: (href: `#${SectionId}`) => MouseEventHandler<HTMLAnchorElement>;
 }) {
@@ -99,38 +101,41 @@ export default function StartSection({
                 Start building
               </h2>
               <p className="text-tertiary mt-2.5 max-w-lg text-[14px] leading-[1.65] md:text-[15px]">
-                Use Kaspa AI for direction, then jump into the route that
-                matches what you need.
+                {kaspaAiEnabled
+                  ? "Use Kaspa AI for direction, then jump into the route that matches what you need."
+                  : "Start with the docs, live examples, or node route that matches what you need."}
               </p>
 
-              <button
-                onClick={onOpenAi}
-                className="group border-subtle mt-5 flex w-full items-center justify-between gap-3 rounded-[20px] border px-4 py-3 text-left transition-colors hover:border-[var(--btn-ghost-hover-border)] hover:bg-[var(--btn-ghost-hover-bg)]"
-                style={{ background: "var(--bg)" }}
-              >
-                <div className="flex min-w-0 items-center gap-3">
-                  <span
-                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-                    style={{
-                      background: `rgba(${KASPA_ACCENT}, 0.08)`,
-                      color: "var(--text-primary)",
-                    }}
-                  >
-                    <SparklesIcon size={15} />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-primary truncate text-[15px] font-medium tracking-[-0.02em]">
-                      Ask Kaspa AI
-                    </p>
-                    <p className="text-tertiary mt-1 text-[13px] leading-[1.55]">
-                      Get pointed to the right SDK, API, or node path.
-                    </p>
+              {kaspaAiEnabled ? (
+                <button
+                  onClick={onOpenAi}
+                  className="group border-subtle mt-5 flex w-full items-center justify-between gap-3 rounded-[20px] border px-4 py-3 text-left transition-colors hover:border-[var(--btn-ghost-hover-border)] hover:bg-[var(--btn-ghost-hover-bg)]"
+                  style={{ background: "var(--bg)" }}
+                >
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span
+                      className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                      style={{
+                        background: `rgba(${KASPA_ACCENT}, 0.08)`,
+                        color: "var(--text-primary)",
+                      }}
+                    >
+                      <SparklesIcon size={15} />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-primary truncate text-[15px] font-medium tracking-[-0.02em]">
+                        Ask Kaspa AI
+                      </p>
+                      <p className="text-tertiary mt-1 text-[13px] leading-[1.55]">
+                        Get pointed to the right SDK, API, or node path.
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <span className="text-muted group-hover:text-secondary shrink-0 transition-all duration-200 group-hover:translate-x-[2px]">
-                  <ChevronRightIcon size={12} />
-                </span>
-              </button>
+                  <span className="text-muted group-hover:text-secondary shrink-0 transition-all duration-200 group-hover:translate-x-[2px]">
+                    <ChevronRightIcon size={12} />
+                  </span>
+                </button>
+              ) : null}
 
               <div className="border-subtle mt-5 border-t pt-5">
                 <p className="text-muted text-[12px] font-medium tracking-[0.08em] uppercase">

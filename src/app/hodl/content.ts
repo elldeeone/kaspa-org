@@ -65,7 +65,7 @@ export const sectionLinks: PageSectionLink<UseSectionId>[] = [
     label: "Help",
     compactLabel: "Help",
     href: "#help",
-    description: "AI assistant for any questions.",
+    description: "Community help and explorer tools.",
   },
 ];
 

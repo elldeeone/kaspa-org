@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { isKaspaAiEnabled } from "./aiFeature";
 import AiLauncherEntry from "./components/AiLauncherEntry";
 import { ArrowUpRightIcon } from "./components/icons";
 import MarketingPageShell from "./components/MarketingPageShell";
@@ -21,7 +22,9 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <MarketingPageShell afterFooter={<AiLauncherEntry />}>
+    <MarketingPageShell
+      afterFooter={isKaspaAiEnabled ? <AiLauncherEntry /> : null}
+    >
       <section className="relative overflow-hidden px-6 pt-28 pb-20 md:px-12 lg:px-20 lg:pt-36">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[520px]">
           <div

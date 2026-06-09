@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { isKaspaAiEnabled } from "./aiFeature";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import AiLauncherEntry from "./components/AiLauncherEntry";
@@ -28,14 +29,14 @@ function HeroCta({
 
 export default function Home() {
   return (
-    <div className="relative">
+    <div className="relative flex min-h-screen flex-col">
       <Nav />
 
       {/* ─── DAG Visualization — Desktop (Fixed Right) ─── */}
       <LiveDagBackground />
 
       {/* ─── Main Content ─── */}
-      <main className="relative z-10">
+      <main className="relative z-10 flex-1">
         {/* ── Hero ── */}
         <section className="flex min-h-screen flex-col items-center pt-[2vh] sm:justify-center sm:pt-0 xl:flex-row xl:items-center xl:justify-start xl:pt-0">
           {/* ─── DAG Visualization — Mobile ─── */}
@@ -118,8 +119,8 @@ export default function Home() {
         </section>
       </main>
 
-      <Footer />
-      <AiLauncherEntry />
+      <Footer reserveLauncherSpace={isKaspaAiEnabled} />
+      {isKaspaAiEnabled ? <AiLauncherEntry /> : null}
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useMemo, useRef } from "react";
 
+import { isKaspaAiEnabled } from "../aiFeature";
 import AiLauncherEntry from "../components/AiLauncherEntry";
 import MarketingPageShell from "../components/MarketingPageShell";
 import { openKaspaAi } from "../components/aiLauncherEvents";
@@ -55,7 +56,9 @@ export default function HodlPage() {
   };
 
   return (
-    <MarketingPageShell afterFooter={<AiLauncherEntry />}>
+    <MarketingPageShell
+      afterFooter={isKaspaAiEnabled ? <AiLauncherEntry /> : null}
+    >
       <PageSectionsNav<UseSectionId>
         sheetId="mobile-section-sheet-hodl"
         sectionLinks={sectionLinks}
@@ -88,7 +91,7 @@ export default function HodlPage() {
         <TransferSection headingRef={transferHeadingRef} />
       </JourneyRail>
 
-      <HelpSection onOpenAi={handleOpenAi} />
+      <HelpSection kaspaAiEnabled={isKaspaAiEnabled} onOpenAi={handleOpenAi} />
     </MarketingPageShell>
   );
 }

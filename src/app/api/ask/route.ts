@@ -1,3 +1,4 @@
+import { isKaspaAiEnabled, KASPA_AI_DISABLED_MESSAGE } from "../../aiFeature";
 import { ASK_MODE, getAskApiKey, getAskApiUrl } from "./config";
 import { normalizeAskAnswer } from "./answer";
 import { postKaspaNewsAsk } from "./kaspaNews";
@@ -17,6 +18,10 @@ function jsonError(message: string, status: number): Response {
 }
 
 export async function POST(request: Request): Promise<Response> {
+  if (!isKaspaAiEnabled) {
+    return jsonError(KASPA_AI_DISABLED_MESSAGE, 503);
+  }
+
   const apiKey = getAskApiKey();
   if (!apiKey) {
     return jsonError("Missing KASPA_NEWS_ASK_API_KEY", 500);

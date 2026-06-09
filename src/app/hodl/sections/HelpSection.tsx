@@ -10,8 +10,10 @@ const DISCORD_URL = "https://discord.gg/kaspa";
 const EXPLORER_URL = "https://explorer.kaspa.org";
 
 export default function HelpSection({
+  kaspaAiEnabled,
   onOpenAi,
 }: {
+  kaspaAiEnabled: boolean;
   onOpenAi: (prompt?: OpenKaspaAiDetail["prompt"]) => void;
 }) {
   return (
@@ -32,22 +34,26 @@ export default function HelpSection({
                 Keep moving
               </h2>
               <p className="text-tertiary mt-4 text-[16px] leading-[1.75]">
-                Ask Kaspa AI for instant answers on wallets, buying, and safety.
-                For community help join Discord, or check a transaction on the
-                explorer.
+                {kaspaAiEnabled
+                  ? "Ask Kaspa AI for instant answers on wallets, buying, and safety. For community help join Discord, or check a transaction on the explorer."
+                  : "For community help join Discord, or check a transaction on the explorer."}
               </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <button onClick={() => onOpenAi()} className="btn-primary">
-                  <SparklesIcon size={14} />
-                  Open AI
-                </button>
-              </div>
+              {kaspaAiEnabled ? (
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <button onClick={() => onOpenAi()} className="btn-primary">
+                    <SparklesIcon size={14} />
+                    Open AI
+                  </button>
+                </div>
+              ) : null}
 
-              <ShuffledPromptPills
-                prompts={helpPrompts}
-                count={4}
-                onSelect={onOpenAi}
-              />
+              {kaspaAiEnabled ? (
+                <ShuffledPromptPills
+                  prompts={helpPrompts}
+                  count={4}
+                  onSelect={onOpenAi}
+                />
+              ) : null}
             </div>
 
             <div className="mt-8 grid grid-cols-1 gap-3 lg:mt-0 lg:self-start">

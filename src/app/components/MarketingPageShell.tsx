@@ -10,11 +10,13 @@ export default function MarketingPageShell({
   children: ReactNode;
   afterFooter?: ReactNode;
 }) {
+  const hasAfterFooter = Boolean(afterFooter);
+
   return (
-    <div className="relative">
+    <div className="relative flex min-h-screen flex-col">
       <Nav />
-      <main className="relative z-10">{children}</main>
-      <Footer />
+      <main className="relative z-10 flex-1">{children}</main>
+      <Footer reserveLauncherSpace={hasAfterFooter} />
       {afterFooter}
     </div>
   );

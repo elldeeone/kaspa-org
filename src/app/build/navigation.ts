@@ -55,7 +55,7 @@ export const sectionLinks: PageSectionLink<SectionId>[] = [
     label: "Help",
     compactLabel: "Help",
     href: "#help",
-    description: "Docs, AI, and community channels when you get stuck.",
+    description: "Docs and community channels when you get stuck.",
   },
 ];
 

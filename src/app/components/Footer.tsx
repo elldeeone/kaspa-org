@@ -7,10 +7,16 @@ const footerLinks = [
   { label: "X", href: "https://x.com/search?q=kaspa" },
 ];
 
-export default function Footer() {
+export default function Footer({
+  reserveLauncherSpace = false,
+}: {
+  reserveLauncherSpace?: boolean;
+}) {
   return (
     <footer
-      className="border-subtle relative z-20 mb-14 border-t sm:mb-16"
+      className={`border-subtle relative z-20 border-t ${
+        reserveLauncherSpace ? "mb-14 sm:mb-16" : ""
+      }`}
       style={{ background: "var(--bg)" }}
     >
       <div className="relative grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-6 pt-3 pb-3 md:flex md:flex-row md:items-center md:justify-between md:gap-4 md:px-12 lg:px-20">

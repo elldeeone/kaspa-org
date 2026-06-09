@@ -37,9 +37,11 @@ That starts `next dev` on the detected LAN IP and prints the device-reachable
 URL. If auto-detection picks the wrong host, override it with
 `NEXT_DEV_HOST=192.168.1.50 npm run dev:lan`.
 
-The AI launcher calls a same-origin route at `/api/ask`. Set the ASK server key
-before using chat locally or on web hosting, and set the public site origin used
-by external AI links. A simple starting point is:
+The AI launcher is disabled by default. Leave
+`NEXT_PUBLIC_KASPA_AI_ENABLED=false` while the ASK backend is unavailable. When a
+replacement backend is ready, set it to `true`, set the ASK server key before
+using chat locally or on web hosting, and set the public site origin used by
+external AI links. A simple starting point is:
 
 ```bash
 cp .env.example .env.local
@@ -48,9 +50,14 @@ cp .env.example .env.local
 Then fill in the real values:
 
 ```bash
+NEXT_PUBLIC_KASPA_AI_ENABLED=false
 KASPA_NEWS_ASK_API_KEY=your_kaspa_news_partner_key
 NEXT_PUBLIC_PUBLIC_SITE_ORIGIN=https://kaspa.org
 ```
+
+When `NEXT_PUBLIC_KASPA_AI_ENABLED` is not set to `true`, the bottom launcher,
+page-level AI buttons, suggested question pills, and ASK entry points are hidden.
+The `/api/ask` route returns `503` without calling the upstream service.
 
 `KASPA_NEWS_ASK_API_KEY` is a private server-side key for
 `https://kaspa.news/api/ask`. Do not expose it through browser JavaScript,
@@ -122,7 +129,8 @@ The Playwright job uploads `playwright-report/` and `test-results/` as artifacts
 
 - Shared site metadata lives in the route layouts under `src/app/`.
 - The home page DAG experience is implemented from `src/dag-viz/` and mounted through the app components.
-- The AI launcher sends questions through `src/app/api/ask/route.ts`, so the browser never sees the private Kaspa.news ASK key.
+- The AI launcher is gated by `NEXT_PUBLIC_KASPA_AI_ENABLED`; keep it false until a working ASK backend is available.
+- When enabled, the AI launcher sends questions through `src/app/api/ask/route.ts`, so the browser never sees the private Kaspa.news ASK key.
 - ASK source-link formatting is normalized server-side in `src/app/api/ask/answer.ts`; do not enable raw HTML rendering in the chat UI to handle upstream links.
 - Keep the ASK route on the Node runtime; using server-side `fetch` for the private Kaspa.news endpoint can be rejected as browser-style traffic.
 

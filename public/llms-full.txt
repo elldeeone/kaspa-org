@@ -150,11 +150,7 @@ Fastest way in
 
 Start building
 
-Use Kaspa AI for direction, then jump into the route that matches what you need.
-
-Ask Kaspa AI
-
-Get pointed to the right SDK, API, or node path.
+Start with the docs, live examples, or node route that matches what you need.
 
 Jump straight to
 
@@ -414,19 +410,9 @@ Help
 
 Keep moving
 
-Start with the docs or Kaspa AI. For deeper help, try GitHub, Discord, or the R&D Telegram.
+Start with the docs. For deeper help, try GitHub, Discord, or the R&D Telegram.
 
 Open docs
-
-Open AI
-
-How do I build and sign a transaction?
-
-What should I use for browser development?
-
-What's the difference between the API and a full node?
-
-How do I run Rusty Kaspa with UTXO indexing?
 
 Code
 
@@ -462,7 +448,7 @@ Send KAS from the exchange to your wallet.
 
 Help
 
-AI assistant for any questions.
+Community help and explorer tools.
 
 Get a wallet
 
@@ -560,19 +546,7 @@ Security Check: Always verify the first and last few characters of your address 
 
 Need help?
 
-Ask Kaspa AI
-
-Ask about setting up a wallet, buying KAS, sending it to your wallet, or backing up your recovery phrase.
-
-Open AI
-
-How do I set up a wallet?
-
-How do I buy KAS?
-
-How do I send KAS to my wallet?
-
-How do I back up my wallet?
+For community help join Discord, or check a transaction on the explorer.
 
 Operated by KasMedia.com
 

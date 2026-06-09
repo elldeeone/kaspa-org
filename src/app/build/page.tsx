@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { isKaspaAiEnabled } from "../aiFeature";
 import AiLauncherEntry from "../components/AiLauncherEntry";
 import MarketingPageShell from "../components/MarketingPageShell";
 import { openKaspaAi } from "../components/aiLauncherEvents";
@@ -36,7 +37,9 @@ export default function BuildPage() {
   };
 
   return (
-    <MarketingPageShell afterFooter={<AiLauncherEntry />}>
+    <MarketingPageShell
+      afterFooter={isKaspaAiEnabled ? <AiLauncherEntry /> : null}
+    >
       <PageSectionsNav<SectionId>
         sheetId="mobile-section-sheet"
         sectionLinks={sectionLinks}
@@ -57,6 +60,7 @@ export default function BuildPage() {
       />
 
       <StartSection
+        kaspaAiEnabled={isKaspaAiEnabled}
         onOpenAi={() => handleOpenAi()}
         onHashClick={nav.handleHashClick}
       />
@@ -69,7 +73,7 @@ export default function BuildPage() {
       <ToolingSection />
       <AccessSection />
       <DevelopmentsSection />
-      <HelpSection onOpenAi={handleOpenAi} />
+      <HelpSection kaspaAiEnabled={isKaspaAiEnabled} onOpenAi={handleOpenAi} />
     </MarketingPageShell>
   );
 }

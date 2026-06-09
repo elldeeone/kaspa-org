@@ -6,8 +6,10 @@ import { ArrowUpRightIcon, ChevronRightIcon, SparklesIcon } from "../icons";
 import { GridSurface, MetaPill } from "../ui";
 
 export default function HelpSection({
+  kaspaAiEnabled,
   onOpenAi,
 }: {
+  kaspaAiEnabled: boolean;
   onOpenAi: (prompt?: OpenKaspaAiDetail["prompt"]) => void;
 }) {
   return (
@@ -28,24 +30,29 @@ export default function HelpSection({
                 Keep moving
               </h2>
               <p className="text-tertiary mt-4 text-[16px] leading-[1.75]">
-                Start with the docs or Kaspa AI. For deeper help, try GitHub,
-                Discord, or the R&amp;D Telegram.
+                {kaspaAiEnabled
+                  ? "Start with the docs or Kaspa AI. For deeper help, try GitHub, Discord, or the R&D Telegram."
+                  : "Start with the docs. For deeper help, try GitHub, Discord, or the R&D Telegram."}
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <ExternalLink href={DOCS_URL} className="btn-primary">
                   Open docs <ChevronRightIcon />
                 </ExternalLink>
-                <button onClick={() => onOpenAi()} className="btn-ghost">
-                  <SparklesIcon size={14} />
-                  Open AI
-                </button>
+                {kaspaAiEnabled ? (
+                  <button onClick={() => onOpenAi()} className="btn-ghost">
+                    <SparklesIcon size={14} />
+                    Open AI
+                  </button>
+                ) : null}
               </div>
 
-              <ShuffledPromptPills
-                prompts={aiPrompts}
-                count={4}
-                onSelect={onOpenAi}
-              />
+              {kaspaAiEnabled ? (
+                <ShuffledPromptPills
+                  prompts={aiPrompts}
+                  count={4}
+                  onSelect={onOpenAi}
+                />
+              ) : null}
             </div>
 
             <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:mt-0 lg:self-start">
