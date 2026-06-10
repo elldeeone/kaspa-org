@@ -25,7 +25,7 @@ export const networkAccessGroups: LinkGroup[] = [
     desc: "Query the network through public tools and the lightweight community-hosted API. The community API is best-effort with no SLA.",
     links: [
       { label: "Community API docs", href: REST_API_URL },
-      { label: "Explorer", href: "https://explorer.kaspa.org" },
+      { label: "Explorer", href: "https://kaspa.stream/" },
       { label: "DAG visualizer", href: "https://kgi.kaspad.net" },
       { label: "Explorer / API DB dumps", href: "https://db-dl.kaspa.org" },
     ],

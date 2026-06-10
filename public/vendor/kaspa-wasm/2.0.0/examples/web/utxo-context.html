@@ -11,7 +11,7 @@
             window.monitor = {};
 
             (async () => {
-                await kaspa.default({ module_or_path: '../../web/kaspa-core/kaspa_bg.wasm' });
+                await kaspa.default('../../web/kaspa-core/kaspa_bg.wasm');
 
                 let network = currentNetwork();
                 log(`Connecting to Kaspa network...`);

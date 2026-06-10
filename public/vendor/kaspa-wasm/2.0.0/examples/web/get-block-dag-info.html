@@ -9,7 +9,7 @@
             let { Resolver, RpcClient, Encoding } = kaspa;
 
             (async () => {
-                await kaspa.default({ module_or_path: '../../web/kaspa-rpc/kaspa_bg.wasm' });
+                await kaspa.default('../../web/kaspa-rpc/kaspa_bg.wasm');
 
                 let networkId = currentNetwork();
                 log(`Connecting to Kaspa network...`);
@@ -23,9 +23,9 @@
                 await rpc.connect();
                 log("Connected to", rpc.url);
                 
-                log("GetServerInfo request...");
-                const info = await rpc.getServerInfo();
-                log("GetServerInfo response:", info);
+                log("GetBlockDagInfo request...");
+                const info = await rpc.getBlockDagInfo();
+                log("GetBlockDagInfo response:", info);
 
                 log("Disconnected...");
                 await rpc.disconnect();

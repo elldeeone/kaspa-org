@@ -10,7 +10,7 @@ export const choosePathCards: PathCard[] = [
       { label: "WASM SDK docs", href: "https://kaspa.aspectron.org/docs/" },
       {
         label: "Upstream examples",
-        href: "https://github.com/kaspanet/rusty-kaspa/tree/v1.1.0/wasm/examples",
+        href: "https://github.com/kaspanet/rusty-kaspa/tree/v2.0.0/wasm/examples",
       },
     ],
   },

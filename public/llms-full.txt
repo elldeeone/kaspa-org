@@ -134,7 +134,7 @@ If this reads like it's early, that's because it is.
 
 ## BUIDL
 
-Rusty Kaspa v1.1.0
+Rusty Kaspa v2.0.0
 
 View release
 
@@ -164,7 +164,7 @@ Try live
 
 Run the Rusty Kaspa browser examples
 
-The examples below are served from the Rusty Kaspa v1.1.0 browser SDK release, so you can see the SDK behave without leaving the page.
+The examples below are served from the Rusty Kaspa v2.0.0 browser SDK release, so you can see the SDK behave without leaving the page.
 
 Get server info
 

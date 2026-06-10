@@ -77,7 +77,7 @@ function setupBackLink() {
     if (cameFromBuild) {
         backLink.setAttribute(
             'href',
-            referrer.hash ? referrer.toString() : `${referrer.origin}/build#try-live`
+            referrer.hash ? referrer.toString() : `/build#try-live`
         );
 
         backLink.addEventListener('click', (event) => {

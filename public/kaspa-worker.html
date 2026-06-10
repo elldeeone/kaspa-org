@@ -2,7 +2,7 @@
 <html>
   <head>
     <script type="module">
-      import * as kaspa from "/vendor/kaspa-wasm/1.1.0/web/kaspa-rpc/kaspa.js";
+      import * as kaspa from "/vendor/kaspa-wasm/2.0.0/web/kaspa-rpc/kaspa.js";
       const { Resolver, RpcClient } = kaspa;
       const WORKER_MESSAGE_SOURCE = "kaspa-worker";
       const CONNECT_MESSAGE_TYPE = "kaspa-worker:connect";
@@ -46,7 +46,7 @@
         try {
           await kaspa.default({
             module_or_path:
-              "/vendor/kaspa-wasm/1.1.0/web/kaspa-rpc/kaspa_bg.wasm",
+              "/vendor/kaspa-wasm/2.0.0/web/kaspa-rpc/kaspa_bg.wasm",
           });
           const rpc = new RpcClient({
             resolver: new Resolver(),

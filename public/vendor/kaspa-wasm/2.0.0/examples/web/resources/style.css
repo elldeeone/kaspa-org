@@ -5,6 +5,13 @@ body {
     font-family: "Consolas", "Andale Mono", monospace;
     /* white-space: pre-wrap; */
 }
+@media (prefers-color-scheme: dark) {
+    body {
+        background: rgb(41, 41, 40);
+        color: rgb(188, 189, 229);
+    }
+}
+
 code {
     display: block;
     font-size: inherit;
@@ -90,69 +97,6 @@ div.button {
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
-@media (prefers-color-scheme: dark) {
-    body {
-        background: rgb(34, 35, 39);
-        color: rgb(223, 227, 246);
-    }
-
-    span.number {
-        color: rgb(151, 222, 132);
-    }
-
-    span.key {
-        color: rgb(150, 190, 255);
-    }
-
-    span.string {
-        color: rgb(108, 222, 205);
-    }
-
-    span.boolean {
-        color: rgb(255, 147, 125);
-    }
-
-    span.keyword {
-        color: rgb(255, 205, 123);
-    }
-
-    .network {
-        color: rgb(106, 234, 184);
-    }
-
-    a, .link {
-        color: rgb(96, 229, 198);
-    }
-
-    a:hover, .link:hover {
-        color: rgb(166, 245, 225);
-    }
-
-    input.address {
-        background: rgb(31, 32, 36);
-        color: rgb(223, 227, 246);
-        border-color: rgb(96, 229, 198);
-        box-shadow: rgba(0, 0, 0, 0.34) 0px 3px 6px, rgba(0, 0, 0, 0.4) 0px 3px 6px;
-    }
-
-    input::placeholder {
-        color: rgb(143, 148, 179);
-        opacity: 1;
-    }
-
-    div.button {
-        color: rgb(223, 227, 246);
-        border-color: rgb(96, 229, 198);
-        background: rgba(96, 229, 198, 0.08);
-        box-shadow: rgba(0, 0, 0, 0.34) 0px 3px 6px, rgba(0, 0, 0, 0.4) 0px 3px 6px;
-    }
-
-    .wallet {
-        border-color: rgb(84, 88, 116);
-        background: rgba(255, 255, 255, 0.03);
-    }
-}
-
 .wallet{
     padding:10px;
     border:1px solid #DDD;
@@ -169,21 +113,4 @@ div.button {
 .wallet .icon{
     width:50px;
     height:50px;
-}
-
-@media (max-width: 640px) {
-    body {
-        padding: 10px 20px 20px;
-        font-size: 15px;
-    }
-
-    .banner {
-        right: 20px;
-        top: 10px;
-    }
-
-    input.address {
-        width: 100%;
-        box-sizing: border-box;
-    }
 }

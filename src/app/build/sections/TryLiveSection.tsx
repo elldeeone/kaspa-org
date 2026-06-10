@@ -26,7 +26,7 @@ export default function TryLiveSection({
         <SectionHeading
           label="Try live"
           title="Run the Rusty Kaspa browser examples"
-          description="The examples below are served from the Rusty Kaspa v1.1.0 browser SDK release, so you can see the SDK behave without leaving the page."
+          description="The examples below are served from the Rusty Kaspa v2.0.0 browser SDK release, so you can see the SDK behave without leaving the page."
           className="max-w-2xl lg:max-w-4xl"
         />
 

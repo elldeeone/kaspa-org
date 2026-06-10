@@ -11,7 +11,7 @@ export const browserExamples: BrowserExample[] = [
     runtime: "RPC",
     path: `${BROWSER_EXAMPLES_BASE}/get-server-info.html`,
     source:
-      "https://github.com/kaspanet/rusty-kaspa/blob/v1.1.0/wasm/examples/web/get-server-info.html",
+      "https://github.com/kaspanet/rusty-kaspa/blob/v2.0.0/wasm/examples/web/get-server-info.html",
   },
   {
     id: "dag-info",
@@ -22,7 +22,7 @@ export const browserExamples: BrowserExample[] = [
     runtime: "RPC",
     path: `${BROWSER_EXAMPLES_BASE}/get-block-dag-info.html`,
     source:
-      "https://github.com/kaspanet/rusty-kaspa/blob/v1.1.0/wasm/examples/web/get-block-dag-info.html",
+      "https://github.com/kaspanet/rusty-kaspa/blob/v2.0.0/wasm/examples/web/get-block-dag-info.html",
   },
   {
     id: "block-added",
@@ -33,7 +33,7 @@ export const browserExamples: BrowserExample[] = [
     runtime: "RPC",
     path: `${BROWSER_EXAMPLES_BASE}/subscribe-block-added.html`,
     source:
-      "https://github.com/kaspanet/rusty-kaspa/blob/v1.1.0/wasm/examples/web/subscribe-block-added.html",
+      "https://github.com/kaspanet/rusty-kaspa/blob/v2.0.0/wasm/examples/web/subscribe-block-added.html",
   },
   {
     id: "daa-changed",
@@ -44,7 +44,7 @@ export const browserExamples: BrowserExample[] = [
     runtime: "RPC",
     path: `${BROWSER_EXAMPLES_BASE}/subscribe-daa-changed.html`,
     source:
-      "https://github.com/kaspanet/rusty-kaspa/blob/v1.1.0/wasm/examples/web/subscribe-daa-changed.html",
+      "https://github.com/kaspanet/rusty-kaspa/blob/v2.0.0/wasm/examples/web/subscribe-daa-changed.html",
   },
   {
     id: "utxo-context",
@@ -55,6 +55,6 @@ export const browserExamples: BrowserExample[] = [
     runtime: "Core",
     path: `${BROWSER_EXAMPLES_BASE}/utxo-context.html`,
     source:
-      "https://github.com/kaspanet/rusty-kaspa/blob/v1.1.0/wasm/examples/web/utxo-context.html",
+      "https://github.com/kaspanet/rusty-kaspa/blob/v2.0.0/wasm/examples/web/utxo-context.html",
   },
 ];

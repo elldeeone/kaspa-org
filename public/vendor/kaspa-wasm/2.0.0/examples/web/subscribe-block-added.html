@@ -19,7 +19,7 @@
 
             (async () => {
                 // load WASM32 SDK binaries 
-                await kaspa.default({ module_or_path: '../../web/kaspa-rpc/kaspa_bg.wasm' });
+                await kaspa.default('../../web/kaspa-rpc/kaspa_bg.wasm');
 
                 let networkId = currentNetwork();
                 log(`Connecting to Kaspa network...`);

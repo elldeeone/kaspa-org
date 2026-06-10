@@ -225,6 +225,12 @@ function debugString(val) {
     return className;
 }
 
+function _assertClass(instance, klass) {
+    if (!(instance instanceof klass)) {
+        throw new Error(`expected instance of ${klass.name}`);
+    }
+}
+
 let stack_pointer = 128;
 
 function addBorrowedObject(obj) {
@@ -232,55 +238,32 @@ function addBorrowedObject(obj) {
     heap[--stack_pointer] = obj;
     return stack_pointer;
 }
-
-function _assertClass(instance, klass) {
-    if (!(instance instanceof klass)) {
-        throw new Error(`expected instance of ${klass.name}`);
-    }
-}
 /**
- * Creates a new script to pay a transaction output to the specified address.
- * @category Wallet SDK
- * @param {Address | string} address
- * @returns {ScriptPublicKey}
+ * Computes the covenant ID from the genesis outpoint and its authorized outputs.
+ *
+ * `genesis_outpoint` may be a [`TransactionOutpoint`] instance or a
+ * compatible plain object: `{ transactionId: HexString, index: number }`.
+ *
+ * `auth_outputs` is a JS array of objects, each with:
+ * - `index: number` — position of this output in the transaction's output array
+ * - `output: TransactionOutput | ITransactionOutput` — the authorized output
+ *
+ * @category Consensus
+ * @param {ITransactionOutpoint | TransactionOutpoint} genesis_outpoint
+ * @param {ICovenantAuthorizedOutput[]} auth_outputs
+ * @returns {Hash}
  */
-export function payToAddressScript(address) {
+export function covenantId(genesis_outpoint, auth_outputs) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        wasm.payToAddressScript(retptr, addBorrowedObject(address));
+        wasm.covenantId(retptr, addBorrowedObject(genesis_outpoint), addBorrowedObject(auth_outputs));
         var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
         var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
         var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
         if (r2) {
             throw takeObject(r1);
         }
-        return ScriptPublicKey.__wrap(r0);
-    } finally {
-        wasm.__wbindgen_add_to_stack_pointer(16);
-        heap[stack_pointer++] = undefined;
-    }
-}
-
-/**
- * Returns the address encoded in a script public key.
- * @param script_public_key - The script public key ({@link ScriptPublicKey}).
- * @param network - The network type.
- * @category Wallet SDK
- * @param {ScriptPublicKey | HexString} script_public_key
- * @param {NetworkType | NetworkId | string} network
- * @returns {Address | undefined}
- */
-export function addressFromScriptPublicKey(script_public_key, network) {
-    try {
-        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        wasm.addressFromScriptPublicKey(retptr, addBorrowedObject(script_public_key), addBorrowedObject(network));
-        var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
-        var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
-        var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
-        if (r2) {
-            throw takeObject(r1);
-        }
-        return takeObject(r0);
+        return Hash.__wrap(r0);
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
         heap[stack_pointer++] = undefined;
@@ -299,29 +282,6 @@ export function isScriptPayToPubkey(script) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         wasm.isScriptPayToPubkey(retptr, addHeapObject(script));
-        var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
-        var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
-        var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
-        if (r2) {
-            throw takeObject(r1);
-        }
-        return r0 !== 0;
-    } finally {
-        wasm.__wbindgen_add_to_stack_pointer(16);
-    }
-}
-
-/**
- * Returns returns true if the script passed is an ECDSA pay-to-pubkey.
- * @param script - The script ({@link HexString} or Uint8Array).
- * @category Wallet SDK
- * @param {HexString | Uint8Array} script
- * @returns {boolean}
- */
-export function isScriptPayToPubkeyECDSA(script) {
-    try {
-        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        wasm.isScriptPayToPubkeyECDSA(retptr, addHeapObject(script));
         var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
         var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
         var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
@@ -354,6 +314,79 @@ export function payToScriptHashScript(redeem_script) {
         return ScriptPublicKey.__wrap(r0);
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+}
+
+/**
+ * Returns the address encoded in a script public key.
+ * @param script_public_key - The script public key ({@link ScriptPublicKey}).
+ * @param network - The network type.
+ * @category Wallet SDK
+ * @param {ScriptPublicKey | HexString} script_public_key
+ * @param {NetworkType | NetworkId | string} network
+ * @returns {Address | undefined}
+ */
+export function addressFromScriptPublicKey(script_public_key, network) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        wasm.addressFromScriptPublicKey(retptr, addBorrowedObject(script_public_key), addBorrowedObject(network));
+        var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+        var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+        var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+        if (r2) {
+            throw takeObject(r1);
+        }
+        return takeObject(r0);
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+        heap[stack_pointer++] = undefined;
+        heap[stack_pointer++] = undefined;
+    }
+}
+
+/**
+ * Returns returns true if the script passed is an ECDSA pay-to-pubkey.
+ * @param script - The script ({@link HexString} or Uint8Array).
+ * @category Wallet SDK
+ * @param {HexString | Uint8Array} script
+ * @returns {boolean}
+ */
+export function isScriptPayToPubkeyECDSA(script) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        wasm.isScriptPayToPubkeyECDSA(retptr, addHeapObject(script));
+        var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+        var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+        var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+        if (r2) {
+            throw takeObject(r1);
+        }
+        return r0 !== 0;
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+    }
+}
+
+/**
+ * Creates a new script to pay a transaction output to the specified address.
+ * @category Wallet SDK
+ * @param {Address | string} address
+ * @returns {ScriptPublicKey}
+ */
+export function payToAddressScript(address) {
+    try {
+        const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+        wasm.payToAddressScript(retptr, addBorrowedObject(address));
+        var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+        var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+        var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+        if (r2) {
+            throw takeObject(r1);
+        }
+        return ScriptPublicKey.__wrap(r0);
+    } finally {
+        wasm.__wbindgen_add_to_stack_pointer(16);
+        heap[stack_pointer++] = undefined;
     }
 }
 
@@ -458,17 +491,29 @@ export function initWASM32Bindings(config) {
 }
 
 /**
- * r" Deferred promise - an object that has `resolve()` and `reject()`
- * r" functions that can be called outside of the promise body.
- * r" WARNING: This function uses `eval` and can not be used in environments
- * r" where dynamically-created code can not be executed such as web browser
- * r" extensions.
- * r" @category General
- * @returns {Promise<any>}
+ * Initialize Rust panic handler in browser mode.
+ *
+ * This will output additional debug information during a panic in the browser
+ * by creating a full-screen `DIV`. This is useful on mobile devices or where
+ * the user otherwise has no access to console/developer tools. Use
+ * {@link presentPanicHookLogs} to activate the panic logs in the
+ * browser environment.
+ * @see {@link presentPanicHookLogs}
+ * @category General
  */
-export function defer() {
-    const ret = wasm.defer();
-    return takeObject(ret);
+export function initBrowserPanicHook() {
+    wasm.initBrowserPanicHook();
+}
+
+/**
+ * Initialize Rust panic handler in console mode.
+ *
+ * This will output additional debug information during a panic to the console.
+ * This function should be called right after loading WASM libraries.
+ * @category General
+ */
+export function initConsolePanicHook() {
+    wasm.initConsolePanicHook();
 }
 
 /**
@@ -485,29 +530,17 @@ export function presentPanicHookLogs() {
 }
 
 /**
- * Initialize Rust panic handler in console mode.
- *
- * This will output additional debug information during a panic to the console.
- * This function should be called right after loading WASM libraries.
- * @category General
+ * r" Deferred promise - an object that has `resolve()` and `reject()`
+ * r" functions that can be called outside of the promise body.
+ * r" WARNING: This function uses `eval` and can not be used in environments
+ * r" where dynamically-created code can not be executed such as web browser
+ * r" extensions.
+ * r" @category General
+ * @returns {Promise<any>}
  */
-export function initConsolePanicHook() {
-    wasm.initConsolePanicHook();
-}
-
-/**
- * Initialize Rust panic handler in browser mode.
- *
- * This will output additional debug information during a panic in the browser
- * by creating a full-screen `DIV`. This is useful on mobile devices or where
- * the user otherwise has no access to console/developer tools. Use
- * {@link presentPanicHookLogs} to activate the panic logs in the
- * browser environment.
- * @see {@link presentPanicHookLogs}
- * @category General
- */
-export function initBrowserPanicHook() {
-    wasm.initBrowserPanicHook();
+export function defer() {
+    const ret = wasm.defer();
+    return takeObject(ret);
 }
 
 function __wbg_adapter_58(arg0, arg1) {
@@ -522,20 +555,20 @@ function __wbg_adapter_64(arg0, arg1, arg2) {
     wasm.__wbindgen_export_7(arg0, arg1, addHeapObject(arg2));
 }
 
-function __wbg_adapter_67(arg0, arg1, arg2) {
-    wasm.__wbindgen_export_7(arg0, arg1, arg2);
-}
-
-function __wbg_adapter_70(arg0, arg1, arg2, arg3) {
+function __wbg_adapter_67(arg0, arg1, arg2, arg3) {
     const ret = wasm.__wbindgen_export_8(arg0, arg1, addHeapObject(arg2), arg3);
     return takeObject(ret);
+}
+
+function __wbg_adapter_70(arg0, arg1, arg2) {
+    wasm.__wbindgen_export_7(arg0, arg1, arg2);
 }
 
 function __wbg_adapter_73(arg0, arg1, arg2) {
     wasm.__wbindgen_export_9(arg0, arg1, addHeapObject(arg2));
 }
 
-function __wbg_adapter_120(arg0, arg1, arg2, arg3) {
+function __wbg_adapter_116(arg0, arg1, arg2, arg3) {
     wasm.__wbindgen_export_10(arg0, arg1, addHeapObject(arg2), addHeapObject(arg3));
 }
 
@@ -849,26 +882,6 @@ export class Address {
         wasm.address_set_setPrefix(this.__wbg_ptr, ptr0, len0);
     }
     /**
-     * @param {number} n
-     * @returns {string}
-     */
-    short(n) {
-        let deferred1_0;
-        let deferred1_1;
-        try {
-            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-            wasm.address_short(retptr, this.__wbg_ptr, n);
-            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
-            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
-            deferred1_0 = r0;
-            deferred1_1 = r1;
-            return getStringFromWasm0(r0, r1);
-        } finally {
-            wasm.__wbindgen_add_to_stack_pointer(16);
-            wasm.__wbindgen_export_3(deferred1_0, deferred1_1, 1);
-        }
-    }
-    /**
      * @param {string} address
      * @returns {boolean}
      */
@@ -984,6 +997,231 @@ export class CompressedParents {
         } finally {
             wasm.__wbindgen_add_to_stack_pointer(16);
         }
+    }
+}
+
+const CovenantBindingFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_covenantbinding_free(ptr >>> 0, 1));
+
+export class CovenantBinding {
+
+    static __wrap(ptr) {
+        ptr = ptr >>> 0;
+        const obj = Object.create(CovenantBinding.prototype);
+        obj.__wbg_ptr = ptr;
+        CovenantBindingFinalization.register(obj, obj.__wbg_ptr, obj);
+        return obj;
+    }
+
+    toJSON() {
+        return {
+            covenantId: this.covenantId,
+            authorizingInput: this.authorizingInput,
+        };
+    }
+
+    toString() {
+        return JSON.stringify(this);
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+        CovenantBindingFinalization.unregister(this);
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_covenantbinding_free(ptr, 0);
+    }
+    /**
+     * @returns {object}
+     */
+    toJSON() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.covenantbinding_toJSON(retptr, this.__wbg_ptr);
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+            if (r2) {
+                throw takeObject(r1);
+            }
+            return takeObject(r0);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+     * @returns {Hash}
+     */
+    get covenantId() {
+        const ret = wasm.covenantbinding_covenantId(this.__wbg_ptr);
+        return Hash.__wrap(ret);
+    }
+    /**
+     * @param {Hash} v
+     */
+    set covenantId(v) {
+        _assertClass(v, Hash);
+        var ptr0 = v.__destroy_into_raw();
+        wasm.covenantbinding_set_covenantId(this.__wbg_ptr, ptr0);
+    }
+    /**
+     * @returns {number}
+     */
+    get authorizingInput() {
+        const ret = wasm.covenantbinding_authorizingInput(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {number} v
+     */
+    set authorizingInput(v) {
+        wasm.covenantbinding_set_authorizingInput(this.__wbg_ptr, v);
+    }
+    /**
+     * @param {number} authorizing_input
+     * @param {Hash} covenant_id
+     */
+    constructor(authorizing_input, covenant_id) {
+        _assertClass(covenant_id, Hash);
+        var ptr0 = covenant_id.__destroy_into_raw();
+        const ret = wasm.covenantbinding_new(authorizing_input, ptr0);
+        this.__wbg_ptr = ret >>> 0;
+        CovenantBindingFinalization.register(this, this.__wbg_ptr, this);
+        return this;
+    }
+}
+
+const GenesisCovenantGroupFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_genesiscovenantgroup_free(ptr >>> 0, 1));
+/**
+ * A genesis covenant group for bulk covenant binding population.
+ *
+ * All listed outputs are bound to the same covenant id, derived from the
+ * authorizing input outpoint and this exact ordered output list.
+ * @category Consensus
+ */
+export class GenesisCovenantGroup {
+
+    toJSON() {
+        return {
+            authorizingInput: this.authorizingInput,
+            outputs: this.outputs,
+        };
+    }
+
+    toString() {
+        return JSON.stringify(this);
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.__wbg_ptr;
+        this.__wbg_ptr = 0;
+        GenesisCovenantGroupFinalization.unregister(this);
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_genesiscovenantgroup_free(ptr, 0);
+    }
+    /**
+     * @param {Array<number>} outputs
+     */
+    set outputs(outputs) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.genesiscovenantgroup_set_outputs(retptr, this.__wbg_ptr, addHeapObject(outputs));
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            if (r1) {
+                throw takeObject(r0);
+            }
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+     * @returns {string}
+     */
+    toString() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.genesiscovenantgroup_toString(retptr, this.__wbg_ptr);
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+            if (r2) {
+                throw takeObject(r1);
+            }
+            return takeObject(r0);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+     * @returns {object}
+     */
+    toJSON() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.genesiscovenantgroup_toJSON(retptr, this.__wbg_ptr);
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+            if (r2) {
+                throw takeObject(r1);
+            }
+            return takeObject(r0);
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+     * @returns {number}
+     */
+    get authorizingInput() {
+        const ret = wasm.genesiscovenantgroup_authorizingInput(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {number} value
+     */
+    set authorizingInput(value) {
+        wasm.genesiscovenantgroup_set_authorizingInput(this.__wbg_ptr, value);
+    }
+    /**
+     * @param {number} authorizing_input
+     * @param {Array<number>} outputs
+     */
+    constructor(authorizing_input, outputs) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.genesiscovenantgroup_ctor(retptr, authorizing_input, addHeapObject(outputs));
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            var r2 = getDataViewMemory0().getInt32(retptr + 4 * 2, true);
+            if (r2) {
+                throw takeObject(r1);
+            }
+            this.__wbg_ptr = r0 >>> 0;
+            GenesisCovenantGroupFinalization.register(this, this.__wbg_ptr, this);
+            return this;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+     * @returns {Array<number>}
+     */
+    get outputs() {
+        const ret = wasm.genesiscovenantgroup_outputs(this.__wbg_ptr);
+        return takeObject(ret);
     }
 }
 
@@ -2657,6 +2895,18 @@ export class RpcClient {
         }
     }
     /**
+     * Retrieves reward information for a block.
+     * Returned information: block color, confirmation count, reward, merging chain block, and header.
+     * @see {@link IGetBlockRewardInfoRequest}, {@link IGetBlockRewardInfoResponse}
+     * @throws `string` on an RPC error, a server-side error or when supplying incorrect arguments.
+     * @param {IGetBlockRewardInfoRequest} request
+     * @returns {Promise<IGetBlockRewardInfoResponse>}
+     */
+    getBlockRewardInfo(request) {
+        const ret = wasm.rpcclient_getBlockRewardInfo(this.__wbg_ptr, addHeapObject(request));
+        return takeObject(ret);
+    }
+    /**
      *
      * Unregister an event listener.
      * This function will remove the callback for the specified event.
@@ -3407,6 +3657,7 @@ export class Transaction {
         return {
             version: this.version,
             lockTime: this.lockTime,
+            storageMass: this.storageMass,
             inputs: this.inputs,
             outputs: this.outputs,
             subnetworkId: this.subnetworkId,
@@ -3489,6 +3740,19 @@ export class Transaction {
      */
     set lockTime(v) {
         wasm.transaction_set_lockTime(this.__wbg_ptr, v);
+    }
+    /**
+     * @returns {bigint}
+     */
+    get storageMass() {
+        const ret = wasm.transaction_get_mass(this.__wbg_ptr);
+        return BigInt.asUintN(64, ret);
+    }
+    /**
+     * @param {bigint} v
+     */
+    set storageMass(v) {
+        wasm.transaction_set_mass(this.__wbg_ptr, v);
     }
     /**
      * Serializes the transaction to a JSON string.
@@ -3712,6 +3976,23 @@ export class Transaction {
         }
     }
     /**
+     * @param {(IGenesisCovenantGroup | GenesisCovenantGroup)[]} groups
+     */
+    populateGenesisCovenants(groups) {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.transaction_populateGenesisCovenants(retptr, this.__wbg_ptr, addBorrowedObject(groups));
+            var r0 = getDataViewMemory0().getInt32(retptr + 4 * 0, true);
+            var r1 = getDataViewMemory0().getInt32(retptr + 4 * 1, true);
+            if (r1) {
+                throw takeObject(r0);
+            }
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+            heap[stack_pointer++] = undefined;
+        }
+    }
+    /**
      * @param {any} js_value
      */
     set subnetworkId(js_value) {
@@ -3750,6 +4031,7 @@ export class Transaction {
         }
     }
     /**
+     * @deprecated Use `storageMass` instead
      * @returns {bigint}
      */
     get mass() {
@@ -3757,6 +4039,7 @@ export class Transaction {
         return BigInt.asUintN(64, ret);
     }
     /**
+     * @deprecated Use `storageMass` instead
      * @param {bigint} v
      */
     set mass(v) {
@@ -3828,6 +4111,7 @@ export class TransactionInput {
         return {
             sequence: this.sequence,
             sigOpCount: this.sigOpCount,
+            computeBudget: this.computeBudget,
             previousOutpoint: this.previousOutpoint,
             signatureScript: this.signatureScript,
             utxo: this.utxo,
@@ -3895,6 +4179,19 @@ export class TransactionInput {
      */
     set sigOpCount(sig_op_count) {
         wasm.transactioninput_set_sig_op_count(this.__wbg_ptr, sig_op_count);
+    }
+    /**
+     * @returns {number}
+     */
+    get computeBudget() {
+        const ret = wasm.transactioninput_get_compute_budget(this.__wbg_ptr);
+        return ret;
+    }
+    /**
+     * @param {number} compute_budget
+     */
+    set computeBudget(compute_budget) {
+        wasm.transactioninput_set_compute_budget(this.__wbg_ptr, compute_budget);
     }
     /**
      * @returns {TransactionOutpoint}
@@ -4084,6 +4381,7 @@ export class TransactionOutput {
 
     toJSON() {
         return {
+            covenant: this.covenant,
             scriptPublicKey: this.scriptPublicKey,
             value: this.value,
         };
@@ -4105,6 +4403,21 @@ export class TransactionOutput {
         wasm.__wbg_transactionoutput_free(ptr, 0);
     }
     /**
+     * @returns {CovenantBinding | undefined}
+     */
+    get covenant() {
+        const ret = wasm.transactionoutput_covenant(this.__wbg_ptr);
+        return ret === 0 ? undefined : CovenantBinding.__wrap(ret);
+    }
+    /**
+     * @param {CovenantBinding} v
+     */
+    set covenant(v) {
+        _assertClass(v, CovenantBinding);
+        var ptr0 = v.__destroy_into_raw();
+        wasm.transactionoutput_set_covenant(this.__wbg_ptr, ptr0);
+    }
+    /**
      * @returns {ScriptPublicKey}
      */
     get scriptPublicKey() {
@@ -4122,10 +4435,16 @@ export class TransactionOutput {
      * TransactionOutput constructor
      * @param {bigint} value
      * @param {ScriptPublicKey} script_public_key
+     * @param {CovenantBinding | null} [covenant]
      */
-    constructor(value, script_public_key) {
+    constructor(value, script_public_key, covenant) {
         _assertClass(script_public_key, ScriptPublicKey);
-        const ret = wasm.transactionoutput_ctor(value, script_public_key.__wbg_ptr);
+        let ptr0 = 0;
+        if (!isLikeNone(covenant)) {
+            _assertClass(covenant, CovenantBinding);
+            ptr0 = covenant.__destroy_into_raw();
+        }
+        const ret = wasm.transactionoutput_ctor(value, script_public_key.__wbg_ptr, ptr0);
         this.__wbg_ptr = ret >>> 0;
         TransactionOutputFinalization.register(this, this.__wbg_ptr, this);
         return this;
@@ -4287,6 +4606,7 @@ export class TransactionUtxoEntry {
             scriptPublicKey: this.scriptPublicKey,
             blockDaaScore: this.blockDaaScore,
             isCoinbase: this.isCoinbase,
+            covenantId: this.covenantId,
         };
     }
 
@@ -4358,6 +4678,24 @@ export class TransactionUtxoEntry {
      */
     set isCoinbase(arg0) {
         wasm.__wbg_set_transactionutxoentry_isCoinbase(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {Hash | undefined}
+     */
+    get covenantId() {
+        const ret = wasm.__wbg_get_transactionutxoentry_covenantId(this.__wbg_ptr);
+        return ret === 0 ? undefined : Hash.__wrap(ret);
+    }
+    /**
+     * @param {Hash | null} [arg0]
+     */
+    set covenantId(arg0) {
+        let ptr0 = 0;
+        if (!isLikeNone(arg0)) {
+            _assertClass(arg0, Hash);
+            ptr0 = arg0.__destroy_into_raw();
+        }
+        wasm.__wbg_set_transactionutxoentry_covenantId(this.__wbg_ptr, ptr0);
     }
 }
 
@@ -4477,6 +4815,7 @@ export class UtxoEntry {
             scriptPublicKey: this.scriptPublicKey,
             blockDaaScore: this.blockDaaScore,
             isCoinbase: this.isCoinbase,
+            covenantId: this.covenantId,
         };
     }
 
@@ -4581,6 +4920,24 @@ export class UtxoEntry {
      */
     set isCoinbase(arg0) {
         wasm.__wbg_set_utxoentry_isCoinbase(this.__wbg_ptr, arg0);
+    }
+    /**
+     * @returns {Hash | undefined}
+     */
+    get covenantId() {
+        const ret = wasm.__wbg_get_utxoentry_covenantId(this.__wbg_ptr);
+        return ret === 0 ? undefined : Hash.__wrap(ret);
+    }
+    /**
+     * @param {Hash | null} [arg0]
+     */
+    set covenantId(arg0) {
+        let ptr0 = 0;
+        if (!isLikeNone(arg0)) {
+            _assertClass(arg0, Hash);
+            ptr0 = arg0.__destroy_into_raw();
+        }
+        wasm.__wbg_set_utxoentry_covenantId(this.__wbg_ptr, ptr0);
     }
     /**
      * @returns {string}
@@ -5010,7 +5367,7 @@ function __wbg_get_imports() {
                 const a = state0.a;
                 state0.a = 0;
                 try {
-                    return __wbg_adapter_120(a, state0.b, arg0, arg1);
+                    return __wbg_adapter_116(a, state0.b, arg0, arg1);
                 } finally {
                     state0.a = a;
                 }
@@ -5344,32 +5701,32 @@ function __wbg_get_imports() {
         const ret = false;
         return ret;
     };
-    imports.wbg.__wbindgen_closure_wrapper428 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 73, __wbg_adapter_58);
+    imports.wbg.__wbindgen_closure_wrapper434 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 82, __wbg_adapter_58);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper6579 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 1944, __wbg_adapter_61);
+    imports.wbg.__wbindgen_closure_wrapper6925 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 2016, __wbg_adapter_61);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper7292 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 1966, __wbg_adapter_64);
+    imports.wbg.__wbindgen_closure_wrapper7616 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 2028, __wbg_adapter_64);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper7294 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 1966, __wbg_adapter_67);
+    imports.wbg.__wbindgen_closure_wrapper7618 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 2028, __wbg_adapter_67);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper7296 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 1966, __wbg_adapter_70);
+    imports.wbg.__wbindgen_closure_wrapper7620 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 2028, __wbg_adapter_70);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper7650 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 2069, __wbg_adapter_73);
+    imports.wbg.__wbindgen_closure_wrapper7961 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 2125, __wbg_adapter_73);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper7651 = function(arg0, arg1, arg2) {
-        const ret = makeMutClosure(arg0, arg1, 2069, __wbg_adapter_73);
+    imports.wbg.__wbindgen_closure_wrapper7962 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 2125, __wbg_adapter_73);
         return addHeapObject(ret);
     };
     imports.wbg.__wbindgen_debug_string = function(arg0, arg1) {
