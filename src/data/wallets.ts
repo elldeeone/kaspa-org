@@ -40,6 +40,32 @@ const walletRecords: KaspaWallet[] = [
     ],
   },
   {
+    id: "kaspacom-wallet",
+    title: "KaspaCom Wallet",
+    icon: "/hodl/wallets/kaspacom-wallet/icon.png",
+    user: "beginner",
+    summary:
+      "A browser-based KaspaCom wallet for creating, importing, and using self-custodial Kaspa wallets.",
+    platforms: ["windows", "mac", "linux", "ios", "android"],
+    features: [],
+    check: {
+      control: "good",
+      validation: "caution",
+      transparency: "acceptable",
+      fees: "good",
+    },
+    actions: [
+      {
+        action: "open",
+        link: "https://wallet.kaspa.com/",
+      },
+      {
+        action: "view_source",
+        link: "https://github.com/KASPACOM/kaspacom-web-wallet",
+      },
+    ],
+  },
+  {
     id: "kaspium",
     title: "Kaspium",
     icon: "/hodl/wallets/kaspium/icon.jpg",
