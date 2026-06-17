@@ -49,6 +49,9 @@ must use `transparency: "caution"`.
 - Set wallet-level `features` and `check` to the values that apply to every
   platform. Use the rating rubric below and provide evidence in the pull
   request. Use `platformOverrides` only when one platform genuinely differs.
+- For hardware wallets that require companion apps, list both `hardware` and
+  the supported companion app OSs. Use wallet-level ratings for the app-platform
+  defaults, then add hardware-specific overrides where needed.
 - List every acquisition path in `actions`. Use `platforms` on an action only
   when the link is OS-specific (App Store, Google Play, OS-specific downloads).
 - Use official wallet links.
@@ -156,6 +159,27 @@ If `platforms` includes `hardware`, the effective `validation` rating for the
 hardware platform must be `not_applicable`. Set `check.validation` to
 `not_applicable` for hardware-only wallets, or override on
 `platformOverrides.hardware.check.validation` for mixed wallets.
+
+For hardware wallets that require Android, iOS, Windows, macOS, or Linux
+companion apps, use the companion app's validation behavior as the wallet-level
+value. Then override only the hardware platform:
+
+```ts
+check: {
+  control: "good",
+  validation: "caution",
+  transparency: "acceptable",
+  fees: "acceptable",
+},
+platformOverrides: {
+  hardware: {
+    check: { validation: "not_applicable" },
+  },
+},
+```
+
+If the companion app lets users choose a Kaspa node, `validation: "acceptable"`
+may fit. If it uses fixed wallet-controlled nodes, use `validation: "caution"`.
 
 ## Field Notes
 
