@@ -8,6 +8,7 @@ import {
   KASPA_MARK_SIGNAL,
   type KaspaMarkSignalDetail,
 } from "./kaspaMarkSignal";
+import LogoContextMenu, { type LogoMenuPosition } from "./LogoContextMenu";
 import NavLinksList from "./NavLinksList";
 import ThemeToggle from "./ThemeToggle";
 import { useIsClient } from "./useIsClient";
@@ -76,6 +77,9 @@ export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [logoReplaced, setLogoReplaced] = useState(false);
   const [logoFlight, setLogoFlight] = useState<LogoFlight | null>(null);
+  const [logoMenu, setLogoMenu] = useState<LogoMenuPosition | null>(null);
+  const longPressTimer = useRef<number | null>(null);
+  const longPressFired = useRef(false);
   const logoTargetRef = useRef<HTMLAnchorElement>(null);
   const isDarkRef = useRef(false);
   const logoReplacedRef = useRef(false);
@@ -154,6 +158,51 @@ export default function Nav() {
     };
   }, []);
 
+  const clearLongPress = () => {
+    if (longPressTimer.current !== null) {
+      window.clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
+  useEffect(() => clearLongPress, []);
+
+  const handleLogoContextMenu = (event: React.MouseEvent) => {
+    event.preventDefault();
+    const targetRect = logoTargetRef.current?.getBoundingClientRect();
+    const position =
+      event.clientX === 0 && event.clientY === 0 && targetRect
+        ? { x: targetRect.left, y: targetRect.bottom }
+        : { x: event.clientX, y: event.clientY };
+    setLogoMenu(position);
+  };
+
+  const closeLogoMenu = () => {
+    setLogoMenu(null);
+    window.requestAnimationFrame(() => {
+      logoTargetRef.current?.focus({ preventScroll: true });
+    });
+  };
+
+  const handleLogoTouchStart = (event: React.TouchEvent) => {
+    const touch = event.touches[0];
+    if (!touch) return;
+    longPressFired.current = false;
+    const { clientX, clientY } = touch;
+    clearLongPress();
+    longPressTimer.current = window.setTimeout(() => {
+      longPressFired.current = true;
+      setLogoMenu({ x: clientX, y: clientY });
+    }, 500);
+  };
+
+  const handleLogoClick = (event: React.MouseEvent) => {
+    if (longPressFired.current) {
+      event.preventDefault();
+      longPressFired.current = false;
+    }
+  };
+
   const flightStyle = activeLogoFlight
     ? ({
         left: `${activeLogoFlight.startX - 24}px`,
@@ -181,7 +230,13 @@ export default function Nav() {
         <Link
           ref={logoTargetRef}
           href="/"
-          className="text-primary relative flex h-12 w-[116px] shrink-0 items-center sm:w-[126px] md:w-[140px]"
+          onContextMenu={handleLogoContextMenu}
+          onTouchStart={handleLogoTouchStart}
+          onTouchEnd={clearLongPress}
+          onTouchMove={clearLongPress}
+          onTouchCancel={clearLongPress}
+          onClick={handleLogoClick}
+          className="text-primary relative flex h-12 w-[116px] shrink-0 items-center select-none [-webkit-touch-callout:none] sm:w-[126px] md:w-[140px]"
           aria-label="Kaspa home"
         >
           {showGlyphLogo ? (
@@ -270,6 +325,10 @@ export default function Nav() {
           />
         </div>
       </div>
+
+      {logoMenu ? (
+        <LogoContextMenu position={logoMenu} onClose={closeLogoMenu} />
+      ) : null}
     </nav>
   );
 }
