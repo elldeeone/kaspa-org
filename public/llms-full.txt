@@ -134,7 +134,7 @@ If this reads like it's early, that's because it is.
 
 ## BUIDL
 
-Rusty Kaspa v2.0.0
+Rusty Kaspa v2.0.1
 
 View release
 
