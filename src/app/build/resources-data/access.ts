@@ -18,6 +18,8 @@ export const networkAccessGroups: LinkGroup[] = [
         href: "https://deepwiki.com/kaspanet/rusty-kaspa",
       },
       { label: "KIPs", href: "https://github.com/kaspanet/kips" },
+      { label: "Research forum", href: "https://research.kas.pa/" },
+      { label: "Kaspa Q&A", href: "https://qa.kas.pa/" },
     ],
   },
   {

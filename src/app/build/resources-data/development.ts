@@ -9,6 +9,12 @@ export const developmentCards: DevelopmentCard[] = [
     href: TELEGRAM_RND_URL,
   },
   {
+    label: "Forum",
+    title: "Kaspa Research",
+    desc: "Long-form forum for protocol, consensus, economics, and mining discussion, plus KIP drafts and proposals.",
+    href: "https://research.kas.pa/",
+  },
+  {
     label: "Hard fork",
     title: "Toccata: covenants & zk",
     desc: "Hard fork bundling extended script opcodes (KIP-17), covenant IDs (KIP-20), zk opcodes with a verifier precompile subsystem (KIP-16), and sequencing commitments (KIP-21). Currently live on TN12 ahead of mainnet activation.",

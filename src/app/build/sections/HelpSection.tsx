@@ -3,7 +3,7 @@ import ShuffledPromptPills from "../../components/ShuffledPromptPills";
 import { type OpenKaspaAiDetail } from "../../components/aiLauncherEvents";
 import { DOCS_URL, TELEGRAM_RND_URL, aiPrompts } from "../content";
 import { ArrowUpRightIcon, ChevronRightIcon, SparklesIcon } from "../icons";
-import { GridSurface, MetaPill } from "../ui";
+import { GridSurface } from "../ui";
 
 export default function HelpSection({
   kaspaAiEnabled,
@@ -31,8 +31,8 @@ export default function HelpSection({
               </h2>
               <p className="text-tertiary mt-4 text-[16px] leading-[1.75]">
                 {kaspaAiEnabled
-                  ? "Start with the docs or Kaspa AI. For deeper help, try GitHub, Discord, or the R&D Telegram."
-                  : "Start with the docs. For deeper help, try GitHub, Discord, or the R&D Telegram."}
+                  ? "Start with the docs or Kaspa AI. For deeper help, try the Q&A, GitHub, Discord, or the R&D Telegram."
+                  : "Start with the docs. For deeper help, try the Q&A, GitHub, Discord, or the R&D Telegram."}
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <ExternalLink href={DOCS_URL} className="btn-primary">
@@ -55,7 +55,7 @@ export default function HelpSection({
               ) : null}
             </div>
 
-            <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:mt-0 lg:self-start">
+            <div className="mt-8 grid auto-rows-fr grid-cols-1 gap-3 sm:grid-cols-2 lg:mt-0 lg:self-start">
               <ExternalLink
                 href="https://github.com/kaspanet/rusty-kaspa"
                 className="group border-subtle flex min-h-[132px] flex-col rounded-[22px] border px-5 py-5 transition-colors hover:border-[var(--btn-ghost-hover-border)] sm:min-h-[148px]"
@@ -93,18 +93,33 @@ export default function HelpSection({
               </ExternalLink>
 
               <ExternalLink
-                href={TELEGRAM_RND_URL}
-                className="group border-subtle flex min-h-[148px] flex-col rounded-[22px] border px-5 py-5 transition-colors hover:border-[var(--btn-ghost-hover-border)] sm:col-span-2 sm:min-h-[164px]"
+                href="https://qa.kas.pa/"
+                className="group border-subtle flex min-h-[132px] flex-col rounded-[22px] border px-5 py-5 transition-colors hover:border-[var(--btn-ghost-hover-border)] sm:min-h-[148px]"
                 style={{ background: "var(--surface)" }}
               >
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-muted text-[12px] font-medium tracking-[0.08em] uppercase">
-                    Latest development
-                  </p>
-                  <MetaPill accent>Public channel</MetaPill>
+                <p className="text-muted text-[12px] font-medium tracking-[0.08em] uppercase">
+                  Questions
+                </p>
+                <div className="mt-auto flex items-end justify-between gap-4 pt-8">
+                  <span className="text-primary text-[22px] font-medium tracking-[-0.03em]">
+                    Kaspa Q&amp;A
+                  </span>
+                  <span className="text-muted group-hover:text-secondary inline-flex transition-all duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
+                    <ArrowUpRightIcon size={13} />
+                  </span>
                 </div>
-                <div className="mt-auto flex items-end justify-between gap-4 pt-10">
-                  <span className="text-primary text-[24px] font-medium tracking-[-0.03em]">
+              </ExternalLink>
+
+              <ExternalLink
+                href={TELEGRAM_RND_URL}
+                className="group border-subtle flex min-h-[132px] flex-col rounded-[22px] border px-5 py-5 transition-colors hover:border-[var(--btn-ghost-hover-border)] sm:min-h-[148px]"
+                style={{ background: "var(--surface)" }}
+              >
+                <p className="text-muted text-[12px] font-medium tracking-[0.08em] uppercase">
+                  Latest development
+                </p>
+                <div className="mt-auto flex items-end justify-between gap-4 pt-8">
+                  <span className="text-primary text-[22px] font-medium tracking-[-0.03em]">
                     Telegram R&amp;D
                   </span>
                   <span className="text-muted group-hover:text-secondary inline-flex transition-all duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
