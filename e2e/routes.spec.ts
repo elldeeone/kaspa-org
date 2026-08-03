@@ -52,3 +52,20 @@ test("DAGVIZ nav link opens in a new tab", async ({ page }) => {
   await expect(dagvizLink).toHaveAttribute("rel", /noopener/);
   await expect(dagvizLink).toHaveAttribute("rel", /noreferrer/);
 });
+
+test("wallet finder links to the wallet submission guide", async ({ page }) => {
+  await page.goto("/hodl#wallet");
+
+  const submissionLink = page.getByRole("link", {
+    name: /learn how to submit it on github/i,
+  });
+
+  await expect(submissionLink).toBeVisible();
+  await expect(submissionLink).toHaveAttribute(
+    "href",
+    "https://github.com/kaspamedia/kaspa-org/blob/main/docs/wallet-submissions.md",
+  );
+  await expect(submissionLink).toHaveAttribute("target", "_blank");
+  await expect(submissionLink).toHaveAttribute("rel", /noopener/);
+  await expect(submissionLink).toHaveAttribute("rel", /noreferrer/);
+});
