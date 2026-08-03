@@ -23,6 +23,7 @@ import {
 import {
   assertNoHorizontalOverflow,
   installStandaloneExampleMocks,
+  measureOpenGraphImage,
   standaloneBasePath,
   standaloneExampleNames,
   waitForStableLayout,
@@ -332,9 +333,13 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
       }
     }
 
-    const dotted = await api.get("/es/missing.txt");
-    expect(dotted.status()).toBe(404);
-    expect(await dotted.text()).toContain('<html lang="en" dir="ltr"');
+    for (const pathname of ["/es/missing.txt", "/es/missing%2Etxt"]) {
+      const dotted = await api.get(pathname);
+      expect(dotted.status(), pathname).toBe(404);
+      expect(await dotted.text(), pathname).toContain(
+        '<html lang="en" dir="ltr"',
+      );
+    }
 
     const spanishOg = await api.get("/es/opengraph-image");
     const repeatedSpanishOg = await api.get("/es/opengraph-image");
@@ -369,6 +374,66 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
     expect(server.readLogs()).not.toMatch(
       /NoFallbackError|ERR_INVALID_URL|Internal Server Error|TypeError: Invalid URL/u,
     );
+  });
+
+  test("renders exact Spanish structured data and a safe Open Graph image", async ({
+    browser,
+  }) => {
+    test.skip(!activeProject, "Spanish Preview matrix runs once");
+    if (!fixture || !server) {
+      throw new Error("Spanish Preview fixture was not started");
+    }
+
+    const sharedCatalog = await loadCatalog(fixture.root, "es", "shared");
+    const structuredData = sharedCatalog.structuredData as MessageCatalog;
+    const expectedStructuredData = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://kaspa.org#organization",
+          name: "Kaspa",
+          url: "https://kaspa.org",
+          logo: "https://kaspa.org/kaspa-logo.svg",
+          description: structuredData.organizationDescription,
+          sameAs: [
+            "https://github.com/kaspanet/rusty-kaspa/",
+            "https://t.me/kasparnd",
+          ],
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://kaspa.org#website",
+          name: "Kaspa",
+          url: "https://kaspa.org",
+          alternateName: ["kaspa.org"],
+          publisher: { "@id": "https://kaspa.org#organization" },
+        },
+      ],
+    };
+
+    const context = await browser.newContext({ baseURL: server.baseUrl });
+    const page = await context.newPage();
+    for (const route of spanishRoutes) {
+      await page.goto(route.path, { waitUntil: "domcontentloaded" });
+      const scripts = page.locator('script[type="application/ld+json"]');
+      await expect(scripts, route.path).toHaveCount(1);
+      const rendered = await scripts.textContent();
+      expect(rendered, route.path).not.toBeNull();
+      expect(JSON.parse(rendered ?? "null"), route.path).toEqual(
+        expectedStructuredData,
+      );
+    }
+
+    const metrics = await measureOpenGraphImage(page, "/es/opengraph-image");
+    expect(metrics).toMatchObject({ width: 1200, height: 630 });
+    expect(metrics.inkPixels).toBeGreaterThan(1_000);
+    expect(metrics.inkBandCount).toBeGreaterThanOrEqual(2);
+    expect(metrics.minX).toBeGreaterThanOrEqual(48);
+    expect(metrics.maxX).toBeLessThanOrEqual(1152);
+    expect(metrics.minY).toBeGreaterThanOrEqual(48);
+    expect(metrics.maxY).toBeLessThanOrEqual(582);
+    await context.close();
   });
 
   test("keeps navigation, CTAs, selector state, and key interactions in Spanish", async ({
@@ -477,6 +542,23 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
     await expect(page).toHaveURL(
       /\/es\/lore\?source=spanish-gate&step=4#roadmap$/u,
     );
+
+    await page.goto("/%65%73/lore?source=encoded-locale#roadmap");
+    const encodedSelector = page.getByRole("combobox", { name: "Idioma" });
+    await expect(encodedSelector).toHaveValue("es");
+    await encodedSelector.selectOption("en");
+    await expect(page).toHaveURL(/\/lore\?source=encoded-locale#roadmap$/u);
+
+    await page.goto("/es/%256core");
+    const unknownPathSelector = page.getByRole("combobox", { name: "Idioma" });
+    await expect(unknownPathSelector).toHaveValue("es");
+    await unknownPathSelector.selectOption("en");
+    await expect(page).toHaveURL(/\/%256core$/u);
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await expect(
+      page.locator('[data-kaspa-global-not-found="true"]'),
+    ).toBeVisible();
+
     await page.goto("/en-XA/lore");
     await expect(page.locator("[data-language-selector]")).toHaveCount(0);
 

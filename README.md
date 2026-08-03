@@ -144,8 +144,8 @@ generate the same files only inside their isolated disposable copies.
 Set `NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview` only in Vercel Preview. Leave
 it unset or set it to `production` in Vercel Production; the production build
 fails closed if either private locale is enabled there. Spanish remains pending
-fluent and Kaspa technical review; terminology decisions are recorded in the
-[draft Spanish glossary](docs/i18n/spanish-glossary.md).
+fluent and Kaspa technical review. Terminology and review status will be managed
+in the selected translation platform before Spanish is approved for Production.
 
 ## CI
 

@@ -5,6 +5,7 @@ import {
   type RouteId,
   type StablePathname,
 } from "./manifest.ts";
+import { normalizePathname } from "./pathname.ts";
 
 export const NEXT_INTL_LOCALE_HEADER = "x-next-intl-locale";
 
@@ -14,27 +15,6 @@ export type RouteRequest = {
   stablePathname: StablePathname;
   hadLocalePrefix: boolean;
 };
-
-function normalizePathname(pathname: string): string | null {
-  let decodedPathname: string;
-  try {
-    decodedPathname = decodeURI(pathname);
-  } catch {
-    return null;
-  }
-
-  if (/[\\\u0000-\u001f\u007f]/u.test(decodedPathname)) return null;
-
-  const withLeadingSlash = decodedPathname.startsWith("/")
-    ? decodedPathname
-    : `/${decodedPathname}`;
-  const normalized = withLeadingSlash.replace(/\/{2,}/gu, "/");
-
-  if (normalized.length > 1 && normalized.endsWith("/")) {
-    return normalized.slice(0, -1);
-  }
-  return normalized;
-}
 
 export function resolveRouteRequest(pathname: string): RouteRequest | null {
   const normalized = normalizePathname(pathname);

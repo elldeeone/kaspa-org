@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { ROUTE_MISS_HEADER } from "@/i18n/manifest";
 import {
+  isStaticStylePathname,
   isRouteMiss,
   sanitizeRoutingHeaders,
   shouldBypassLocaleRouting,
@@ -19,7 +20,7 @@ export default function proxy(request: NextRequest): NextResponse {
     // Existing public files resolve before afterFiles rewrites. Mark only
     // static-style misses so Next can render the reserved global 404 without
     // sending API and framework routes through locale routing.
-    if (pathname.includes(".") && isRouteMiss(pathname)) {
+    if (isStaticStylePathname(pathname) && isRouteMiss(pathname)) {
       requestHeaders.set(ROUTE_MISS_HEADER, "1");
     }
     return NextResponse.next({

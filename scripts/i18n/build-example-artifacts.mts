@@ -53,8 +53,6 @@ export const LOCALIZED_BUILD_EXAMPLE_URLS = LOCALIZED_BUILD_EXAMPLE_PATHS.map(
 
 export type BuildArtifactLocale = "en-XA" | "es";
 
-const BUILD_ARTIFACT_LOCALES = ["en-XA", "es"] as const;
-
 const EXAMPLES_RELATIVE_DIRECTORY =
   "public/vendor/kaspa-wasm/2.0.0/examples/web";
 const SOURCE_UTILS_PATH = "resources/utils.js";
@@ -824,7 +822,7 @@ function validateEnglishSources(sources: BuildExampleSources): string[] {
   return errors;
 }
 
-export function validateLocalizedBuildArtifacts(
+function validateLocalizedBuildArtifacts(
   sources: BuildExampleSources,
   artifacts: GeneratedBuildExampleArtifacts,
   locale: BuildArtifactLocale,
@@ -919,8 +917,21 @@ export function validatePseudoBuildArtifacts(
 export function validateSpanishBuildArtifacts(
   sources: BuildExampleSources,
   artifacts: GeneratedBuildExampleArtifacts,
+  englishMessages: BuildArtifactMessages,
+  spanishMessages: BuildArtifactMessages,
 ): string[] {
-  return validateLocalizedBuildArtifacts(sources, artifacts, "es");
+  const errors = validateLocalizedBuildArtifacts(sources, artifacts, "es");
+  const expected = generateSpanishBuildArtifacts(
+    sources,
+    englishMessages,
+    spanishMessages,
+  );
+  for (const path of SPANISH_BUILD_EXAMPLE_PATHS) {
+    if (artifacts[path] !== expected[path]) {
+      errors.push(`${path} does not match catalog-backed Spanish output`);
+    }
+  }
+  return errors;
 }
 
 function examplesDirectory(repositoryRoot: string): string {
@@ -1148,9 +1159,15 @@ export async function syncLocalizedBuildArtifacts(
     ...Object.values(generatedByLocale),
   );
   const regenerated = Object.assign({}, ...Object.values(regeneratedByLocale));
-  const errors = BUILD_ARTIFACT_LOCALES.flatMap((locale) =>
-    validateLocalizedBuildArtifacts(sources, generatedByLocale[locale], locale),
-  );
+  const errors = [
+    ...validatePseudoBuildArtifacts(sources, generatedByLocale["en-XA"]),
+    ...validateSpanishBuildArtifacts(
+      sources,
+      generatedByLocale.es,
+      englishMessages,
+      spanishMessages,
+    ),
+  ];
   if (JSON.stringify(generated) !== JSON.stringify(regenerated)) {
     errors.push("localized Build artifact generation is not deterministic");
   }
@@ -1211,9 +1228,15 @@ export async function checkLocalizedBuildArtifacts(
     {},
     ...Object.values(generatedByLocale),
   );
-  const errors = BUILD_ARTIFACT_LOCALES.flatMap((locale) =>
-    validateLocalizedBuildArtifacts(sources, generatedByLocale[locale], locale),
-  );
+  const errors = [
+    ...validatePseudoBuildArtifacts(sources, generatedByLocale["en-XA"]),
+    ...validateSpanishBuildArtifacts(
+      sources,
+      generatedByLocale.es,
+      englishMessages,
+      spanishMessages,
+    ),
+  ];
   if (errors.length) throw new Error(errors.join("\n"));
 
   const candidates = await listLocalizedArtifactCandidates(repositoryRoot);

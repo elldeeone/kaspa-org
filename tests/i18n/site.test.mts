@@ -19,10 +19,16 @@ import {
   routeIds,
   stablePathnames,
 } from "../../src/i18n/manifest.ts";
+import { spanishMessages } from "../../src/i18n/messages.ts";
+import {
+  createOpenGraphImageDescriptor,
+  createOpenGraphRenderContract,
+} from "../../src/i18n/opengraph-contract.ts";
 import {
   isNextAsset,
   isOpenGraphImage,
   isRouteMiss,
+  isStaticStylePathname,
   sanitizeRoutingHeaders,
   shouldBypassLocaleRouting,
 } from "../../src/i18n/proxy-policy.ts";
@@ -263,6 +269,21 @@ test(
 
       assert.equal(resolveRouteRequest(`/${privateLocale}/historia`), null);
     }
+
+    assert.deepEqual(createOpenGraphRenderContract(spanishLocale), {
+      headingLines: spanishMessages.home.openGraph.heading.split("\n"),
+      tagline: spanishMessages.home.openGraph.tagline,
+      layout: "localized",
+    });
+    for (const routeId of routeIds) {
+      assert.deepEqual(createOpenGraphImageDescriptor(routeId, spanishLocale), {
+        url: "/es/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: spanishMessages[routeId].openGraph.imageAlt,
+        ...(routeId === "home" ? { type: "image/png" } : {}),
+      });
+    }
   },
 );
 
@@ -351,6 +372,7 @@ test("framework bypasses are explicit and do not collide with OG or Next assets"
     "/_next/static/chunk.js",
     "/_vercel/insights",
     "/icon.svg",
+    "/es/missing%2Etxt",
     "/opengraph-image",
     "/en/opengraph-image",
   ]) {
@@ -358,6 +380,9 @@ test("framework bypasses are explicit and do not collide with OG or Next assets"
   }
 
   assert.equal(shouldBypassLocaleRouting("/lore"), false);
+  assert.equal(shouldBypassLocaleRouting("/broken%encoding"), true);
+  assert.equal(isStaticStylePathname("/es/missing%2Etxt"), true);
+  assert.equal(isStaticStylePathname("/es/lore"), false);
   assert.equal(isOpenGraphImage("/en/opengraph-image"), true);
   assert.equal(isOpenGraphImage("/en/opengraph-image/extra"), false);
   assert.equal(isNextAsset("/_next/image"), true);

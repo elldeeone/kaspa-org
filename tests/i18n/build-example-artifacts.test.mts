@@ -165,7 +165,15 @@ test("Spanish Build artifacts are deterministic, complete, and catalog-backed", 
     [...LOCALIZED_BUILD_EXAMPLE_PATHS].sort(),
     [...PSEUDO_BUILD_EXAMPLE_PATHS, ...SPANISH_BUILD_EXAMPLE_PATHS].sort(),
   );
-  assert.deepEqual(validateSpanishBuildArtifacts(sources, first), []);
+  assert.deepEqual(
+    validateSpanishBuildArtifacts(
+      sources,
+      first,
+      englishMessages,
+      spanishMessages,
+    ),
+    [],
+  );
 
   for (const name of BUILD_EXAMPLE_NAMES) {
     const spanish = first[`${name}.es.html`];
@@ -195,6 +203,31 @@ test("Spanish Build artifacts are deterministic, complete, and catalog-backed", 
   assert.match(controls, /mainnet/u);
   assert.match(controls, /testnet-10/u);
   assert.match(controls, /testnet-11/u);
+});
+
+test("Spanish Build artifact validation rejects catalog-complete English output", async () => {
+  const sources = await loadSources();
+  const [englishMessages, spanishMessages] = await Promise.all([
+    loadEnglishBuildArtifactMessages(process.cwd()),
+    loadBuildArtifactMessages(process.cwd(), "es"),
+  ]);
+  const allEnglish = generateSpanishBuildArtifacts(
+    sources,
+    englishMessages,
+    englishMessages,
+  );
+
+  assert.deepEqual(
+    validateSpanishBuildArtifacts(
+      sources,
+      allEnglish,
+      englishMessages,
+      spanishMessages,
+    ),
+    SPANISH_BUILD_EXAMPLE_PATHS.map(
+      (path) => `${path} does not match catalog-backed Spanish output`,
+    ),
+  );
 });
 
 test("Build artifact generation rejects a non-plural event message", async () => {

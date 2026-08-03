@@ -36,6 +36,69 @@ export async function waitForStableLayout(page: Page) {
   });
 }
 
+export async function measureOpenGraphImage(page: Page, pathname: string) {
+  return page.evaluate(async (imagePathname) => {
+    const response = await fetch(imagePathname);
+    if (!response.ok) {
+      throw new Error(
+        `Open Graph image ${imagePathname} returned ${response.status}`,
+      );
+    }
+
+    const bitmap = await createImageBitmap(await response.blob());
+    const canvas = document.createElement("canvas");
+    canvas.width = bitmap.width;
+    canvas.height = bitmap.height;
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("2D canvas is unavailable");
+    context.drawImage(bitmap, 0, 0);
+    const pixels = context.getImageData(0, 0, bitmap.width, bitmap.height).data;
+    const background = [pixels[0], pixels[1], pixels[2]];
+    const inkRows = new Set<number>();
+    let inkPixels = 0;
+    let minX = bitmap.width;
+    let maxX = -1;
+    let minY = bitmap.height;
+    let maxY = -1;
+
+    for (let y = 0; y < bitmap.height; y += 1) {
+      for (let x = 0; x < bitmap.width; x += 1) {
+        const offset = (y * bitmap.width + x) * 4;
+        const distance =
+          Math.abs(pixels[offset] - background[0]) +
+          Math.abs(pixels[offset + 1] - background[1]) +
+          Math.abs(pixels[offset + 2] - background[2]);
+        if (pixels[offset + 3] === 0 || distance < 24) continue;
+        inkPixels += 1;
+        inkRows.add(y);
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+        minY = Math.min(minY, y);
+        maxY = Math.max(maxY, y);
+      }
+    }
+
+    let inkBandCount = 0;
+    let lastInkRow = Number.NEGATIVE_INFINITY;
+    for (const row of inkRows) {
+      if (row - lastInkRow > 12) inkBandCount += 1;
+      lastInkRow = row;
+    }
+    bitmap.close();
+
+    return {
+      width: canvas.width,
+      height: canvas.height,
+      inkPixels,
+      inkBandCount,
+      minX,
+      maxX,
+      minY,
+      maxY,
+    };
+  }, pathname);
+}
+
 export async function installStandaloneExampleMocks(page: Page) {
   const interceptedModules = new Set<"core" | "rpc">();
 

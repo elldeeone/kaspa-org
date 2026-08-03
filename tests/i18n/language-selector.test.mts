@@ -79,6 +79,27 @@ test("language links preserve fixed slugs, query strings, and hashes", () => {
     "/lore#roadmap",
   );
   assert.equal(
+    buildLanguageHref(
+      "/%65%73/lore",
+      defaultLocale,
+      "?source=edge",
+      "#roadmap",
+    ),
+    "/lore?source=edge#roadmap",
+  );
+  assert.equal(
+    buildLanguageHref("/%65%73/lore", spanishLocale, "", ""),
+    "/es/lore",
+  );
+  assert.equal(
+    buildLanguageHref("/es/%256core", defaultLocale, "", ""),
+    "/%256core",
+  );
+  assert.equal(
+    buildLanguageHref("/es/%256core", spanishLocale, "", ""),
+    "/es/%256core",
+  );
+  assert.equal(
     buildLanguageHref(`/${pseudoLocale}/build`, spanishLocale, "?tab=rpc", ""),
     "/es/build?tab=rpc",
   );

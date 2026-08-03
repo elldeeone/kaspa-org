@@ -7,6 +7,7 @@ import {
   NEXT_INTL_LOCALE_HEADER,
   resolveRouteRequest,
 } from "./route-request.ts";
+import { normalizePathname } from "./pathname.ts";
 
 export function sanitizeRoutingHeaders(headers: HeadersInit): Headers {
   const sanitized = new Headers(headers);
@@ -47,15 +48,23 @@ export function isRouteMiss(
   return !route || !resolvePublication(route.routeId, route.locale);
 }
 
+export function isStaticStylePathname(pathname: string): boolean {
+  const normalizedPathname = normalizePathname(pathname);
+  return normalizedPathname === null || normalizedPathname.includes(".");
+}
+
 export function shouldBypassLocaleRouting(pathname: string): boolean {
+  const normalizedPathname = normalizePathname(pathname);
+  if (!normalizedPathname) return true;
+
   return (
-    pathname === "/api" ||
-    pathname.startsWith("/api/") ||
-    pathname === "/_next" ||
-    pathname.startsWith("/_next/") ||
-    pathname === "/_vercel" ||
-    pathname.startsWith("/_vercel/") ||
-    isOpenGraphImage(pathname) ||
-    pathname.includes(".")
+    normalizedPathname === "/api" ||
+    normalizedPathname.startsWith("/api/") ||
+    normalizedPathname === "/_next" ||
+    normalizedPathname.startsWith("/_next/") ||
+    normalizedPathname === "/_vercel" ||
+    normalizedPathname.startsWith("/_vercel/") ||
+    isOpenGraphImage(normalizedPathname) ||
+    normalizedPathname.includes(".")
   );
 }

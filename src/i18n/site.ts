@@ -25,6 +25,7 @@ import {
   loadMessages,
   type MessageNamespace,
 } from "./messages.ts";
+import { createOpenGraphImageDescriptor } from "./opengraph-contract.ts";
 
 export { routeIds, stablePathnames } from "./manifest.ts";
 export type { RouteId, StablePathname } from "./manifest.ts";
@@ -200,18 +201,7 @@ export function createRouteMetadata(
         }
       : undefined;
   const isPrivate = route.publication === "preview";
-  const imagePathname =
-    locale === defaultLocale
-      ? "/opengraph-image"
-      : `/${locale}/opengraph-image`;
-  const image = {
-    url: imagePathname,
-    width: 1200,
-    height: 630,
-    alt: routeMessages.openGraph.imageAlt,
-  } as const;
-  const openGraphImage =
-    routeId === "home" ? { ...image, type: "image/png" as const } : image;
+  const image = createOpenGraphImageDescriptor(routeId, locale);
 
   return {
     metadataBase: new URL(siteUrl),
@@ -230,7 +220,7 @@ export function createRouteMetadata(
           type: "website",
           url: route.canonicalPathname,
           siteName: "Kaspa",
-          images: [openGraphImage],
+          images: [image],
         },
     twitter: isPrivate
       ? undefined
@@ -238,10 +228,7 @@ export function createRouteMetadata(
           card: "summary_large_image",
           title: metadata.title,
           description: metadata.description,
-          images:
-            routeId === "home"
-              ? [{ ...image, type: "image/png" }]
-              : [imagePathname],
+          images: routeId === "home" ? [image] : [image.url],
         },
     robots: isPrivate ? { index: false, follow: false } : undefined,
   };

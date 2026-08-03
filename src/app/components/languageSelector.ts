@@ -1,13 +1,12 @@
 import {
-  defaultLocale,
   getLocaleDefinition,
   listSelectableLocales,
   pseudoLocale,
   resolveSupportedLocale,
-  supportedLocaleCodes,
   type Locale,
   type LocaleDefinition,
 } from "../../i18n/config.ts";
+import { localizePathname } from "../../i18n/pathname.ts";
 
 export type LanguageSelectorLocale = Exclude<Locale, typeof pseudoLocale>;
 export type LanguageSelectorOption = Omit<LocaleDefinition, "code"> & {
@@ -47,34 +46,12 @@ export function shouldShowLanguageSelector(
   );
 }
 
-function removeRegisteredLocalePrefix(pathname: string): string {
-  const normalizedPathname = pathname.toLowerCase();
-  const prefix = supportedLocaleCodes.find((locale) => {
-    const normalizedPrefix = `/${locale.toLowerCase()}`;
-    return (
-      normalizedPathname === normalizedPrefix ||
-      normalizedPathname.startsWith(`${normalizedPrefix}/`)
-    );
-  });
-  if (!prefix) return pathname;
-
-  const unprefixedPathname = pathname.slice(prefix.length + 1);
-  return unprefixedPathname || "/";
-}
-
 export function buildLanguageHref(
   pathname: string,
   locale: LanguageSelectorLocale,
   search: string,
   hash: string,
 ): string {
-  const unprefixedPathname = removeRegisteredLocalePrefix(pathname);
-  const localeCode = getLocaleDefinition(locale).code;
-  const localizedPathname =
-    locale === defaultLocale
-      ? unprefixedPathname
-      : unprefixedPathname === "/"
-        ? `/${localeCode}`
-        : `/${localeCode}${unprefixedPathname}`;
+  const localizedPathname = localizePathname(pathname, locale) ?? pathname;
   return `${localizedPathname}${search}${hash}`;
 }

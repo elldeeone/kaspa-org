@@ -2,11 +2,14 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
-import { defaultLocale, type Locale } from "./config.ts";
-import { getHomeMessages } from "./messages.ts";
+import type { Locale } from "./config.ts";
+import {
+  createOpenGraphRenderContract,
+  openGraphContentType,
+  openGraphSize,
+} from "./opengraph-contract.ts";
 
-export const openGraphSize = { width: 1200, height: 630 };
-export const openGraphContentType = "image/png";
+export { openGraphContentType, openGraphSize };
 
 const HEADING_SIZE = 140;
 const SUB_SIZE = Math.round(HEADING_SIZE * (28 / 96)); // matches homepage ratio
@@ -15,13 +18,12 @@ const PADDING_TOP = 100;
 const fontDirectory = join(process.cwd(), "src", "app", "fonts");
 
 export async function renderOpenGraphImage(locale: Locale) {
-  const copy = getHomeMessages(locale).openGraph;
-  const heading = copy.heading.split("\n");
+  const contract = createOpenGraphRenderContract(locale);
   const [geistBold, geistRegular] = await Promise.all([
     readFile(join(fontDirectory, "Geist-Bold.ttf")),
     readFile(join(fontDirectory, "Geist-Regular.ttf")),
   ]);
-  const useLocalizedLayout = locale !== defaultLocale;
+  const useLocalizedLayout = contract.layout === "localized";
 
   return new ImageResponse(
     <div
@@ -41,7 +43,7 @@ export async function renderOpenGraphImage(locale: Locale) {
           flexDirection: "column",
         }}
       >
-        {heading.map((line) => (
+        {contract.headingLines.map((line) => (
           <div
             key={line}
             style={{
@@ -78,8 +80,8 @@ export async function renderOpenGraphImage(locale: Locale) {
         }}
       >
         {useLocalizedLayout
-          ? copy.tagline
-          : copy.tagline.split(" ").map((word, index) => (
+          ? contract.tagline
+          : contract.tagline.split(" ").map((word, index) => (
               <span
                 key={`${word}-${index}`}
                 style={
