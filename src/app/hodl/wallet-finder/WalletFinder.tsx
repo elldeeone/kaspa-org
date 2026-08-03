@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 
+import ExternalLink from "../../components/ExternalLink";
+import { ArrowUpRightIcon } from "../../components/icons";
 import { ACCENT } from "../content";
 import { initialFilters, OS_OPTIONS } from "./constants";
 import FilterPanel, { type FilterPanelProps } from "./FilterPanel";
@@ -25,6 +27,9 @@ import { DesktopResults, MobileResults } from "./WalletResults";
 import WizardFlow, { type WizardPanelProps } from "./WizardFlow";
 
 type WalletFinderMode = "guided" | "table";
+
+const WALLET_SUBMISSION_GUIDE_URL =
+  "https://github.com/kaspamedia/kaspa-org/blob/main/docs/wallet-submissions.md";
 
 type ActiveFilterChip = {
   key: string;
@@ -284,6 +289,21 @@ export default function WalletFinder() {
             </div>
           </>
         )}
+      </div>
+
+      <div className="border-subtle relative z-10 border-t px-5 py-3.5 text-center md:px-8">
+        <p className="text-muted text-[12.5px] leading-relaxed">
+          Missing a wallet?{" "}
+          <ExternalLink
+            href={WALLET_SUBMISSION_GUIDE_URL}
+            className="group text-tertiary hover:text-primary inline-flex items-center gap-1 font-medium underline-offset-2 transition-colors hover:underline"
+          >
+            Learn how to submit it on GitHub
+            <span className="opacity-40 transition-opacity group-hover:opacity-75">
+              <ArrowUpRightIcon size={9} />
+            </span>
+          </ExternalLink>
+        </p>
       </div>
     </div>
   );
