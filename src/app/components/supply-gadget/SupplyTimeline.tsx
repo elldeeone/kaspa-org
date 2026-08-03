@@ -1,14 +1,18 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
+
 import { CheckIcon } from "../icons";
-import { formatKas } from "./emissionMath";
-import { getHistoricalMilestones } from "./supplyTimelineData";
+import { SOMPI_PER_KAS } from "./emissionConstants";
+import {
+  getHistoricalMilestones,
+  type HistoricalMilestone,
+} from "./supplyTimelineData";
 import { LiveDot } from "./supplyVisuals";
 
 const GREEN = "#5a9e82";
 const TEAL = "rgb(118, 167, 158)";
-
 function CheckCircle() {
   return (
     <div
@@ -33,7 +37,32 @@ export default function SupplyTimeline({
   expectedSompi,
   isConnected,
 }: SupplyTimelineProps) {
+  const locale = useLocale();
+  const t = useTranslations("home.proof.supply");
   const milestoneData = useMemo(() => getHistoricalMilestones(), []);
+  const integerFormat = useMemo(() => new Intl.NumberFormat(locale), [locale]);
+
+  const formatKas = (sompi: bigint) =>
+    integerFormat.format(sompi / SOMPI_PER_KAS);
+
+  const formatMilestoneDate = (milestone: HistoricalMilestone) => {
+    const startDate = new Date(milestone.date.start);
+    if (milestone.id === "preDeflationary") {
+      const endDate = new Date(milestone.date.end ?? milestone.date.start);
+      return t("timeline.preDeflationary.date", { startDate, endDate });
+    }
+
+    switch (milestone.id) {
+      case "genesis":
+        return t("timeline.genesis.date", { date: startDate });
+      case "checkpoint":
+        return t("timeline.checkpoint.date", { date: startDate });
+      case "chromatic":
+        return t("timeline.chromatic.date", { date: startDate });
+      case "crescendo":
+        return t("timeline.crescendo.date", { date: startDate });
+    }
+  };
 
   return (
     <div className="relative">
@@ -46,19 +75,25 @@ export default function SupplyTimeline({
       <div className="space-y-0">
         {/* Historical milestones */}
         {milestoneData.map((m) => (
-          <div key={m.label} className="relative flex gap-4 pb-6">
+          <div key={m.id} className="relative flex gap-4 pb-6">
             <CheckCircle />
             <div className="min-w-0 pt-0.5">
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-                <span className="text-sm font-medium">{m.label}</span>
-                <span className="text-muted text-xs">{m.date}</span>
+                <span className="text-sm font-medium">
+                  {t(`timeline.${m.id}.label`)}
+                </span>
+                <span className="text-muted text-xs">
+                  {formatMilestoneDate(m)}
+                </span>
               </div>
               <div className="mt-1 font-mono text-sm tracking-tight">
                 {formatKas(m.expectedSompi)}{" "}
-                <span className="text-muted text-xs">KAS</span>
+                <span className="text-muted text-xs">
+                  {t("comparison.unit")}
+                </span>
               </div>
               <p className="text-muted mt-0.5 text-xs leading-relaxed">
-                {m.description}
+                {t(`timeline.${m.id}.description`)}
               </p>
             </div>
           </div>
@@ -72,26 +107,30 @@ export default function SupplyTimeline({
           <div className="min-w-0 pt-0.5">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
               <span className="text-sm font-medium" style={{ color: TEAL }}>
-                Now
+                {t("timeline.now")}
               </span>
-              <span className="text-muted text-xs">live</span>
+              <span className="text-muted text-xs">{t("timeline.live")}</span>
             </div>
             {isConnected && circulatingSompi !== null ? (
               <>
                 <div className="mt-1 font-mono text-sm tracking-tight">
                   {formatKas(circulatingSompi)}{" "}
-                  <span className="text-muted text-xs">KAS circulating</span>
+                  <span className="text-muted text-xs">
+                    {t("timeline.circulating")}
+                  </span>
                 </div>
                 {expectedSompi !== null && (
                   <div className="mt-1 font-mono text-sm tracking-tight">
                     {formatKas(expectedSompi)}{" "}
-                    <span className="text-muted text-xs">KAS expected</span>
+                    <span className="text-muted text-xs">
+                      {t("timeline.expected")}
+                    </span>
                   </div>
                 )}
               </>
             ) : (
               <div className="text-muted mt-1 text-xs">
-                {isConnected ? "Loading..." : "Connecting to node..."}
+                {isConnected ? t("timeline.loading") : t("timeline.connecting")}
               </div>
             )}
           </div>

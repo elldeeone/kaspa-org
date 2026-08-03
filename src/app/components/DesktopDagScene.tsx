@@ -5,10 +5,14 @@ import DagHero from "@/dag-viz/DagHero";
 import DagAnnotation from "./DagAnnotation";
 
 interface DesktopDagSceneProps {
+  annotation: string;
   maskColor: string;
 }
 
-export default function DesktopDagScene({ maskColor }: DesktopDagSceneProps) {
+export default function DesktopDagScene({
+  annotation,
+  maskColor,
+}: DesktopDagSceneProps) {
   return (
     <>
       {/* Live DAG canvas */}
@@ -38,7 +42,7 @@ export default function DesktopDagScene({ maskColor }: DesktopDagSceneProps) {
       />
 
       {/* Hand-scribbled annotation */}
-      <DagAnnotation />
+      <DagAnnotation>{annotation}</DagAnnotation>
     </>
   );
 }

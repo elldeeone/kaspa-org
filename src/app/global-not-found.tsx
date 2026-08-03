@@ -6,7 +6,8 @@ import { getLocale, getTranslations } from "next-intl/server";
 
 import { defaultLocale, getLocaleDefinition, isLocale } from "@/i18n/config";
 import { siteViewport } from "@/i18n/document";
-import { isAiAvailable, siteUrl, structuredDataSchema } from "@/i18n/site";
+import { getSharedClientMessages } from "@/i18n/messages";
+import { createStructuredData, isAiAvailable, siteUrl } from "@/i18n/site";
 
 import NotFoundContent from "./components/NotFoundContent";
 import "./globals.css";
@@ -37,8 +38,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     metadataBase: new URL(siteUrl),
-    title: t("title"),
-    description: t("description"),
+    title: t("metadata.title"),
+    description: t("metadata.description"),
     applicationName: "Kaspa",
     alternates: { canonical: null },
     openGraph: null,
@@ -51,6 +52,8 @@ export default async function GlobalNotFound() {
   const localeCode = await resolveNotFoundLocale();
   const locale = getLocaleDefinition(localeCode);
   const t = await getTranslations({ locale: localeCode, namespace: "errors" });
+  const sharedMessages = getSharedClientMessages(localeCode);
+  const structuredData = createStructuredData(localeCode);
 
   return (
     <html
@@ -63,7 +66,7 @@ export default async function GlobalNotFound() {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredDataSchema),
+            __html: JSON.stringify(structuredData),
           }}
         />
       </head>
@@ -72,16 +75,22 @@ export default async function GlobalNotFound() {
       >
         <NextIntlClientProvider locale={locale.code} messages={null}>
           <Providers>
-            <NotFoundContent
-              global
-              aiAvailable={isAiAvailable("not-found", locale.code)}
-              messages={{
-                code: t("code"),
-                heading: t("heading"),
-                body: t("body"),
-                home: t("home"),
-              }}
-            />
+            <NextIntlClientProvider
+              locale={locale.code}
+              messages={sharedMessages}
+            >
+              <NotFoundContent
+                global
+                locale={locale.code}
+                aiAvailable={isAiAvailable("not-found", locale.code)}
+                messages={{
+                  code: t("page.code"),
+                  heading: t("page.heading"),
+                  body: t("page.body"),
+                  home: t("page.home"),
+                }}
+              />
+            </NextIntlClientProvider>
           </Providers>
         </NextIntlClientProvider>
         <Script

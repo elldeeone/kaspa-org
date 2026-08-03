@@ -1,20 +1,29 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 
-import { parse as parseIcuMessage } from "@formatjs/icu-messageformat-parser";
-
-import { defaultLocale, localeCodes } from "../../src/i18n/config.ts";
+import {
+  defaultLocale,
+  localeCodes,
+  pseudoLocale,
+} from "../../src/i18n/config.ts";
 import {
   RESERVED_NOT_FOUND_PATHNAME,
   routeIds,
   stablePathnames,
 } from "../../src/i18n/manifest.ts";
 import {
+  getRouteDefinition,
   listPublishedLocales,
   resolvePublishedRoute,
 } from "../../src/i18n/site.ts";
 import { shouldBypassLocaleRouting } from "../../src/i18n/proxy-policy.ts";
 import { analyzeAppRouteFile, isAppRouteFile } from "./app-route-policy.mts";
+import {
+  compareCatalogs,
+  flattenCatalog,
+  validateCatalogSource,
+  type MessageCatalog,
+} from "./catalog-contract.mts";
 
 const repositoryRoot = process.cwd();
 const errors: string[] = [];
@@ -31,202 +40,125 @@ function listSourceFiles(directory: string): string[] {
   });
 }
 
-class JsonKeyScanner {
-  private index = 0;
-  private readonly source: string;
-  private readonly location: string;
-
-  constructor(source: string, location: string) {
-    this.source = source;
-    this.location = location;
-  }
-
-  scan() {
-    this.skipWhitespace();
-    this.scanValue([]);
-    this.skipWhitespace();
-    if (this.index !== this.source.length) {
-      throw new Error(`unexpected token at offset ${this.index}`);
-    }
-  }
-
-  private scanValue(path: string[]) {
-    this.skipWhitespace();
-    const token = this.source[this.index];
-    if (token === "{") return this.scanObject(path);
-    if (token === "[") return this.scanArray(path);
-    if (token === '"') {
-      this.scanString();
-      return;
-    }
-    this.scanPrimitive();
-  }
-
-  private scanObject(path: string[]) {
-    this.index += 1;
-    this.skipWhitespace();
-    const keys = new Set<string>();
-    if (this.source[this.index] === "}") {
-      this.index += 1;
-      return;
-    }
-
-    while (this.index < this.source.length) {
-      if (this.source[this.index] !== '"') {
-        throw new Error(`expected an object key at offset ${this.index}`);
-      }
-      const key = this.scanString();
-      const keyPath = [...path, key].join(".");
-      if (keys.has(key)) fail(this.location, `duplicate JSON key ${keyPath}`);
-      keys.add(key);
-
-      this.skipWhitespace();
-      if (this.source[this.index] !== ":") {
-        throw new Error(`expected ':' at offset ${this.index}`);
-      }
-      this.index += 1;
-      this.scanValue([...path, key]);
-      this.skipWhitespace();
-
-      if (this.source[this.index] === "}") {
-        this.index += 1;
-        return;
-      }
-      if (this.source[this.index] !== ",") {
-        throw new Error(`expected ',' at offset ${this.index}`);
-      }
-      this.index += 1;
-      this.skipWhitespace();
-    }
-
-    throw new Error("unterminated object");
-  }
-
-  private scanArray(path: string[]) {
-    this.index += 1;
-    this.skipWhitespace();
-    if (this.source[this.index] === "]") {
-      this.index += 1;
-      return;
-    }
-
-    let itemIndex = 0;
-    while (this.index < this.source.length) {
-      this.scanValue([...path, String(itemIndex)]);
-      itemIndex += 1;
-      this.skipWhitespace();
-      if (this.source[this.index] === "]") {
-        this.index += 1;
-        return;
-      }
-      if (this.source[this.index] !== ",") {
-        throw new Error(`expected ',' at offset ${this.index}`);
-      }
-      this.index += 1;
-      this.skipWhitespace();
-    }
-
-    throw new Error("unterminated array");
-  }
-
-  private scanString() {
-    const start = this.index;
-    this.index += 1;
-    while (this.index < this.source.length) {
-      const token = this.source[this.index];
-      if (token === "\\") {
-        this.index += 2;
-        continue;
-      }
-      this.index += 1;
-      if (token === '"') {
-        return JSON.parse(this.source.slice(start, this.index)) as string;
-      }
-    }
-    throw new Error("unterminated string");
-  }
-
-  private scanPrimitive() {
-    const start = this.index;
-    while (
-      this.index < this.source.length &&
-      !/[\s,}\]]/u.test(this.source[this.index] ?? "")
-    ) {
-      this.index += 1;
-    }
-    JSON.parse(this.source.slice(start, this.index));
-  }
-
-  private skipWhitespace() {
-    while (/\s/u.test(this.source[this.index] ?? "")) this.index += 1;
+const requiredNamespaces = new Set<string>(["errors", "shared"]);
+for (const routeId of routeIds) {
+  for (const namespace of getRouteDefinition(routeId).namespaces) {
+    requiredNamespaces.add(namespace);
   }
 }
 
-function validateMessages(
-  value: unknown,
-  location: string,
-  path: string[] = [],
-) {
-  if (typeof value === "string") {
-    if (!value.trim()) fail(location, `${path.join(".")} must not be empty`);
-    try {
-      parseIcuMessage(value);
-    } catch (error) {
+const messagesDirectory = join(repositoryRoot, "messages");
+const sourceDirectory = join(messagesDirectory, defaultLocale);
+const sourceNamespaces = readdirSync(sourceDirectory, { withFileTypes: true })
+  .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
+  .map((entry) => entry.name.slice(0, -".json".length))
+  .sort();
+const sourceCatalogs = new Map<string, MessageCatalog>();
+for (const namespace of sourceNamespaces) {
+  const location = `messages/${defaultLocale}/${namespace}.json`;
+  const catalogPath = join(repositoryRoot, location);
+  const result = validateCatalogSource(
+    readFileSync(catalogPath, "utf8"),
+    location,
+  );
+  errors.push(...result.errors);
+  if (result.catalog) sourceCatalogs.set(namespace, result.catalog);
+}
+for (const namespace of [...requiredNamespaces].sort()) {
+  const location = `messages/${defaultLocale}/${namespace}.json`;
+  if (!existsSync(join(repositoryRoot, location))) {
+    fail(location, "required source catalog is missing");
+  }
+}
+
+const requiredSemanticKeys = {
+  errors: [
+    "metadata.title",
+    "metadata.description",
+    "page.code",
+    "page.heading",
+    "page.body",
+    "page.home",
+  ],
+  home: [
+    "metadata.title",
+    "metadata.description",
+    "openGraph.imageAlt",
+    "openGraph.heading",
+    "openGraph.tagline",
+  ],
+} as const;
+
+for (const [namespace, keys] of Object.entries(requiredSemanticKeys)) {
+  const catalog = sourceCatalogs.get(namespace);
+  if (!catalog) continue;
+  const flattened = flattenCatalog(catalog);
+  for (const key of keys) {
+    if (!flattened.has(key)) {
       fail(
-        location,
-        `${path.join(".")} has invalid ICU syntax: ${String(error)}`,
+        `messages/${defaultLocale}/${namespace}.json`,
+        `missing required ${namespace}.${key}`,
       );
     }
-    return;
   }
+}
 
-  if (!value || Array.isArray(value) || typeof value !== "object") {
-    fail(
+const catalogLocales = readdirSync(messagesDirectory, {
+  withFileTypes: true,
+})
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
+  .sort();
+
+for (const locale of catalogLocales) {
+  if (locale === defaultLocale || /-XA$/iu.test(locale)) continue;
+  const localeDirectory = join(messagesDirectory, locale);
+  const targetNamespaces = readdirSync(localeDirectory, {
+    withFileTypes: true,
+  })
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
+    .map((entry) => entry.name.slice(0, -".json".length))
+    .sort();
+  for (const namespace of targetNamespaces) {
+    const location = `messages/${locale}/${namespace}.json`;
+    const catalogPath = join(repositoryRoot, location);
+    const sourceCatalog = sourceCatalogs.get(namespace);
+    if (!sourceCatalog) {
+      fail(location, "target namespace has no English source catalog");
+      continue;
+    }
+    const result = validateCatalogSource(
+      readFileSync(catalogPath, "utf8"),
       location,
-      `${path.join(".") || "catalog"} must be an object or string`,
     );
-    return;
-  }
-
-  for (const [key, child] of Object.entries(value)) {
-    validateMessages(child, location, [...path, key]);
+    errors.push(...result.errors);
+    if (result.catalog) {
+      for (const issue of compareCatalogs(sourceCatalog, result.catalog)) {
+        fail(location, issue);
+      }
+    }
   }
 }
 
 for (const locale of localeCodes) {
-  const catalogPath = join(repositoryRoot, "messages", locale, "errors.json");
-  const location = `messages/${locale}/errors.json`;
-  if (!existsSync(catalogPath)) {
-    fail(location, "required Phase 1 catalog is missing");
+  if (locale === pseudoLocale) continue;
+  if (!catalogLocales.includes(locale)) {
+    fail(`messages/${locale}`, "enabled locale catalog directory is missing");
     continue;
   }
-
-  const source = readFileSync(catalogPath, "utf8");
-  try {
-    new JsonKeyScanner(source, location).scan();
-    const catalog = JSON.parse(source) as Record<string, unknown>;
-    validateMessages(catalog, location);
-    for (const key of [
-      "title",
-      "description",
-      "code",
-      "heading",
-      "body",
-      "home",
-    ]) {
-      if (typeof catalog[key] !== "string")
-        fail(location, `missing errors.${key}`);
+  const requiredForLocale = new Set<string>(["errors", "shared"]);
+  for (const routeId of routeIds) {
+    if (!listPublishedLocales(routeId).includes(locale)) continue;
+    for (const namespace of getRouteDefinition(routeId).namespaces) {
+      requiredForLocale.add(namespace);
     }
-  } catch (error) {
-    fail(location, `invalid JSON: ${String(error)}`);
   }
-}
-
-if (localeCodes.some((locale) => /-XA$/iu.test(locale))) {
-  fail(
-    "src/i18n/config.ts",
-    "pseudo-locales must not be enabled in production",
-  );
+  for (const namespace of [...requiredForLocale].sort()) {
+    const location = `messages/${locale}/${namespace}.json`;
+    if (!existsSync(join(repositoryRoot, location))) {
+      fail(location, "required enabled route-locale catalog is missing");
+    }
+  }
 }
 
 if (
@@ -356,6 +288,6 @@ if (errors.length) {
   process.exitCode = 1;
 } else {
   console.log(
-    `i18n validation passed: ${localeCodes.length} locale, ${routeIds.length} routes, Phase 1 catalogs and adapters valid`,
+    `i18n validation passed: ${localeCodes.length} locale, ${routeIds.length} routes, Phase 2 catalog and route contracts valid`,
   );
 }

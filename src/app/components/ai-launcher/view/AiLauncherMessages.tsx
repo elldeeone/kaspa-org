@@ -1,4 +1,5 @@
 import type { RefObject } from "react";
+import { useTranslations } from "next-intl";
 import ReactMarkdown from "react-markdown";
 
 import type { Message } from "../types";
@@ -84,6 +85,8 @@ export function AiLauncherMessages({
   messagesEndRef,
   onCopy,
 }: AiLauncherMessagesProps): React.JSX.Element {
+  const t = useTranslations("shared.ai.launcher");
+
   return (
     <div className="mx-auto max-w-3xl space-y-5 py-6">
       {messages.map((message) => {
@@ -124,10 +127,7 @@ export function AiLauncherMessages({
                   {parsedAnswer?.sources ? (
                     <details className="ai-sources">
                       <summary>
-                        Sources
-                        {parsedAnswer.sourceCount > 0
-                          ? ` (${parsedAnswer.sourceCount})`
-                          : ""}
+                        {t("sources", { count: parsedAnswer.sourceCount })}
                       </summary>
                       <div className="ai-prose ai-sources-content">
                         <MarkdownContent markdown={parsedAnswer.sources} />
@@ -144,7 +144,7 @@ export function AiLauncherMessages({
                       className="rounded-md border px-2.5 py-1 text-[12px] text-[var(--text-secondary)] transition-colors"
                       style={{ borderColor: "var(--border-subtle)" }}
                     >
-                      {copiedMessageId === message.id ? "copied" : "copy"}
+                      {copiedMessageId === message.id ? t("copied") : t("copy")}
                     </button>
                   </div>
                 </>

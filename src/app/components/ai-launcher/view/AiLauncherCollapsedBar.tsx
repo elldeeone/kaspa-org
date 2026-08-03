@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+
 import { SparklesIcon } from "../../icons";
 import { ChevronUpIcon } from "../icons";
 
@@ -8,6 +10,8 @@ type AiLauncherCollapsedBarProps = {
 export function AiLauncherCollapsedBar({
   onOpen,
 }: AiLauncherCollapsedBarProps): React.JSX.Element {
+  const t = useTranslations("shared.ai.launcher");
+
   return (
     <button
       type="button"
@@ -28,7 +32,7 @@ export function AiLauncherCollapsedBar({
           <SparklesIcon size={15} />
         </span>
         <span className="silver-sweep-text text-[13px] font-medium">
-          Ask anything
+          {t("askAnything")}
         </span>
         <span className="text-[var(--text-muted)] transition-colors group-hover:text-[var(--text-secondary)]">
           <ChevronUpIcon size={14} />

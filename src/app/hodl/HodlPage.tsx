@@ -1,8 +1,7 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, type ReactNode } from "react";
 
-import AiLauncherEntry from "../components/AiLauncherEntry";
 import MarketingPageShell from "../components/MarketingPageShell";
 import { openKaspaAi } from "../components/aiLauncherEvents";
 import PageSectionsNav from "../components/page-sections/PageSectionsNav";
@@ -16,7 +15,13 @@ import TransferSection from "./sections/TransferSection";
 import WalletSection from "./sections/WalletSection";
 import { StepConnector } from "./ui";
 
-export default function HodlPage({ aiAvailable }: { aiAvailable: boolean }) {
+export default function HodlPage({
+  aiAvailable,
+  aiLauncher,
+}: {
+  aiAvailable: boolean;
+  aiLauncher?: ReactNode;
+}) {
   const walletHeadingRef = useRef<HTMLHeadingElement | null>(null);
   const buyHeadingRef = useRef<HTMLHeadingElement | null>(null);
   const transferHeadingRef = useRef<HTMLHeadingElement | null>(null);
@@ -55,7 +60,7 @@ export default function HodlPage({ aiAvailable }: { aiAvailable: boolean }) {
   };
 
   return (
-    <MarketingPageShell afterFooter={aiAvailable ? <AiLauncherEntry /> : null}>
+    <MarketingPageShell afterFooter={aiLauncher}>
       <PageSectionsNav<UseSectionId>
         sheetId="mobile-section-sheet-hodl"
         sectionLinks={sectionLinks}

@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/link";
+import type { Locale } from "@/i18n/config";
 
-import AiLauncherEntry from "./AiLauncherEntry";
+import LocalizedAiLauncherEntry from "./LocalizedAiLauncherEntry";
 import { ArrowUpRightIcon } from "./icons";
 import MarketingPageShell from "./MarketingPageShell";
 
@@ -14,16 +15,20 @@ export type NotFoundMessages = {
 export default function NotFoundContent({
   messages,
   aiAvailable,
+  locale,
   global = false,
 }: {
   messages: NotFoundMessages;
   aiAvailable: boolean;
+  locale: Locale;
   global?: boolean;
 }) {
   return (
     <div data-kaspa-global-not-found={global ? "true" : undefined}>
       <MarketingPageShell
-        afterFooter={aiAvailable ? <AiLauncherEntry /> : null}
+        afterFooter={
+          aiAvailable ? <LocalizedAiLauncherEntry locale={locale} /> : null
+        }
       >
         <section className="relative overflow-hidden px-6 pt-28 pb-20 md:px-12 lg:px-20 lg:pt-36">
           <div className="pointer-events-none absolute inset-x-0 top-0 h-[520px]">

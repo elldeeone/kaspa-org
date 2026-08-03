@@ -3,7 +3,10 @@ import {
   ROUTE_MISS_HEADER,
   isRoutePublished,
 } from "./manifest.ts";
-import { NEXT_INTL_LOCALE_HEADER, resolveRouteRequest } from "./site.ts";
+import {
+  NEXT_INTL_LOCALE_HEADER,
+  resolveRouteRequest,
+} from "./route-request.ts";
 
 export function sanitizeRoutingHeaders(headers: HeadersInit): Headers {
   const sanitized = new Headers(headers);

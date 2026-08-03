@@ -50,5 +50,7 @@ export default async function HomeRoute({
 }) {
   const { locale } = resolvePageRoute((await params).locale);
   setRequestLocale(locale);
-  return <HomePage aiAvailable={isAiAvailable(routeId, locale)} />;
+  return (
+    <HomePage locale={locale} aiAvailable={isAiAvailable(routeId, locale)} />
+  );
 }

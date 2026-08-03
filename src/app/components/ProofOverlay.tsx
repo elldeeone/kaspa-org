@@ -1,6 +1,7 @@
 "use client";
 
 import SupplyGadgetLoader from "./supply-gadget/SupplyGadgetLoader";
+import { useTranslations } from "next-intl";
 import { createPortal } from "react-dom";
 import {
   type ReactNode,
@@ -10,6 +11,7 @@ import {
   useState,
 } from "react";
 import { useBodyScrollLock } from "./useBodyScrollLock";
+import { useDialogFocusTrap } from "./useDialogFocusTrap";
 
 const GREEN = "#5a9e82";
 const TEAL = "rgb(118, 167, 158)";
@@ -18,7 +20,7 @@ const ARAMAIC_BEFORE = "ומה די עליך ועל אחיך ייטב בשאר "
 const ARAMAIC_HIGHLIGHT = "כספא";
 const ARAMAIC_AFTER = " ודהבה למעבד כרעות אלהכם תעבדון";
 
-const SECTION_NAMES = ["Live", "Origin", "Run it"] as const;
+const SECTION_IDS = ["live", "origin", "runIt"] as const;
 
 function SurfaceCard({
   children,
@@ -42,7 +44,9 @@ export default function ProofOverlay({
 }: {
   onClose: () => void;
 }): React.JSX.Element | null {
+  const t = useTranslations("home.proof");
   const [visible, setVisible] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activeSection, setActiveSection] = useState(0);
@@ -66,6 +70,7 @@ export default function ProofOverlay({
   }, []);
 
   useBodyScrollLock(true);
+  useDialogFocusTrap(dialogRef);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -124,7 +129,12 @@ export default function ProofOverlay({
 
   const overlay = (
     <div
+      ref={dialogRef}
       className="fixed inset-0 z-[120] overflow-hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-label={t("chrome.title")}
+      tabIndex={-1}
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(12px)",
@@ -142,6 +152,7 @@ export default function ProofOverlay({
       >
         <button
           onClick={handleClose}
+          autoFocus
           className="text-secondary hover:text-primary flex items-center gap-2 text-[14px] transition-colors"
         >
           <svg width={14} height={14} viewBox="0 0 14 14" fill="none">
@@ -153,44 +164,47 @@ export default function ProofOverlay({
               strokeLinejoin="round"
             />
           </svg>
-          Back
+          {t("chrome.back")}
         </button>
         <span className="text-muted ml-auto text-[12px] font-semibold tracking-[0.14em] uppercase">
-          Verify the proof
+          {t("chrome.title")}
         </span>
       </div>
 
       {/* ── Section dots ── */}
       <nav
         className="fixed top-1/2 right-4 z-[130] hidden -translate-y-1/2 flex-col items-end gap-3 md:flex"
-        aria-label="Proof sections"
+        aria-label={t("chrome.sectionsAria")}
       >
-        {SECTION_NAMES.map((name, i) => (
-          <button
-            key={name}
-            onClick={() => jumpToSection(i)}
-            className="group flex items-center gap-2"
-            aria-label={`Jump to ${name}`}
-          >
-            <span
-              className="text-[10px] tracking-[0.12em] uppercase opacity-0 transition-opacity group-hover:opacity-100"
-              style={{
-                color: i === activeSection ? TEAL : "var(--text-muted)",
-              }}
+        {SECTION_IDS.map((sectionId, i) => {
+          const sectionName = t(`sections.${sectionId}`);
+          return (
+            <button
+              key={sectionId}
+              onClick={() => jumpToSection(i)}
+              className="group flex items-center gap-2"
+              aria-label={t("chrome.jumpToSection", { section: sectionName })}
             >
-              {name}
-            </span>
-            <span
-              className="block rounded-full transition-all"
-              style={{
-                width: i === activeSection ? 8 : 5,
-                height: i === activeSection ? 8 : 5,
-                background: i === activeSection ? TEAL : "var(--text-muted)",
-                opacity: i === activeSection ? 1 : 0.4,
-              }}
-            />
-          </button>
-        ))}
+              <span
+                className="text-[10px] tracking-[0.12em] uppercase opacity-0 transition-opacity group-hover:opacity-100"
+                style={{
+                  color: i === activeSection ? TEAL : "var(--text-muted)",
+                }}
+              >
+                {sectionName}
+              </span>
+              <span
+                className="block rounded-full transition-all"
+                style={{
+                  width: i === activeSection ? 8 : 5,
+                  height: i === activeSection ? 8 : 5,
+                  background: i === activeSection ? TEAL : "var(--text-muted)",
+                  opacity: i === activeSection ? 1 : 0.4,
+                }}
+              />
+            </button>
+          );
+        })}
       </nav>
 
       <div
@@ -204,17 +218,13 @@ export default function ProofOverlay({
               className="text-[11px] font-semibold tracking-[0.18em] uppercase"
               style={{ color: GREEN }}
             >
-              Historical · Current · Continuous
+              {t("live.eyebrow")}
             </p>
             <h2 className="text-primary mt-2 text-[24px] leading-[1.1] font-semibold tracking-[-0.02em] md:text-[30px]">
-              Live supply vs. emission schedule
+              {t("live.title")}
             </h2>
             <p className="text-secondary mt-4 text-[15px] leading-[1.75]">
-              Kaspa&apos;s circulating supply is recomputable from first
-              principles. A live node reports the current total. The historical
-              total at the Nov 22, 2021 checkpoint is committed to by the
-              hardwired genesis via its UTXO set, and every coin issued after
-              that checkpoint follows the deterministic emission schedule.
+              {t("live.body")}
             </p>
             <div className="mt-6 mb-4">
               <SupplyGadgetLoader showIntro={false} />
@@ -230,32 +240,31 @@ export default function ProofOverlay({
               className="text-[11px] font-semibold tracking-[0.18em] uppercase"
               style={{ color: TEAL }}
             >
-              Origin
+              {t("origin.eyebrow")}
             </p>
             <h2 className="text-primary mt-2 text-[24px] leading-[1.1] font-semibold tracking-[-0.02em] md:text-[30px]">
-              Where the supply begins
+              {t("origin.title")}
             </h2>
 
             <p className="text-secondary mt-6 text-[15px] leading-[1.75]">
-              Every coin traces back to a single block where the supply was{" "}
-              <strong className="text-primary">zero</strong>. Its UTXO
-              commitment is the mathematical fingerprint of an empty set, the
-              same constant on any machine that computes it. Supply starts here,
-              and every coin since is scheduled emission, not allocation.
+              {t.rich("origin.supplyBody", {
+                strong: (chunks) => (
+                  <strong className="text-primary">{chunks}</strong>
+                ),
+              })}
             </p>
 
             <p className="text-secondary mt-5 text-[15px] leading-[1.75]">
-              Inside that block&apos;s coinbase is a verse from{" "}
-              <strong className="text-primary">Ezra 7:18</strong>, written in
-              Aramaic, celebrating the values of liberty promoted by the ancient
-              Persian kings.
+              {t.rich("origin.verseBody", {
+                reference: (chunks) => (
+                  <strong className="text-primary">{chunks}</strong>
+                ),
+              })}
             </p>
 
             <SurfaceCard className="mt-6 text-center">
               <p className="text-primary text-[15px] leading-[1.75] italic">
-                &ldquo;And whatever seems good to you and your brothers to do
-                with the rest of the silver and gold, do according to the will
-                of your God.&rdquo;
+                {t("origin.translatedQuotation")}
               </p>
               <p
                 className="mt-3 text-[9px] leading-[1.7] opacity-50 md:text-[10px]"
@@ -268,15 +277,16 @@ export default function ProofOverlay({
                 {ARAMAIC_AFTER}
               </p>
               <p className="text-muted mt-1.5 text-[12px]">
-                Ezra 7:18, in the genesis coinbase
+                {t("origin.quotationAttribution")}
               </p>
             </SurfaceCard>
 
             <p className="text-secondary mt-6 text-[15px] leading-[1.75]">
-              The coinbase also carries the hash of{" "}
-              <strong className="text-primary">Bitcoin block #708,639</strong>,
-              proving the block was produced after that point in time, with no
-              premine.
+              {t.rich("origin.timestampBody", {
+                bitcoinBlock: (chunks) => (
+                  <strong className="text-primary">{chunks}</strong>
+                ),
+              })}
             </p>
           </section>
 
@@ -289,27 +299,20 @@ export default function ProofOverlay({
               className="text-[11px] font-semibold tracking-[0.18em] uppercase"
               style={{ color: GREEN }}
             >
-              Don&apos;t trust, verify
+              {t("run.eyebrow")}
             </p>
             <h2 className="text-primary mt-2 text-[24px] leading-[1.1] font-semibold tracking-[-0.02em] md:text-[30px]">
-              Run it yourself
+              {t("run.title")}
             </h2>
             <p className="text-secondary mt-6 text-[15px] leading-[1.75]">
-              Reproduce the proof from genesis to the current tip. The notebook
-              walks the chain of pruning-point block hashes back to genesis,
-              verifies the UTXO commitment against the empty-set fingerprint,
-              and checks the anchoring Bitcoin block hashes. To read the
-              historical supply at the Nov 22, 2021 checkpoint as a number, one
-              extra derivation step sums the proof-committed UTXO set.
+              {t("run.intro")}
             </p>
             <SurfaceCard className="mt-6">
               <h3 className="text-primary text-[17px] font-semibold tracking-[-0.01em]">
-                The proof notebook
+                {t("run.notebookTitle")}
               </h3>
               <p className="text-secondary mt-2 text-[15px] leading-[1.75]">
-                Clone, run, inspect. The notebook verifies the genesis and
-                checkpoint linkage but does not itself print the historical
-                supply number.
+                {t("run.notebookBody")}
               </p>
               <a
                 href="https://github.com/kaspagang/kaspad-py-explorer/blob/main/src/genesis_proof.ipynb"
@@ -317,80 +320,86 @@ export default function ProofOverlay({
                 rel="noopener noreferrer"
                 className="btn-primary mt-5 inline-flex"
               >
-                Open on GitHub
+                {t("run.notebookAction")}
               </a>
             </SurfaceCard>
 
             <SurfaceCard className="mt-6">
               <h3 className="text-primary text-[17px] font-semibold tracking-[-0.01em]">
-                Verify the checkpoint total
+                {t("run.checkpointTitle")}
               </h3>
               <ol className="text-secondary mt-4 list-decimal space-y-3 pl-5 text-[14px] leading-[1.75]">
+                <li>{t("run.checkpointStep1")}</li>
                 <li>
-                  Run the notebook to verify the hardwired genesis, checkpoint
-                  linkage, empty-set origin, and Bitcoin anchors.
+                  {t.rich("run.checkpointStep2", {
+                    kaspad: (chunks) => (
+                      <a
+                        href="https://github.com/kaspanet/kaspad/tree/v0.11.5-2"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary underline decoration-[rgba(118,167,158,0.45)] underline-offset-4"
+                      >
+                        {chunks}
+                      </a>
+                    ),
+                    processor: (chunks) => (
+                      <a
+                        href="https://github.com/kaspanet/kaspad/blob/v0.11.5-2/domain/consensus/processes/blockprocessor/validate_and_insert_block.go"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary underline decoration-[rgba(118,167,158,0.45)] underline-offset-4"
+                      >
+                        {chunks}
+                      </a>
+                    ),
+                    code: (chunks) => (
+                      <code className="rounded bg-[rgba(118,167,158,0.08)] px-1.5 py-0.5 text-[12px]">
+                        {chunks}
+                      </code>
+                    ),
+                  })}
                 </li>
                 <li>
-                  Open historical{" "}
-                  <a
-                    href="https://github.com/kaspanet/kaspad/tree/v0.11.5-2"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary underline decoration-[rgba(118,167,158,0.45)] underline-offset-4"
-                  >
-                    kaspad v0.11.5-2
-                  </a>{" "}
-                  and note that{" "}
-                  <a
-                    href="https://github.com/kaspanet/kaspad/blob/v0.11.5-2/domain/consensus/processes/blockprocessor/validate_and_insert_block.go"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary underline decoration-[rgba(118,167,158,0.45)] underline-offset-4"
-                  >
-                    the block processor
-                  </a>{" "}
-                  loads and verifies the embedded checkpoint{" "}
-                  <code className="rounded bg-[rgba(118,167,158,0.08)] px-1.5 py-0.5 text-[12px]">
-                    utxos.gz
-                  </code>{" "}
-                  against the hardwired genesis UTXO commitment.
+                  {t.rich("run.checkpointStep3", {
+                    utxos: (chunks) => (
+                      <a
+                        href="https://github.com/kaspanet/kaspad/blob/v0.11.5-2/domain/consensus/processes/blockprocessor/resources/utxos.gz"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary underline decoration-[rgba(118,167,158,0.45)] underline-offset-4"
+                      >
+                        {chunks}
+                      </a>
+                    ),
+                    serialization: (chunks) => (
+                      <a
+                        href="https://github.com/kaspanet/kaspad/blob/v0.11.5-2/domain/consensus/utils/utxo/serialization.go"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary underline decoration-[rgba(118,167,158,0.45)] underline-offset-4"
+                      >
+                        {chunks}
+                      </a>
+                    ),
+                  })}
                 </li>
                 <li>
-                  Parse{" "}
-                  <a
-                    href="https://github.com/kaspanet/kaspad/blob/v0.11.5-2/domain/consensus/processes/blockprocessor/resources/utxos.gz"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary underline decoration-[rgba(118,167,158,0.45)] underline-offset-4"
-                  >
-                    utxos.gz
-                  </a>{" "}
-                  using the format in{" "}
-                  <a
-                    href="https://github.com/kaspanet/kaspad/blob/v0.11.5-2/domain/consensus/utils/utxo/serialization.go"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary underline decoration-[rgba(118,167,158,0.45)] underline-offset-4"
-                  >
-                    serialization.go
-                  </a>{" "}
-                  and sum every UTXO amount.
-                </li>
-                <li>
-                  That sum is the historical supply at checkpoint DAA{" "}
-                  <code className="rounded bg-[rgba(118,167,158,0.08)] px-1.5 py-0.5 text-[12px]">
-                    1,312,860
-                  </code>{" "}
-                  (Nov 22, 2021):
-                  <code className="ml-1 rounded bg-[rgba(118,167,158,0.08)] px-1.5 py-0.5 text-[12px]">
-                    984,222,544.04487171 KAS
-                  </code>
+                  {t.rich("run.checkpointStep4", {
+                    daa: (chunks) => (
+                      <code className="rounded bg-[rgba(118,167,158,0.08)] px-1.5 py-0.5 text-[12px]">
+                        {chunks}
+                      </code>
+                    ),
+                    supply: (chunks) => (
+                      <code className="ml-1 rounded bg-[rgba(118,167,158,0.08)] px-1.5 py-0.5 text-[12px]">
+                        {chunks}
+                      </code>
+                    ),
+                  })}
                 </li>
               </ol>
               <p className="text-muted mt-4 text-[12px] leading-[1.7]">
-                From this point forward, issuance is deterministic. Adding the
-                scheduled issuance since the checkpoint gives the expected
-                supply at any DAA, which should match what a live node reports.
+                {t("run.checkpointNote")}
               </p>
             </SurfaceCard>
           </section>

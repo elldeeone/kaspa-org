@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
-import AiLauncherEntry from "../components/AiLauncherEntry";
 import MarketingPageShell from "../components/MarketingPageShell";
 import { openKaspaAi } from "../components/aiLauncherEvents";
 import PageSectionsNav from "../components/page-sections/PageSectionsNav";
@@ -22,7 +21,13 @@ import StartSection from "./sections/StartSection";
 import ToolingSection from "./sections/ToolingSection";
 import TryLiveSection from "./sections/TryLiveSection";
 
-export default function BuildPage({ aiAvailable }: { aiAvailable: boolean }) {
+export default function BuildPage({
+  aiAvailable,
+  aiLauncher,
+}: {
+  aiAvailable: boolean;
+  aiLauncher?: ReactNode;
+}) {
   const [activeExampleId, setActiveExampleId] =
     useState<BrowserExample["id"]>("server-info");
 
@@ -36,7 +41,7 @@ export default function BuildPage({ aiAvailable }: { aiAvailable: boolean }) {
   };
 
   return (
-    <MarketingPageShell afterFooter={aiAvailable ? <AiLauncherEntry /> : null}>
+    <MarketingPageShell afterFooter={aiLauncher}>
       <PageSectionsNav<SectionId>
         sheetId="mobile-section-sheet"
         sectionLinks={sectionLinks}

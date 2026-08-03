@@ -15,6 +15,7 @@ async function main() {
   const server = await startProductionServer(process.cwd());
 
   try {
+    let routeCount = 0;
     const request = async (
       pathname: string,
       expectedStatus: number,
@@ -24,6 +25,7 @@ async function main() {
         headers,
         redirect: "manual",
       });
+      routeCount += 1;
       assert.equal(response.status, expectedStatus, pathname);
       return response;
     };
@@ -45,6 +47,10 @@ async function main() {
       "/_vercel/missing",
       RESERVED_NOT_FOUND_PATHNAME,
       "/en/opengraph-image",
+      "/en-XA",
+      "/en-XA/lore",
+      "/en-XA/missing",
+      "/en-XA/opengraph-image",
     ]) {
       const response = await request(pathname, 404, {
         [ROUTE_MISS_HEADER]: "1",
@@ -56,6 +62,9 @@ async function main() {
     }
 
     await request("/api/ask", 405);
+    const proofCatalog = await request("/api/i18n/home-proof/en", 200);
+    assert.match(await proofCatalog.text(), /"trigger":"Verify the proof"/u);
+    await request("/api/i18n/home-proof/en-XA", 404);
     await request("/icon.svg", 200);
     await request("/opengraph-image", 200);
     await delay(250);
@@ -70,7 +79,7 @@ async function main() {
     }
 
     console.log(
-      "i18n production smoke: 18 routes passed with a clean server log",
+      `i18n production smoke: ${routeCount} routes passed with a clean server log`,
     );
   } finally {
     await server.stop();

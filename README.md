@@ -112,6 +112,26 @@ npm run test:e2e:headed
 npm run test:e2e:ui
 ```
 
+Phase 2 keeps the `en-XA` pseudo-locale private. Generate its deterministic
+catalog artifact and run its preview-build browser gate with:
+
+```bash
+npm run i18n:pseudo:generate
+npm run test:e2e:i18n:pseudo
+```
+
+For a manual local preview, build and start with the preview target, then open
+`http://localhost:3000/en-XA`:
+
+```bash
+NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview npm run build
+NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview npm start
+```
+
+Set `NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview` only in Vercel Preview. Leave
+it unset or set it to `production` in Vercel Production; the production build
+fails closed if the private pseudo-locale is enabled there.
+
 ## CI
 
 GitHub Actions lives at `.github/workflows/ci.yml` and runs:
@@ -123,8 +143,10 @@ GitHub Actions lives at `.github/workflows/ci.yml` and runs:
 - `npm run types:check`
 - `npm run build`
 - `npm run test:e2e`
+- `npm run test:e2e:i18n:pseudo`
 
-The Playwright job uploads `playwright-report/` and `test-results/` as artifacts when the smoke suite fails.
+The Playwright job uploads `playwright-report/` and `test-results/` as artifacts
+when either browser suite fails.
 
 ## Project Notes
 

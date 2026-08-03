@@ -122,6 +122,7 @@ async function stopServer(
 
 export async function startProductionServer(
   cwd: string,
+  environment: Readonly<Record<string, string | undefined>> = {},
 ): Promise<ProductionServer> {
   const port = await reservePort();
   const child = spawn(
@@ -130,7 +131,11 @@ export async function startProductionServer(
     {
       cwd,
       detached: process.platform !== "win32",
-      env: { ...process.env, NEXT_TELEMETRY_DISABLED: "1" },
+      env: {
+        ...process.env,
+        ...environment,
+        NEXT_TELEMETRY_DISABLED: "1",
+      },
       stdio: "pipe",
     },
   );

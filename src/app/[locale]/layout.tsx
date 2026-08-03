@@ -6,7 +6,8 @@ import { setRequestLocale } from "next-intl/server";
 
 import { getLocaleDefinition, isLocale } from "@/i18n/config";
 import { siteViewport } from "@/i18n/document";
-import { structuredDataSchema } from "@/i18n/site";
+import { getSharedClientMessages } from "@/i18n/messages";
+import { createStructuredData } from "@/i18n/site";
 
 import "../globals.css";
 import Providers from "../providers";
@@ -37,6 +38,8 @@ export default async function LocaleLayout({
 
   setRequestLocale(requestedLocale);
   const locale = getLocaleDefinition(requestedLocale);
+  const sharedMessages = getSharedClientMessages(requestedLocale);
+  const structuredData = createStructuredData(requestedLocale);
 
   return (
     <html
@@ -49,7 +52,7 @@ export default async function LocaleLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredDataSchema),
+            __html: JSON.stringify(structuredData),
           }}
         />
       </head>
@@ -57,7 +60,14 @@ export default async function LocaleLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextIntlClientProvider locale={locale.code} messages={null}>
-          <Providers>{children}</Providers>
+          <Providers>
+            <NextIntlClientProvider
+              locale={locale.code}
+              messages={sharedMessages}
+            >
+              {children}
+            </NextIntlClientProvider>
+          </Providers>
         </NextIntlClientProvider>
         <Script
           src="https://rybbit.kasmedia.com/api/script.js"

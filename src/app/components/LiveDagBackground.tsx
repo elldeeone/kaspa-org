@@ -8,7 +8,11 @@ const DesktopDagScene = dynamic(() => import("./DesktopDagScene"), {
   ssr: false,
 });
 
-export default function LiveDagBackground() {
+export default function LiveDagBackground({
+  annotation,
+}: {
+  annotation: string;
+}) {
   const { resolvedTheme } = useTheme();
   const [showDag, setShowDag] = useState(false);
 
@@ -51,7 +55,7 @@ export default function LiveDagBackground() {
 
   return (
     <div className="pointer-events-none fixed top-0 right-0 z-0 h-screen w-[56vw] overflow-hidden 2xl:-right-[5vw] 2xl:w-[70vw]">
-      <DesktopDagScene maskColor={maskColor} />
+      <DesktopDagScene annotation={annotation} maskColor={maskColor} />
     </div>
   );
 }

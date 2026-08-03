@@ -1,6 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 import { useIsClient } from "./useIsClient";
 
 export default function ThemeToggle({
@@ -8,6 +9,7 @@ export default function ThemeToggle({
 }: {
   compact?: boolean;
 }) {
+  const t = useTranslations("shared.theme");
   const { resolvedTheme, setTheme } = useTheme();
   const isClient = useIsClient();
   const sizeClass = compact ? "h-11 w-11" : "h-10 w-10";
@@ -23,7 +25,9 @@ export default function ThemeToggle({
     <button
       onClick={() => setTheme(isDark ? "light" : "dark")}
       className={`flex ${sizeClass} text-primary items-center justify-center rounded-lg transition-colors hover:bg-[var(--surface)]`}
-      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
+      aria-label={t("switchMode", {
+        mode: t(isDark ? "light" : "dark"),
+      })}
     >
       {isDark ? (
         /* Sun */

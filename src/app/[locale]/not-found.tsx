@@ -3,7 +3,6 @@ import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 
 import NotFoundContent from "@/app/components/NotFoundContent";
 import { defaultLocale, isLocale } from "@/i18n/config";
-import { isAiAvailable } from "@/i18n/site";
 
 async function resolveLocale() {
   const requestLocale = await getLocale();
@@ -14,8 +13,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await resolveLocale();
   const t = await getTranslations({ locale, namespace: "errors" });
   return {
-    title: t("title"),
-    description: t("description"),
+    title: t("metadata.title"),
+    description: t("metadata.description"),
     alternates: { canonical: null },
     openGraph: null,
     twitter: null,
@@ -30,12 +29,15 @@ export default async function LocalizedNotFound() {
 
   return (
     <NotFoundContent
-      aiAvailable={isAiAvailable("not-found", locale)}
+      locale={locale}
+      // Next serializes this segment boundary into every localized route.
+      // Keep the launcher on global-not-found without leaking its catalog here.
+      aiAvailable={false}
       messages={{
-        code: t("code"),
-        heading: t("heading"),
-        body: t("body"),
-        home: t("home"),
+        code: t("page.code"),
+        heading: t("page.heading"),
+        body: t("page.body"),
+        home: t("page.home"),
       }}
     />
   );

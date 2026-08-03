@@ -1,6 +1,7 @@
 import { setRequestLocale } from "next-intl/server";
 
 import BuildPage from "@/app/build/BuildPage";
+import LocalizedAiLauncherEntry from "@/app/components/LocalizedAiLauncherEntry";
 import { isLocale } from "@/i18n/config";
 import {
   createRouteMetadata,
@@ -50,5 +51,13 @@ export default async function BuildRoute({
 }) {
   const { locale } = resolvePageRoute((await params).locale);
   setRequestLocale(locale);
-  return <BuildPage aiAvailable={isAiAvailable(routeId, locale)} />;
+  const aiAvailable = isAiAvailable(routeId, locale);
+  return (
+    <BuildPage
+      aiAvailable={aiAvailable}
+      aiLauncher={
+        aiAvailable ? <LocalizedAiLauncherEntry locale={locale} /> : null
+      }
+    />
+  );
 }

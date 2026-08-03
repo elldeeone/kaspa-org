@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { analyzeAppRouteFile } from "../../scripts/i18n/app-route-policy.mts";
-import { defaultLocale } from "../../src/i18n/config.ts";
+import {
+  defaultLocale,
+  i18nBuildTarget,
+  pseudoLocale,
+} from "../../src/i18n/config.ts";
 import {
   RESERVED_NOT_FOUND_PATHNAME,
   ROUTE_MISS_HEADER,
@@ -21,6 +25,7 @@ import {
   NEXT_INTL_LOCALE_HEADER,
   createRouteMetadata,
   listEnabledLocales,
+  listDiscoverableRoutes,
   listPublishedLocales,
   listPublishedRoutes,
   resolvePublishedRoute,
@@ -28,9 +33,13 @@ import {
   siteUrl,
 } from "../../src/i18n/site.ts";
 
-test("Phase 1 publishes exactly the five stable English routes", () => {
+test("the active build profile keeps discovery English-only", () => {
+  const pseudoEnabled = i18nBuildTarget !== "production";
   assert.equal(defaultLocale, "en");
-  assert.deepEqual(listEnabledLocales(), ["en"]);
+  assert.deepEqual(
+    listEnabledLocales(),
+    pseudoEnabled ? ["en", pseudoLocale] : ["en"],
+  );
   assert.deepEqual(routeIds, ["home", "lore", "build", "assets", "hodl"]);
   assert.deepEqual(stablePathnames, [
     "/",
@@ -41,7 +50,10 @@ test("Phase 1 publishes exactly the five stable English routes", () => {
   ]);
 
   for (const routeId of routeIds) {
-    assert.deepEqual(listPublishedLocales(routeId), ["en"]);
+    assert.deepEqual(
+      listPublishedLocales(routeId),
+      pseudoEnabled && routeId === "home" ? ["en", pseudoLocale] : ["en"],
+    );
   }
   for (const pathname of stablePathnames) {
     assert.equal(isPathnamePublished(pathname, "en"), true, pathname);
@@ -54,9 +66,9 @@ test("Phase 1 publishes exactly the five stable English routes", () => {
   assert.equal(isPathnamePublished("/es/historia", "en"), false);
 
   const publishedRoutes = listPublishedRoutes();
-  assert.equal(publishedRoutes.length, 5);
+  assert.equal(publishedRoutes.length, pseudoEnabled ? 6 : 5);
   assert.deepEqual(
-    publishedRoutes.map((route) => route.canonicalUrl),
+    listDiscoverableRoutes().map((route) => route.canonicalUrl),
     [
       siteUrl,
       `${siteUrl}/lore`,
@@ -65,9 +77,17 @@ test("Phase 1 publishes exactly the five stable English routes", () => {
       `${siteUrl}/hodl`,
     ],
   );
+  assert.equal(
+    resolvePublishedRoute("home", pseudoLocale)?.publication ?? null,
+    pseudoEnabled ? "preview" : null,
+  );
+  for (const routeId of ["lore", "build", "assets", "hodl"] as const) {
+    assert.equal(resolvePublishedRoute(routeId, pseudoLocale), null);
+  }
 });
 
 test("route resolution accepts only enabled locale prefixes and fixed English slugs", () => {
+  const pseudoEnabled = i18nBuildTarget !== "production";
   assert.deepEqual(resolveRouteRequest("/lore"), {
     routeId: "lore",
     locale: "en",
@@ -86,6 +106,17 @@ test("route resolution accepts only enabled locale prefixes and fixed English sl
     stablePathname: "/",
     hadLocalePrefix: true,
   });
+  assert.deepEqual(
+    resolveRouteRequest("/en-xa"),
+    pseudoEnabled
+      ? {
+          routeId: "home",
+          locale: pseudoLocale,
+          stablePathname: "/",
+          hadLocalePrefix: true,
+        }
+      : null,
+  );
 
   for (const pathname of [
     "/es/lore",

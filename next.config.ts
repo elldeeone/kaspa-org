@@ -5,6 +5,17 @@ import {
   RESERVED_NOT_FOUND_PATHNAME,
   ROUTE_MISS_HEADER,
 } from "./src/i18n/manifest";
+import { isPseudoLocaleEnabled } from "./src/i18n/config";
+
+const isProductionDeployment =
+  process.env.VERCEL_ENV === "production" ||
+  process.env.AWS_BRANCH?.trim().toLowerCase() === "main";
+
+if (isPseudoLocaleEnabled && isProductionDeployment) {
+  throw new Error(
+    "The private en-XA pseudo-locale cannot be enabled in a production deployment.",
+  );
+}
 
 const legacyRedirects = [
   { source: "/.well-known/llms.txt", destination: "/llms.txt" },

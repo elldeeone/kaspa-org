@@ -71,6 +71,9 @@ jobs:
       - name: Run smoke suite
         run: npm run test:e2e
 
+      - name: Run private pseudo-locale suite
+        run: npm run test:e2e:i18n:pseudo
+
       - name: Upload Playwright artifacts
         if: failure()
         uses: actions/upload-artifact@v7

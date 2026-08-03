@@ -50,5 +50,7 @@ export default async function LoreRoute({
 }) {
   const { locale } = resolvePageRoute((await params).locale);
   setRequestLocale(locale);
-  return <LorePage aiAvailable={isAiAvailable(routeId, locale)} />;
+  return (
+    <LorePage locale={locale} aiAvailable={isAiAvailable(routeId, locale)} />
+  );
 }

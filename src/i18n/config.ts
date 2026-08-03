@@ -1,7 +1,34 @@
 const AI_ENABLED_VALUES = new Set(["1", "true", "yes", "on"]);
 
-export const localeCodes = ["en"] as const;
-export type Locale = (typeof localeCodes)[number];
+export const i18nBuildTargets = ["production", "preview", "test"] as const;
+export type I18nBuildTarget = (typeof i18nBuildTargets)[number];
+
+export function resolveI18nBuildTarget(
+  value: string | undefined,
+): I18nBuildTarget {
+  const normalized = value?.trim().toLowerCase();
+  if (!normalized) return "production";
+  if (
+    normalized === "production" ||
+    normalized === "preview" ||
+    normalized === "test"
+  ) {
+    return normalized;
+  }
+  throw new Error(
+    `Invalid NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET: ${JSON.stringify(value)}`,
+  );
+}
+
+export const i18nBuildTarget = resolveI18nBuildTarget(
+  process.env.NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET,
+);
+export const pseudoLocale = "en-XA" as const;
+export type Locale = "en" | typeof pseudoLocale;
+export const isPseudoLocaleEnabled = i18nBuildTarget !== "production";
+export const localeCodes: readonly Locale[] = isPseudoLocaleEnabled
+  ? ["en", pseudoLocale]
+  : ["en"];
 
 export const defaultLocale: Locale = "en";
 
@@ -21,6 +48,12 @@ const localeDefinitions: Record<Locale, LocaleDefinition> = {
     hrefLang: "en",
     dir: "ltr",
   },
+  "en-XA": {
+    code: "en-XA",
+    label: "Pseudo",
+    hrefLang: "en-XA",
+    dir: "ltr",
+  },
 };
 
 export const isAiDeploymentEnabled = AI_ENABLED_VALUES.has(
@@ -29,6 +62,14 @@ export const isAiDeploymentEnabled = AI_ENABLED_VALUES.has(
 
 export function isLocale(value: string | undefined): value is Locale {
   return localeCodes.some((locale) => locale === value);
+}
+
+export function resolveLocale(value: string | undefined): Locale | null {
+  if (!value) return null;
+  const normalized = value.toLowerCase();
+  return (
+    localeCodes.find((locale) => locale.toLowerCase() === normalized) ?? null
+  );
 }
 
 export function getLocaleDefinition(locale: Locale): LocaleDefinition {

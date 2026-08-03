@@ -1,4 +1,4 @@
-import { ASK_API_PATH, LOADING_MESSAGES } from "./constants";
+import { ASK_API_PATH, LOADING_MESSAGE_KEYS } from "./constants";
 import type { ChatRequestMessage } from "./types";
 
 type AskResponseBody = {
@@ -6,16 +6,16 @@ type AskResponseBody = {
 };
 
 export function getNextLoadingMessageIndex(current: number): number {
-  if (LOADING_MESSAGES.length <= 1) {
+  if (LOADING_MESSAGE_KEYS.length <= 1) {
     return current;
   }
 
   const bytes = new Uint32Array(1);
   crypto.getRandomValues(bytes);
 
-  let next = bytes[0] % LOADING_MESSAGES.length;
+  let next = bytes[0] % LOADING_MESSAGE_KEYS.length;
   if (next === current) {
-    next = (next + 1) % LOADING_MESSAGES.length;
+    next = (next + 1) % LOADING_MESSAGE_KEYS.length;
   }
 
   return next;

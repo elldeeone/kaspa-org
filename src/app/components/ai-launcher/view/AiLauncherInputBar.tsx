@@ -1,4 +1,5 @@
 import type { FormEvent, RefObject } from "react";
+import { useTranslations } from "next-intl";
 
 import { SendIcon } from "../icons";
 
@@ -17,6 +18,7 @@ export function AiLauncherInputBar({
   onChangeInput,
   onSubmit,
 }: AiLauncherInputBarProps): React.JSX.Element {
+  const t = useTranslations("shared.ai.launcher");
   const canSend = input.trim().length > 0 && !isTyping;
 
   return (
@@ -31,14 +33,14 @@ export function AiLauncherInputBar({
           type="text"
           value={input}
           onChange={(event) => onChangeInput(event.target.value)}
-          placeholder="Ask anything..."
+          placeholder={t("placeholder")}
           className="flex-1 bg-transparent text-[16px] text-foreground outline-none placeholder:text-(--text-muted)"
           disabled={isTyping}
         />
         <button
           type="submit"
           disabled={!canSend}
-          aria-label="Send message"
+          aria-label={t("sendMessage")}
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md transition-all"
           style={{
             background: canSend ? "var(--btn-primary-bg)" : "transparent",

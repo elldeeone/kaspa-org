@@ -1,14 +1,14 @@
 import type { StablePathname } from "@/i18n/site";
 
 type InternalNavLink = {
-  label: string;
+  id: "lore" | "hodl" | "build";
   href: StablePathname;
   external?: false;
   disabled?: boolean;
 };
 
 type ExternalNavLink = {
-  label: string;
+  id: "think" | "dagviz";
   href: string;
   external: true;
   disabled?: boolean;
@@ -17,9 +17,9 @@ type ExternalNavLink = {
 export type NavLink = InternalNavLink | ExternalNavLink;
 
 export const navLinks: readonly NavLink[] = [
-  { label: "LORE", href: "/lore" },
-  { label: "HODL", href: "/hodl" },
-  { label: "BUIDL", href: "/build" },
-  { label: "THINK", href: "https://research.kas.pa/", external: true },
-  { label: "DAGVIZ", href: "https://kgi.kaspad.net/", external: true },
+  { id: "lore", href: "/lore" },
+  { id: "hodl", href: "/hodl" },
+  { id: "build", href: "/build" },
+  { id: "think", href: "https://research.kas.pa/", external: true },
+  { id: "dagviz", href: "https://kgi.kaspad.net/", external: true },
 ] as const;

@@ -2,9 +2,9 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
-import type { Locale } from "./config.ts";
+import { defaultLocale, type Locale } from "./config.ts";
+import { getHomeMessages } from "./messages.ts";
 
-export const openGraphAlt = "Kaspa — Real-time Decentralization";
 export const openGraphSize = { width: 1200, height: 630 };
 export const openGraphContentType = "image/png";
 
@@ -14,22 +14,14 @@ const PADDING_LEFT = 72;
 const PADDING_TOP = 100;
 const fontDirectory = join(process.cwd(), "src", "app", "fonts");
 
-const openGraphCopy = {
-  en: {
-    heading: ["Real-time", "Decentralization"],
-    tagline: ["bitcoin\u2019s", "proof-of-work", "without", "the", "wait."],
-  },
-} as const satisfies Record<
-  Locale,
-  { heading: readonly [string, string]; tagline: readonly string[] }
->;
-
 export async function renderOpenGraphImage(locale: Locale) {
-  const copy = openGraphCopy[locale];
+  const copy = getHomeMessages(locale).openGraph;
+  const heading = copy.heading.split("\n");
   const [geistBold, geistRegular] = await Promise.all([
     readFile(join(fontDirectory, "Geist-Bold.ttf")),
     readFile(join(fontDirectory, "Geist-Regular.ttf")),
   ]);
+  const useLocalizedLayout = locale !== defaultLocale;
 
   return new ImageResponse(
     <div
@@ -49,30 +41,23 @@ export async function renderOpenGraphImage(locale: Locale) {
           flexDirection: "column",
         }}
       >
-        <div
-          style={{
-            fontSize: HEADING_SIZE,
-            fontFamily: "Geist",
-            fontWeight: 700,
-            color: "#1a1a1e",
-            lineHeight: 0.9,
-            letterSpacing: "-0.04em",
-          }}
-        >
-          {copy.heading[0]}
-        </div>
-        <div
-          style={{
-            fontSize: HEADING_SIZE,
-            fontFamily: "Geist",
-            fontWeight: 700,
-            color: "#1a1a1e",
-            lineHeight: 0.9,
-            letterSpacing: "-0.04em",
-          }}
-        >
-          {copy.heading[1]}
-        </div>
+        {heading.map((line) => (
+          <div
+            key={line}
+            style={{
+              width: "100%",
+              fontSize: useLocalizedLayout ? 68 : HEADING_SIZE,
+              fontFamily: "Geist",
+              fontWeight: 700,
+              color: "#1a1a1e",
+              lineHeight: useLocalizedLayout ? 1 : 0.9,
+              letterSpacing: useLocalizedLayout ? "-0.02em" : "-0.04em",
+              wordBreak: useLocalizedLayout ? "break-all" : "normal",
+            }}
+          >
+            {line}
+          </div>
+        ))}
       </div>
       <div
         style={{
@@ -87,13 +72,23 @@ export async function renderOpenGraphImage(locale: Locale) {
           letterSpacing: "-0.01em",
           marginTop: 40,
           marginLeft: 5,
+          ...(useLocalizedLayout
+            ? { width: "100%", flexWrap: "wrap" as const }
+            : {}),
         }}
       >
-        <span>{copy.tagline[0]}</span>
-        <span style={{ marginLeft: 9 }}>{copy.tagline[1]}</span>
-        <span style={{ marginLeft: 4 }}>{copy.tagline[2]}</span>
-        <span style={{ marginLeft: 9 }}>{copy.tagline[3]}</span>
-        <span style={{ marginLeft: 9 }}>{copy.tagline[4]}</span>
+        {useLocalizedLayout
+          ? copy.tagline
+          : copy.tagline.split(" ").map((word, index) => (
+              <span
+                key={`${word}-${index}`}
+                style={
+                  index === 0 ? undefined : { marginLeft: index === 2 ? 4 : 9 }
+                }
+              >
+                {word}
+              </span>
+            ))}
       </div>
     </div>,
     {

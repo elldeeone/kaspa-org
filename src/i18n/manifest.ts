@@ -1,4 +1,4 @@
-import type { Locale } from "./config.ts";
+import { isPseudoLocaleEnabled, type Locale } from "./config.ts";
 
 export const RESERVED_NOT_FOUND_PATHNAME =
   "/__kaspa_i18n_unpublished__/not/found";
@@ -30,16 +30,32 @@ export function getRouteIdForPathname(pathname: string): RouteId | null {
   );
 }
 
+export type RoutePublication = "public" | "preview";
+
 const publicationMatrix = {
-  home: { en: true },
-  lore: { en: true },
-  build: { en: true },
-  assets: { en: true },
-  hodl: { en: true },
-} as const satisfies Record<RouteId, Record<Locale, boolean>>;
+  home: {
+    en: "public",
+    "en-XA": isPseudoLocaleEnabled ? "preview" : false,
+  },
+  lore: { en: "public", "en-XA": false },
+  build: { en: "public", "en-XA": false },
+  assets: { en: "public", "en-XA": false },
+  hodl: { en: "public", "en-XA": false },
+} as const satisfies Record<RouteId, Record<Locale, RoutePublication | false>>;
+
+export function getRoutePublication(
+  routeId: RouteId,
+  locale: Locale,
+): RoutePublication | null {
+  return publicationMatrix[routeId][locale] || null;
+}
 
 export function isRoutePublished(routeId: RouteId, locale: Locale): boolean {
-  return publicationMatrix[routeId][locale];
+  return getRoutePublication(routeId, locale) !== null;
+}
+
+export function isRouteDiscoverable(routeId: RouteId, locale: Locale): boolean {
+  return getRoutePublication(routeId, locale) === "public";
 }
 
 export function isPathnamePublished(

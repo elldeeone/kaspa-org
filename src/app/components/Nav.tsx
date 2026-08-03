@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Link, useIsPathnamePublished } from "@/i18n/link";
 import {
   KASPA_MARK_SIGNAL,
@@ -76,6 +77,7 @@ function KaspaGlyphLogo(): React.JSX.Element {
 }
 
 export default function Nav() {
+  const t = useTranslations("shared.navigation");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [logoReplaced, setLogoReplaced] = useState(false);
@@ -243,7 +245,7 @@ export default function Nav() {
           className={`text-primary relative flex h-12 w-[116px] shrink-0 items-center select-none sm:w-[126px] md:w-[140px] ${
             assetsPublished ? "[-webkit-touch-callout:none]" : ""
           }`}
-          aria-label="Kaspa home"
+          aria-label={t("homeAria")}
           aria-haspopup={assetsPublished ? "menu" : undefined}
           aria-expanded={assetsPublished ? logoMenu !== null : undefined}
           aria-controls={assetsPublished && logoMenu ? LOGO_MENU_ID : undefined}
@@ -292,11 +294,11 @@ export default function Nav() {
           <button
             onClick={() => setMenuOpen((value) => !value)}
             className="text-primary relative flex h-11 w-11 items-center justify-center rounded-lg transition-colors hover:bg-[var(--surface)]"
-            aria-label="Toggle menu"
+            aria-label={t("toggleMenu")}
             aria-expanded={menuOpen}
             aria-controls="mobile-nav-links"
           >
-            <span className="sr-only">Menu</span>
+            <span className="sr-only">{t("menu")}</span>
             <span
               className={`absolute h-[1.5px] w-[18px] bg-current transition-all duration-300 ${
                 menuOpen ? "translate-y-0 rotate-45" : "-translate-y-[4.5px]"

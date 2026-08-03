@@ -1,16 +1,13 @@
 import { defaultLocale, isLocale } from "@/i18n/config";
 import { renderOpenGraphImage } from "@/i18n/opengraph";
-import { listEnabledLocales, listPublishedRoutes } from "@/i18n/site";
+import { listPublishedLocales } from "@/i18n/site";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
 
 function listLocalizedOpenGraphLocales() {
-  const publishedLocales = new Set(
-    listPublishedRoutes().map((route) => route.locale),
-  );
-  return listEnabledLocales().filter(
-    (locale) => locale !== defaultLocale && publishedLocales.has(locale),
+  return listPublishedLocales("home").filter(
+    (locale) => locale !== defaultLocale,
   );
 }
 

@@ -6,8 +6,6 @@ export const SECONDS_PER_MONTH = 2_629_800n; // 365.25 / 12 * 86400
 // UTXO set hashes to this commitment, so the total below is proof-anchored.
 export const CHECKPOINT_DAA = 1_312_860n;
 export const CHECKPOINT_TOTAL_SOMPI = 98_422_254_404_487_171n;
-export const CHECKPOINT_DATE = "Nov 22, 2021";
-export const LAUNCH_WINDOW_DATE = "Nov 7 – Nov 22, 2021";
 
 // Mainnet constants
 export const DEFLATIONARY_PHASE_DAA = 15_519_600n;

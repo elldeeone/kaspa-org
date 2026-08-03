@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/link";
 
@@ -17,6 +18,7 @@ export default function LogoContextMenu({
   position: LogoMenuPosition;
   onClose: () => void;
 }): React.JSX.Element {
+  const t = useTranslations("shared.logoMenu");
   const [shown, setShown] = useState(false);
   const menuItemRef = useRef<HTMLAnchorElement>(null);
 
@@ -66,7 +68,7 @@ export default function LogoContextMenu({
       id={LOGO_MENU_ID}
       data-logo-menu
       role="menu"
-      aria-label="Kaspa logo"
+      aria-label={t("aria")}
       onKeyDown={(event) => {
         if (
           event.key === "ArrowDown" ||
@@ -90,7 +92,7 @@ export default function LogoContextMenu({
         onClick={onClose}
         className="text-secondary hover:text-primary flex items-center justify-between gap-6 rounded-lg px-3 py-2 text-[14px] transition-colors hover:bg-[var(--surface)]"
       >
-        View logo assets
+        {t("viewAssets")}
         <span aria-hidden="true" className="text-tertiary">
           →
         </span>

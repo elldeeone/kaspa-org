@@ -4,37 +4,43 @@ import {
   defaultLocale,
   getLocaleDefinition,
   isAiDeploymentEnabled,
-  isLocale,
   listEnabledLocales as getEnabledLocaleCodes,
   type Locale,
   type LocaleDefinition,
 } from "./config.ts";
 import {
-  getRouteIdForPathname,
+  getRoutePublication,
+  isRouteDiscoverable,
   isRoutePublished,
   routeIds,
   routeManifest,
+  type RoutePublication,
   type RouteId,
   type StablePathname,
 } from "./manifest.ts";
+import {
+  getHomeMessages,
+  getMessages,
+  loadMessages,
+  type MessageNamespace,
+} from "./messages.ts";
 
 export { routeIds, stablePathnames } from "./manifest.ts";
 export type { RouteId, StablePathname } from "./manifest.ts";
+export {
+  NEXT_INTL_LOCALE_HEADER,
+  resolveRouteRequest,
+} from "./route-request.ts";
+export type { RouteRequest } from "./route-request.ts";
 
 export const siteUrl = "https://kaspa.org";
-export const NEXT_INTL_LOCALE_HEADER = "x-next-intl-locale";
 export type SiteSurfaceId = RouteId | "not-found";
-
-type MessageNamespace = "errors";
 
 type RouteDefinition = {
   id: RouteId;
   pathname: StablePathname;
   namespaces: readonly MessageNamespace[];
-  metadata: {
-    title: string;
-    description: string;
-  };
+  metadata: { title: string; description: string } | null;
   sitemap: {
     changeFrequency: "weekly" | "monthly";
     priority: number;
@@ -44,17 +50,13 @@ type RouteDefinition = {
 const routeDefinitions: Record<RouteId, RouteDefinition> = {
   home: {
     ...routeManifest.home,
-    namespaces: [],
-    metadata: {
-      title: "Kaspa | Proof-of-Work blockDAG for Real-Time Decentralization",
-      description:
-        "Kaspa is a fair-launched proof-of-work blockDAG cryptocurrency running at 10 blocks per second, built for real-time decentralization.",
-    },
+    namespaces: ["shared", "home"],
+    metadata: null,
     sitemap: { changeFrequency: "weekly", priority: 1 },
   },
   lore: {
     ...routeManifest.lore,
-    namespaces: [],
+    namespaces: ["shared"],
     metadata: {
       title: "LORE | Kaspa",
       description:
@@ -64,7 +66,7 @@ const routeDefinitions: Record<RouteId, RouteDefinition> = {
   },
   build: {
     ...routeManifest.build,
-    namespaces: [],
+    namespaces: ["shared"],
     metadata: {
       title: "Kaspa Developer Docs, SDKs, APIs, and Node Access | Kaspa",
       description:
@@ -74,7 +76,7 @@ const routeDefinitions: Record<RouteId, RouteDefinition> = {
   },
   assets: {
     ...routeManifest.assets,
-    namespaces: [],
+    namespaces: ["shared"],
     metadata: {
       title: "Kaspa Logos & Assets | Kaspa",
       description:
@@ -84,7 +86,7 @@ const routeDefinitions: Record<RouteId, RouteDefinition> = {
   },
   hodl: {
     ...routeManifest.hodl,
-    namespaces: [],
+    namespaces: ["shared"],
     metadata: {
       title: "Buy KAS, Set Up a Wallet, and Self-Custody | Kaspa",
       description: "Get a wallet, buy KAS, and transfer to self-custody.",
@@ -94,12 +96,12 @@ const routeDefinitions: Record<RouteId, RouteDefinition> = {
 };
 
 const aiLocaleContracts: Record<SiteSurfaceId, Record<Locale, boolean>> = {
-  home: { en: true },
-  lore: { en: true },
-  build: { en: true },
-  assets: { en: false },
-  hodl: { en: true },
-  "not-found": { en: true },
+  home: { en: true, "en-XA": false },
+  lore: { en: true, "en-XA": false },
+  build: { en: true, "en-XA": false },
+  assets: { en: false, "en-XA": false },
+  hodl: { en: true, "en-XA": false },
+  "not-found": { en: true, "en-XA": false },
 };
 
 export type RouteContext = {
@@ -111,36 +113,9 @@ export type RouteContext = {
   canonicalPathname: string;
   canonicalUrl: string;
   languageAlternatives: Readonly<Record<string, string>>;
+  publication: RoutePublication;
   availableInBuild: true;
 };
-
-export type RouteRequest = {
-  routeId: RouteId;
-  locale: Locale;
-  stablePathname: StablePathname;
-  hadLocalePrefix: boolean;
-};
-
-function normalizePathname(pathname: string): string | null {
-  let decodedPathname: string;
-  try {
-    decodedPathname = decodeURI(pathname);
-  } catch {
-    return null;
-  }
-
-  if (/[\\\u0000-\u001f\u007f]/u.test(decodedPathname)) return null;
-
-  const withLeadingSlash = decodedPathname.startsWith("/")
-    ? decodedPathname
-    : `/${decodedPathname}`;
-  const normalized = withLeadingSlash.replace(/\/{2,}/gu, "/");
-
-  if (normalized.length > 1 && normalized.endsWith("/")) {
-    return normalized.slice(0, -1);
-  }
-  return normalized;
-}
 
 function localizePathname(pathname: StablePathname, locale: Locale): string {
   if (locale === defaultLocale) return pathname;
@@ -151,41 +126,17 @@ export function getRouteDefinition(routeId: RouteId): RouteDefinition {
   return routeDefinitions[routeId];
 }
 
-export function resolveRouteRequest(pathname: string): RouteRequest | null {
-  const normalized = normalizePathname(pathname);
-  if (!normalized) return null;
-
-  const segments = normalized.split("/").filter(Boolean);
-  const candidateLocale = segments[0]?.toLowerCase();
-  const hadLocalePrefix = isLocale(candidateLocale);
-  const locale = hadLocalePrefix ? candidateLocale : defaultLocale;
-  const routePathname = hadLocalePrefix
-    ? segments.length === 1
-      ? "/"
-      : `/${segments.slice(1).join("/")}`
-    : normalized;
-  const routeId = getRouteIdForPathname(routePathname);
-
-  return routeId
-    ? {
-        routeId,
-        locale,
-        stablePathname: routeDefinitions[routeId].pathname,
-        hadLocalePrefix,
-      }
-    : null;
-}
-
 export function resolvePublishedRoute(
   routeId: RouteId,
   locale: Locale,
 ): RouteContext | null {
-  if (!isRoutePublished(routeId, locale)) return null;
+  const publication = getRoutePublication(routeId, locale);
+  if (!publication) return null;
 
   const definition = routeDefinitions[routeId];
   const canonicalPathname = localizePathname(definition.pathname, locale);
   const languageAlternatives = Object.fromEntries(
-    listPublishedLocales(routeId).map((publishedLocale) => {
+    listDiscoverableLocales(routeId).map((publishedLocale) => {
       const localeDefinition = getLocaleDefinition(publishedLocale);
       return [
         localeDefinition.hrefLang,
@@ -203,6 +154,7 @@ export function resolvePublishedRoute(
     canonicalPathname,
     canonicalUrl: `${siteUrl}${canonicalPathname === "/" ? "" : canonicalPathname}`,
     languageAlternatives,
+    publication,
     availableInBuild: true,
   };
 }
@@ -215,6 +167,12 @@ export function listPublishedLocales(routeId: RouteId): readonly Locale[] {
 
 export function listEnabledLocales(): readonly Locale[] {
   return getEnabledLocaleCodes();
+}
+
+export function listDiscoverableLocales(routeId: RouteId): readonly Locale[] {
+  return getEnabledLocaleCodes().filter((locale) =>
+    isRouteDiscoverable(routeId, locale),
+  );
 }
 
 export function listPublishedRoutes(): readonly RouteContext[] {
@@ -231,21 +189,13 @@ export function listPublishedRoutes(): readonly RouteContext[] {
   );
 }
 
-export async function loadMessages(locale: Locale) {
-  switch (locale) {
-    case "en":
-      return {
-        errors: (await import("../../messages/en/errors.json")).default,
-      };
-  }
+export function listDiscoverableRoutes(): readonly RouteContext[] {
+  return listPublishedRoutes().filter(
+    (route) => route.publication === "public",
+  );
 }
 
-const socialImage = {
-  url: "/opengraph-image",
-  width: 1200,
-  height: 630,
-  alt: "Kaspa — Real-time Decentralization",
-} as const;
+export { loadMessages };
 
 export function createRouteMetadata(
   routeId: RouteId,
@@ -255,7 +205,12 @@ export function createRouteMetadata(
   if (!route) return null;
 
   const definition = routeDefinitions[routeId];
-  const publishedLocales = listPublishedLocales(routeId);
+  const localizedHome = routeId === "home" ? getHomeMessages(locale) : null;
+  const metadata = localizedHome?.metadata ?? definition.metadata;
+  if (!metadata) {
+    throw new Error(`Metadata is not configured for ${routeId}:${locale}`);
+  }
+  const publishedLocales = listDiscoverableLocales(routeId);
   const languages =
     publishedLocales.length > 1
       ? {
@@ -264,40 +219,53 @@ export function createRouteMetadata(
             ?.canonicalUrl,
         }
       : undefined;
+  const isPrivate = route.publication === "preview";
   const imagePathname =
-    locale === defaultLocale
+    routeId !== "home" || locale === defaultLocale
       ? "/opengraph-image"
       : `/${locale}/opengraph-image`;
-  const image = { ...socialImage, url: imagePathname };
+  const imageCopy =
+    localizedHome?.openGraph ?? getHomeMessages(defaultLocale).openGraph;
+  const image = {
+    url: imagePathname,
+    width: 1200,
+    height: 630,
+    alt: imageCopy.imageAlt,
+  } as const;
   const openGraphImage =
     routeId === "home" ? { ...image, type: "image/png" as const } : image;
 
   return {
     metadataBase: new URL(siteUrl),
-    title: definition.metadata.title,
-    description: definition.metadata.description,
+    title: metadata.title,
+    description: metadata.description,
     applicationName: "Kaspa",
     alternates: {
-      canonical: route.canonicalPathname,
-      languages,
+      canonical: isPrivate ? null : route.canonicalPathname,
+      languages: isPrivate ? undefined : languages,
     },
-    openGraph: {
-      title: definition.metadata.title,
-      description: definition.metadata.description,
-      type: "website",
-      url: route.canonicalPathname,
-      siteName: "Kaspa",
-      images: [openGraphImage],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: definition.metadata.title,
-      description: definition.metadata.description,
-      images:
-        routeId === "home"
-          ? [{ ...image, type: "image/png" }]
-          : [imagePathname],
-    },
+    openGraph: isPrivate
+      ? undefined
+      : {
+          title: metadata.title,
+          description: metadata.description,
+          type: "website",
+          url: route.canonicalPathname,
+          siteName: "Kaspa",
+          images: [openGraphImage],
+        },
+    twitter: isPrivate
+      ? undefined
+      : {
+          card: "summary_large_image",
+          title: metadata.title,
+          description: metadata.description,
+          images:
+            routeId === "home"
+              ? [{ ...image, type: "image/png" }]
+              : [imagePathname],
+        },
+    robots: isPrivate ? { index: false, follow: false } : undefined,
   };
 }
 
@@ -311,29 +279,31 @@ export function isAiAvailable(
 const organizationId = `${siteUrl}#organization`;
 const websiteId = `${siteUrl}#website`;
 
-export const structuredDataSchema = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": organizationId,
-      name: "Kaspa",
-      url: siteUrl,
-      logo: `${siteUrl}/kaspa-logo.svg`,
-      description:
-        "Kaspa is a fair-launched proof-of-work blockDAG cryptocurrency running at 10 blocks per second, built for real-time decentralization.",
-      sameAs: [
-        "https://github.com/kaspanet/rusty-kaspa/",
-        "https://t.me/kasparnd",
-      ],
-    },
-    {
-      "@type": "WebSite",
-      "@id": websiteId,
-      name: "Kaspa",
-      url: siteUrl,
-      alternateName: ["kaspa.org"],
-      publisher: { "@id": organizationId },
-    },
-  ],
-} as const;
+export function createStructuredData(locale: Locale) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": organizationId,
+        name: "Kaspa",
+        url: siteUrl,
+        logo: `${siteUrl}/kaspa-logo.svg`,
+        description:
+          getMessages(locale).shared.structuredData.organizationDescription,
+        sameAs: [
+          "https://github.com/kaspanet/rusty-kaspa/",
+          "https://t.me/kasparnd",
+        ],
+      },
+      {
+        "@type": "WebSite",
+        "@id": websiteId,
+        name: "Kaspa",
+        url: siteUrl,
+        alternateName: ["kaspa.org"],
+        publisher: { "@id": organizationId },
+      },
+    ],
+  } as const;
+}

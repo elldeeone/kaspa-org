@@ -1,6 +1,7 @@
 "use client";
 
 import { Rock_Salt } from "next/font/google";
+import type { ReactNode } from "react";
 
 const rockSalt = Rock_Salt({
   subsets: ["latin"],
@@ -8,7 +9,7 @@ const rockSalt = Rock_Salt({
   preload: false,
 });
 
-export default function DagAnnotation() {
+export default function DagAnnotation({ children }: { children: ReactNode }) {
   return (
     <div
       className="pointer-events-none absolute select-none"
@@ -30,7 +31,7 @@ export default function DagAnnotation() {
           letterSpacing: "0.01em",
         }}
       >
-        pow in real-time
+        {children}
       </p>
 
       {/* Arrow — diagonal down-left like the handwritten version */}

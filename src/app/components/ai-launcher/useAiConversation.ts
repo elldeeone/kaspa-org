@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   useCallback,
   useEffect,
@@ -12,11 +13,7 @@ import {
 } from "react";
 
 import { copyTextToClipboard } from "../copyTextToClipboard";
-import {
-  GENERIC_ERROR_MESSAGE,
-  LOADING_MESSAGES,
-  LOADING_MESSAGE_ROTATE_MS,
-} from "./constants";
+import { LOADING_MESSAGE_KEYS, LOADING_MESSAGE_ROTATE_MS } from "./constants";
 import { getNextLoadingMessageIndex, requestKaspaAnswer } from "./ask";
 import type { ChatRequestMessage, Message } from "./types";
 
@@ -52,6 +49,7 @@ function buildChatHistory(
 }
 
 export function useAiConversation(): UseAiConversationResult {
+  const t = useTranslations("shared.ai");
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -165,7 +163,7 @@ export function useAiConversation(): UseAiConversationResult {
               message.id === aiId
                 ? {
                     ...message,
-                    text: GENERIC_ERROR_MESSAGE,
+                    text: t("genericError"),
                   }
                 : message,
             ),
@@ -181,7 +179,7 @@ export function useAiConversation(): UseAiConversationResult {
           }
         });
     },
-    [isTyping],
+    [isTyping, t],
   );
 
   const handleSubmit = useCallback(
@@ -198,7 +196,9 @@ export function useAiConversation(): UseAiConversationResult {
     handleSubmit,
     input,
     isTyping,
-    loadingMessage: LOADING_MESSAGES[loadingMessageIndex],
+    loadingMessage: t(
+      `loading.${LOADING_MESSAGE_KEYS[loadingMessageIndex] ?? LOADING_MESSAGE_KEYS[0]}`,
+    ),
     messages,
     messagesEndRef,
     sendMessage,
