@@ -1,7 +1,14 @@
+import { useTranslations } from "next-intl";
+
 import ExternalLink from "../../components/ExternalLink";
 import ShuffledPromptPills from "../../components/ShuffledPromptPills";
 import { type OpenKaspaAiDetail } from "../../components/aiLauncherEvents";
-import { DOCS_URL, TELEGRAM_RND_URL, aiPrompts } from "../content";
+import {
+  BUILD_TERMS,
+  DOCS_URL,
+  TELEGRAM_RND_URL,
+  useAiPrompts,
+} from "../content";
 import { ArrowUpRightIcon, ChevronRightIcon, SparklesIcon } from "../icons";
 import { GridSurface } from "../ui";
 
@@ -12,6 +19,9 @@ export default function HelpSection({
   kaspaAiEnabled: boolean;
   onOpenAi: (prompt?: OpenKaspaAiDetail["prompt"]) => void;
 }) {
+  const t = useTranslations("build.help");
+  const aiPrompts = useAiPrompts();
+
   return (
     <section
       id="help"
@@ -24,24 +34,35 @@ export default function HelpSection({
           <div className="relative lg:grid lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8">
             <div className="max-w-2xl">
               <p className="text-muted text-[13px] font-medium tracking-[0.08em] uppercase">
-                Help
+                {t("eyebrow")}
               </p>
               <h2 className="mt-3 text-[32px] leading-[1.02] font-medium tracking-[-0.03em] md:text-[40px]">
-                Keep moving
+                {t("title")}
               </h2>
               <p className="text-tertiary mt-4 text-[16px] leading-[1.75]">
                 {kaspaAiEnabled
-                  ? "Start with the docs or Kaspa AI. For deeper help, try the Q&A, GitHub, Discord, or the R&D Telegram."
-                  : "Start with the docs. For deeper help, try the Q&A, GitHub, Discord, or the R&D Telegram."}
+                  ? t("descriptionWithAi", {
+                      discord: BUILD_TERMS.discord,
+                      github: BUILD_TERMS.github,
+                      kaspaAi: BUILD_TERMS.kaspaAi,
+                      qa: BUILD_TERMS.qa,
+                      telegram: BUILD_TERMS.telegram,
+                    })
+                  : t("descriptionWithoutAi", {
+                      discord: BUILD_TERMS.discord,
+                      github: BUILD_TERMS.github,
+                      qa: BUILD_TERMS.qa,
+                      telegram: BUILD_TERMS.telegram,
+                    })}
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <ExternalLink href={DOCS_URL} className="btn-primary">
-                  Open docs <ChevronRightIcon />
+                  {t("actions.openDocs")} <ChevronRightIcon />
                 </ExternalLink>
                 {kaspaAiEnabled ? (
                   <button onClick={() => onOpenAi()} className="btn-ghost">
                     <SparklesIcon size={14} />
-                    Open AI
+                    {t("actions.openAi")}
                   </button>
                 ) : null}
               </div>
@@ -62,11 +83,13 @@ export default function HelpSection({
                 style={{ background: "var(--surface)" }}
               >
                 <p className="text-muted text-[12px] font-medium tracking-[0.08em] uppercase">
-                  Code
+                  {t("links.github.eyebrow")}
                 </p>
                 <div className="mt-auto flex items-end justify-between gap-4 pt-8">
                   <span className="text-primary text-[22px] font-medium tracking-[-0.03em]">
-                    GitHub
+                    {t("links.github.title", {
+                      github: BUILD_TERMS.github,
+                    })}
                   </span>
                   <span className="text-muted group-hover:text-secondary inline-flex transition-all duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
                     <ArrowUpRightIcon size={13} />
@@ -80,11 +103,13 @@ export default function HelpSection({
                 style={{ background: "var(--surface)" }}
               >
                 <p className="text-muted text-[12px] font-medium tracking-[0.08em] uppercase">
-                  Chat
+                  {t("links.discord.eyebrow")}
                 </p>
                 <div className="mt-auto flex items-end justify-between gap-4 pt-8">
                   <span className="text-primary text-[22px] font-medium tracking-[-0.03em]">
-                    Discord
+                    {t("links.discord.title", {
+                      discord: BUILD_TERMS.discord,
+                    })}
                   </span>
                   <span className="text-muted group-hover:text-secondary inline-flex transition-all duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
                     <ArrowUpRightIcon size={13} />
@@ -98,11 +123,13 @@ export default function HelpSection({
                 style={{ background: "var(--surface)" }}
               >
                 <p className="text-muted text-[12px] font-medium tracking-[0.08em] uppercase">
-                  Questions
+                  {t("links.qa.eyebrow")}
                 </p>
                 <div className="mt-auto flex items-end justify-between gap-4 pt-8">
                   <span className="text-primary text-[22px] font-medium tracking-[-0.03em]">
-                    Kaspa Q&amp;A
+                    {t("links.qa.title", {
+                      kaspaQAndA: BUILD_TERMS.kaspaQAndA,
+                    })}
                   </span>
                   <span className="text-muted group-hover:text-secondary inline-flex transition-all duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
                     <ArrowUpRightIcon size={13} />
@@ -116,11 +143,13 @@ export default function HelpSection({
                 style={{ background: "var(--surface)" }}
               >
                 <p className="text-muted text-[12px] font-medium tracking-[0.08em] uppercase">
-                  Latest development
+                  {t("links.telegram.eyebrow")}
                 </p>
                 <div className="mt-auto flex items-end justify-between gap-4 pt-8">
                   <span className="text-primary text-[22px] font-medium tracking-[-0.03em]">
-                    Telegram R&amp;D
+                    {t("links.telegram.title", {
+                      telegram: BUILD_TERMS.telegram,
+                    })}
                   </span>
                   <span className="text-muted group-hover:text-secondary inline-flex transition-all duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
                     <ArrowUpRightIcon size={13} />

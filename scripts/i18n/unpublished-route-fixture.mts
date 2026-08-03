@@ -13,6 +13,12 @@ import {
 import { createRequire } from "node:module";
 import { join, relative, sep } from "node:path";
 
+import {
+  cleanPseudoBuildArtifacts,
+  syncPseudoBuildArtifacts,
+} from "./build-example-artifacts.mts";
+import { resolveI18nBuildTarget } from "../../src/i18n/config.ts";
+
 const require = createRequire(import.meta.url);
 const nextCliPath = require.resolve("next/dist/bin/next");
 const excludedRootEntries = new Set([
@@ -116,8 +122,7 @@ export async function createUnpublishedAssetsFixture(
   try {
     const manifestPath = join(fixture.root, "src", "i18n", "manifest.ts");
     const manifest = await readFile(manifestPath, "utf8");
-    const assetsPublication =
-      /(\bassets:\s*\{\s*en:\s*)"public"(,\s*"en-XA":\s*false\s*\})/gu;
+    const assetsPublication = /(\bassets:\s*\{\s*en:\s*)"public"/gu;
     const matches = [...manifest.matchAll(assetsPublication)];
     assert.equal(
       matches.length,
@@ -126,7 +131,7 @@ export async function createUnpublishedAssetsFixture(
     );
     await writeFile(
       manifestPath,
-      manifest.replace(assetsPublication, "$1false$2"),
+      manifest.replace(assetsPublication, "$1false"),
       "utf8",
     );
     return fixture;
@@ -140,6 +145,12 @@ export async function buildProductionFixture(
   cwd: string,
   environment: Readonly<Record<string, string | undefined>> = {},
 ): Promise<string> {
+  const buildTarget = resolveI18nBuildTarget(
+    environment.NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET ??
+      process.env.NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET,
+  );
+  await syncPseudoBuildArtifacts(cwd, buildTarget);
+
   const child = spawn(process.execPath, [nextCliPath, "build"], {
     cwd,
     env: {
@@ -157,14 +168,21 @@ export async function buildProductionFixture(
     logs += chunk.toString();
   });
 
-  const result = await new Promise<{
+  let result: {
     code: number | null;
     signal: NodeJS.Signals | null;
-  }>((resolve, reject) => {
-    child.once("error", reject);
-    child.once("exit", (code, signal) => resolve({ code, signal }));
-  });
+  };
+  try {
+    result = await new Promise((resolve, reject) => {
+      child.once("error", reject);
+      child.once("exit", (code, signal) => resolve({ code, signal }));
+    });
+  } catch (error) {
+    await cleanPseudoBuildArtifacts(cwd);
+    throw error;
+  }
   if (result.code !== 0) {
+    await cleanPseudoBuildArtifacts(cwd);
     throw new Error(
       `unpublished-route fixture build failed (${result.signal ?? result.code})\n${logs}`,
     );

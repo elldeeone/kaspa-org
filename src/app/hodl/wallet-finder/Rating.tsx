@@ -3,20 +3,18 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { useTranslations } from "next-intl";
 import { ACCENT } from "../content";
 import { WALLET_CHECK_RATINGS } from "./taxonomy";
 import type { WalletCheckRating, WalletCriterion } from "./types";
-import { ratingExplanations, walletCriteria } from "./walletMetadata";
+import { getRatingExplanationKey } from "./walletMetadata";
 
 const RATING_META = {
-  good: { label: "Good", color: ACCENT },
-  acceptable: { label: "Acceptable", color: "rgb(90, 165, 90)" },
-  caution: { label: "Caution", color: "rgb(210, 130, 30)" },
-  not_applicable: { label: "Not applicable", color: "rgba(160,160,170,0.5)" },
-} as const satisfies Record<
-  WalletCheckRating,
-  { label: string; color: string }
->;
+  good: { color: ACCENT },
+  acceptable: { color: "rgb(90, 165, 90)" },
+  caution: { color: "rgb(210, 130, 30)" },
+  not_applicable: { color: "rgba(160,160,170,0.5)" },
+} as const satisfies Record<WalletCheckRating, { color: string }>;
 
 const TOOLTIP_WIDTH = 240;
 
@@ -67,14 +65,16 @@ export function RatingTooltip({
   children?: ReactNode;
   className?: string;
 }) {
+  const t = useTranslations("hodl");
   const [visible, setVisible] = useState(false);
   const [tipRect, setTipRect] = useState<DOMRect | null>(null);
   const ref = useRef<HTMLSpanElement>(null);
 
-  const explanation = ratingExplanations[criterion]?.[rating];
-  const criterionLabel =
-    walletCriteria.find((entry) => entry.id === criterion)?.label ?? criterion;
-  const ratingLabel = RATING_META[rating].label;
+  const explanationKey = getRatingExplanationKey(criterion, rating);
+  const explanation = explanationKey ? t(explanationKey) : undefined;
+
+  const criterionLabel = t(`walletFinder.criteria.${criterion}.label`);
+  const ratingLabel = t(`walletFinder.ratings.${rating}`);
 
   const open = () => {
     if (ref.current) {
@@ -122,7 +122,10 @@ export function RatingTooltip({
         role="button"
         tabIndex={0}
         aria-expanded={visible}
-        aria-label={`${criterionLabel}: ${ratingLabel}`}
+        aria-label={t("walletFinder.ratings.aria", {
+          criterion: criterionLabel,
+          rating: ratingLabel,
+        })}
         className={`inline-flex cursor-pointer ${className ?? ""}`}
         onPointerEnter={(event) => {
           if (event.pointerType === "mouse") open();
@@ -163,7 +166,10 @@ export function RatingTooltip({
               className="mb-1 text-[10px] font-semibold tracking-[0.06em] uppercase"
               style={{ color: RATING_META[rating].color }}
             >
-              {criterionLabel}: {ratingLabel}
+              {t("walletFinder.ratings.tooltipHeading", {
+                criterion: criterionLabel,
+                rating: ratingLabel,
+              })}
             </p>
             <p>{explanation}</p>
           </div>,
@@ -178,13 +184,15 @@ export function RatingLegend({
 }: {
   className?: string;
 } = {}) {
+  const t = useTranslations("hodl");
+
   return (
     <div className={className}>
       {WALLET_CHECK_RATINGS.map((rating) => (
         <div key={rating} className="flex items-center gap-1.5">
           <RatingSymbol rating={rating} />
           <span className="text-secondary text-[12.5px]">
-            {RATING_META[rating].label}
+            {t(`walletFinder.ratings.${rating}`)}
           </span>
         </div>
       ))}

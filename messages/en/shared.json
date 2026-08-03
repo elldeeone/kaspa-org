@@ -20,6 +20,13 @@
     "aria": "Kaspa logo",
     "viewAssets": "View logo assets"
   },
+  "pageSections": {
+    "onThisPage": "On this page",
+    "openAria": "Open page sections, current section {section}",
+    "dialogAria": "Page sections",
+    "close": "Close",
+    "current": "Current"
+  },
   "footer": {
     "glyphAria": "Kaspa glyph",
     "operatedBy": "Operated by <operator>KasMedia.com</operator>",

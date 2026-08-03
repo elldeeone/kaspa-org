@@ -24,7 +24,7 @@ export type BrowserExample = {
   shortLabel: string;
   mobileTabLabel: string;
   desc: string;
-  runtime: "RPC" | "Core";
+  runtime: string;
   path: string;
   source: string;
 };
@@ -60,6 +60,14 @@ export type LinkGroup = {
 };
 
 export type DevelopmentCard = {
+  id:
+    | "channel"
+    | "research"
+    | "toccata"
+    | "silverscript"
+    | "vprogs"
+    | "python"
+    | "kips";
   label: string;
   title: string;
   desc: string;

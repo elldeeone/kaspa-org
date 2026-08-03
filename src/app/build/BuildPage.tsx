@@ -1,16 +1,15 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
+import { useTranslations } from "next-intl";
 
-import MarketingPageShell from "../components/MarketingPageShell";
 import { openKaspaAi } from "../components/aiLauncherEvents";
 import PageSectionsNav from "../components/page-sections/PageSectionsNav";
 import { useFloatingSectionNav } from "../components/page-sections/useFloatingSectionNav";
 import {
-  mobileSectionLinks,
-  sectionLinks,
   type BrowserExample,
   type SectionId,
+  useBuildNavigation,
 } from "./content";
 import AccessSection from "./sections/AccessSection";
 import DevelopmentsSection from "./sections/DevelopmentsSection";
@@ -21,13 +20,10 @@ import StartSection from "./sections/StartSection";
 import ToolingSection from "./sections/ToolingSection";
 import TryLiveSection from "./sections/TryLiveSection";
 
-export default function BuildPage({
-  aiAvailable,
-  aiLauncher,
-}: {
-  aiAvailable: boolean;
-  aiLauncher?: ReactNode;
-}) {
+export default function BuildPage({ aiAvailable }: { aiAvailable: boolean }) {
+  const t = useTranslations("build.navigation");
+  const { mobileSectionLinks, sectionLinks, startRoutes } =
+    useBuildNavigation();
   const [activeExampleId, setActiveExampleId] =
     useState<BrowserExample["id"]>("server-info");
 
@@ -41,7 +37,7 @@ export default function BuildPage({
   };
 
   return (
-    <MarketingPageShell afterFooter={aiLauncher}>
+    <>
       <PageSectionsNav<SectionId>
         sheetId="mobile-section-sheet"
         sectionLinks={sectionLinks}
@@ -52,7 +48,9 @@ export default function BuildPage({
         sectionNavIdle={nav.sectionNavIdle}
         mobileNavOpen={nav.mobileNavOpen}
         mobileCurrentLabel={
-          nav.activeSection === "start" ? "Build" : nav.activeSectionLink.label
+          nav.activeSection === "start"
+            ? t("current")
+            : nav.activeSectionLink.label
         }
         onNavInteract={nav.markSectionNavActive}
         onOpenMobileNav={nav.openMobileNav}
@@ -65,6 +63,7 @@ export default function BuildPage({
         kaspaAiEnabled={aiAvailable}
         onOpenAi={() => handleOpenAi()}
         onHashClick={nav.handleHashClick}
+        startRoutes={startRoutes}
       />
       <TryLiveSection
         activeExampleId={activeExampleId}
@@ -76,6 +75,6 @@ export default function BuildPage({
       <AccessSection />
       <DevelopmentsSection />
       <HelpSection kaspaAiEnabled={aiAvailable} onOpenAi={handleOpenAi} />
-    </MarketingPageShell>
+    </>
   );
 }

@@ -1,7 +1,7 @@
 import { readFileSync, statSync } from "node:fs";
 import { extname, join } from "node:path";
 
-import { kaspaWallets } from "../src/data/wallets.ts";
+import { kaspaWalletRecords } from "../src/data/wallets.ts";
 import {
   ratingExplanations,
   walletCriteria,
@@ -45,7 +45,7 @@ function fail(path: string, message: string) {
   errors.push(`${path}: ${message}`);
 }
 
-function isNonEmptyString(value: unknown) {
+function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
 
@@ -55,6 +55,58 @@ function hasValidUrl(value: string) {
 
 function hasUrl(value: string) {
   return /https?:\/\/|www\./i.test(value);
+}
+
+function getWalletCatalogEntries() {
+  const catalogPath = join(process.cwd(), "messages", "en", "hodl.json");
+  let catalog: unknown;
+
+  try {
+    catalog = JSON.parse(readFileSync(catalogPath, "utf8"));
+  } catch (error) {
+    fail(
+      "messages/en/hodl.json",
+      `must be readable JSON (${error instanceof Error ? error.message : String(error)})`,
+    );
+    return {};
+  }
+
+  const wallets = (
+    catalog as {
+      walletFinder?: { wallets?: unknown };
+    }
+  )?.walletFinder?.wallets;
+
+  if (
+    typeof wallets !== "object" ||
+    wallets === null ||
+    Array.isArray(wallets)
+  ) {
+    fail(
+      "messages/en/hodl.json.walletFinder.wallets",
+      "must be an object keyed by wallet id",
+    );
+    return {};
+  }
+
+  return wallets as Record<string, unknown>;
+}
+
+function validateWalletSummary(path: string, summary: unknown) {
+  if (!isNonEmptyString(summary)) {
+    fail(path, "must be a non-empty string");
+    return;
+  }
+
+  if (summary.length > maxSummaryLength) {
+    fail(path, `must be ${maxSummaryLength} characters or fewer`);
+  }
+  if (/[\r\n]/.test(summary)) {
+    fail(path, "must be a single line");
+  }
+  if (hasUrl(summary)) {
+    fail(path, "must not contain URLs");
+  }
 }
 
 function getPublicFilePath(publicPath: string) {
@@ -243,9 +295,10 @@ function effectiveValidation(
 }
 
 const walletIds = new Set<string>();
+const walletCatalogEntries = getWalletCatalogEntries();
 
-kaspaWallets.forEach((wallet, walletIndex) => {
-  const walletPath = `kaspaWallets[${walletIndex}]`;
+kaspaWalletRecords.forEach((wallet, walletIndex) => {
+  const walletPath = `kaspaWalletRecords[${walletIndex}]`;
 
   if (!isNonEmptyString(wallet.id)) {
     fail(`${walletPath}.id`, "must be a non-empty string");
@@ -260,7 +313,7 @@ kaspaWallets.forEach((wallet, walletIndex) => {
     walletIds.add(wallet.id);
   }
 
-  for (const field of ["title", "icon", "summary"] as const) {
+  for (const field of ["title", "icon"] as const) {
     if (!isNonEmptyString(wallet[field])) {
       fail(`${walletPath}.${field}`, "must be a non-empty string");
     }
@@ -270,18 +323,21 @@ kaspaWallets.forEach((wallet, walletIndex) => {
     validateIcon(walletPath, wallet.id, wallet.icon);
   }
 
-  if (isNonEmptyString(wallet.summary)) {
-    if (wallet.summary.length > maxSummaryLength) {
-      fail(
-        `${walletPath}.summary`,
-        `must be ${maxSummaryLength} characters or fewer`,
+  if (isNonEmptyString(wallet.id)) {
+    const catalogEntry = walletCatalogEntries[wallet.id];
+    const catalogPath = `messages/en/hodl.json.walletFinder.wallets.${wallet.id}`;
+
+    if (
+      typeof catalogEntry !== "object" ||
+      catalogEntry === null ||
+      Array.isArray(catalogEntry)
+    ) {
+      fail(catalogPath, "must be an object containing summary");
+    } else {
+      validateWalletSummary(
+        `${catalogPath}.summary`,
+        (catalogEntry as Record<string, unknown>).summary,
       );
-    }
-    if (/[\r\n]/.test(wallet.summary)) {
-      fail(`${walletPath}.summary`, "must be a single line");
-    }
-    if (hasUrl(wallet.summary)) {
-      fail(`${walletPath}.summary`, "must not contain URLs");
     }
   }
 
@@ -461,6 +517,15 @@ kaspaWallets.forEach((wallet, walletIndex) => {
   });
 });
 
+for (const catalogWalletId of Object.keys(walletCatalogEntries)) {
+  if (!walletIds.has(catalogWalletId)) {
+    fail(
+      `messages/en/hodl.json.walletFinder.wallets.${catalogWalletId}`,
+      "does not have a matching wallet record",
+    );
+  }
+}
+
 if (errors.length > 0) {
   console.error("Wallet data validation failed:");
   for (const error of errors) {
@@ -469,4 +534,6 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log(`Wallet data validation passed (${kaspaWallets.length} wallets).`);
+console.log(
+  `Wallet data validation passed (${kaspaWalletRecords.length} wallets).`,
+);

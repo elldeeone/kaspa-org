@@ -1,8 +1,11 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 import ExternalLink from "../../components/ExternalLink";
 import ShuffledPromptPills from "../../components/ShuffledPromptPills";
 import { type OpenKaspaAiDetail } from "../../components/aiLauncherEvents";
 import { GridSurface } from "../../build/ui";
-import { helpPrompts } from "../content";
 import { ArrowUpRightIcon } from "../../components/icons";
 import { SparklesIcon } from "../icons";
 
@@ -16,6 +19,21 @@ export default function HelpSection({
   kaspaAiEnabled: boolean;
   onOpenAi: (prompt?: OpenKaspaAiDetail["prompt"]) => void;
 }) {
+  const t = useTranslations("hodl");
+  const helpPrompts = [
+    t("help.prompts.backupWallet"),
+    t("help.prompts.buyKas"),
+    t("help.prompts.firstPurchase"),
+    t("help.prompts.leaveOnExchange"),
+    t("help.prompts.moveFromExchange"),
+    t("help.prompts.fees"),
+    t("help.prompts.recoveryPhrase"),
+    t("help.prompts.walletVsExchange"),
+    t("help.prompts.receiveKas"),
+    t("help.prompts.multipleWallets"),
+    t("help.prompts.maxSupply"),
+  ];
+
   return (
     <section
       id="help"
@@ -28,21 +46,21 @@ export default function HelpSection({
           <div className="relative lg:grid lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-8">
             <div className="max-w-2xl">
               <p className="text-muted text-[13px] font-medium tracking-[0.08em] uppercase">
-                Help
+                {t("help.eyebrow")}
               </p>
               <h2 className="mt-3 text-[32px] leading-[1.02] font-medium tracking-[-0.03em] md:text-[40px]">
-                Keep moving
+                {t("help.heading")}
               </h2>
               <p className="text-tertiary mt-4 text-[16px] leading-[1.75]">
                 {kaspaAiEnabled
-                  ? "Ask Kaspa AI for instant answers on wallets, buying, and safety. For community help join Discord, or check a transaction on the explorer."
-                  : "For community help join Discord, or check a transaction on the explorer."}
+                  ? t("help.descriptionWithAi")
+                  : t("help.descriptionWithoutAi")}
               </p>
               {kaspaAiEnabled ? (
                 <div className="mt-8 flex flex-wrap gap-3">
                   <button onClick={() => onOpenAi()} className="btn-primary">
                     <SparklesIcon size={14} />
-                    Open AI
+                    {t("help.openAi")}
                   </button>
                 </div>
               ) : null}
@@ -63,11 +81,11 @@ export default function HelpSection({
                 style={{ background: "var(--surface)" }}
               >
                 <p className="text-muted text-[12px] font-medium tracking-[0.08em] uppercase">
-                  Community
+                  {t("help.community")}
                 </p>
                 <div className="mt-auto flex items-end justify-between gap-4 pt-10">
                   <span className="text-primary text-[22px] font-medium tracking-[-0.03em]">
-                    Discord
+                    {t("help.discord")}
                   </span>
                   <span className="text-muted group-hover:text-secondary inline-flex transition-all duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
                     <ArrowUpRightIcon size={13} />
@@ -81,11 +99,11 @@ export default function HelpSection({
                 style={{ background: "var(--surface)" }}
               >
                 <p className="text-muted text-[12px] font-medium tracking-[0.08em] uppercase">
-                  Track a transaction
+                  {t("help.trackTransaction")}
                 </p>
                 <div className="mt-auto flex items-end justify-between gap-4 pt-10">
                   <span className="text-primary text-[22px] font-medium tracking-[-0.03em]">
-                    Explorer
+                    {t("help.explorer")}
                   </span>
                   <span className="text-muted group-hover:text-secondary inline-flex transition-all duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
                     <ArrowUpRightIcon size={13} />

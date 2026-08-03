@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { ChevronRightIcon } from "../icons";
 import type { PageSectionLink } from "./types";
 
@@ -24,6 +26,8 @@ export default function SectionNavMobileBar<T extends string>({
   onOpenMobileNav,
   sheetId,
 }: SectionNavMobileBarProps<T>): React.JSX.Element {
+  const t = useTranslations("shared.pageSections");
+
   return (
     <div
       className={`fixed inset-x-0 top-16 z-40 transition-all duration-300 md:hidden ${
@@ -44,12 +48,12 @@ export default function SectionNavMobileBar<T extends string>({
             type="button"
             aria-expanded={mobileNavOpen}
             aria-controls={sheetId}
-            aria-label={`Open page sections, current section ${activeSectionLink.label}`}
+            aria-label={t("openAria", { section: activeSectionLink.label })}
             onClick={onOpenMobileNav}
             className="text-secondary hover:text-primary inline-flex shrink-0 items-center gap-2 transition-colors"
           >
             <span className="text-muted shrink-0 text-[10px] font-medium tracking-[0.12em] uppercase">
-              On this page
+              {t("onThisPage")}
             </span>
             <span className="text-muted">
               <ChevronRightIcon size={10} />

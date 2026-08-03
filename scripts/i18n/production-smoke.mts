@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 
+import { PSEUDO_BUILD_EXAMPLE_URLS } from "./build-example-artifacts.mts";
 import {
   RESERVED_NOT_FOUND_PATHNAME,
   ROUTE_MISS_HEADER,
@@ -37,6 +38,10 @@ async function main() {
     const prefixed = await request("/en/lore", 307);
     assert.equal(prefixed.headers.get("location"), "/lore");
 
+    for (const pathname of PSEUDO_BUILD_EXAMPLE_URLS) {
+      await request(pathname, 404);
+    }
+
     for (const pathname of [
       "/missing",
       "/es/missing",
@@ -49,6 +54,9 @@ async function main() {
       "/en/opengraph-image",
       "/en-XA",
       "/en-XA/lore",
+      "/en-XA/build",
+      "/en-XA/assets",
+      "/en-XA/hodl",
       "/en-XA/missing",
       "/en-XA/opengraph-image",
     ]) {

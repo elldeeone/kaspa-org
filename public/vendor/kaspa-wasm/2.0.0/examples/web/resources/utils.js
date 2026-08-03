@@ -1,3 +1,5 @@
+import { resolveBuildExampleReturnPath } from './return-path.mjs';
+
 document.body.innerHTML =
 `<a id="back-link" href="/build#try-live"><- Back</a> | Network: <span id="menu"></span><span id="actions"></span><br>
 `
@@ -54,8 +56,13 @@ function setupBackLink() {
         return;
     }
 
-    const fallback = '/build#try-live';
-    backLink.setAttribute('href', fallback);
+    const returnTo = new URLSearchParams(window.location.search).get('returnTo');
+    const returnPath = resolveBuildExampleReturnPath(
+        returnTo,
+        window.location.origin,
+        '/build'
+    );
+    backLink.setAttribute('href', returnPath);
 
     if (window.top !== window.self) {
         backLink.setAttribute('target', '_top');
@@ -74,18 +81,8 @@ function setupBackLink() {
         referrer.origin === window.location.origin &&
         referrer.pathname === '/build';
 
-    if (cameFromBuild) {
-        backLink.setAttribute(
-            'href',
-            referrer.hash ? referrer.toString() : `/build#try-live`
-        );
-
-        backLink.addEventListener('click', (event) => {
-            if (window.history.length > 1) {
-                event.preventDefault();
-                window.history.back();
-            }
-        });
+    if (cameFromBuild && !returnTo) {
+        backLink.setAttribute('href', '/build#try-live');
     }
 }
 

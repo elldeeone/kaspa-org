@@ -49,5 +49,5 @@ export default async function AssetsRoute({
 }) {
   const { locale } = resolvePageRoute((await params).locale);
   setRequestLocale(locale);
-  return <AssetsPageContent />;
+  return <AssetsPageContent locale={locale} />;
 }

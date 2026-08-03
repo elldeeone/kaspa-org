@@ -1,9 +1,14 @@
+import { useTranslations } from "next-intl";
+
 import ExternalLink from "../../components/ExternalLink";
 import SectionHeading from "../../components/SectionHeading";
-import { KASPA_ACCENT, networkAccessGroups } from "../content";
+import { KASPA_ACCENT, useNetworkAccessGroups } from "../content";
 import { ArrowUpRightIcon } from "../icons";
 
 export default function AccessSection() {
+  const t = useTranslations("build.access");
+  const networkAccessGroups = useNetworkAccessGroups();
+
   return (
     <section
       id="access"
@@ -13,9 +18,9 @@ export default function AccessSection() {
       <div className="mx-auto max-w-6xl lg:grid lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-12">
         <div className="h-fit lg:sticky lg:top-32">
           <SectionHeading
-            label="Access"
-            title="Network access"
-            description="Docs, query surfaces, node references, and test flows grouped by what builders actually need."
+            label={t("heading.label")}
+            title={t("heading.title")}
+            description={t("heading.description")}
           />
         </div>
 

@@ -20,7 +20,11 @@ export default async function LorePage({
         aiAvailable ? <LocalizedAiLauncherEntry locale={locale} /> : null
       }
     >
-      <LoreArticle contributors={shown} totalContributors={total} />
+      <LoreArticle
+        contributors={shown}
+        locale={locale}
+        totalContributors={total}
+      />
     </MarketingPageShell>
   );
 }

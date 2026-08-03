@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 
 import {
+  isPseudoLocaleEnabled,
   defaultLocale,
   localeCodes,
   pseudoLocale,
@@ -12,10 +13,12 @@ import {
   stablePathnames,
 } from "../../src/i18n/manifest.ts";
 import {
+  assertPreviewLocaleComplete,
   getRouteDefinition,
   listPublishedLocales,
   resolvePublishedRoute,
 } from "../../src/i18n/site.ts";
+import { englishMessages } from "../../src/i18n/messages.ts";
 import { shouldBypassLocaleRouting } from "../../src/i18n/proxy-policy.ts";
 import { analyzeAppRouteFile, isAppRouteFile } from "./app-route-policy.mts";
 import {
@@ -64,6 +67,14 @@ for (const namespace of sourceNamespaces) {
   errors.push(...result.errors);
   if (result.catalog) sourceCatalogs.set(namespace, result.catalog);
 }
+
+const registeredNamespaces = Object.keys(englishMessages).sort();
+if (JSON.stringify(sourceNamespaces) !== JSON.stringify(registeredNamespaces)) {
+  fail(
+    "src/i18n/messages.ts",
+    `registered namespaces ${JSON.stringify(registeredNamespaces)} do not match source catalogs ${JSON.stringify(sourceNamespaces)}`,
+  );
+}
 for (const namespace of [...requiredNamespaces].sort()) {
   const location = `messages/${defaultLocale}/${namespace}.json`;
   if (!existsSync(join(repositoryRoot, location))) {
@@ -87,6 +98,10 @@ const requiredSemanticKeys = {
     "openGraph.heading",
     "openGraph.tagline",
   ],
+  lore: ["metadata.title", "metadata.description", "openGraph.imageAlt"],
+  build: ["metadata.title", "metadata.description", "openGraph.imageAlt"],
+  assets: ["metadata.title", "metadata.description", "openGraph.imageAlt"],
+  hodl: ["metadata.title", "metadata.description", "openGraph.imageAlt"],
 } as const;
 
 for (const [namespace, keys] of Object.entries(requiredSemanticKeys)) {
@@ -198,6 +213,17 @@ for (const routeId of routeIds) {
   }
 }
 
+if (isPseudoLocaleEnabled) {
+  try {
+    assertPreviewLocaleComplete(pseudoLocale);
+  } catch (error) {
+    fail(
+      "src/i18n/site.ts",
+      error instanceof Error ? error.message : String(error),
+    );
+  }
+}
+
 for (const adapterPath of localizedAdapters) {
   if (!existsSync(join(repositoryRoot, adapterPath))) {
     fail(adapterPath, "required localized route adapter is missing");
@@ -288,6 +314,6 @@ if (errors.length) {
   process.exitCode = 1;
 } else {
   console.log(
-    `i18n validation passed: ${localeCodes.length} locale, ${routeIds.length} routes, Phase 2 catalog and route contracts valid`,
+    `i18n validation passed: ${localeCodes.length} locale, ${routeIds.length} routes, Phase 3 full-site contracts valid`,
   );
 }

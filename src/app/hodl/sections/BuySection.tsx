@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import type { RefObject } from "react";
 
 import ExternalLink from "../../components/ExternalLink";
@@ -9,6 +12,8 @@ export default function BuySection({
 }: {
   headingRef?: RefObject<HTMLHeadingElement | null>;
 }) {
+  const t = useTranslations("hodl");
+
   return (
     <section
       id="buy"
@@ -17,8 +22,8 @@ export default function BuySection({
       <div className="mx-auto max-w-7xl lg:pl-[96px]">
         <JourneyStepHeader
           step={2}
-          title="Buy KAS"
-          description="KAS is listed on many exchanges. Acquire it on a platform supported in your region, then transfer it to your private wallet."
+          title={t("buy.heading")}
+          description={t("buy.description")}
           headingRef={headingRef}
         />
 
@@ -45,7 +50,7 @@ export default function BuySection({
               className="text-primary col-span-2 flex items-center justify-center text-[clamp(16px,2vw,24px)] font-semibold"
               style={{ background: "var(--surface)" }}
             >
-              And 50+ more
+              {t("buy.moreExchanges", { count: 50 })}
             </div>
           </div>
         </div>

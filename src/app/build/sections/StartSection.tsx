@@ -1,14 +1,15 @@
 import type { MouseEventHandler } from "react";
+import { useTranslations } from "next-intl";
 
 import ExternalLink from "../../components/ExternalLink";
-import type { SectionId } from "../content";
+import type { SectionId, StartRoute } from "../content";
 import {
+  BUILD_TERMS,
   DOCS_URL,
   KASPA_ACCENT,
   KASPA_VERSION,
   RUSTY_KASPA_URL,
   RUSTY_RELEASE_URL,
-  startRoutes,
 } from "../content";
 import { ArrowUpRightIcon, ChevronRightIcon, SparklesIcon } from "../icons";
 import { GridSurface } from "../ui";
@@ -17,11 +18,15 @@ export default function StartSection({
   kaspaAiEnabled,
   onOpenAi,
   onHashClick,
+  startRoutes,
 }: {
   kaspaAiEnabled: boolean;
   onOpenAi: () => void;
   onHashClick: (href: `#${SectionId}`) => MouseEventHandler<HTMLAnchorElement>;
+  startRoutes: StartRoute[];
 }) {
+  const t = useTranslations("build.start");
+
   return (
     <section
       id="start"
@@ -48,10 +53,10 @@ export default function StartSection({
               className="rounded-full px-3.5 py-1.5 text-[var(--btn-primary-text)]"
               style={{ background: "var(--btn-primary-bg)" }}
             >
-              {KASPA_VERSION}
+              {t("release.version", { version: KASPA_VERSION })}
             </span>
             <span className="text-secondary flex items-center gap-2 px-3.5 py-1.5">
-              View release
+              {t("release.action")}
               <span className="text-muted inline-block transition-transform duration-200 group-hover:translate-x-[2px]">
                 &rarr;
               </span>
@@ -59,12 +64,15 @@ export default function StartSection({
           </ExternalLink>
 
           <h1 className="mt-7 text-[40px] leading-[0.92] font-bold tracking-[-0.04em] sm:text-[46px] md:text-[60px] lg:text-[72px]">
-            Build on Kaspa
+            {t("heading", { kaspa: BUILD_TERMS.kaspa })}
           </h1>
 
           <p className="text-secondary mx-auto mt-5 max-w-2xl text-[17px] leading-[1.7] sm:text-[18px] md:text-[20px] lg:mx-0">
-            WASM SDK, native Rust libraries, and node infrastructure for
-            building on Kaspa.
+            {t("description", {
+              kaspa: BUILD_TERMS.kaspa,
+              rust: BUILD_TERMS.rust,
+              wasmSdk: BUILD_TERMS.wasmSdk,
+            })}
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:mt-10 sm:flex-row lg:items-stretch lg:justify-start">
@@ -72,13 +80,14 @@ export default function StartSection({
               href={DOCS_URL}
               className="btn-primary w-full justify-center sm:w-auto"
             >
-              Open docs <ChevronRightIcon />
+              {t("actions.openDocs")} <ChevronRightIcon />
             </ExternalLink>
             <ExternalLink
               href={RUSTY_KASPA_URL}
               className="btn-ghost w-full justify-center sm:w-auto"
             >
-              View on GitHub <ArrowUpRightIcon />
+              {t("actions.viewGitHub", { github: BUILD_TERMS.github })}{" "}
+              <ArrowUpRightIcon />
             </ExternalLink>
           </div>
         </div>
@@ -95,15 +104,17 @@ export default function StartSection({
             <GridSurface />
             <div className="relative">
               <p className="text-muted text-[12px] font-medium tracking-[0.08em] uppercase">
-                Fastest way in
+                {t("quickstart.eyebrow")}
               </p>
               <h2 className="mt-2 max-w-lg text-[22px] leading-[1.06] font-medium tracking-[-0.03em] md:text-[26px] lg:text-[28px]">
-                Start building
+                {t("quickstart.title")}
               </h2>
               <p className="text-tertiary mt-2.5 max-w-lg text-[14px] leading-[1.65] md:text-[15px]">
                 {kaspaAiEnabled
-                  ? "Use Kaspa AI for direction, then jump into the route that matches what you need."
-                  : "Start with the docs, live examples, or node route that matches what you need."}
+                  ? t("quickstart.descriptionWithAi", {
+                      kaspaAi: BUILD_TERMS.kaspaAi,
+                    })
+                  : t("quickstart.descriptionWithoutAi")}
               </p>
 
               {kaspaAiEnabled ? (
@@ -124,10 +135,15 @@ export default function StartSection({
                     </span>
                     <div className="min-w-0">
                       <p className="text-primary truncate text-[15px] font-medium tracking-[-0.02em]">
-                        Ask Kaspa AI
+                        {t("quickstart.aiTitle", {
+                          kaspaAi: BUILD_TERMS.kaspaAi,
+                        })}
                       </p>
                       <p className="text-tertiary mt-1 text-[13px] leading-[1.55]">
-                        Get pointed to the right SDK, API, or node path.
+                        {t("quickstart.aiDescription", {
+                          api: BUILD_TERMS.api,
+                          sdk: BUILD_TERMS.sdk,
+                        })}
                       </p>
                     </div>
                   </div>
@@ -139,7 +155,7 @@ export default function StartSection({
 
               <div className="border-subtle mt-5 border-t pt-5">
                 <p className="text-muted text-[12px] font-medium tracking-[0.08em] uppercase">
-                  Jump straight to
+                  {t("quickstart.jumpLabel")}
                 </p>
                 <div className="mt-3 grid gap-2 lg:grid-cols-3">
                   {startRoutes.map((card) => (

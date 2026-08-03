@@ -47,3 +47,11 @@ next-env.d.ts
 
 # lighthouse reports
 /lighthouse
+
+# private generated i18n Build examples
+/public/vendor/kaspa-wasm/2.0.0/examples/web/get-block-dag-info.en-XA.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/get-server-info.en-XA.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-block-added.en-XA.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-daa-changed.en-XA.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/utxo-context.en-XA.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/resources/utils.en-XA.js

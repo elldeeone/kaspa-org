@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "title": "Kaspa Logos & Assets | Kaspa",
+    "description": "Download the official Kaspa logo set — horizontal and stacked lockups, the icon, and brand colors. SVG and high-resolution PNG."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Real-time Decentralization"
+  },
+  "page": {
+    "heading": "Kaspa logo assets"
+  },
+  "groups": {
+    "lockup": "Horizontal",
+    "stacked": "Stacked",
+    "icon": "Icon"
+  },
+  "logos": {
+    "lockupColor": {
+      "name": "Full color",
+      "imageAlt": "Kaspa full color logo",
+      "downloadAria": "Download Kaspa horizontal full color logo as {format}"
+    },
+    "lockupReverse": {
+      "name": "Reverse",
+      "imageAlt": "Kaspa reverse logo",
+      "downloadAria": "Download Kaspa horizontal reverse logo as {format}"
+    },
+    "lockupBlack": {
+      "name": "Black",
+      "imageAlt": "Kaspa black logo",
+      "downloadAria": "Download Kaspa horizontal black logo as {format}"
+    },
+    "lockupWhite": {
+      "name": "White",
+      "imageAlt": "Kaspa white logo",
+      "downloadAria": "Download Kaspa horizontal white logo as {format}"
+    },
+    "lockupOutline": {
+      "name": "Outline",
+      "imageAlt": "Kaspa outline logo",
+      "downloadAria": "Download Kaspa horizontal outline logo as {format}"
+    },
+    "stackedColor": {
+      "name": "Full color",
+      "imageAlt": "Kaspa full color logo",
+      "downloadAria": "Download Kaspa stacked full color logo as {format}"
+    },
+    "stackedReverse": {
+      "name": "Reverse",
+      "imageAlt": "Kaspa reverse logo",
+      "downloadAria": "Download Kaspa stacked reverse logo as {format}"
+    },
+    "stackedBlack": {
+      "name": "Black",
+      "imageAlt": "Kaspa black logo",
+      "downloadAria": "Download Kaspa stacked black logo as {format}"
+    },
+    "stackedWhite": {
+      "name": "White",
+      "imageAlt": "Kaspa white logo",
+      "downloadAria": "Download Kaspa stacked white logo as {format}"
+    },
+    "stackedOutline": {
+      "name": "Outline",
+      "imageAlt": "Kaspa outline logo",
+      "downloadAria": "Download Kaspa stacked outline logo as {format}"
+    },
+    "iconGreen": {
+      "name": "Green",
+      "imageAlt": "Kaspa green logo",
+      "downloadAria": "Download Kaspa icon green logo as {format}"
+    },
+    "iconGreenDark": {
+      "name": "Green on dark",
+      "imageAlt": "Kaspa green on dark logo",
+      "downloadAria": "Download Kaspa icon green on dark logo as {format}"
+    },
+    "iconBlack": {
+      "name": "Black",
+      "imageAlt": "Kaspa black logo",
+      "downloadAria": "Download Kaspa icon black logo as {format}"
+    },
+    "iconWhite": {
+      "name": "White",
+      "imageAlt": "Kaspa white logo",
+      "downloadAria": "Download Kaspa icon white logo as {format}"
+    }
+  },
+  "formats": {
+    "svg": "SVG",
+    "png": "PNG"
+  }
+}

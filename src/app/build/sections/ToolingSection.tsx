@@ -1,10 +1,15 @@
+import { useTranslations } from "next-intl";
+
 import ExternalLink from "../../components/ExternalLink";
 import SectionHeading from "../../components/SectionHeading";
-import { communityTools, emergingTools, toolingCards } from "../content";
+import { BUILD_TERMS, useToolingCards } from "../content";
 import { ArrowUpRightIcon } from "../icons";
 import { MetaPill } from "../ui";
 
 export default function ToolingSection() {
+  const t = useTranslations("build.tooling");
+  const { communityTools, emergingTools, toolingCards } = useToolingCards();
+
   return (
     <section
       id="tooling"
@@ -13,9 +18,9 @@ export default function ToolingSection() {
       <div className="mx-auto max-w-6xl lg:grid lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-12">
         <div className="h-fit lg:sticky lg:top-32">
           <SectionHeading
-            label="Tooling"
-            title="Current toolchain"
-            description="The stable surfaces builders can rely on today, with emerging work called out separately."
+            label={t("heading.label")}
+            title={t("heading.title")}
+            description={t("heading.description")}
           />
         </div>
 
@@ -103,14 +108,16 @@ export default function ToolingSection() {
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
               <div className="max-w-2xl">
                 <p className="text-muted text-[13px] font-medium tracking-[0.08em] uppercase">
-                  Community projects
+                  {t("community.eyebrow")}
                 </p>
                 <h3 className="mt-3 text-[24px] leading-[1.06] font-medium tracking-[-0.03em] md:text-[28px]">
-                  Ecosystem tools and infra
+                  {t("community.title")}
                 </h3>
                 <p className="text-tertiary mt-3 text-[15px] leading-[1.72]">
-                  Open-source projects from the broader Kaspa ecosystem that
-                  complement the upstream SDK and node stack.
+                  {t("community.description", {
+                    kaspa: BUILD_TERMS.kaspa,
+                    sdk: BUILD_TERMS.sdk,
+                  })}
                 </p>
               </div>
             </div>
@@ -131,7 +138,7 @@ export default function ToolingSection() {
                     {tool.desc}
                   </p>
                   <div className="text-secondary group-hover:text-primary mt-3 inline-flex items-center gap-2 text-[14px] font-medium transition-colors md:mt-4">
-                    Open
+                    {t("community.open")}
                     <span className="inline-flex transition-transform duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
                       <ArrowUpRightIcon size={11} />
                     </span>

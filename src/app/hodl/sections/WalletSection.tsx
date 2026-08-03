@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import type { RefObject } from "react";
 
 import { ACCENT } from "../content";
@@ -10,6 +13,8 @@ export default function WalletSection({
 }: {
   headingRef?: RefObject<HTMLHeadingElement | null>;
 }) {
+  const t = useTranslations("hodl");
+
   return (
     <section
       id="wallet"
@@ -19,8 +24,8 @@ export default function WalletSection({
       <div className="mx-auto max-w-7xl lg:pl-[96px]">
         <JourneyStepHeader
           step={1}
-          title="Get a wallet"
-          description="Choose a wallet that fits how you plan to hold and use KAS."
+          title={t("wallet.heading")}
+          description={t("wallet.description")}
           headingRef={headingRef}
         />
 
@@ -31,10 +36,10 @@ export default function WalletSection({
             <ShieldKeyIcon />
           </div>
           <p className="text-secondary text-[14px] leading-[1.7]">
-            <strong className="text-primary font-medium">Important:</strong>{" "}
-            Back up your recovery phrase or wallet instructions before moving
-            meaningful funds. Send a small test transaction first, then move the
-            rest only after it arrives.
+            <strong className="text-primary font-medium">
+              {t("wallet.safety.label")}
+            </strong>{" "}
+            {t("wallet.safety.body")}
           </p>
         </div>
       </div>

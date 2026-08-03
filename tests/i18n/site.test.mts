@@ -10,6 +10,7 @@ import {
 import {
   RESERVED_NOT_FOUND_PATHNAME,
   ROUTE_MISS_HEADER,
+  isLocaleRouteSetComplete,
   isPathnamePublished,
   routeIds,
   stablePathnames,
@@ -23,6 +24,7 @@ import {
 } from "../../src/i18n/proxy-policy.ts";
 import {
   NEXT_INTL_LOCALE_HEADER,
+  assertPreviewLocaleComplete,
   createRouteMetadata,
   listEnabledLocales,
   listDiscoverableRoutes,
@@ -32,6 +34,35 @@ import {
   resolveRouteRequest,
   siteUrl,
 } from "../../src/i18n/site.ts";
+
+const previewRouteMatrix = [
+  { routeId: "home", locale: "en", canonicalPathname: "/" },
+  { routeId: "home", locale: pseudoLocale, canonicalPathname: "/en-XA" },
+  { routeId: "lore", locale: "en", canonicalPathname: "/lore" },
+  {
+    routeId: "lore",
+    locale: pseudoLocale,
+    canonicalPathname: "/en-XA/lore",
+  },
+  { routeId: "build", locale: "en", canonicalPathname: "/build" },
+  {
+    routeId: "build",
+    locale: pseudoLocale,
+    canonicalPathname: "/en-XA/build",
+  },
+  { routeId: "assets", locale: "en", canonicalPathname: "/assets" },
+  {
+    routeId: "assets",
+    locale: pseudoLocale,
+    canonicalPathname: "/en-XA/assets",
+  },
+  { routeId: "hodl", locale: "en", canonicalPathname: "/hodl" },
+  {
+    routeId: "hodl",
+    locale: pseudoLocale,
+    canonicalPathname: "/en-XA/hodl",
+  },
+] as const;
 
 test("the active build profile keeps discovery English-only", () => {
   const pseudoEnabled = i18nBuildTarget !== "production";
@@ -52,9 +83,11 @@ test("the active build profile keeps discovery English-only", () => {
   for (const routeId of routeIds) {
     assert.deepEqual(
       listPublishedLocales(routeId),
-      pseudoEnabled && routeId === "home" ? ["en", pseudoLocale] : ["en"],
+      pseudoEnabled ? ["en", pseudoLocale] : ["en"],
     );
   }
+  assert.equal(isLocaleRouteSetComplete("en"), true);
+  assert.equal(isLocaleRouteSetComplete(pseudoLocale), pseudoEnabled);
   for (const pathname of stablePathnames) {
     assert.equal(isPathnamePublished(pathname, "en"), true, pathname);
     assert.equal(
@@ -66,7 +99,7 @@ test("the active build profile keeps discovery English-only", () => {
   assert.equal(isPathnamePublished("/es/historia", "en"), false);
 
   const publishedRoutes = listPublishedRoutes();
-  assert.equal(publishedRoutes.length, pseudoEnabled ? 6 : 5);
+  assert.equal(publishedRoutes.length, pseudoEnabled ? 10 : 5);
   assert.deepEqual(
     listDiscoverableRoutes().map((route) => route.canonicalUrl),
     [
@@ -77,12 +110,12 @@ test("the active build profile keeps discovery English-only", () => {
       `${siteUrl}/hodl`,
     ],
   );
-  assert.equal(
-    resolvePublishedRoute("home", pseudoLocale)?.publication ?? null,
-    pseudoEnabled ? "preview" : null,
-  );
-  for (const routeId of ["lore", "build", "assets", "hodl"] as const) {
-    assert.equal(resolvePublishedRoute(routeId, pseudoLocale), null);
+  for (const routeId of routeIds) {
+    assert.equal(
+      resolvePublishedRoute(routeId, pseudoLocale)?.publication ?? null,
+      pseudoEnabled ? "preview" : null,
+      routeId,
+    );
   }
 });
 
@@ -129,6 +162,52 @@ test("route resolution accepts only enabled locale prefixes and fixed English sl
     assert.equal(resolveRouteRequest(pathname), null, pathname);
   }
 });
+
+test(
+  "Preview publishes the exact complete private pseudo route matrix",
+  { skip: i18nBuildTarget === "production" },
+  () => {
+    assert.doesNotThrow(() => assertPreviewLocaleComplete(pseudoLocale));
+    assert.deepEqual(
+      listPublishedRoutes().map(({ routeId, locale, canonicalPathname }) => ({
+        routeId,
+        locale,
+        canonicalPathname,
+      })),
+      previewRouteMatrix,
+    );
+
+    for (const routeId of routeIds) {
+      const stablePathname = stablePathnames[routeIds.indexOf(routeId)];
+      const localizedPathname =
+        stablePathname === "/"
+          ? `/${pseudoLocale}`
+          : `/${pseudoLocale}${stablePathname}`;
+      const route = resolvePublishedRoute(routeId, pseudoLocale);
+      assert.ok(route);
+      assert.equal(route.pathname, stablePathname);
+      assert.equal(route.canonicalPathname, localizedPathname);
+      assert.deepEqual(resolveRouteRequest(localizedPathname), {
+        routeId,
+        locale: pseudoLocale,
+        stablePathname,
+        hadLocalePrefix: true,
+      });
+
+      const metadata = createRouteMetadata(routeId, pseudoLocale);
+      assert.ok(metadata);
+      assert.deepEqual(metadata.alternates, {
+        canonical: null,
+        languages: undefined,
+      });
+      assert.equal(metadata.openGraph, undefined);
+      assert.equal(metadata.twitter, undefined);
+      assert.deepEqual(metadata.robots, { index: false, follow: false });
+    }
+
+    assert.equal(resolveRouteRequest(`/${pseudoLocale}/historia`), null);
+  },
+);
 
 test("published route contexts and English metadata share one authority", () => {
   const expected = {

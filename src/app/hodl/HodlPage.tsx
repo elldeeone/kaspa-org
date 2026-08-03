@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, useRef, type ReactNode } from "react";
+import { useMemo, useRef } from "react";
+import { useTranslations } from "next-intl";
 
-import MarketingPageShell from "../components/MarketingPageShell";
 import { openKaspaAi } from "../components/aiLauncherEvents";
 import PageSectionsNav from "../components/page-sections/PageSectionsNav";
+import type { PageSectionLink } from "../components/page-sections/types";
 import { useFloatingSectionNav } from "../components/page-sections/useFloatingSectionNav";
-import { mobileSectionLinks, sectionLinks, type UseSectionId } from "./content";
+import type { UseSectionId } from "./content";
 import BuySection from "./sections/BuySection";
 import HelpSection from "./sections/HelpSection";
 import JourneyRail, { type JourneyRailStep } from "./sections/JourneyRail";
@@ -15,19 +16,48 @@ import TransferSection from "./sections/TransferSection";
 import WalletSection from "./sections/WalletSection";
 import { StepConnector } from "./ui";
 
-export default function HodlPage({
-  aiAvailable,
-  aiLauncher,
-}: {
-  aiAvailable: boolean;
-  aiLauncher?: ReactNode;
-}) {
+export default function HodlPage({ aiAvailable }: { aiAvailable: boolean }) {
+  const t = useTranslations("hodl");
   const walletHeadingRef = useRef<HTMLHeadingElement | null>(null);
   const buyHeadingRef = useRef<HTMLHeadingElement | null>(null);
   const transferHeadingRef = useRef<HTMLHeadingElement | null>(null);
 
+  const sectionLinks = useMemo<PageSectionLink<UseSectionId>[]>(
+    () => [
+      {
+        id: "wallet",
+        label: t("navigation.sections.wallet.label"),
+        compactLabel: t("navigation.sections.wallet.compactLabel"),
+        href: "#wallet",
+        description: t("navigation.sections.wallet.description"),
+      },
+      {
+        id: "buy",
+        label: t("navigation.sections.buy.label"),
+        compactLabel: t("navigation.sections.buy.compactLabel"),
+        href: "#buy",
+        description: t("navigation.sections.buy.description"),
+      },
+      {
+        id: "transfer",
+        label: t("navigation.sections.transfer.label"),
+        compactLabel: t("navigation.sections.transfer.compactLabel"),
+        href: "#transfer",
+        description: t("navigation.sections.transfer.description"),
+      },
+      {
+        id: "help",
+        label: t("navigation.sections.help.label"),
+        compactLabel: t("navigation.sections.help.compactLabel"),
+        href: "#help",
+        description: t("navigation.sections.help.description"),
+      },
+    ],
+    [t],
+  );
+
   const nav = useFloatingSectionNav<UseSectionId>({
-    links: mobileSectionLinks,
+    links: sectionLinks,
     initialSection: "start",
   });
 
@@ -60,11 +90,11 @@ export default function HodlPage({
   };
 
   return (
-    <MarketingPageShell afterFooter={aiLauncher}>
+    <>
       <PageSectionsNav<UseSectionId>
         sheetId="mobile-section-sheet-hodl"
         sectionLinks={sectionLinks}
-        mobileSectionLinks={mobileSectionLinks}
+        mobileSectionLinks={sectionLinks}
         activeSection={nav.activeSection}
         activeSectionLink={nav.activeSectionLink}
         showSectionNav={nav.showSectionNav}
@@ -72,7 +102,7 @@ export default function HodlPage({
         mobileNavOpen={nav.mobileNavOpen}
         mobileCurrentLabel={
           nav.activeSection === "start"
-            ? "HODL"
+            ? t("navigation.current")
             : nav.activeSectionLink.compactLabel
         }
         onNavInteract={nav.markSectionNavActive}
@@ -94,6 +124,6 @@ export default function HodlPage({
       </JourneyRail>
 
       <HelpSection kaspaAiEnabled={aiAvailable} onOpenAi={handleOpenAi} />
-    </MarketingPageShell>
+    </>
   );
 }

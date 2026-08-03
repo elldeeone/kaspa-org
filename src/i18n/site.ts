@@ -19,8 +19,8 @@ import {
   type StablePathname,
 } from "./manifest.ts";
 import {
-  getHomeMessages,
   getMessages,
+  getRouteMessages,
   loadMessages,
   type MessageNamespace,
 } from "./messages.ts";
@@ -40,7 +40,6 @@ type RouteDefinition = {
   id: RouteId;
   pathname: StablePathname;
   namespaces: readonly MessageNamespace[];
-  metadata: { title: string; description: string } | null;
   sitemap: {
     changeFrequency: "weekly" | "monthly";
     priority: number;
@@ -51,46 +50,26 @@ const routeDefinitions: Record<RouteId, RouteDefinition> = {
   home: {
     ...routeManifest.home,
     namespaces: ["shared", "home"],
-    metadata: null,
     sitemap: { changeFrequency: "weekly", priority: 1 },
   },
   lore: {
     ...routeManifest.lore,
-    namespaces: ["shared"],
-    metadata: {
-      title: "LORE | Kaspa",
-      description:
-        "Kaspa is a fair-launched proof-of-work blockDAG focused on real-time decentralization, with no premine, no insider allocation, and 10 BPS mainnet performance.",
-    },
+    namespaces: ["shared", "lore"],
     sitemap: { changeFrequency: "monthly", priority: 0.8 },
   },
   build: {
     ...routeManifest.build,
-    namespaces: ["shared"],
-    metadata: {
-      title: "Kaspa Developer Docs, SDKs, APIs, and Node Access | Kaspa",
-      description:
-        "Everything you need to start building on Kaspa. WASM SDK, Rust libraries, live API playground, node access, and developer tooling.",
-    },
+    namespaces: ["shared", "build"],
     sitemap: { changeFrequency: "weekly", priority: 0.9 },
   },
   assets: {
     ...routeManifest.assets,
-    namespaces: ["shared"],
-    metadata: {
-      title: "Kaspa Logos & Assets | Kaspa",
-      description:
-        "Download the official Kaspa logo set — horizontal and stacked lockups, the icon, and brand colors. SVG and high-resolution PNG.",
-    },
+    namespaces: ["shared", "assets"],
     sitemap: { changeFrequency: "monthly", priority: 0.7 },
   },
   hodl: {
     ...routeManifest.hodl,
-    namespaces: ["shared"],
-    metadata: {
-      title: "Buy KAS, Set Up a Wallet, and Self-Custody | Kaspa",
-      description: "Get a wallet, buy KAS, and transfer to self-custody.",
-    },
+    namespaces: ["shared", "hodl"],
     sitemap: { changeFrequency: "weekly", priority: 0.9 },
   },
 };
@@ -204,12 +183,8 @@ export function createRouteMetadata(
   const route = resolvePublishedRoute(routeId, locale);
   if (!route) return null;
 
-  const definition = routeDefinitions[routeId];
-  const localizedHome = routeId === "home" ? getHomeMessages(locale) : null;
-  const metadata = localizedHome?.metadata ?? definition.metadata;
-  if (!metadata) {
-    throw new Error(`Metadata is not configured for ${routeId}:${locale}`);
-  }
+  const routeMessages = getRouteMessages(locale, routeId);
+  const metadata = routeMessages.metadata;
   const publishedLocales = listDiscoverableLocales(routeId);
   const languages =
     publishedLocales.length > 1
@@ -221,16 +196,14 @@ export function createRouteMetadata(
       : undefined;
   const isPrivate = route.publication === "preview";
   const imagePathname =
-    routeId !== "home" || locale === defaultLocale
+    locale === defaultLocale
       ? "/opengraph-image"
       : `/${locale}/opengraph-image`;
-  const imageCopy =
-    localizedHome?.openGraph ?? getHomeMessages(defaultLocale).openGraph;
   const image = {
     url: imagePathname,
     width: 1200,
     height: 630,
-    alt: imageCopy.imageAlt,
+    alt: routeMessages.openGraph.imageAlt,
   } as const;
   const openGraphImage =
     routeId === "home" ? { ...image, type: "image/png" as const } : image;
@@ -274,6 +247,45 @@ export function isAiAvailable(
   locale: Locale,
 ): boolean {
   return isAiDeploymentEnabled && aiLocaleContracts[surfaceId][locale];
+}
+
+export function assertPreviewLocaleComplete(locale: Locale): void {
+  for (const routeId of routeIds) {
+    if (getRoutePublication(routeId, locale) !== "preview") {
+      throw new Error(
+        `${locale} is not preview-published for the complete route set: ${routeId}`,
+      );
+    }
+    if (isRouteDiscoverable(routeId, locale)) {
+      throw new Error(`${routeId}:${locale} must remain private`);
+    }
+
+    const definition = getRouteDefinition(routeId);
+    if (
+      !definition.namespaces.includes("shared") ||
+      !definition.namespaces.includes(routeId)
+    ) {
+      throw new Error(
+        `${routeId}:${locale} is missing its shared or route message namespace`,
+      );
+    }
+
+    const routeMessages = getRouteMessages(locale, routeId);
+    if (
+      !routeMessages.metadata.title ||
+      !routeMessages.metadata.description ||
+      !routeMessages.openGraph.imageAlt
+    ) {
+      throw new Error(
+        `${routeId}:${locale} is missing metadata or Open Graph copy`,
+      );
+    }
+    if (aiLocaleContracts[routeId][locale] !== false) {
+      throw new Error(
+        `${routeId}:${locale} must explicitly disable AI while it is private`,
+      );
+    }
+  }
 }
 
 const organizationId = `${siteUrl}#organization`;

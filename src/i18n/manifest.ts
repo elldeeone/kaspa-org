@@ -37,10 +37,22 @@ const publicationMatrix = {
     en: "public",
     "en-XA": isPseudoLocaleEnabled ? "preview" : false,
   },
-  lore: { en: "public", "en-XA": false },
-  build: { en: "public", "en-XA": false },
-  assets: { en: "public", "en-XA": false },
-  hodl: { en: "public", "en-XA": false },
+  lore: {
+    en: "public",
+    "en-XA": isPseudoLocaleEnabled ? "preview" : false,
+  },
+  build: {
+    en: "public",
+    "en-XA": isPseudoLocaleEnabled ? "preview" : false,
+  },
+  assets: {
+    en: "public",
+    "en-XA": isPseudoLocaleEnabled ? "preview" : false,
+  },
+  hodl: {
+    en: "public",
+    "en-XA": isPseudoLocaleEnabled ? "preview" : false,
+  },
 } as const satisfies Record<RouteId, Record<Locale, RoutePublication | false>>;
 
 export function getRoutePublication(
@@ -56,6 +68,10 @@ export function isRoutePublished(routeId: RouteId, locale: Locale): boolean {
 
 export function isRouteDiscoverable(routeId: RouteId, locale: Locale): boolean {
   return getRoutePublication(routeId, locale) === "public";
+}
+
+export function isLocaleRouteSetComplete(locale: Locale): boolean {
+  return routeIds.every((routeId) => isRoutePublished(routeId, locale));
 }
 
 export function isPathnamePublished(

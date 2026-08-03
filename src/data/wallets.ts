@@ -1,7 +1,9 @@
-import type { KaspaWallet } from "@/app/hodl/wallet-finder/types";
+import type { KaspaWalletRecord } from "@/app/hodl/wallet-finder/types";
+import type { AppMessages } from "@/i18n/messages";
 
 /*
-Add a wallet by adding one object to walletRecords.
+Add a wallet by adding one object to walletRecords and its English summary to
+messages/en/hodl.json under walletFinder.wallets.<wallet-id>.summary.
 See docs/wallet-submissions.md for the full submission template.
 
 Required:
@@ -16,14 +18,21 @@ Required:
 
 Maintainers validate rating accuracy before merge.
 */
-const walletRecords: KaspaWallet[] = [
+type WalletCatalogId = Extract<
+  keyof AppMessages["hodl"]["walletFinder"]["wallets"],
+  string
+>;
+
+type CatalogBackedWalletRecord = Omit<KaspaWalletRecord, "id"> & {
+  id: WalletCatalogId;
+};
+
+const walletRecords: CatalogBackedWalletRecord[] = [
   {
     id: "kaspa-cli-wallet",
     title: "CLI Wallet",
     icon: "/hodl/wallets/kaspa-cli-wallet/icon.png",
     user: "experienced",
-    summary:
-      "Command-line wallet tooling for users comfortable managing keys and transactions from a terminal.",
     platforms: ["windows", "mac", "linux"],
     features: ["multisig"],
     check: {
@@ -44,8 +53,6 @@ const walletRecords: KaspaWallet[] = [
     title: "KaspaCom Wallet",
     icon: "/hodl/wallets/kaspacom-wallet/icon.png",
     user: "beginner",
-    summary:
-      "A browser-based KaspaCom wallet for creating, importing, and using self-custodial Kaspa wallets.",
     platforms: ["windows", "mac", "linux", "ios", "android"],
     features: [],
     check: {
@@ -70,8 +77,6 @@ const walletRecords: KaspaWallet[] = [
     title: "Kaspium",
     icon: "/hodl/wallets/kaspium/icon.jpg",
     user: "beginner",
-    summary:
-      "A self-custodial mobile wallet for sending, receiving, and holding KAS from a phone.",
     platforms: ["ios", "android"],
     features: [],
     check: {
@@ -102,8 +107,6 @@ const walletRecords: KaspaWallet[] = [
     title: "Kaspa NG",
     icon: "/hodl/wallets/kng-desktop/icon.png",
     user: "beginner",
-    summary:
-      "A modern Kaspa desktop wallet with a friendly default UI, optional full-node operation, and deep configuration for advanced use.",
     platforms: ["windows", "mac", "linux"],
     features: [],
     check: {
@@ -128,8 +131,6 @@ const walletRecords: KaspaWallet[] = [
     title: "Kaspa NG Web",
     icon: "/hodl/wallets/kng-web/icon.png",
     user: "beginner",
-    summary:
-      "The browser-based version of Kaspa NG. Friendly by default, no installation needed, with optional advanced configuration.",
     platforms: ["windows", "mac", "linux", "ios", "android"],
     features: [],
     check: {
@@ -151,6 +152,6 @@ const walletRecords: KaspaWallet[] = [
   },
 ];
 
-export const kaspaWallets = [...walletRecords].sort((walletA, walletB) =>
+export const kaspaWalletRecords = [...walletRecords].sort((walletA, walletB) =>
   walletA.title.localeCompare(walletB.title),
 );

@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import type { RefObject } from "react";
 
 import { accentAlpha, KASPIUM_SCREENSHOT_SRC } from "./content";
@@ -51,6 +54,8 @@ export function PhoneFrame({
   className?: string;
   frameClassName?: string;
 }) {
+  const t = useTranslations("hodl");
+
   return (
     <div className={`relative ${className}`}>
       <div
@@ -58,7 +63,7 @@ export function PhoneFrame({
       >
         <Image
           src={KASPIUM_SCREENSHOT_SRC}
-          alt="Kaspium wallet app screenshot"
+          alt={t("media.kaspiumScreenshotAlt")}
           fill
           priority
           sizes="(min-width: 1024px) 240px, (min-width: 768px) 260px, 248px"

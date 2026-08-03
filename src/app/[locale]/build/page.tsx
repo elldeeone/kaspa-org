@@ -1,8 +1,11 @@
+import { NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 
 import BuildPage from "@/app/build/BuildPage";
 import LocalizedAiLauncherEntry from "@/app/components/LocalizedAiLauncherEntry";
+import MarketingPageShell from "@/app/components/MarketingPageShell";
 import { isLocale } from "@/i18n/config";
+import { getBuildClientMessages } from "@/i18n/messages";
 import {
   createRouteMetadata,
   isAiAvailable,
@@ -53,11 +56,17 @@ export default async function BuildRoute({
   setRequestLocale(locale);
   const aiAvailable = isAiAvailable(routeId, locale);
   return (
-    <BuildPage
-      aiAvailable={aiAvailable}
-      aiLauncher={
+    <MarketingPageShell
+      afterFooter={
         aiAvailable ? <LocalizedAiLauncherEntry locale={locale} /> : null
       }
-    />
+    >
+      <NextIntlClientProvider
+        locale={locale}
+        messages={getBuildClientMessages(locale)}
+      >
+        <BuildPage aiAvailable={aiAvailable} />
+      </NextIntlClientProvider>
+    </MarketingPageShell>
   );
 }

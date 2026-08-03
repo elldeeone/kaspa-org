@@ -6,6 +6,7 @@ import {
   pseudoLocalizeCatalog,
   pseudoLocalizeMessage,
 } from "../../src/i18n/pseudo.ts";
+import { englishMessages } from "../../src/i18n/messages.ts";
 import {
   PSEUDO_UNCHANGED_MESSAGE_KEYS,
   generatePseudoCatalog,
@@ -37,7 +38,7 @@ test("pseudo localization preserves approved proper nouns and code", () => {
   );
 });
 
-test("Phase 3 glossary terms still expand during Phase 2 pseudo QA", () => {
+test("Phase 3 glossary terms expand during full-site pseudo QA", () => {
   const terms = [
     "blockDAG",
     "proof-of-work",
@@ -58,6 +59,13 @@ test("Phase 3 glossary terms still expand during Phase 2 pseudo QA", () => {
 
   assert.match(result, /^\[!! /u);
   for (const term of terms) assert.equal(result.includes(term), false, term);
+
+  const pseudoTerms = pseudoLocalizeCatalog({
+    terms: englishMessages.build.terms,
+  }).terms;
+  for (const [key, source] of Object.entries(englishMessages.build.terms)) {
+    assert.notEqual(pseudoTerms[key as keyof typeof pseudoTerms], source, key);
+  }
 });
 
 test("ICU interface comparison rejects branch, style, tag, and pound drift", () => {

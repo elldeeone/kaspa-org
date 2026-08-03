@@ -31,6 +31,9 @@ const publicRoutes = [
     path: "/build",
     internalPath: "/en/build",
     baselineBytes: 98_334,
+    // Phase 3 keeps this interactive route client-side and serializes only its
+    // reviewed route catalog. Preserve the original baseline for other growth.
+    localizedClientPayloadBudgetBytes: 12_500,
     title: "Kaspa Developer Docs, SDKs, APIs, and Node Access | Kaspa",
     description:
       "Everything you need to start building on Kaspa. WASM SDK, Rust libraries, live API playground, node access, and developer tooling.",
@@ -47,6 +50,8 @@ const publicRoutes = [
     path: "/hodl",
     internalPath: "/en/hodl",
     baselineBytes: 91_253,
+    // The wallet finder has the same reviewed, route-scoped client-catalog cost.
+    localizedClientPayloadBudgetBytes: 12_500,
     title: "Buy KAS, Set Up a Wallet, and Self-Custody | Kaspa",
     description: "Get a wallet, buy KAS, and transfer to self-custody.",
   },
@@ -162,7 +167,10 @@ test.describe("Phase 1 i18n foundation", () => {
 
       const html = await response.text();
       expect(Buffer.byteLength(html), route.path).toBeLessThanOrEqual(
-        Math.floor(route.baselineBytes * 1.1),
+        Math.floor(route.baselineBytes * 1.1) +
+          ("localizedClientPayloadBudgetBytes" in route
+            ? route.localizedClientPayloadBudgetBytes
+            : 0),
       );
       expect(html, route.path).toContain('<html lang="en" dir="ltr"');
       expect(readMeta(html, "name", "viewport"), route.path).toBe(

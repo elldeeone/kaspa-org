@@ -1,7 +1,12 @@
 import { readFile, readdir } from "node:fs/promises";
-import { join, relative } from "node:path";
+import { join, relative, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
-import { resolveLocale, type Locale } from "../../src/i18n/config.ts";
+import {
+  pseudoLocale,
+  resolveLocale,
+  type Locale,
+} from "../../src/i18n/config.ts";
 import {
   getRouteIdForPathname,
   routeIds,
@@ -28,35 +33,61 @@ const sharedClientPaths = [
   "shared.theme",
 ] as const;
 
-const routePolicies = {
-  home: {
-    allowedPaths: sharedClientPaths,
-    requiredNamespaces: ["shared"],
-    requiredPaths: sharedClientPaths,
-  },
-  lore: {
-    allowedPaths: sharedClientPaths,
-    requiredNamespaces: ["shared"],
-    requiredPaths: sharedClientPaths,
-  },
+const routeClientPaths: Readonly<
+  Partial<Record<RouteId, { readonly allowedPaths: readonly string[] }>>
+> = {
   build: {
-    allowedPaths: sharedClientPaths,
-    requiredNamespaces: ["shared"],
-    requiredPaths: sharedClientPaths,
-  },
-  assets: {
-    allowedPaths: sharedClientPaths,
-    requiredNamespaces: ["shared"],
-    requiredPaths: sharedClientPaths,
+    allowedPaths: [
+      "build.access",
+      "build.developments",
+      "build.help",
+      "build.navigation",
+      "build.paths",
+      "build.runNode",
+      "build.start",
+      "build.terms",
+      "build.tooling",
+      "build.tryLive",
+      "shared.pageSections",
+    ],
   },
   hodl: {
-    allowedPaths: sharedClientPaths,
-    requiredNamespaces: ["shared"],
-    requiredPaths: sharedClientPaths,
+    allowedPaths: [
+      "hodl.buy",
+      "hodl.help",
+      "hodl.media",
+      "hodl.navigation",
+      "hodl.start",
+      "hodl.transfer",
+      "hodl.wallet",
+      "hodl.walletFinder",
+      "shared.pageSections",
+    ],
   },
-} as const satisfies Record<RouteId, ClientMessagePolicy>;
+};
 
-assertClientMessagePolicyCoverage(routeIds, routePolicies);
+export function createRoutePolicies(): Readonly<
+  Record<RouteId, ClientMessagePolicy>
+> {
+  const policies: Partial<Record<RouteId, ClientMessagePolicy>> = {};
+  for (const routeId of routeIds) {
+    const routePaths = routeClientPaths[routeId]?.allowedPaths ?? [];
+    const allowedPaths = [...sharedClientPaths, ...routePaths];
+    const requiredNamespaces = [
+      ...new Set(allowedPaths.map((path) => path.split(".", 1)[0])),
+    ];
+    policies[routeId] = {
+      allowedPaths,
+      requiredNamespaces,
+      requiredPaths: allowedPaths,
+    };
+  }
+
+  assertClientMessagePolicyCoverage(routeIds, policies);
+  return policies;
+}
+
+const routePolicies = createRoutePolicies();
 
 type PrerenderManifest = {
   routes?: Record<string, unknown>;
@@ -74,7 +105,12 @@ function resolveInternalRoute(internalPath: string): {
 } | null {
   const segments = internalPath.split("/").filter(Boolean);
   if (!segments.length) return null;
-  const locale = resolveLocale(segments[0]);
+  const requestedLocale = segments[0];
+  const locale =
+    resolveLocale(requestedLocale) ??
+    (requestedLocale.toLowerCase() === pseudoLocale.toLowerCase()
+      ? pseudoLocale
+      : null);
   if (!locale) return null;
   const pathname =
     segments.length === 1 ? "/" : `/${segments.slice(1).join("/")}`;
@@ -85,6 +121,57 @@ function resolveInternalRoute(internalPath: string): {
     routeId,
     routeSegments: routeManifest[routeId].pathname.split("/").filter(Boolean),
   };
+}
+
+function isLocalizedOpenGraphRoute(internalPath: string): boolean {
+  const segments = internalPath.split("/").filter(Boolean);
+  if (segments.length !== 2 || segments[1] !== "opengraph-image") return false;
+  const requestedLocale = segments[0];
+  return (
+    resolveLocale(requestedLocale) !== null ||
+    requestedLocale.toLowerCase() === pseudoLocale.toLowerCase()
+  );
+}
+
+export function listExpectedPrerenderedPageRoutes(): string[] {
+  return listPublishedRoutes()
+    .map(
+      (route) =>
+        `/${route.locale}${route.pathname === "/" ? "" : route.pathname}`,
+    )
+    .sort();
+}
+
+export function validatePrerenderedPageRouteSet(
+  prerenderedPaths: readonly string[],
+  expectedPaths: readonly string[] = listExpectedPrerenderedPageRoutes(),
+): string[] {
+  const expected = new Set(expectedPaths);
+  const actual = new Set(
+    prerenderedPaths.filter((internalPath) => {
+      if (isLocalizedOpenGraphRoute(internalPath)) return false;
+      const segments = internalPath.split("/").filter(Boolean);
+      const requestedLocale = segments[0];
+      if (!requestedLocale) return false;
+      return (
+        resolveLocale(requestedLocale) !== null ||
+        requestedLocale.toLowerCase() === pseudoLocale.toLowerCase()
+      );
+    }),
+  );
+  const errors: string[] = [];
+
+  for (const internalPath of [...expected].sort()) {
+    if (!actual.has(internalPath)) {
+      errors.push(`${internalPath}: published route is not prerendered`);
+    }
+  }
+  for (const internalPath of [...actual].sort()) {
+    if (!expected.has(internalPath)) {
+      errors.push(`${internalPath}: unexpected localized page is prerendered`);
+    }
+  }
+  return errors;
 }
 
 function resolveRoutePolicy(
@@ -208,19 +295,34 @@ function readCatalogMessage(catalog: unknown, path: string): string {
   return value;
 }
 
+export async function readServerOnlyCatalogFingerprints(
+  root = repositoryRoot,
+): Promise<string[]> {
+  const [errorsCatalog, sharedCatalog, ...routeCatalogs] = await Promise.all([
+    readJson(join(root, "messages/en/errors.json")),
+    readJson(join(root, "messages/en/shared.json")),
+    ...routeIds.map((routeId) =>
+      readJson(join(root, `messages/en/${routeId}.json`)),
+    ),
+  ]);
+  const fingerprints = new Set<string>([
+    readCatalogMessage(errorsCatalog, "metadata.description"),
+    readCatalogMessage(sharedCatalog, "structuredData.organizationDescription"),
+  ]);
+
+  for (const catalog of routeCatalogs) {
+    fingerprints.add(readCatalogMessage(catalog, "metadata.title"));
+    fingerprints.add(readCatalogMessage(catalog, "metadata.description"));
+    fingerprints.add(readCatalogMessage(catalog, "openGraph.imageAlt"));
+  }
+  const homeCatalog = routeCatalogs[routeIds.indexOf("home")];
+  fingerprints.add(readCatalogMessage(homeCatalog, "openGraph.tagline"));
+  return [...fingerprints].sort();
+}
+
 async function validateStaticChunks(): Promise<string[]> {
   const errors: string[] = [];
-  const [errorsCatalog, homeCatalog, sharedCatalog] = await Promise.all([
-    readJson(join(repositoryRoot, "messages/en/errors.json")),
-    readJson(join(repositoryRoot, "messages/en/home.json")),
-    readJson(join(repositoryRoot, "messages/en/shared.json")),
-  ]);
-  const fingerprints = [
-    readCatalogMessage(errorsCatalog, "metadata.description"),
-    readCatalogMessage(homeCatalog, "metadata.title"),
-    readCatalogMessage(homeCatalog, "openGraph.tagline"),
-    readCatalogMessage(sharedCatalog, "structuredData.organizationDescription"),
-  ];
+  const fingerprints = await readServerOnlyCatalogFingerprints();
   const chunksDirectory = join(nextDirectory, "static", "chunks");
   const chunks = (await listFilesRecursively(chunksDirectory)).filter((path) =>
     path.endsWith(".js"),
@@ -245,6 +347,7 @@ async function main(): Promise<void> {
     join(nextDirectory, "prerender-manifest.json"),
   )) as PrerenderManifest;
   const prerenderRoutes = prerenderManifest.routes ?? {};
+  const errors = validatePrerenderedPageRouteSet(Object.keys(prerenderRoutes));
   const routes = Object.keys(prerenderRoutes)
     .map((internalPath) => ({
       internalPath,
@@ -263,13 +366,6 @@ async function main(): Promise<void> {
     throw new Error("prerender manifest contains no localized page routes");
   }
 
-  const errors: string[] = [];
-  for (const route of listPublishedRoutes()) {
-    const internalPath = `/${route.locale}${route.pathname === "/" ? "" : route.pathname}`;
-    if (!Object.hasOwn(prerenderRoutes, internalPath)) {
-      errors.push(`${internalPath}: published route is not prerendered`);
-    }
-  }
   let artifactCount = 0;
   for (const { internalPath, route } of routes) {
     const result = await validateRoute(internalPath, route);
@@ -288,4 +384,8 @@ async function main(): Promise<void> {
   );
 }
 
-await main();
+const isMain =
+  process.argv[1] !== undefined &&
+  import.meta.url === pathToFileURL(resolve(process.argv[1])).href;
+
+if (isMain) await main();

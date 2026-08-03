@@ -112,21 +112,32 @@ npm run test:e2e:headed
 npm run test:e2e:ui
 ```
 
-Phase 2 keeps the `en-XA` pseudo-locale private. Generate its deterministic
-catalog artifact and run its preview-build browser gate with:
+Phase 3 keeps the complete `en-XA` pseudo-site private. Generate its
+deterministic catalog artifact and run the full preview-build browser gate with:
 
 ```bash
 npm run i18n:pseudo:generate
 npm run test:e2e:i18n:pseudo
 ```
 
-For a manual local preview, build and start with the preview target, then open
-`http://localhost:3000/en-XA`:
+For a manual local preview, build and start with the preview target, then inspect
+all five routes beginning at `http://localhost:3000/en-XA`:
 
 ```bash
 NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview npm run build
 NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview npm start
 ```
+
+The Preview build generates ignored `en-XA` Build-example siblings under
+`public/vendor/kaspa-wasm` and keeps them available for `npm start`. After
+stopping the server, remove those private derived files with:
+
+```bash
+npm run -s i18n:artifacts -- --clean
+```
+
+A Production build performs that cleanup before compiling. Preview fixtures
+generate the same files only inside their isolated disposable copies.
 
 Set `NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview` only in Vercel Preview. Leave
 it unset or set it to `production` in Vercel Production; the production build
@@ -150,8 +161,9 @@ when either browser suite fails.
 
 ## Project Notes
 
-- Localized route metadata and publication rules live in `src/i18n/site.ts`; the
-  guarded `[locale]` page adapters expose them through `generateMetadata`.
+- Localized route metadata and namespaces live in `src/i18n/site.ts`; route
+  publication lives in `src/i18n/manifest.ts`. Guarded `[locale]` page adapters
+  expose metadata through `generateMetadata`.
 - The home page DAG experience is implemented from `src/dag-viz/` and mounted through the app components.
 - The AI launcher requires both `NEXT_PUBLIC_KASPA_AI_ENABLED` and the route-locale
   capability in `src/i18n/site.ts`; keep the deployment flag false until a working

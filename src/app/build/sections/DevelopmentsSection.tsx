@@ -1,10 +1,15 @@
+import { useTranslations } from "next-intl";
+
 import ExternalLink from "../../components/ExternalLink";
 import SectionHeading from "../../components/SectionHeading";
-import { KASPA_ACCENT, developmentCards } from "../content";
+import { BUILD_TERMS, KASPA_ACCENT, useDevelopmentCards } from "../content";
 import { ArrowUpRightIcon } from "../icons";
 import { MetaPill } from "../ui";
 
 export default function DevelopmentsSection() {
+  const t = useTranslations("build.developments");
+  const developmentCards = useDevelopmentCards();
+
   return (
     <section
       id="developments"
@@ -13,9 +18,9 @@ export default function DevelopmentsSection() {
       <div className="mx-auto max-w-6xl lg:grid lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-12">
         <div className="h-fit lg:sticky lg:top-32">
           <SectionHeading
-            label="Developments"
-            title="Follow the work in public"
-            description="Track the main discussion channel, then follow SDK, protocol, and experimental programmability work as it develops."
+            label={t("heading.label")}
+            title={t("heading.title")}
+            description={t("heading.description", { sdk: BUILD_TERMS.sdk })}
           />
         </div>
 
@@ -23,7 +28,7 @@ export default function DevelopmentsSection() {
           <div className="absolute top-2 bottom-2 left-[4px] w-0.5 bg-[var(--border-subtle)] md:left-[6px]" />
           <div className="space-y-4">
             {developmentCards.map((item) => {
-              const isChannel = item.label === "Channel";
+              const isChannel = item.id === "channel";
               return (
                 <div key={item.title} className="relative">
                   <span
@@ -49,7 +54,7 @@ export default function DevelopmentsSection() {
                     <div className="flex flex-wrap items-center gap-2">
                       <MetaPill accent={isChannel}>{item.label}</MetaPill>
                       {isChannel ? (
-                        <MetaPill accent>Live discussion</MetaPill>
+                        <MetaPill accent>{t("liveDiscussion")}</MetaPill>
                       ) : null}
                     </div>
                     <div className="mt-4 flex items-start justify-between gap-4">

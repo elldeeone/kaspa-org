@@ -1,9 +1,10 @@
 import type { MouseEventHandler } from "react";
+import { useTranslations } from "next-intl";
 
 import ExternalLink from "../../components/ExternalLink";
 import SectionHeading from "../../components/SectionHeading";
 import type { SectionId } from "../content";
-import { REST_API_URL, choosePathCards } from "../content";
+import { BUILD_TERMS, REST_API_URL, useChoosePathCards } from "../content";
 import { ArrowUpRightIcon } from "../icons";
 import { MetaPill } from "../ui";
 
@@ -12,6 +13,9 @@ export default function PathsSection({
 }: {
   onHashClick: (href: `#${SectionId}`) => MouseEventHandler<HTMLAnchorElement>;
 }) {
+  const t = useTranslations("build.paths");
+  const choosePathCards = useChoosePathCards();
+
   return (
     <section
       id="paths"
@@ -19,9 +23,9 @@ export default function PathsSection({
     >
       <div className="mx-auto max-w-6xl">
         <SectionHeading
-          label="Paths"
-          title="Choose your path"
-          description="Start with the SDK or infrastructure path that matches the system you're building."
+          label={t("heading.label")}
+          title={t("heading.title")}
+          description={t("heading.description", { sdk: BUILD_TERMS.sdk })}
         />
 
         <div className="mt-10 grid gap-5 lg:grid-cols-3">
@@ -67,16 +71,15 @@ export default function PathsSection({
           <div className="flex flex-col gap-2 md:flex-row md:items-baseline md:justify-between md:gap-6">
             <p className="text-muted max-w-4xl text-[14px] leading-[1.68]">
               <span className="text-muted mr-3 text-[11px] font-medium tracking-[0.08em] uppercase">
-                Community API
+                {t("communityApi.label", { api: BUILD_TERMS.api })}
               </span>
-              For quick reads or constrained environments, a community-hosted
-              API is available. Best-effort, no SLA.
+              {t("communityApi.description", { api: BUILD_TERMS.api })}
             </p>
             <ExternalLink
               href={REST_API_URL}
               className="group text-secondary hover:text-primary inline-flex shrink-0 items-center gap-1.5 text-[13px] font-medium transition-colors"
             >
-              REST API docs
+              {t("communityApi.action", { restApi: BUILD_TERMS.restApi })}
               <span className="text-muted group-hover:text-secondary inline-flex transition-all duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
                 <ArrowUpRightIcon size={10} />
               </span>

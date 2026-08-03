@@ -2,18 +2,22 @@
 
 Wallet submissions are handled through pull requests. Each pull request should
 add or update exactly one wallet record in
-[`src/data/wallets.ts`](../src/data/wallets.ts).
+[`src/data/wallets.ts`](../src/data/wallets.ts) and its English summary in the
+HODL message catalog.
 
 ## Steps
 
 1. Add or update one wallet record in
    [`src/data/wallets.ts`](../src/data/wallets.ts).
-2. Add the wallet icon at
+2. Add or update its English summary at
+   `walletFinder.wallets.<wallet-id>.summary` in
+   [`messages/en/hodl.json`](../messages/en/hodl.json).
+3. Add the wallet icon at
    [`public/hodl/wallets/<wallet-id>/icon.<ext>`](../public/hodl/wallets).
-3. Use the record template below.
-4. Run `npm ci` if dependencies are not installed, then run
+4. Use the record and catalog templates below.
+5. Run `npm ci` if dependencies are not installed, then run
    `npm run wallets:check`.
-5. Open a pull request using the
+6. Open a pull request using the
    [wallet submission template](https://github.com/kaspamedia/kaspa-org/compare/main...?quick_pull=1&template=wallet-submission.md).
 
 ## Acceptance Criteria
@@ -43,6 +47,7 @@ must use `transparency: "caution"`.
 
 - Add or update exactly one wallet record per pull request.
 - Use a stable lowercase, hyphen-separated `id`, for example `example-wallet`.
+- Use that exact `id` as the key for the wallet's English catalog summary.
 - Add the wallet icon at `public/hodl/wallets/<wallet-id>/icon.<ext>`.
 - Set `icon` to `/hodl/wallets/<wallet-id>/icon.<ext>`.
 - List every supported OS in `platforms`.
@@ -69,7 +74,6 @@ must use `transparency: "caution"`.
   title: "Example Wallet",
   icon: "/hodl/wallets/example-wallet/icon.svg",
   user: "beginner",
-  summary: "A short plain-English description of the wallet.",
   platforms: ["windows", "mac", "linux"],
   features: [],
   check: {
@@ -84,6 +88,21 @@ must use `transparency: "caution"`.
 }
 ```
 
+Add the display summary to `messages/en/hodl.json`; this catalog entry is the
+single source used by the English site and future translations:
+
+```json
+{
+  "walletFinder": {
+    "wallets": {
+      "example-wallet": {
+        "summary": "A short plain-English description of the wallet."
+      }
+    }
+  }
+}
+```
+
 ## Schema
 
 | Field               | Required | Notes                                                                                                            |
@@ -92,7 +111,6 @@ must use `transparency: "caution"`.
 | `title`             | yes      | Wallet name shown in the list. Wallets are displayed alphabetically by this value.                               |
 | `icon`              | yes      | `/hodl/wallets/<id>/icon.<ext>`.                                                                                 |
 | `user`              | yes      | `beginner` (approachable) or `experienced` (technical familiarity assumed).                                      |
-| `summary`           | yes      | Plain-English summary, 140 chars or fewer, single line, no URLs.                                                 |
 | `platforms`         | yes      | Non-empty list of supported OSs from `windows`, `mac`, `linux`, `ios`, `android`, `hardware`.                    |
 | `features`          | yes      | Default features that apply to every platform. Use `[]` if none.                                                 |
 | `check`             | yes      | Default rating per criterion (`control`, `validation`, `transparency`, `fees`). Applies to every platform.       |
@@ -183,7 +201,7 @@ may fit. If it uses fixed wallet-controlled nodes, use `validation: "caution"`.
 
 ## Field Notes
 
-`summary` should be neutral and concise:
+The catalog `summary` should be neutral and concise:
 
 - 140 characters or fewer
 - single line
@@ -200,5 +218,7 @@ may fit. If it uses fixed wallet-controlled nodes, use `validation: "caution"`.
 - Do not bake a rounded square background into the icon.
 - Do not use remote icon URLs.
 
-CI validates the data shape with `npm run wallets:check`. Maintainers may adjust
-ratings, wording, links, OS support, feature claims, or assets before merge.
+CI validates both the wallet data and the exact wallet-to-catalog coverage with
+`npm run wallets:check`. A missing summary or a summary without a matching
+wallet record fails the check. Maintainers may adjust ratings, wording, links,
+OS support, feature claims, or assets before merge.

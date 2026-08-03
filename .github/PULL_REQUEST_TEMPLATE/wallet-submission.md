@@ -45,6 +45,13 @@ For hardware wallets that require companion apps, check both `Hardware` and ever
 - [ ] New
 - [ ] Experienced
 
+### Wallet summary
+
+Add the neutral English display summary under
+`walletFinder.wallets.<wallet-id>.summary` in `messages/en/hodl.json`.
+
+Summary:
+
 ### Criteria ratings and evidence
 
 The wallet record carries a single `check` block that applies to every platform. Use the rating rubric in `docs/wallet-submissions.md`, and include evidence for each rating. Use `platformOverrides.<os>.check` only when one platform genuinely differs (rare).
@@ -92,6 +99,7 @@ List every way a user can install or open the wallet. Each acquisition path is o
 ### Confirmation
 
 - [ ] I added or updated only one wallet entry in `src/data/wallets.ts`
+- [ ] I added or updated its matching English summary in `messages/en/hodl.json`
 - [ ] `platforms` lists every supported OS
 - [ ] `features` and `check` describe the wallet's defaults; per-OS variation lives in `platformOverrides`
 - [ ] `actions` covers every acquisition path; platform-specific links use `platforms`

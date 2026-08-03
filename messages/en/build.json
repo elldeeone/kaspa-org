@@ -1,0 +1,417 @@
+{
+  "metadata": {
+    "title": "Kaspa Developer Docs, SDKs, APIs, and Node Access | Kaspa",
+    "description": "Everything you need to start building on Kaspa. WASM SDK, Rust libraries, live API playground, node access, and developer tooling."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Real-time Decentralization"
+  },
+  "terms": {
+    "daa": "DAA",
+    "dag": "DAG",
+    "node": "Node",
+    "publicNodeNetwork": "Public Node Network",
+    "utxo": "UTXO"
+  },
+  "artifacts": {
+    "controls": {
+      "back": "Back",
+      "network": "Network",
+      "disconnect": "Disconnect",
+      "reconnect": "Reconnect",
+      "connecting": "| Connecting..."
+    },
+    "runtime": {
+      "connectingKaspaNetwork": "Connecting to Kaspa network...",
+      "selectedNetwork": "Selected network is {network}...",
+      "connectedTo": "Connected to",
+      "disconnected": "Disconnected...",
+      "disconnectedFrom": "Disconnected from",
+      "connectingPublicNode": "Connecting to public node...",
+      "disconnect": "Disconnect",
+      "apiRequest": "{api} request...",
+      "apiResponse": "{api} response:",
+      "subscribingEvent": "Subscribing to {event}...",
+      "registeringProtocolNotifications": "Registering for {protocol} notifications...",
+      "subscribingProtocolScore": "Subscribing to {protocol} score...",
+      "event": "event:",
+      "networkConsole": "network"
+    },
+    "utxo": {
+      "receivedEvents": "| Received {count, plural, one {# event} other {# events}}",
+      "noticeManyUtxos": "Please note that some addresses may have thousands of {term} which makes it impractical for the browser to display as a list. This type of data output should be paginated.",
+      "noticeManualTesting": "This demo is meant for manual testing to demonstrate events emitted by the {api}, your browser may have difficulty rendering large sets of {term}.",
+      "addressPlaceholder": "Enter {network} address...",
+      "monitorAddress": "Click to monitor address",
+      "restart": "Restart",
+      "trackingAddress": "Tracking address:",
+      "error": "Error:",
+      "restarting": "Restarting...",
+      "stoppingProcessor": "Stopping processor...",
+      "startingProcessor": "Starting processor...",
+      "processorStarted": "Processor started..."
+    }
+  },
+  "navigation": {
+    "current": "Build",
+    "sections": {
+      "start": {
+        "label": "Start",
+        "compactLabel": "Start",
+        "description": "Overview and the fastest way into the stack."
+      },
+      "tryLive": {
+        "label": "Try live",
+        "compactLabel": "Live",
+        "description": "Upstream browser examples and live demos."
+      },
+      "paths": {
+        "label": "Choose path",
+        "compactLabel": "Paths",
+        "description": "{wasmSdk}, native {rust}, or full-node setup."
+      },
+      "runNode": {
+        "label": "Run node",
+        "compactLabel": "Node",
+        "description": "{docker} one-liner to run {rustyKaspa} locally."
+      },
+      "tooling": {
+        "label": "Tooling",
+        "compactLabel": "Tools",
+        "description": "Upstream libraries, infrastructure, and ecosystem projects."
+      },
+      "access": {
+        "label": "Access",
+        "compactLabel": "Access",
+        "description": "Docs, query surfaces, node references, and test flows."
+      },
+      "developments": {
+        "label": "Developments",
+        "compactLabel": "Dev",
+        "description": "Follow active work and public R&D discussions."
+      },
+      "help": {
+        "label": "Help",
+        "compactLabel": "Help",
+        "description": "Docs and community channels when you get stuck."
+      }
+    }
+  },
+  "start": {
+    "release": {
+      "version": "{version}",
+      "action": "View release"
+    },
+    "heading": "Build on {kaspa}",
+    "description": "{wasmSdk}, native {rust} libraries, and node infrastructure for building on {kaspa}.",
+    "actions": {
+      "openDocs": "Open docs",
+      "viewGitHub": "View on {github}"
+    },
+    "quickstart": {
+      "eyebrow": "Fastest way in",
+      "title": "Start building",
+      "descriptionWithAi": "Use {kaspaAi} for direction, then jump into the route that matches what you need.",
+      "descriptionWithoutAi": "Start with the docs, live examples, or node route that matches what you need.",
+      "aiTitle": "Ask {kaspaAi}",
+      "aiDescription": "Get pointed to the right {sdk}, {api}, or node path.",
+      "jumpLabel": "Jump straight to",
+      "routes": {
+        "chainData": "Read chain data",
+        "stack": "Pick your stack",
+        "node": "Run a node"
+      }
+    }
+  },
+  "tryLive": {
+    "heading": {
+      "label": "Try live",
+      "title": "Run the {rustyKaspa} browser examples",
+      "description": "The examples below are served from the {rustyKaspaVersion} browser {sdk} release, so you can see the {sdk} behave without leaving the page."
+    },
+    "upstream": "upstream",
+    "actions": {
+      "openStandalone": "Open standalone",
+      "viewSource": "View source"
+    },
+    "networkNotice": "Runs against the <network>{publicNodeNetwork}</network>, a decentralized pool of community-operated nodes fronted by the {kaspaResolver}. May take a few seconds to initialize, and is not recommended for large-scale production use.",
+    "examples": {
+      "serverInfo": {
+        "title": "Get server info",
+        "shortLabel": "Server info",
+        "mobileTabLabel": "Server",
+        "description": "Connect through the public resolver and fetch basic node information directly from the browser.",
+        "runtime": "{rpc}"
+      },
+      "dagInfo": {
+        "title": "Get block {dag} info",
+        "shortLabel": "{dag} info",
+        "mobileTabLabel": "{dag}",
+        "description": "Read high-level {dag} state from a live {kaspa} node using the upstream browser {rpc} bindings.",
+        "runtime": "{rpc}"
+      },
+      "blockAdded": {
+        "title": "Watch new blocks",
+        "shortLabel": "New blocks",
+        "mobileTabLabel": "Blocks",
+        "description": "Subscribe to block-added events and watch blocks arrive in real time from the browser.",
+        "runtime": "{rpc}"
+      },
+      "daaChanged": {
+        "title": "Watch {daa} changes",
+        "shortLabel": "{daa} changes",
+        "mobileTabLabel": "{daa}",
+        "description": "Subscribe to {daa} score updates and watch the stream change in real time.",
+        "runtime": "{rpc}"
+      },
+      "utxoContext": {
+        "title": "Track a {utxo} context",
+        "shortLabel": "{utxo} context",
+        "mobileTabLabel": "{utxo}",
+        "description": "Use the core browser bindings to monitor an address and receive live {utxo} events.",
+        "runtime": "{core}"
+      }
+    }
+  },
+  "paths": {
+    "heading": {
+      "label": "Paths",
+      "title": "Choose your path",
+      "description": "Start with the {sdk} or infrastructure path that matches the system you're building."
+    },
+    "cards": {
+      "wasm": {
+        "tier": "App {sdk}",
+        "title": "Build with the {wasmSdk}",
+        "description": "Use the upstream browser and {nodeJs} bindings for wallet flows, transactions, and {rpc} access.",
+        "docs": "{wasmSdk} docs",
+        "examples": "Upstream examples"
+      },
+      "rust": {
+        "tier": "Native {rust}",
+        "title": "Build with native {rust}",
+        "description": "Use the {rust} crates inside {rustyKaspa} for backend services, systems integrations, wallet internals, and node-adjacent workloads.",
+        "repo": "{rustyKaspa} repo"
+      },
+      "node": {
+        "tier": "Node",
+        "title": "Run a node",
+        "description": "Use {rustyKaspa} for full access, {utxo} indexing, and production infrastructure.",
+        "release": "Latest release",
+        "repo": "{rustyKaspa} repo"
+      }
+    },
+    "communityApi": {
+      "label": "Community {api}",
+      "description": "For quick reads or constrained environments, a community-hosted {api} is available. Best-effort, no SLA.",
+      "action": "{restApi} docs"
+    }
+  },
+  "runNode": {
+    "heading": {
+      "label": "Node",
+      "title": "Run a node",
+      "description": "Spin up {rustyKaspa} locally with {docker}. For a persistent setup, check {dockerHub} or build from source."
+    },
+    "quickstart": "{docker} quickstart",
+    "title": "Run the latest {rustyKaspa} image",
+    "description": "Exposes {grpc} on port 16110 so you can talk to the node from your dev machine. Ephemeral container — no persistent storage or inbound {p2p}.",
+    "copyCommand": "Copy {docker} command",
+    "commandCopied": "{docker} command copied",
+    "dockerHub": "{dockerHub}",
+    "compile": "Compile from source"
+  },
+  "tooling": {
+    "heading": {
+      "label": "Tooling",
+      "title": "Current toolchain",
+      "description": "The stable surfaces builders can rely on today, with emerging work called out separately."
+    },
+    "stable": {
+      "rustyKaspa": {
+        "eyebrow": "Native stack",
+        "title": "{rustyKaspa}",
+        "description": "{rust} crates, wallet internals, full node, {rpc}, indexing, and direct network access.",
+        "tags": {
+          "rust": "Native {rust}",
+          "infra": "Node & infra"
+        },
+        "action": "Open repo"
+      },
+      "wasm": {
+        "eyebrow": "Libraries & {sdks}",
+        "title": "{wasmSdk}",
+        "description": "Upstream browser and {node} bindings for applications, wallets, and transaction flows.",
+        "tag": "Browser + {node}",
+        "action": "Open docs"
+      }
+    },
+    "emerging": {
+      "python": {
+        "status": "Beta",
+        "title": "{pythonSdk}",
+        "description": "Nearly complete. Usable today if {python} is part of your stack.",
+        "action": "Open repo"
+      }
+    },
+    "community": {
+      "eyebrow": "Community projects",
+      "title": "Ecosystem tools and infra",
+      "description": "Open-source projects from the broader {kaspa} ecosystem that complement the upstream {sdk} and node stack.",
+      "open": "Open",
+      "cards": {
+        "indexer": {
+          "type": "Indexer",
+          "title": "{simplyKaspaIndexer}",
+          "description": "Standalone indexing for {kaspa} block and transaction data."
+        },
+        "dnsSeeder": {
+          "type": "Infra",
+          "title": "{dnsSeeder}",
+          "description": "Bootstrapping infrastructure for the {kaspa} peer-to-peer network."
+        },
+        "khost": {
+          "type": "Hosting",
+          "title": "{khost}",
+          "description": "Tooling for running and contributing node capacity to the wider ecosystem."
+        },
+        "kaspaJs": {
+          "type": "Library",
+          "title": "{kaspaJs}",
+          "description": "Community-maintained {javascript} tooling around the {kaspa} stack."
+        }
+      }
+    }
+  },
+  "access": {
+    "heading": {
+      "label": "Access",
+      "title": "Network access",
+      "description": "Docs, query surfaces, node references, and test flows grouped by what builders actually need."
+    },
+    "groups": {
+      "docs": {
+        "title": "Docs",
+        "description": "Start with the guides, technical references, and open proposals.",
+        "links": {
+          "docs": "Open docs",
+          "wasm": "{wasmSdk} docs",
+          "deepWiki": "{rustyKaspa} {deepWiki}",
+          "kips": "{kips}",
+          "research": "Research forum",
+          "qa": "{kaspaQAndA}"
+        }
+      },
+      "query": {
+        "title": "Query and access",
+        "description": "Query the network through public tools and the lightweight community-hosted {api}. The community {api} is best-effort with no SLA.",
+        "links": {
+          "api": "Community {api} docs",
+          "explorer": "Explorer",
+          "dag": "{dag} visualizer",
+          "dumps": "Explorer / {api} DB dumps"
+        }
+      },
+      "node": {
+        "title": "Node and {rpc}",
+        "description": "Run full infrastructure or go deeper into the node stack.",
+        "links": {
+          "rustyKaspa": "{rustyKaspa}",
+          "release": "Latest release"
+        }
+      },
+      "testnet": {
+        "title": "Testnet",
+        "description": "Use public testing resources before shipping to mainnet.",
+        "faucet": "Testnet faucet"
+      }
+    }
+  },
+  "developments": {
+    "heading": {
+      "label": "Developments",
+      "title": "Follow the work in public",
+      "description": "Track the main discussion channel, then follow {sdk}, protocol, and experimental programmability work as it develops."
+    },
+    "liveDiscussion": "Live discussion",
+    "cards": {
+      "channel": {
+        "label": "Channel",
+        "title": "Core R&D {telegram}",
+        "description": "The main public stream for current {kaspa} research and development discussions. {discord} is still used, but most core discussion now happens here."
+      },
+      "research": {
+        "label": "Forum",
+        "title": "{kaspaResearch}",
+        "description": "Long-form forum for protocol, consensus, economics, and mining discussion, plus {kip} drafts and proposals."
+      },
+      "toccata": {
+        "label": "Hard fork",
+        "title": "{toccata}: covenants & {zk}",
+        "description": "Hard fork bundling extended script opcodes ({kip17}), covenant IDs ({kip20}), {zk} opcodes with a verifier precompile subsystem ({kip16}), and sequencing commitments ({kip21}). Currently live on {tn12} ahead of mainnet activation."
+      },
+      "silverscript": {
+        "label": "Programmability",
+        "title": "{silverscript}",
+        "description": "High-level scripting language that compiles to native {kaspaScript}. Testing on {tn12} ahead of the {toccata} hard fork that lands covenants and {zk} opcodes on mainnet."
+      },
+      "vprogs": {
+        "label": "Programmability",
+        "title": "{vprogs}",
+        "description": "Early research on verifiable programs: on-chain sequencing with off-chain execution settled via {zk} proofs. Builds on the script primitives landing in {toccata}."
+      },
+      "python": {
+        "label": "{sdk}",
+        "title": "{pythonSdk}",
+        "description": "In beta and nearly complete. {python} tooling is progressing in the open and expanding the developer surface."
+      },
+      "kips": {
+        "label": "Protocol",
+        "title": "{kips}",
+        "description": "Track proposals that can change how applications and infrastructure integrate with the network."
+      }
+    }
+  },
+  "help": {
+    "eyebrow": "Help",
+    "title": "Keep moving",
+    "descriptionWithAi": "Start with the docs or {kaspaAi}. For deeper help, try the {qa}, {github}, {discord}, or the R&D {telegram}.",
+    "descriptionWithoutAi": "Start with the docs. For deeper help, try the {qa}, {github}, {discord}, or the R&D {telegram}.",
+    "actions": {
+      "openDocs": "Open docs",
+      "openAi": "Open AI"
+    },
+    "links": {
+      "github": {
+        "eyebrow": "Code",
+        "title": "{github}"
+      },
+      "discord": {
+        "eyebrow": "Chat",
+        "title": "{discord}"
+      },
+      "qa": {
+        "eyebrow": "Questions",
+        "title": "{kaspaQAndA}"
+      },
+      "telegram": {
+        "eyebrow": "Latest development",
+        "title": "{telegram} R&D"
+      }
+    },
+    "prompts": {
+      "gettingStarted": "How do I get started building on {kaspa}?",
+      "choosePath": "Which path should I pick — {wasmSdk}, native {rust}, or running a node?",
+      "nodeOrApi": "Do I need to run my own node, or can I use the community {api}?",
+      "smartContracts": "Does {kaspa} have smart contracts?",
+      "wallet": "How do I build a wallet with the {wasmSdk}?",
+      "transaction": "How do I build and sign a transaction?",
+      "runNode": "How do I run a {kaspa} node?",
+      "hardware": "What hardware do I need for a node?",
+      "toccata": "What is {toccata} and what changes does it bring?",
+      "covenants": "What are covenants in {kaspa}?",
+      "silverscript": "What is {silverscript}?",
+      "networks": "What is the difference between mainnet and {tn12}?"
+    }
+  }
+}

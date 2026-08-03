@@ -1,11 +1,24 @@
+import assets from "../../messages/en/assets.json" with { type: "json" };
+import build from "../../messages/en/build.json" with { type: "json" };
 import errors from "../../messages/en/errors.json" with { type: "json" };
+import hodl from "../../messages/en/hodl.json" with { type: "json" };
 import home from "../../messages/en/home.json" with { type: "json" };
+import lore from "../../messages/en/lore.json" with { type: "json" };
 import shared from "../../messages/en/shared.json" with { type: "json" };
 
 import { isPseudoLocaleEnabled, pseudoLocale, type Locale } from "./config.ts";
+import type { RouteId } from "./manifest.ts";
 import { pseudoLocalizeCatalog } from "./pseudo.ts";
 
-export const englishMessages = { errors, home, shared } as const;
+export const englishMessages = {
+  assets,
+  build,
+  errors,
+  hodl,
+  home,
+  lore,
+  shared,
+} as const;
 export type AppMessages = typeof englishMessages;
 export type MessageNamespace = keyof AppMessages;
 export type LocaleMessages = Pick<AppMessages, "errors" | "shared"> &
@@ -46,6 +59,19 @@ export function getHomeMessages(locale: Locale): AppMessages["home"] {
   return messages;
 }
 
+export function getRouteMessages<Route extends RouteId>(
+  locale: Locale,
+  routeId: Route,
+): AppMessages[Route] {
+  const messages = getMessages(locale)[routeId];
+  if (!messages) {
+    throw new Error(
+      `The ${routeId} catalog is unavailable for locale ${locale}`,
+    );
+  }
+  return messages as AppMessages[Route];
+}
+
 export function getSharedClientMessages(locale: Locale) {
   const { footer, logoMenu, navigation, theme } = getMessages(locale).shared;
   return {
@@ -57,6 +83,64 @@ export function getAiClientMessages(locale: Locale) {
   const { ai } = getMessages(locale).shared;
   return {
     shared: { ai },
+  };
+}
+
+export function getBuildClientMessages(locale: Locale) {
+  const {
+    access,
+    developments,
+    help,
+    navigation,
+    paths,
+    runNode,
+    start,
+    terms,
+    tooling,
+    tryLive,
+  } = getRouteMessages(locale, "build");
+  const { pageSections } = getMessages(locale).shared;
+  return {
+    build: {
+      access,
+      developments,
+      help,
+      navigation,
+      paths,
+      runNode,
+      start,
+      terms,
+      tooling,
+      tryLive,
+    },
+    shared: { pageSections },
+  };
+}
+
+export function getHodlClientMessages(locale: Locale) {
+  const {
+    buy,
+    help,
+    media,
+    navigation,
+    start,
+    transfer,
+    wallet,
+    walletFinder,
+  } = getRouteMessages(locale, "hodl");
+  const { pageSections } = getMessages(locale).shared;
+  return {
+    hodl: {
+      buy,
+      help,
+      media,
+      navigation,
+      start,
+      transfer,
+      wallet,
+      walletFinder,
+    },
+    shared: { pageSections },
   };
 }
 

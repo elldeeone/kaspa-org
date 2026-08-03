@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { ACCENT, accentAlpha } from "../content";
-import { OS_GUIDANCE_GROUPS, STEP_SUBTITLES, STEP_TITLES } from "./constants";
+import { OS_GUIDANCE_GROUPS, WIZARD_STEP_IDS } from "./constants";
 import { getVisibleFeatures } from "./filterState";
 import { getOsIcon } from "./icons";
 import type {
@@ -71,6 +72,8 @@ export default function WizardFlow({
   isCriterionDisabled,
   isFeatureDisabled,
 }: WizardPanelProps) {
+  const t = useTranslations("hodl");
+  const stepId = WIZARD_STEP_IDS[step - 1] ?? "os";
   const activeStyle = (active: boolean) =>
     active
       ? {
@@ -100,14 +103,14 @@ export default function WizardFlow({
         <div className="md:hidden">
           <div className="mb-4 flex items-center justify-between">
             <p className="text-muted text-[11px] font-semibold tracking-[0.1em] uppercase">
-              Step {step} of 4
+              {t("walletFinder.wizard.progress", { step, total: 4 })}
             </p>
             <button
               type="button"
               onClick={onSkip}
               className="text-tertiary hover:text-primary text-[12px] font-medium underline-offset-2 transition-colors hover:underline"
             >
-              Skip →
+              {t("walletFinder.wizard.skip")}
             </button>
           </div>
           <div className="flex gap-1.5">
@@ -171,18 +174,20 @@ export default function WizardFlow({
             onClick={onSkip}
             className="text-tertiary hover:text-primary ml-auto text-[13px] font-medium underline-offset-2 transition-colors hover:underline"
           >
-            Skip to all wallets →
+            {t("walletFinder.wizard.skipAll")}
           </button>
         </div>
 
         <h3 className="mt-5 text-[22px] leading-snug font-semibold tracking-[-0.02em] md:mt-0 md:text-[28px]">
-          {STEP_TITLES[step - 1]}
+          {t(`walletFinder.wizard.steps.${stepId}.title`)}
         </h3>
-        {STEP_SUBTITLES[step - 1] === "Optional" ? (
-          <p className="text-muted mt-2 text-[13px] italic">Optional</p>
+        {stepId === "criteria" || stepId === "features" ? (
+          <p className="text-muted mt-2 text-[13px] italic">
+            {t("walletFinder.common.optional")}
+          </p>
         ) : (
           <p className="text-tertiary mt-2 text-[14px] leading-relaxed md:text-[15px]">
-            {STEP_SUBTITLES[step - 1]}
+            {t(`walletFinder.wizard.steps.${stepId}.subtitle`)}
           </p>
         )}
       </div>
@@ -201,7 +206,7 @@ export default function WizardFlow({
                       +
                     </span>
                     <span className="text-secondary text-[12.5px] leading-snug">
-                      {pro}
+                      {t(pro)}
                     </span>
                   </div>
                 ))}
@@ -211,15 +216,17 @@ export default function WizardFlow({
                       -
                     </span>
                     <span className="text-tertiary text-[12.5px] leading-snug">
-                      {con}
+                      {t(con)}
                     </span>
                   </div>
                 ))}
               </div>
             );
             return (
-              <div key={group.title}>
-                <p className="mb-3 text-[16px] font-semibold">{group.title}</p>
+              <div key={group.id}>
+                <p className="mb-3 text-[16px] font-semibold">
+                  {t(`walletFinder.guidance.${group.id}.title`)}
+                </p>
                 <div
                   className="mb-4 grid gap-2"
                   style={{
@@ -227,14 +234,12 @@ export default function WizardFlow({
                   }}
                 >
                   {group.os.map((osOption) => {
-                    const selected = filters.os === osOption.id;
+                    const selected = filters.os === osOption;
                     return (
                       <button
-                        key={osOption.id}
+                        key={osOption}
                         type="button"
-                        onClick={() =>
-                          onSetOs(selected ? undefined : osOption.id)
-                        }
+                        onClick={() => onSetOs(selected ? undefined : osOption)}
                         className="flex w-full flex-col items-center gap-1.5 rounded-[14px] border py-3 transition-all hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
                         style={activeStyle(selected)}
                       >
@@ -243,7 +248,7 @@ export default function WizardFlow({
                             color: selected ? ACCENT : "var(--text-secondary)",
                           }}
                         >
-                          {getOsIcon(osOption.id, "h-7 w-7")}
+                          {getOsIcon(osOption, "h-7 w-7")}
                         </span>
                         <span
                           className="text-[11.5px] font-medium"
@@ -251,7 +256,7 @@ export default function WizardFlow({
                             color: selected ? ACCENT : "var(--text-secondary)",
                           }}
                         >
-                          {osOption.label}
+                          {t(`walletFinder.operatingSystems.${osOption}`)}
                         </span>
                       </button>
                     );
@@ -261,7 +266,7 @@ export default function WizardFlow({
                 <div className="hidden lg:block">{prosConsList}</div>
                 <details className="group lg:hidden">
                   <summary className="text-tertiary hover:text-primary flex cursor-pointer list-none items-center gap-1.5 text-[12.5px] font-medium transition-colors [&::-webkit-details-marker]:hidden">
-                    <span>Pros and cons</span>
+                    <span>{t("walletFinder.wizard.prosAndCons")}</span>
                     <svg
                       className="h-3.5 w-3.5 transition-transform group-open:rotate-180"
                       viewBox="0 0 12 12"
@@ -297,12 +302,16 @@ export default function WizardFlow({
                 style={activeStyle(active)}
               >
                 <span className="block text-[16px] font-semibold">
-                  {user === "beginner" ? "New" : "Experienced"}
+                  {user === "beginner"
+                    ? t("walletFinder.common.newUser")
+                    : t("walletFinder.common.experiencedUser")}
                 </span>
                 <span className="text-tertiary mt-2 block text-[14px] leading-[1.55]">
                   {user === "beginner"
-                    ? "Show wallets ideal for new users."
-                    : "Show all of the wallets."}
+                    ? t("walletFinder.wizard.experience.newDescription")
+                    : t(
+                        "walletFinder.wizard.experience.experiencedDescription",
+                      )}
                 </span>
               </button>
             );
@@ -329,10 +338,12 @@ export default function WizardFlow({
                 <ActiveCheck active={active} />
                 <div className="min-w-0">
                   <p className="text-[14px] leading-tight font-semibold">
-                    {criterion.label}
+                    {t(`walletFinder.criteria.${criterion.id}.label`)}
                   </p>
                   <p className="text-tertiary mt-1 text-[12.5px] leading-[1.5]">
-                    {disabled ? "Not available." : criterion.description}
+                    {disabled
+                      ? t("walletFinder.common.notAvailableSentence")
+                      : t(`walletFinder.criteria.${criterion.id}.description`)}
                   </p>
                 </div>
               </button>
@@ -360,10 +371,12 @@ export default function WizardFlow({
                 <ActiveCheck active={active} />
                 <div className="min-w-0">
                   <p className="text-[14px] leading-tight font-semibold">
-                    {feature.label}
+                    {t(`walletFinder.features.${feature.id}.label`)}
                   </p>
                   <p className="text-tertiary mt-1 text-[12.5px] leading-[1.5]">
-                    {disabled ? "Not available." : feature.description}
+                    {disabled
+                      ? t("walletFinder.common.notAvailableSentence")
+                      : t(`walletFinder.features.${feature.id}.description`)}
                   </p>
                 </div>
               </button>
@@ -379,7 +392,7 @@ export default function WizardFlow({
             onClick={onBack}
             className="border-subtle flex-1 rounded-[10px] border px-6 py-3 text-[15px] font-medium transition-colors hover:bg-black/[0.03] md:flex-none dark:hover:bg-white/[0.04]"
           >
-            Back
+            {t("walletFinder.wizard.back")}
           </button>
         ) : (
           <span className="flex-1 md:flex-none" />
@@ -390,7 +403,7 @@ export default function WizardFlow({
             onClick={onNext}
             className="btn-primary flex-1 justify-center md:ml-auto md:flex-none"
           >
-            Next
+            {t("walletFinder.wizard.next")}
           </button>
         ) : (
           <button
@@ -398,8 +411,12 @@ export default function WizardFlow({
             onClick={onDone}
             className="btn-primary flex-1 justify-center whitespace-nowrap md:ml-auto md:flex-none"
           >
-            <span className="md:hidden">Show wallets</span>
-            <span className="hidden md:inline">Show matching wallets</span>
+            <span className="md:hidden">
+              {t("walletFinder.wizard.showWallets")}
+            </span>
+            <span className="hidden md:inline">
+              {t("walletFinder.wizard.showMatchingWallets")}
+            </span>
           </button>
         )}
       </div>

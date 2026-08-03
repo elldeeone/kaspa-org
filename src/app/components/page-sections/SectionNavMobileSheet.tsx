@@ -1,6 +1,7 @@
 "use client";
 
 import type { MouseEventHandler } from "react";
+import { useTranslations } from "next-intl";
 
 import { ChevronRightIcon } from "../icons";
 import type { PageSectionLink } from "./types";
@@ -24,6 +25,8 @@ export default function SectionNavMobileSheet<T extends string>({
   onHashClick,
   sheetLinkLabelKey = "compactLabel",
 }: SectionNavMobileSheetProps<T>): React.JSX.Element {
+  const t = useTranslations("shared.pageSections");
+
   return (
     <div
       className={`fixed inset-0 z-[70] transition-transform duration-300 md:hidden ${
@@ -37,7 +40,7 @@ export default function SectionNavMobileSheet<T extends string>({
         id={sheetId}
         role="dialog"
         aria-modal="true"
-        aria-label="Page sections"
+        aria-label={t("dialogAria")}
         className="flex h-full flex-col bg-[var(--surface)]"
       >
         <div
@@ -52,7 +55,7 @@ export default function SectionNavMobileSheet<T extends string>({
             tabIndex={mobileNavOpen ? 0 : -1}
             className="text-secondary hover:text-primary inline-flex h-9 items-center text-[13px] font-medium transition-colors"
           >
-            Close
+            {t("close")}
           </button>
         </div>
 
@@ -90,7 +93,7 @@ export default function SectionNavMobileSheet<T extends string>({
                       </p>
                       {active ? (
                         <span className="text-secondary text-[11px] font-medium">
-                          Current
+                          {t("current")}
                         </span>
                       ) : null}
                     </div>
