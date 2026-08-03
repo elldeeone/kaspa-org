@@ -2,9 +2,11 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
-export const alt = "Kaspa — Real-time Decentralization";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+import type { Locale } from "./config.ts";
+
+export const openGraphAlt = "Kaspa — Real-time Decentralization";
+export const openGraphSize = { width: 1200, height: 630 };
+export const openGraphContentType = "image/png";
 
 const HEADING_SIZE = 140;
 const SUB_SIZE = Math.round(HEADING_SIZE * (28 / 96)); // matches homepage ratio
@@ -12,7 +14,18 @@ const PADDING_LEFT = 72;
 const PADDING_TOP = 100;
 const fontDirectory = join(process.cwd(), "src", "app", "fonts");
 
-export default async function OG() {
+const openGraphCopy = {
+  en: {
+    heading: ["Real-time", "Decentralization"],
+    tagline: ["bitcoin\u2019s", "proof-of-work", "without", "the", "wait."],
+  },
+} as const satisfies Record<
+  Locale,
+  { heading: readonly [string, string]; tagline: readonly string[] }
+>;
+
+export async function renderOpenGraphImage(locale: Locale) {
+  const copy = openGraphCopy[locale];
   const [geistBold, geistRegular] = await Promise.all([
     readFile(join(fontDirectory, "Geist-Bold.ttf")),
     readFile(join(fontDirectory, "Geist-Regular.ttf")),
@@ -46,7 +59,7 @@ export default async function OG() {
             letterSpacing: "-0.04em",
           }}
         >
-          Real-time
+          {copy.heading[0]}
         </div>
         <div
           style={{
@@ -58,7 +71,7 @@ export default async function OG() {
             letterSpacing: "-0.04em",
           }}
         >
-          Decentralization
+          {copy.heading[1]}
         </div>
       </div>
       <div
@@ -76,15 +89,15 @@ export default async function OG() {
           marginLeft: 5,
         }}
       >
-        <span>{"bitcoin\u2019s"}</span>
-        <span style={{ marginLeft: 9 }}>proof-of-work</span>
-        <span style={{ marginLeft: 4 }}>without</span>
-        <span style={{ marginLeft: 9 }}>the</span>
-        <span style={{ marginLeft: 9 }}>wait.</span>
+        <span>{copy.tagline[0]}</span>
+        <span style={{ marginLeft: 9 }}>{copy.tagline[1]}</span>
+        <span style={{ marginLeft: 4 }}>{copy.tagline[2]}</span>
+        <span style={{ marginLeft: 9 }}>{copy.tagline[3]}</span>
+        <span style={{ marginLeft: 9 }}>{copy.tagline[4]}</span>
       </div>
     </div>,
     {
-      ...size,
+      ...openGraphSize,
       fonts: [
         { name: "Geist", data: geistBold, weight: 700, style: "normal" },
         { name: "Geist", data: geistRegular, weight: 400, style: "normal" },

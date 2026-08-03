@@ -1,7 +1,7 @@
-import Link from "next/link";
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
-import { isKaspaAiEnabled } from "./aiFeature";
+import { Link } from "@/i18n/link";
+
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import AiLauncherEntry from "./components/AiLauncherEntry";
@@ -18,7 +18,7 @@ function HeroCta({
 }: {
   children: ReactNode;
   className: string;
-  href: string;
+  href: ComponentProps<typeof Link>["href"];
 }) {
   return (
     <Link href={href} className={className}>
@@ -27,7 +27,7 @@ function HeroCta({
   );
 }
 
-export default function Home() {
+export default function HomePage({ aiAvailable }: { aiAvailable: boolean }) {
   return (
     <div className="relative flex min-h-screen flex-col">
       <Nav />
@@ -60,13 +60,13 @@ export default function Home() {
                 Get started <ChevronRightIcon />
               </HeroCta>
               <HeroCta
-                href="/hodl#wallet"
+                href={{ pathname: "/hodl", hash: "wallet" }}
                 className="btn-ghost w-full justify-center py-5 text-[18px] sm:w-auto sm:justify-start sm:py-3 sm:text-[15px]"
               >
                 Get a wallet <ChevronRightIcon />
               </HeroCta>
               <HeroCta
-                href="/hodl#buy"
+                href={{ pathname: "/hodl", hash: "buy" }}
                 className="btn-ghost w-full justify-center py-5 text-[18px] sm:w-auto sm:justify-start sm:py-3 sm:text-[15px]"
               >
                 Buy Kaspa <ChevronRightIcon />
@@ -119,8 +119,8 @@ export default function Home() {
         </section>
       </main>
 
-      <Footer reserveLauncherSpace={isKaspaAiEnabled} />
-      {isKaspaAiEnabled ? <AiLauncherEntry /> : null}
+      <Footer reserveLauncherSpace={aiAvailable} />
+      {aiAvailable ? <AiLauncherEntry /> : null}
     </div>
   );
 }

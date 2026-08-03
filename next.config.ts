@@ -1,4 +1,10 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+import {
+  RESERVED_NOT_FOUND_PATHNAME,
+  ROUTE_MISS_HEADER,
+} from "./src/i18n/manifest";
 
 const legacyRedirects = [
   { source: "/.well-known/llms.txt", destination: "/llms.txt" },
@@ -44,6 +50,9 @@ const allowedDevOrigins = Array.from(
 
 const nextConfig: NextConfig = {
   allowedDevOrigins,
+  experimental: {
+    globalNotFound: true,
+  },
   images: {
     remotePatterns: [
       {
@@ -61,6 +70,29 @@ const nextConfig: NextConfig = {
       permanent: true,
     }));
   },
+  async rewrites() {
+    return {
+      beforeFiles: [],
+      afterFiles: [
+        {
+          source: "/:path*",
+          has: [
+            {
+              type: "header",
+              key: ROUTE_MISS_HEADER,
+              value: "1",
+            },
+          ],
+          destination: RESERVED_NOT_FOUND_PATHNAME,
+        },
+      ],
+      fallback: [],
+    };
+  },
 };
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin({
+  requestConfig: "./src/i18n/request.ts",
+});
+
+export default withNextIntl(nextConfig);

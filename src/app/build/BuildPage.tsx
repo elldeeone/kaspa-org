@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import { isKaspaAiEnabled } from "../aiFeature";
 import AiLauncherEntry from "../components/AiLauncherEntry";
 import MarketingPageShell from "../components/MarketingPageShell";
 import { openKaspaAi } from "../components/aiLauncherEvents";
@@ -23,7 +22,7 @@ import StartSection from "./sections/StartSection";
 import ToolingSection from "./sections/ToolingSection";
 import TryLiveSection from "./sections/TryLiveSection";
 
-export default function BuildPage() {
+export default function BuildPage({ aiAvailable }: { aiAvailable: boolean }) {
   const [activeExampleId, setActiveExampleId] =
     useState<BrowserExample["id"]>("server-info");
 
@@ -37,9 +36,7 @@ export default function BuildPage() {
   };
 
   return (
-    <MarketingPageShell
-      afterFooter={isKaspaAiEnabled ? <AiLauncherEntry /> : null}
-    >
+    <MarketingPageShell afterFooter={aiAvailable ? <AiLauncherEntry /> : null}>
       <PageSectionsNav<SectionId>
         sheetId="mobile-section-sheet"
         sectionLinks={sectionLinks}
@@ -60,7 +57,7 @@ export default function BuildPage() {
       />
 
       <StartSection
-        kaspaAiEnabled={isKaspaAiEnabled}
+        kaspaAiEnabled={aiAvailable}
         onOpenAi={() => handleOpenAi()}
         onHashClick={nav.handleHashClick}
       />
@@ -73,7 +70,7 @@ export default function BuildPage() {
       <ToolingSection />
       <AccessSection />
       <DevelopmentsSection />
-      <HelpSection kaspaAiEnabled={isKaspaAiEnabled} onOpenAi={handleOpenAi} />
+      <HelpSection kaspaAiEnabled={aiAvailable} onOpenAi={handleOpenAi} />
     </MarketingPageShell>
   );
 }

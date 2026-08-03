@@ -1,9 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import { Link } from "@/i18n/link";
+
 export type LogoMenuPosition = { x: number; y: number };
+export const LOGO_MENU_ID = "kaspa-logo-menu";
 
 const MENU_WIDTH = 200;
 const EDGE_GAP = 8;
@@ -61,6 +63,7 @@ export default function LogoContextMenu({
 
   return (
     <div
+      id={LOGO_MENU_ID}
       data-logo-menu
       role="menu"
       aria-label="Kaspa logo"

@@ -21,4 +21,5 @@ export const routeHeadings = [
   { path: "/lore", heading: loreHeading },
   { path: "/hodl", heading: /odl kaspa/i },
   { path: "/build", heading: /build on kaspa/i },
+  { path: "/assets", heading: /kaspa logo assets/i },
 ] as const;

@@ -1,9 +1,20 @@
-export type NavLink = {
+import type { StablePathname } from "@/i18n/site";
+
+type InternalNavLink = {
   label: string;
-  href: string;
-  external?: boolean;
+  href: StablePathname;
+  external?: false;
   disabled?: boolean;
 };
+
+type ExternalNavLink = {
+  label: string;
+  href: string;
+  external: true;
+  disabled?: boolean;
+};
+
+export type NavLink = InternalNavLink | ExternalNavLink;
 
 export const navLinks: readonly NavLink[] = [
   { label: "LORE", href: "/lore" },

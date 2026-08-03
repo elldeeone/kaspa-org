@@ -3,7 +3,7 @@ import { defineConfig, devices } from "@playwright/test";
 const isCI = !!process.env.CI;
 const useDevServer = process.env.PLAYWRIGHT_E2E_MODE === "dev";
 const port = useDevServer ? 3000 : 3100;
-const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${port}`;
 
 export default defineConfig({
   testDir: "./e2e",
@@ -40,7 +40,7 @@ export default defineConfig({
   webServer: process.env.PLAYWRIGHT_BASE_URL
     ? undefined
     : {
-        command: `npm run ${useDevServer ? "dev" : "start"} -- --hostname 127.0.0.1 --port ${port}`,
+        command: `npm run ${useDevServer ? "dev" : "start"} -- --hostname localhost --port ${port}`,
         url: baseURL,
         reuseExistingServer: useDevServer && !isCI,
         stdout: "pipe",

@@ -2,7 +2,6 @@
 
 import { useMemo, useRef } from "react";
 
-import { isKaspaAiEnabled } from "../aiFeature";
 import AiLauncherEntry from "../components/AiLauncherEntry";
 import MarketingPageShell from "../components/MarketingPageShell";
 import { openKaspaAi } from "../components/aiLauncherEvents";
@@ -17,7 +16,7 @@ import TransferSection from "./sections/TransferSection";
 import WalletSection from "./sections/WalletSection";
 import { StepConnector } from "./ui";
 
-export default function HodlPage() {
+export default function HodlPage({ aiAvailable }: { aiAvailable: boolean }) {
   const walletHeadingRef = useRef<HTMLHeadingElement | null>(null);
   const buyHeadingRef = useRef<HTMLHeadingElement | null>(null);
   const transferHeadingRef = useRef<HTMLHeadingElement | null>(null);
@@ -56,9 +55,7 @@ export default function HodlPage() {
   };
 
   return (
-    <MarketingPageShell
-      afterFooter={isKaspaAiEnabled ? <AiLauncherEntry /> : null}
-    >
+    <MarketingPageShell afterFooter={aiAvailable ? <AiLauncherEntry /> : null}>
       <PageSectionsNav<UseSectionId>
         sheetId="mobile-section-sheet-hodl"
         sectionLinks={sectionLinks}
@@ -91,7 +88,7 @@ export default function HodlPage() {
         <TransferSection headingRef={transferHeadingRef} />
       </JourneyRail>
 
-      <HelpSection kaspaAiEnabled={isKaspaAiEnabled} onOpenAi={handleOpenAi} />
+      <HelpSection kaspaAiEnabled={aiAvailable} onOpenAi={handleOpenAi} />
     </MarketingPageShell>
   );
 }

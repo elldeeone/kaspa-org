@@ -118,6 +118,7 @@ GitHub Actions lives at `.github/workflows/ci.yml` and runs:
 
 - `npm run lint`
 - `npm run wallets:check`
+- `npm run i18n:check`
 - `npm run format:check`
 - `npm run types:check`
 - `npm run build`
@@ -127,9 +128,12 @@ The Playwright job uploads `playwright-report/` and `test-results/` as artifacts
 
 ## Project Notes
 
-- Shared site metadata lives in the route layouts under `src/app/`.
+- Localized route metadata and publication rules live in `src/i18n/site.ts`; the
+  guarded `[locale]` page adapters expose them through `generateMetadata`.
 - The home page DAG experience is implemented from `src/dag-viz/` and mounted through the app components.
-- The AI launcher is gated by `NEXT_PUBLIC_KASPA_AI_ENABLED`; keep it false until a working ASK backend is available.
+- The AI launcher requires both `NEXT_PUBLIC_KASPA_AI_ENABLED` and the route-locale
+  capability in `src/i18n/site.ts`; keep the deployment flag false until a working
+  ASK backend is available.
 - When enabled, the AI launcher sends questions through `src/app/api/ask/route.ts`, so the browser never sees the private Kaspa.news ASK key.
 - ASK source-link formatting is normalized server-side in `src/app/api/ask/answer.ts`; do not enable raw HTML rendering in the chat UI to handle upstream links.
 - Keep the ASK route on the Node runtime; using server-side `fetch` for the private Kaspa.news endpoint can be rejected as browser-style traffic.

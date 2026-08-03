@@ -36,6 +36,9 @@ jobs:
       - name: Check wallet data
         run: npm run wallets:check
 
+      - name: Check i18n contracts
+        run: npm run i18n:check
+
       - name: Check formatting
         run: npm run format:check
 

@@ -3,12 +3,15 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import Link from "next/link";
+import { Link, useIsPathnamePublished } from "@/i18n/link";
 import {
   KASPA_MARK_SIGNAL,
   type KaspaMarkSignalDetail,
 } from "./kaspaMarkSignal";
-import LogoContextMenu, { type LogoMenuPosition } from "./LogoContextMenu";
+import LogoContextMenu, {
+  LOGO_MENU_ID,
+  type LogoMenuPosition,
+} from "./LogoContextMenu";
 import NavLinksList from "./NavLinksList";
 import ThemeToggle from "./ThemeToggle";
 import { useIsClient } from "./useIsClient";
@@ -89,6 +92,7 @@ export default function Nav() {
   const isDark = isClient && resolvedTheme === "dark";
   const showGlyphLogo = isDark && logoReplaced;
   const activeLogoFlight = isDark ? logoFlight : null;
+  const assetsPublished = useIsPathnamePublished("/assets");
 
   const logoSrc = isDark ? "/kaspa-logo-dark.svg" : "/kaspa-logo.svg";
 
@@ -230,14 +234,19 @@ export default function Nav() {
         <Link
           ref={logoTargetRef}
           href="/"
-          onContextMenu={handleLogoContextMenu}
-          onTouchStart={handleLogoTouchStart}
-          onTouchEnd={clearLongPress}
-          onTouchMove={clearLongPress}
-          onTouchCancel={clearLongPress}
+          onContextMenu={assetsPublished ? handleLogoContextMenu : undefined}
+          onTouchStart={assetsPublished ? handleLogoTouchStart : undefined}
+          onTouchEnd={assetsPublished ? clearLongPress : undefined}
+          onTouchMove={assetsPublished ? clearLongPress : undefined}
+          onTouchCancel={assetsPublished ? clearLongPress : undefined}
           onClick={handleLogoClick}
-          className="text-primary relative flex h-12 w-[116px] shrink-0 items-center select-none [-webkit-touch-callout:none] sm:w-[126px] md:w-[140px]"
+          className={`text-primary relative flex h-12 w-[116px] shrink-0 items-center select-none sm:w-[126px] md:w-[140px] ${
+            assetsPublished ? "[-webkit-touch-callout:none]" : ""
+          }`}
           aria-label="Kaspa home"
+          aria-haspopup={assetsPublished ? "menu" : undefined}
+          aria-expanded={assetsPublished ? logoMenu !== null : undefined}
+          aria-controls={assetsPublished && logoMenu ? LOGO_MENU_ID : undefined}
         >
           {showGlyphLogo ? (
             <span aria-hidden="true" className="text-primary flex">
@@ -326,7 +335,7 @@ export default function Nav() {
         </div>
       </div>
 
-      {logoMenu ? (
+      {assetsPublished && logoMenu ? (
         <LogoContextMenu position={logoMenu} onClose={closeLogoMenu} />
       ) : null}
     </nav>
