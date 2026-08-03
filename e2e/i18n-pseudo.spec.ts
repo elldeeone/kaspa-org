@@ -7,7 +7,6 @@ import {
   request as requestFactory,
   test,
   type APIRequestContext,
-  type Page,
 } from "@playwright/test";
 
 import {
@@ -20,6 +19,14 @@ import {
   validateProductionFixtureClientPayload,
   type ProductionFixture,
 } from "../scripts/i18n/unpublished-route-fixture.mts";
+import {
+  assertNoHorizontalOverflow,
+  installStandaloneExampleMocks,
+  standaloneBasePath,
+  standaloneExampleNames,
+  standaloneRuntimeFingerprints,
+  waitForStableLayout,
+} from "./i18n-preview-helpers";
 
 const previewEnvironment = {
   NEXT_PUBLIC_KASPA_AI_ENABLED: "true",
@@ -56,25 +63,6 @@ const pseudoRoutes = [
   },
 ] as const;
 
-const standaloneExampleNames = [
-  "get-server-info",
-  "get-block-dag-info",
-  "subscribe-block-added",
-  "subscribe-daa-changed",
-  "utxo-context",
-] as const;
-
-const standaloneRuntimeFingerprints: Readonly<
-  Record<(typeof standaloneExampleNames)[number], string>
-> = {
-  "get-server-info": "GetServerInfo",
-  "get-block-dag-info": "GetBlockDagInfo",
-  "subscribe-block-added": "Block Added",
-  "subscribe-daa-changed": "DAA",
-  "utxo-context": "UtxoProcessor",
-};
-
-const standaloneBasePath = "/vendor/kaspa-wasm/2.0.0/examples/web";
 const localizedReturnPath = "/en-XA/build#try-live";
 const localizedReturnQuery = new URLSearchParams({
   returnTo: localizedReturnPath,
@@ -109,133 +97,6 @@ function assertPrivatePseudoHtml(html: string, pathname: string) {
   expect(html, pathname).not.toContain(
     "https://kaspa.org/en-XA/opengraph-image",
   );
-}
-
-async function waitForStableLayout(page: Page) {
-  await page.evaluate(async () => {
-    await document.fonts.ready;
-    await Promise.all(
-      [...document.images]
-        .filter((image) => image.currentSrc)
-        .map((image) =>
-          image.complete ? undefined : image.decode().catch(() => undefined),
-        ),
-    );
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    );
-  });
-}
-
-async function installStandaloneExampleMocks(page: Page) {
-  const interceptedModules = new Set<"core" | "rpc">();
-
-  await page.route(
-    "**/vendor/kaspa-wasm/2.0.0/web/kaspa-rpc/kaspa.js",
-    async (route) => {
-      interceptedModules.add("rpc");
-      await route.fulfill({
-        contentType: "text/javascript",
-        body: `
-          export default async function initialize() {}
-
-          export class Resolver {}
-
-          export class RpcClient {
-            constructor() {
-              this.url = "mock://local-rpc";
-              this.listeners = new Map();
-            }
-
-            addEventListener(name, listener) {
-              const listeners = this.listeners.get(name) ?? [];
-              listeners.push(listener);
-              this.listeners.set(name, listeners);
-            }
-
-            async emit(name) {
-              for (const listener of this.listeners.get(name) ?? []) {
-                await listener({ type: name });
-              }
-            }
-
-            async connect() {
-              await this.emit("connect");
-            }
-
-            async disconnect() {
-              await this.emit("disconnect");
-            }
-
-            async getServerInfo() {
-              return { serverVersion: "mock-server" };
-            }
-
-            async getBlockDagInfo() {
-              return { blockCount: 1 };
-            }
-
-            async subscribeBlockAdded() {}
-            async subscribeVirtualDaaScoreChanged() {}
-          }
-
-          export const Encoding = { Borsh: "borsh" };
-        `,
-      });
-    },
-  );
-
-  await page.route(
-    "**/vendor/kaspa-wasm/2.0.0/web/kaspa-core/kaspa.js",
-    async (route) => {
-      interceptedModules.add("core");
-      await route.fulfill({
-        contentType: "text/javascript",
-        body: `
-          export default async function initialize() {}
-
-          export class Resolver {
-            async connect() {
-              return { url: "mock://local-core" };
-            }
-          }
-
-          export class RpcClient {}
-
-          export class UtxoProcessor {
-            async start() {}
-            async stop() {}
-            addEventListener() {}
-          }
-
-          export class UtxoContext {
-            async clear() {}
-            async trackAddresses() {}
-          }
-
-          export const Encoding = { Borsh: "borsh" };
-        `,
-      });
-    },
-  );
-
-  return interceptedModules;
-}
-
-async function assertNoHorizontalOverflow(
-  page: Page,
-  viewportWidth: number,
-  state: string,
-) {
-  const dimensions = await page.evaluate(() => ({
-    body: document.body.scrollWidth,
-    client: document.documentElement.clientWidth,
-    document: document.documentElement.scrollWidth,
-  }));
-  expect(
-    Math.max(dimensions.body, dimensions.document),
-    `${viewportWidth}px ${state}`,
-  ).toBeLessThanOrEqual(dimensions.client + 1);
 }
 
 test.describe("Phase 3 full-site private pseudo-locale", () => {

@@ -3,6 +3,9 @@
     "homeAria": "Kaspa home",
     "toggleMenu": "Toggle menu",
     "menu": "Menu",
+    "language": {
+      "label": "Language"
+    },
     "links": {
       "lore": "LORE",
       "hodl": "HODL",

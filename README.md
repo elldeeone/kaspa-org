@@ -112,24 +112,26 @@ npm run test:e2e:headed
 npm run test:e2e:ui
 ```
 
-Phase 3 keeps the complete `en-XA` pseudo-site private. Generate its
-deterministic catalog artifact and run the full preview-build browser gate with:
+Phase 4 keeps both the complete `en-XA` pseudo-site and the complete Spanish
+site private. Run their full preview-build browser gates with:
 
 ```bash
 npm run i18n:pseudo:generate
 npm run test:e2e:i18n:pseudo
+npm run test:e2e:i18n:spanish
 ```
 
 For a manual local preview, build and start with the preview target, then inspect
-all five routes beginning at `http://localhost:3000/en-XA`:
+all five routes beginning at `http://localhost:3000/en-XA` and
+`http://localhost:3000/es`:
 
 ```bash
 NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview npm run build
 NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview npm start
 ```
 
-The Preview build generates ignored `en-XA` Build-example siblings under
-`public/vendor/kaspa-wasm` and keeps them available for `npm start`. After
+The Preview build generates ignored `en-XA` and `es` Build-example siblings
+under `public/vendor/kaspa-wasm` and keeps them available for `npm start`. After
 stopping the server, remove those private derived files with:
 
 ```bash
@@ -141,7 +143,9 @@ generate the same files only inside their isolated disposable copies.
 
 Set `NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview` only in Vercel Preview. Leave
 it unset or set it to `production` in Vercel Production; the production build
-fails closed if the private pseudo-locale is enabled there.
+fails closed if either private locale is enabled there. Spanish remains pending
+fluent and Kaspa technical review; terminology decisions are recorded in the
+[draft Spanish glossary](docs/i18n/spanish-glossary.md).
 
 ## CI
 
@@ -155,6 +159,7 @@ GitHub Actions lives at `.github/workflows/ci.yml` and runs:
 - `npm run build`
 - `npm run test:e2e`
 - `npm run test:e2e:i18n:pseudo`
+- `npm run test:e2e:i18n:spanish`
 
 The Playwright job uploads `playwright-report/` and `test-results/` as artifacts
 when either browser suite fails.

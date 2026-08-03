@@ -15,6 +15,10 @@ const publicRoutes = [
     path: "/",
     internalPath: "/en",
     baselineBytes: 37_238,
+    // Phase 4 adds locale-neutral long-word wrapping to the rendered hero class
+    // so translated headings stay inside narrow screens. Keep the original
+    // baseline and budget only that HTML-only layout marker.
+    localizedLayoutBudgetBytes: 64,
     title: "Kaspa | Proof-of-Work blockDAG for Real-Time Decentralization",
     description:
       "Kaspa is a fair-launched proof-of-work blockDAG cryptocurrency running at 10 blocks per second, built for real-time decentralization.",
@@ -170,6 +174,9 @@ test.describe("Phase 1 i18n foundation", () => {
         Math.floor(route.baselineBytes * 1.1) +
           ("localizedClientPayloadBudgetBytes" in route
             ? route.localizedClientPayloadBudgetBytes
+            : 0) +
+          ("localizedLayoutBudgetBytes" in route
+            ? route.localizedLayoutBudgetBytes
             : 0),
       );
       expect(html, route.path).toContain('<html lang="en" dir="ltr"');

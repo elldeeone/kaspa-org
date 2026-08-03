@@ -6,6 +6,10 @@ import {
   defaultLocale,
   i18nBuildTarget,
   pseudoLocale,
+  resolveLocale,
+  resolveSupportedLocale,
+  spanishLocale,
+  supportedLocaleCodes,
 } from "../../src/i18n/config.ts";
 import {
   RESERVED_NOT_FOUND_PATHNAME,
@@ -26,7 +30,9 @@ import {
   NEXT_INTL_LOCALE_HEADER,
   assertPreviewLocaleComplete,
   createRouteMetadata,
+  isAiAvailable,
   listEnabledLocales,
+  listSelectableLocales,
   listDiscoverableRoutes,
   listPublishedLocales,
   listPublishedRoutes,
@@ -38,11 +44,17 @@ import {
 const previewRouteMatrix = [
   { routeId: "home", locale: "en", canonicalPathname: "/" },
   { routeId: "home", locale: pseudoLocale, canonicalPathname: "/en-XA" },
+  { routeId: "home", locale: spanishLocale, canonicalPathname: "/es" },
   { routeId: "lore", locale: "en", canonicalPathname: "/lore" },
   {
     routeId: "lore",
     locale: pseudoLocale,
     canonicalPathname: "/en-XA/lore",
+  },
+  {
+    routeId: "lore",
+    locale: spanishLocale,
+    canonicalPathname: "/es/lore",
   },
   { routeId: "build", locale: "en", canonicalPathname: "/build" },
   {
@@ -50,11 +62,21 @@ const previewRouteMatrix = [
     locale: pseudoLocale,
     canonicalPathname: "/en-XA/build",
   },
+  {
+    routeId: "build",
+    locale: spanishLocale,
+    canonicalPathname: "/es/build",
+  },
   { routeId: "assets", locale: "en", canonicalPathname: "/assets" },
   {
     routeId: "assets",
     locale: pseudoLocale,
     canonicalPathname: "/en-XA/assets",
+  },
+  {
+    routeId: "assets",
+    locale: spanishLocale,
+    canonicalPathname: "/es/assets",
   },
   { routeId: "hodl", locale: "en", canonicalPathname: "/hodl" },
   {
@@ -62,14 +84,29 @@ const previewRouteMatrix = [
     locale: pseudoLocale,
     canonicalPathname: "/en-XA/hodl",
   },
+  {
+    routeId: "hodl",
+    locale: spanishLocale,
+    canonicalPathname: "/es/hodl",
+  },
 ] as const;
 
 test("the active build profile keeps discovery English-only", () => {
-  const pseudoEnabled = i18nBuildTarget !== "production";
+  const privateLocalesEnabled = i18nBuildTarget !== "production";
   assert.equal(defaultLocale, "en");
+  assert.deepEqual(supportedLocaleCodes, ["en", pseudoLocale, spanishLocale]);
+  assert.equal(resolveSupportedLocale("ES"), spanishLocale);
+  assert.equal(
+    resolveLocale("es"),
+    privateLocalesEnabled ? spanishLocale : null,
+  );
   assert.deepEqual(
     listEnabledLocales(),
-    pseudoEnabled ? ["en", pseudoLocale] : ["en"],
+    privateLocalesEnabled ? ["en", pseudoLocale, spanishLocale] : ["en"],
+  );
+  assert.deepEqual(
+    listSelectableLocales(),
+    privateLocalesEnabled ? ["en", spanishLocale] : ["en"],
   );
   assert.deepEqual(routeIds, ["home", "lore", "build", "assets", "hodl"]);
   assert.deepEqual(stablePathnames, [
@@ -83,11 +120,12 @@ test("the active build profile keeps discovery English-only", () => {
   for (const routeId of routeIds) {
     assert.deepEqual(
       listPublishedLocales(routeId),
-      pseudoEnabled ? ["en", pseudoLocale] : ["en"],
+      privateLocalesEnabled ? ["en", pseudoLocale, spanishLocale] : ["en"],
     );
   }
   assert.equal(isLocaleRouteSetComplete("en"), true);
-  assert.equal(isLocaleRouteSetComplete(pseudoLocale), pseudoEnabled);
+  assert.equal(isLocaleRouteSetComplete(pseudoLocale), privateLocalesEnabled);
+  assert.equal(isLocaleRouteSetComplete(spanishLocale), privateLocalesEnabled);
   for (const pathname of stablePathnames) {
     assert.equal(isPathnamePublished(pathname, "en"), true, pathname);
     assert.equal(
@@ -99,7 +137,7 @@ test("the active build profile keeps discovery English-only", () => {
   assert.equal(isPathnamePublished("/es/historia", "en"), false);
 
   const publishedRoutes = listPublishedRoutes();
-  assert.equal(publishedRoutes.length, pseudoEnabled ? 10 : 5);
+  assert.equal(publishedRoutes.length, privateLocalesEnabled ? 15 : 5);
   assert.deepEqual(
     listDiscoverableRoutes().map((route) => route.canonicalUrl),
     [
@@ -113,14 +151,20 @@ test("the active build profile keeps discovery English-only", () => {
   for (const routeId of routeIds) {
     assert.equal(
       resolvePublishedRoute(routeId, pseudoLocale)?.publication ?? null,
-      pseudoEnabled ? "preview" : null,
+      privateLocalesEnabled ? "preview" : null,
       routeId,
     );
+    assert.equal(
+      resolvePublishedRoute(routeId, spanishLocale)?.publication ?? null,
+      privateLocalesEnabled ? "preview" : null,
+      routeId,
+    );
+    assert.equal(isAiAvailable(routeId, spanishLocale), false, routeId);
   }
 });
 
 test("route resolution accepts only enabled locale prefixes and fixed English slugs", () => {
-  const pseudoEnabled = i18nBuildTarget !== "production";
+  const privateLocalesEnabled = i18nBuildTarget !== "production";
   assert.deepEqual(resolveRouteRequest("/lore"), {
     routeId: "lore",
     locale: "en",
@@ -141,7 +185,7 @@ test("route resolution accepts only enabled locale prefixes and fixed English sl
   });
   assert.deepEqual(
     resolveRouteRequest("/en-xa"),
-    pseudoEnabled
+    privateLocalesEnabled
       ? {
           routeId: "home",
           locale: pseudoLocale,
@@ -150,9 +194,19 @@ test("route resolution accepts only enabled locale prefixes and fixed English sl
         }
       : null,
   );
+  assert.deepEqual(
+    resolveRouteRequest("/ES/lore"),
+    privateLocalesEnabled
+      ? {
+          routeId: "lore",
+          locale: spanishLocale,
+          stablePathname: "/lore",
+          hadLocalePrefix: true,
+        }
+      : null,
+  );
 
   for (const pathname of [
-    "/es/lore",
     "/es/historia",
     "/en/LORE",
     "/en%2Flore",
@@ -164,10 +218,11 @@ test("route resolution accepts only enabled locale prefixes and fixed English sl
 });
 
 test(
-  "Preview publishes the exact complete private pseudo route matrix",
+  "Preview publishes the exact complete private pseudo and Spanish route matrix",
   { skip: i18nBuildTarget === "production" },
   () => {
     assert.doesNotThrow(() => assertPreviewLocaleComplete(pseudoLocale));
+    assert.doesNotThrow(() => assertPreviewLocaleComplete(spanishLocale));
     assert.deepEqual(
       listPublishedRoutes().map(({ routeId, locale, canonicalPathname }) => ({
         routeId,
@@ -177,35 +232,37 @@ test(
       previewRouteMatrix,
     );
 
-    for (const routeId of routeIds) {
-      const stablePathname = stablePathnames[routeIds.indexOf(routeId)];
-      const localizedPathname =
-        stablePathname === "/"
-          ? `/${pseudoLocale}`
-          : `/${pseudoLocale}${stablePathname}`;
-      const route = resolvePublishedRoute(routeId, pseudoLocale);
-      assert.ok(route);
-      assert.equal(route.pathname, stablePathname);
-      assert.equal(route.canonicalPathname, localizedPathname);
-      assert.deepEqual(resolveRouteRequest(localizedPathname), {
-        routeId,
-        locale: pseudoLocale,
-        stablePathname,
-        hadLocalePrefix: true,
-      });
+    for (const privateLocale of [pseudoLocale, spanishLocale] as const) {
+      for (const routeId of routeIds) {
+        const stablePathname = stablePathnames[routeIds.indexOf(routeId)];
+        const localizedPathname =
+          stablePathname === "/"
+            ? `/${privateLocale}`
+            : `/${privateLocale}${stablePathname}`;
+        const route = resolvePublishedRoute(routeId, privateLocale);
+        assert.ok(route);
+        assert.equal(route.pathname, stablePathname);
+        assert.equal(route.canonicalPathname, localizedPathname);
+        assert.deepEqual(resolveRouteRequest(localizedPathname), {
+          routeId,
+          locale: privateLocale,
+          stablePathname,
+          hadLocalePrefix: true,
+        });
 
-      const metadata = createRouteMetadata(routeId, pseudoLocale);
-      assert.ok(metadata);
-      assert.deepEqual(metadata.alternates, {
-        canonical: null,
-        languages: undefined,
-      });
-      assert.equal(metadata.openGraph, undefined);
-      assert.equal(metadata.twitter, undefined);
-      assert.deepEqual(metadata.robots, { index: false, follow: false });
+        const metadata = createRouteMetadata(routeId, privateLocale);
+        assert.ok(metadata);
+        assert.deepEqual(metadata.alternates, {
+          canonical: null,
+          languages: undefined,
+        });
+        assert.equal(metadata.openGraph, undefined);
+        assert.equal(metadata.twitter, undefined);
+        assert.deepEqual(metadata.robots, { index: false, follow: false });
+      }
+
+      assert.equal(resolveRouteRequest(`/${privateLocale}/historia`), null);
     }
-
-    assert.equal(resolveRouteRequest(`/${pseudoLocale}/historia`), null);
   },
 );
 
@@ -270,7 +327,7 @@ test("the route-miss policy is collision-safe and spoof-resistant", () => {
     true,
   );
   assert.equal(isRouteMiss("/missing"), true);
-  assert.equal(isRouteMiss("/es/lore"), true);
+  assert.equal(isRouteMiss("/es/lore"), i18nBuildTarget === "production");
   assert.equal(isRouteMiss("/missing.txt"), true);
   assert.equal(isRouteMiss("/api/nope"), true);
   assert.equal(isRouteMiss(RESERVED_NOT_FOUND_PATHNAME), false);

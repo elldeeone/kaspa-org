@@ -1,4 +1,8 @@
-import { isPseudoLocaleEnabled, type Locale } from "./config.ts";
+import {
+  isPseudoLocaleEnabled,
+  isSpanishLocaleEnabled,
+  type Locale,
+} from "./config.ts";
 
 export const RESERVED_NOT_FOUND_PATHNAME =
   "/__kaspa_i18n_unpublished__/not/found";
@@ -36,22 +40,27 @@ const publicationMatrix = {
   home: {
     en: "public",
     "en-XA": isPseudoLocaleEnabled ? "preview" : false,
+    es: isSpanishLocaleEnabled ? "preview" : false,
   },
   lore: {
     en: "public",
     "en-XA": isPseudoLocaleEnabled ? "preview" : false,
+    es: isSpanishLocaleEnabled ? "preview" : false,
   },
   build: {
     en: "public",
     "en-XA": isPseudoLocaleEnabled ? "preview" : false,
+    es: isSpanishLocaleEnabled ? "preview" : false,
   },
   assets: {
     en: "public",
     "en-XA": isPseudoLocaleEnabled ? "preview" : false,
+    es: isSpanishLocaleEnabled ? "preview" : false,
   },
   hodl: {
     en: "public",
     "en-XA": isPseudoLocaleEnabled ? "preview" : false,
+    es: isSpanishLocaleEnabled ? "preview" : false,
   },
 } as const satisfies Record<RouteId, Record<Locale, RoutePublication | false>>;
 

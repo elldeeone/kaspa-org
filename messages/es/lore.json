@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "title": "LORE | Kaspa",
+    "description": "Kaspa es un blockDAG de prueba de trabajo con lanzamiento justo, centrado en la descentralización en tiempo real, sin preminado ni asignaciones privilegiadas y con un rendimiento de 10 BPS en la red principal."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Descentralización en tiempo real"
+  },
+  "article": {
+    "heading": "Kaspa es un blockDAG de prueba de trabajo activo que funciona a 10 bloques por segundo.",
+    "shift": {
+      "heading": "El cambio",
+      "body": "Sigue un camino diferente al de las antiguas cadenas de prueba de trabajo. Los bloques paralelos no se descartan: se ordenan. Muchos de los límites asociados con la prueba de trabajo procedían de la arquitectura de las cadenas antiguas, no de la propia prueba de trabajo. <paper>Artículo de PHANTOM / GHOSTDAG</paper>"
+    },
+    "history": {
+      "heading": "Breve historia",
+      "research": "Kaspa nació de la investigación sobre blockDAG en la Universidad Hebrea de Jerusalén y, más tarde, en Harvard. Esta línea de investigación se remonta a la <ghost>sección sobre el protocolo GHOST del documento técnico de Ethereum</ghost>, se dio a conocer pronto en los círculos de investigación de Bitcoin y continuó con SPECTRE y PHANTOM hasta llegar a los protocolos que hoy ejecuta Kaspa. <scaling>Scaling Bitcoin 2015</scaling> · <coindesk>CoinDesk, 2017</coindesk>",
+      "launch": "La red principal se lanzó en noviembre de 2021 como una red de prueba de trabajo con lanzamiento justo. Sin preminado, asignaciones privilegiadas ni preventas. Todas las monedas en circulación se han minado públicamente desde el bloque génesis. Ese lanzamiento justo dio a Kaspa una comunidad amplia y fiel. Sigue siendo uno de sus mayores logros y una de sus fortalezas fundamentales. <launchPlan>Plan de lanzamiento</launchPlan> · <genesisProof>Prueba del génesis</genesisProof>"
+    },
+    "northStar": {
+      "heading": "Estrella polar",
+      "intro": "La descentralización en tiempo real es la estrella polar de Kaspa.",
+      "urgency": "El tiempo real es innegociable. La impaciencia es el instinto primario de Kaspa: una rabieta contra los tiempos de espera que rechaza los límites que los adultos aceptan sin más. Y no lo exigimos solo por la velocidad, sino también por las propiedades Satoshi sin concesiones: resistencia a la censura, liquidación sin permisos y minería competitiva, todo logrado en tiempo real, no a la larga. Esto no puede lograrse en tiempo real sin prueba de trabajo. <uniqueness>Por qué la PoW es única</uniqueness>",
+      "consensus": "Que Kaspa alcance la RTD significa que el protocolo muestrea a la mayoría honesta de la red minera en cada ronda de consenso. Esto permite que las transacciones que tardan una hora en confirmarse de forma segura en Bitcoin se confirmen en segundos en Kaspa; o, de forma equivalente, garantiza que Kaspa logre en segundos la resistencia a la censura que en Bitcoin tarda una hora. Esto importa no solo para la velocidad de liquidación, sino en todos los contextos donde la secuenciación en tiempo real es crítica: resolución de mercados, cascadas de liquidaciones y cualquier situación en la que un único líder de consenso que ordene las transacciones a su discreción obtenga demasiado poder.",
+      "eventFeed": "El muestreo en tiempo real de la mayoría honesta también puede aprovecharse para conseguir un flujo de datos y eventos en tiempo real, sin necesidad de confianza y gobernado por la red minera. <post>Publicación sobre la RTD</post>",
+      "resilience": "La RTD también tiene una vertiente defensiva. Los protocolos con sincronía parcial —como el próximo DAGKnight— son únicos al ofrecer la doble propiedad de ser rápidos cuando la red funciona correctamente y lentos, pero seguros, cuando no es así. Kaspa vende velocidad al gran público y dinero de resistencia extrema a los cypherpunks."
+    },
+    "shipped": {
+      "heading": "Lo logrado y lo que sigue",
+      "rewrite": "El nodo original de Golang se reescribió desde cero en Rust. La reescritura estuvo respaldada por una subvención comunitaria de 100M KAS y se convirtió en un verdadero esfuerzo de código abierto en torno a <code>rusty-kaspa</code>, con una amplia base de colaboradores. <github>GitHub de Rusty Kaspa</github>",
+      "crescendo": "Esa reescritura hizo posible Crescendo. Sin ella, Kaspa no habría podido pasar a 10 bloques por segundo en la red principal. Con Crescendo, la tesis cobró vida. <reference>Referencia de Crescendo</reference> · <release>Notas de la versión</release>"
+    },
+    "roadmap": {
+      "toccata": {
+        "heading": "Bifurcación dura Toccata",
+        "overview": "La próxima bifurcación dura es Toccata, que introduce programabilidad en la capa base mediante covenants. Los covenants son reglas recursivas de gasto que restringen quién puede gastar las monedas y de qué manera, lo que abre el camino a bóvedas, billeteras inteligentes, activos nativos y construcciones asistidas por ZK.",
+        "implementation": "En Bitcoin, OP_CAT es el antiguo código de operación que Satoshi deshabilitó: se ha vuelto a proponer, sigue debatiéndose y todavía no se ha incluido. Toccata se acerca más a OP_CAT++, con una superficie funcional de covenants más amplia y <silverscript>Silverscript</silverscript> como compilador específico para escribir covenants en Kaspa. Ya hay una implementación madura y operativa en <tn12>TN12</tn12>."
+      },
+      "dagKnight": {
+        "heading": "Bifurcación dura DAGKnight",
+        "overview": "DAGKnight es la actualización del protocolo de consenso que sigue a Toccata. Supone un gran salto para la prueba de trabajo y el consenso sin permisos: es el único protocolo BFT con sincronía parcial que tolera un 49 % de fallos bizantinos en la configuración oblivious. Es un paso hacia una prueba de trabajo resiliente a las particiones de red. El objetivo para los tiempos de bloque se sitúa entre 25 y 40 milisegundos. <paper>Artículo de DAGKnight</paper>"
+      },
+      "hardfork2027": {
+        "heading": "Bifurcación dura de 2027",
+        "performance": "Un tiempo de bloque de 10 milisegundos —100 bloques por segundo— probablemente requeriría ajustes algorítmicos del DAG en la forma en que los mineros referencian los bloques punta del DAG, además de nuevas optimizaciones del rendimiento de los nodos. El objetivo es una bifurcación dura en 2027.",
+        "resilience": "En cuanto al consenso, DAGKnight ya aporta seguridad ante particiones de red: las transacciones confirmadas antes de una partición conservan su finalidad. Sin embargo, no permite progresar durante una partición: las transacciones no pueden confirmarse realmente hasta que esta termina. El trabajo previsto para 2027 busca añadir progreso práctico mediante una combinación de canales de pago en cadena y ventanas de finalidad que se adaptan a la tasa de hash. Esto convertiría a Kaspa en dinero duro de resistencia extrema, con flujos de pago locales que seguirían funcionando pese a fallos en la conectividad a internet."
+      }
+    },
+    "closing": {
+      "origin": "Kaspa no surgió del ciclo habitual de entusiasmo especulativo. Surgió de investigación de larga trayectoria, un lanzamiento justo, desarrollo de código abierto y años de seguir avanzando donde la mayor parte del sector cripto dejó de hacerlo.",
+      "summary": "Un blockDAG activo. 10 BPS en la red principal. La descentralización en tiempo real como estrella polar. Toccata es lo próximo. Después, DAGKnight.",
+      "early": "Si al leer esto parece que aún es pronto, es porque lo es."
+    }
+  },
+  "contributors": {
+    "viewOnGitHub": "Ver colaboradores de Rusty Kaspa en GitHub",
+    "more": "+{count, plural, one {# colaborador} other {# colaboradores}}"
+  }
+}

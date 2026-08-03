@@ -8,9 +8,10 @@ import type { BrowserExample } from "./types";
 import { useBuildTerms } from "./useBuildTerms";
 
 function getBrowserExamplePath(stem: string, locale: Locale): string {
-  const isPseudo = locale === "en-XA";
-  const filename = `${stem}${isPseudo ? ".en-XA" : ""}.html`;
-  const returnTo = isPseudo ? "/en-XA/build#try-live" : "/build#try-live";
+  const suffix = locale === "en" ? "" : `.${locale}`;
+  const filename = `${stem}${suffix}.html`;
+  const returnTo =
+    locale === "en" ? "/build#try-live" : `/${locale}/build#try-live`;
   return `${BROWSER_EXAMPLES_BASE}/${filename}?returnTo=${encodeURIComponent(returnTo)}`;
 }
 

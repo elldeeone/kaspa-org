@@ -5,8 +5,22 @@ import hodl from "../../messages/en/hodl.json" with { type: "json" };
 import home from "../../messages/en/home.json" with { type: "json" };
 import lore from "../../messages/en/lore.json" with { type: "json" };
 import shared from "../../messages/en/shared.json" with { type: "json" };
+import spanishAssets from "../../messages/es/assets.json" with { type: "json" };
+import spanishBuild from "../../messages/es/build.json" with { type: "json" };
+import spanishErrors from "../../messages/es/errors.json" with { type: "json" };
+import spanishHodl from "../../messages/es/hodl.json" with { type: "json" };
+import spanishHome from "../../messages/es/home.json" with { type: "json" };
+import spanishLore from "../../messages/es/lore.json" with { type: "json" };
+import spanishShared from "../../messages/es/shared.json" with { type: "json" };
 
-import { isPseudoLocaleEnabled, pseudoLocale, type Locale } from "./config.ts";
+import {
+  isPseudoLocaleEnabled,
+  isSpanishLocaleEnabled,
+  listSelectableLocales,
+  pseudoLocale,
+  spanishLocale,
+  type Locale,
+} from "./config.ts";
 import type { RouteId } from "./manifest.ts";
 import { pseudoLocalizeCatalog } from "./pseudo.ts";
 
@@ -23,6 +37,16 @@ export type AppMessages = typeof englishMessages;
 export type MessageNamespace = keyof AppMessages;
 export type LocaleMessages = Pick<AppMessages, "errors" | "shared"> &
   Partial<Omit<AppMessages, "errors" | "shared">>;
+
+export const spanishMessages = {
+  assets: spanishAssets,
+  build: spanishBuild,
+  errors: spanishErrors,
+  hodl: spanishHodl,
+  home: spanishHome,
+  lore: spanishLore,
+  shared: spanishShared,
+} satisfies AppMessages;
 
 let generatedPseudoMessages: AppMessages | null = null;
 
@@ -42,6 +66,13 @@ export function getMessages(locale: Locale): LocaleMessages {
       }
       generatedPseudoMessages ??= pseudoLocalizeCatalog(englishMessages);
       return generatedPseudoMessages;
+    case spanishLocale:
+      if (!isSpanishLocaleEnabled) {
+        throw new Error(
+          `${spanishLocale} messages are unavailable in production builds`,
+        );
+      }
+      return spanishMessages;
     default:
       return assertNever(locale);
   }
@@ -74,6 +105,21 @@ export function getRouteMessages<Route extends RouteId>(
 
 export function getSharedClientMessages(locale: Locale) {
   const { footer, logoMenu, navigation, theme } = getMessages(locale).shared;
+  if (listSelectableLocales().length <= 1) {
+    return {
+      shared: {
+        footer,
+        logoMenu,
+        navigation: {
+          homeAria: navigation.homeAria,
+          toggleMenu: navigation.toggleMenu,
+          menu: navigation.menu,
+          links: navigation.links,
+        },
+        theme,
+      },
+    };
+  }
   return {
     shared: { footer, logoMenu, navigation, theme },
   };

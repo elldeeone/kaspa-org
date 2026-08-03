@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { listSelectableLocales } from "@/i18n/config";
 import { Link, useIsPathnamePublished } from "@/i18n/link";
 import {
   KASPA_MARK_SIGNAL,
@@ -13,6 +14,7 @@ import LogoContextMenu, {
   LOGO_MENU_ID,
   type LogoMenuPosition,
 } from "./LogoContextMenu";
+import LanguageSelector from "./LanguageSelector";
 import NavLinksList from "./NavLinksList";
 import ThemeToggle from "./ThemeToggle";
 import { useIsClient } from "./useIsClient";
@@ -25,6 +27,7 @@ const navLinkDisabledDesktop =
   "inline-flex min-h-10 items-center whitespace-nowrap py-2 text-[15px] text-secondary";
 const navLinkDisabledMobile =
   "inline-flex min-h-11 items-center whitespace-nowrap py-2 text-[17px] text-secondary";
+const hasMultipleSelectableLocales = listSelectableLocales().length > 1;
 
 type LogoFlight = {
   id: number;
@@ -286,6 +289,7 @@ export default function Nav() {
               disabledClassName={navLinkDisabledDesktop}
             />
           </div>
+          {hasMultipleSelectableLocales ? <LanguageSelector /> : null}
           <ThemeToggle />
         </div>
 
@@ -323,7 +327,7 @@ export default function Nav() {
         inert={!menuOpen}
         className={`overflow-hidden transition-all duration-300 ease-in-out md:hidden ${
           menuOpen
-            ? "max-h-[320px] opacity-100"
+            ? "max-h-[420px] opacity-100"
             : "pointer-events-none max-h-0 opacity-0"
         }`}
       >
@@ -334,6 +338,7 @@ export default function Nav() {
             onNavigate={() => setMenuOpen(false)}
             tabIndex={menuOpen ? 0 : -1}
           />
+          {hasMultipleSelectableLocales ? <LanguageSelector showLabel /> : null}
         </div>
       </div>
 

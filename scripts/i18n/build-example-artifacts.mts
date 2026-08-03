@@ -30,12 +30,30 @@ export const PSEUDO_BUILD_EXAMPLE_PATHS = [
   ...BUILD_EXAMPLE_NAMES.map((name) => `${name}.en-XA.html`),
   "resources/utils.en-XA.js",
 ] as const;
+export const SPANISH_BUILD_EXAMPLE_PATHS = [
+  ...BUILD_EXAMPLE_NAMES.map((name) => `${name}.es.html`),
+  "resources/utils.es.js",
+] as const;
+export const LOCALIZED_BUILD_EXAMPLE_PATHS = [
+  ...PSEUDO_BUILD_EXAMPLE_PATHS,
+  ...SPANISH_BUILD_EXAMPLE_PATHS,
+] as const;
 
 export const BUILD_EXAMPLES_PUBLIC_BASE_PATH =
   "/vendor/kaspa-wasm/2.0.0/examples/web";
 export const PSEUDO_BUILD_EXAMPLE_URLS = PSEUDO_BUILD_EXAMPLE_PATHS.map(
   (path) => `${BUILD_EXAMPLES_PUBLIC_BASE_PATH}/${path}`,
 );
+export const SPANISH_BUILD_EXAMPLE_URLS = SPANISH_BUILD_EXAMPLE_PATHS.map(
+  (path) => `${BUILD_EXAMPLES_PUBLIC_BASE_PATH}/${path}`,
+);
+export const LOCALIZED_BUILD_EXAMPLE_URLS = LOCALIZED_BUILD_EXAMPLE_PATHS.map(
+  (path) => `${BUILD_EXAMPLES_PUBLIC_BASE_PATH}/${path}`,
+);
+
+export type BuildArtifactLocale = "en-XA" | "es";
+
+const BUILD_ARTIFACT_LOCALES = ["en-XA", "es"] as const;
 
 const EXAMPLES_RELATIVE_DIRECTORY =
   "public/vendor/kaspa-wasm/2.0.0/examples/web";
@@ -178,37 +196,35 @@ const ARTIFACT_MESSAGE_KEYS = {
 function readMessageGroup(
   value: unknown,
   group: keyof typeof ARTIFACT_MESSAGE_KEYS,
+  catalogPath: string,
 ): Record<string, string> {
   if (value === null || typeof value !== "object" || Array.isArray(value)) {
-    throw new Error(
-      `messages/en/build.json artifacts.${group} must be an object`,
-    );
+    throw new Error(`${catalogPath} artifacts.${group} must be an object`);
   }
   const record = value as Record<string, unknown>;
   const expectedKeys = ARTIFACT_MESSAGE_KEYS[group];
   const actualKeys = Object.keys(record).sort();
   if (JSON.stringify(actualKeys) !== JSON.stringify([...expectedKeys].sort())) {
     throw new Error(
-      `messages/en/build.json artifacts.${group} keys differ from the standalone artifact contract`,
+      `${catalogPath} artifacts.${group} keys differ from the standalone artifact contract`,
     );
   }
   for (const key of expectedKeys) {
     if (typeof record[key] !== "string" || record[key] === "") {
       throw new Error(
-        `messages/en/build.json artifacts.${group}.${key} must be a non-empty string`,
+        `${catalogPath} artifacts.${group}.${key} must be a non-empty string`,
       );
     }
   }
   return record as Record<string, string>;
 }
 
-export async function loadEnglishBuildArtifactMessages(
+export async function loadBuildArtifactMessages(
   repositoryRoot: string,
+  locale: "en" | "es",
 ): Promise<BuildArtifactMessages> {
-  const source = await readFile(
-    join(repositoryRoot, "messages/en/build.json"),
-    "utf8",
-  );
+  const catalogPath = `messages/${locale}/build.json`;
+  const source = await readFile(join(repositoryRoot, catalogPath), "utf8");
   const catalog = JSON.parse(source) as Record<string, unknown>;
   const artifacts = catalog.artifacts;
   if (
@@ -216,14 +232,20 @@ export async function loadEnglishBuildArtifactMessages(
     typeof artifacts !== "object" ||
     Array.isArray(artifacts)
   ) {
-    throw new Error("messages/en/build.json must contain an artifacts object");
+    throw new Error(`${catalogPath} must contain an artifacts object`);
   }
   const groups = artifacts as Record<string, unknown>;
   return {
-    controls: readMessageGroup(groups.controls, "controls"),
-    runtime: readMessageGroup(groups.runtime, "runtime"),
-    utxo: readMessageGroup(groups.utxo, "utxo"),
+    controls: readMessageGroup(groups.controls, "controls", catalogPath),
+    runtime: readMessageGroup(groups.runtime, "runtime", catalogPath),
+    utxo: readMessageGroup(groups.utxo, "utxo", catalogPath),
   } as BuildArtifactMessages;
+}
+
+export function loadEnglishBuildArtifactMessages(
+  repositoryRoot: string,
+): Promise<BuildArtifactMessages> {
+  return loadBuildArtifactMessages(repositoryRoot, "en");
 }
 
 type Replacement = readonly [
@@ -276,11 +298,17 @@ function substituteMessage(
   return result;
 }
 
-function pseudoMessage(
+type MessageTransform = "identity" | "pseudo";
+
+function localizedMessage(
   message: string,
-  substitutions: Readonly<Record<string, string>> = {},
+  substitutions: Readonly<Record<string, string>>,
+  transform: MessageTransform,
 ): string {
-  return substituteMessage(pseudoLocalizeMessage(message), substitutions);
+  return substituteMessage(
+    transform === "pseudo" ? pseudoLocalizeMessage(message) : message,
+    substitutions,
+  );
 }
 
 function sourceLiteral(
@@ -290,15 +318,20 @@ function sourceLiteral(
   return JSON.stringify(substituteMessage(message, substitutions));
 }
 
-function literal(message: string): string {
-  return JSON.stringify(pseudoMessage(message));
+function localizedLiteral(
+  message: string,
+  transform: MessageTransform,
+  substitutions: Readonly<Record<string, string>> = {},
+): string {
+  return JSON.stringify(localizedMessage(message, substitutions, transform));
 }
 
-function template(
+function localizedTemplate(
   message: string,
   substitutions: Readonly<Record<string, string>>,
+  transform: MessageTransform,
 ): string {
-  return `\`${pseudoMessage(message, substitutions)}\``;
+  return `\`${localizedMessage(message, substitutions, transform)}\``;
 }
 
 function sourceTemplate(
@@ -366,209 +399,311 @@ function compileCardinalPlural(
 }
 
 function buildHtmlReplacements(
-  messages: BuildArtifactMessages,
+  sourceMessages: BuildArtifactMessages,
+  targetMessages: BuildArtifactMessages,
+  transform: MessageTransform,
 ): Readonly<
   Record<(typeof BUILD_EXAMPLE_NAMES)[number], readonly Replacement[]>
 > {
-  const { runtime, utxo } = messages;
+  const { runtime: sourceRuntime, utxo: sourceUtxo } = sourceMessages;
+  const { runtime: targetRuntime, utxo: targetUtxo } = targetMessages;
   const common: readonly Replacement[] = [
     [
-      sourceTemplate(runtime.connectingKaspaNetwork),
-      template(runtime.connectingKaspaNetwork, {}),
+      sourceTemplate(sourceRuntime.connectingKaspaNetwork),
+      localizedTemplate(targetRuntime.connectingKaspaNetwork, {}, transform),
     ],
   ];
   const selectedNetwork = (expression: string): Replacement => [
-    sourceTemplate(runtime.selectedNetwork, { network: expression }),
-    template(runtime.selectedNetwork, { network: expression }),
+    sourceTemplate(sourceRuntime.selectedNetwork, { network: expression }),
+    localizedTemplate(
+      targetRuntime.selectedNetwork,
+      { network: expression },
+      transform,
+    ),
   ];
   const apiMessage = (
-    message: string,
+    sourceMessage: string,
+    targetMessage: string,
     api: "GetBlockDagInfo" | "GetServerInfo",
   ): Replacement => [
-    sourceLiteral(message, { api }),
-    JSON.stringify(pseudoMessage(message, { api })),
+    sourceLiteral(sourceMessage, { api }),
+    localizedLiteral(targetMessage, transform, { api }),
   ];
 
   return {
     "get-server-info": [
       ...common,
       selectedNetwork("${networkId}"),
-      [sourceLiteral(runtime.connectedTo), literal(runtime.connectedTo)],
-      apiMessage(runtime.apiRequest, "GetServerInfo"),
-      apiMessage(runtime.apiResponse, "GetServerInfo"),
-      [sourceLiteral(runtime.disconnected), literal(runtime.disconnected)],
+      [
+        sourceLiteral(sourceRuntime.connectedTo),
+        localizedLiteral(targetRuntime.connectedTo, transform),
+      ],
+      apiMessage(
+        sourceRuntime.apiRequest,
+        targetRuntime.apiRequest,
+        "GetServerInfo",
+      ),
+      apiMessage(
+        sourceRuntime.apiResponse,
+        targetRuntime.apiResponse,
+        "GetServerInfo",
+      ),
+      [
+        sourceLiteral(sourceRuntime.disconnected),
+        localizedLiteral(targetRuntime.disconnected, transform),
+      ],
     ],
     "get-block-dag-info": [
       ...common,
       selectedNetwork("${networkId}"),
-      [sourceLiteral(runtime.connectedTo), literal(runtime.connectedTo)],
-      apiMessage(runtime.apiRequest, "GetBlockDagInfo"),
-      apiMessage(runtime.apiResponse, "GetBlockDagInfo"),
-      [sourceLiteral(runtime.disconnected), literal(runtime.disconnected)],
+      [
+        sourceLiteral(sourceRuntime.connectedTo),
+        localizedLiteral(targetRuntime.connectedTo, transform),
+      ],
+      apiMessage(
+        sourceRuntime.apiRequest,
+        targetRuntime.apiRequest,
+        "GetBlockDagInfo",
+      ),
+      apiMessage(
+        sourceRuntime.apiResponse,
+        targetRuntime.apiResponse,
+        "GetBlockDagInfo",
+      ),
+      [
+        sourceLiteral(sourceRuntime.disconnected),
+        localizedLiteral(targetRuntime.disconnected, transform),
+      ],
     ],
     "subscribe-block-added": [
       ...common,
       selectedNetwork('${networkId.class("network")}'),
-      [sourceLiteral(runtime.connectedTo), literal(runtime.connectedTo)],
       [
-        sourceLiteral(runtime.subscribingEvent, { event: "Block Added" }),
-        JSON.stringify(
-          pseudoMessage(runtime.subscribingEvent, { event: "Block Added" }),
-        ),
+        sourceLiteral(sourceRuntime.connectedTo),
+        localizedLiteral(targetRuntime.connectedTo, transform),
       ],
       [
-        sourceLiteral(runtime.disconnectedFrom),
-        literal(runtime.disconnectedFrom),
+        sourceLiteral(sourceRuntime.subscribingEvent, {
+          event: "Block Added",
+        }),
+        localizedLiteral(targetRuntime.subscribingEvent, transform, {
+          event: "Block Added",
+        }),
       ],
       [
-        `${sourceLiteral(runtime.disconnect)},event`,
-        `${literal(runtime.disconnect)},event`,
+        sourceLiteral(sourceRuntime.disconnectedFrom),
+        localizedLiteral(targetRuntime.disconnectedFrom, transform),
       ],
       [
-        sourceLiteral(runtime.connectingPublicNode),
-        literal(runtime.connectingPublicNode),
+        `${sourceLiteral(sourceRuntime.disconnect)},event`,
+        `${localizedLiteral(targetRuntime.disconnect, transform)},event`,
+      ],
+      [
+        sourceLiteral(sourceRuntime.connectingPublicNode),
+        localizedLiteral(targetRuntime.connectingPublicNode, transform),
       ],
     ],
     "subscribe-daa-changed": [
       ...common,
       selectedNetwork('${networkId.class("network")}'),
       [
-        sourceLiteral(runtime.registeringProtocolNotifications, {
+        sourceLiteral(sourceRuntime.registeringProtocolNotifications, {
           protocol: "DAA",
         }),
-        JSON.stringify(
-          pseudoMessage(runtime.registeringProtocolNotifications, {
-            protocol: "DAA",
-          }),
-        ),
-      ],
-      [sourceLiteral(runtime.connectedTo), literal(runtime.connectedTo)],
-      [
-        sourceLiteral(runtime.subscribingProtocolScore, { protocol: "DAA" }),
-        JSON.stringify(
-          pseudoMessage(runtime.subscribingProtocolScore, { protocol: "DAA" }),
+        localizedLiteral(
+          targetRuntime.registeringProtocolNotifications,
+          transform,
+          { protocol: "DAA" },
         ),
       ],
       [
-        sourceLiteral(runtime.disconnectedFrom),
-        literal(runtime.disconnectedFrom),
+        sourceLiteral(sourceRuntime.connectedTo),
+        localizedLiteral(targetRuntime.connectedTo, transform),
       ],
       [
-        `${sourceLiteral(runtime.disconnect)},event`,
-        `${literal(runtime.disconnect)},event`,
+        sourceLiteral(sourceRuntime.subscribingProtocolScore, {
+          protocol: "DAA",
+        }),
+        localizedLiteral(targetRuntime.subscribingProtocolScore, transform, {
+          protocol: "DAA",
+        }),
       ],
       [
-        sourceLiteral(runtime.connectingPublicNode),
-        literal(runtime.connectingPublicNode),
+        sourceLiteral(sourceRuntime.disconnectedFrom),
+        localizedLiteral(targetRuntime.disconnectedFrom, transform),
+      ],
+      [
+        `${sourceLiteral(sourceRuntime.disconnect)},event`,
+        `${localizedLiteral(targetRuntime.disconnect, transform)},event`,
+      ],
+      [
+        sourceLiteral(sourceRuntime.connectingPublicNode),
+        localizedLiteral(targetRuntime.connectingPublicNode, transform),
       ],
     ],
     "utxo-context": [
       ...common,
       selectedNetwork('${network.class("network")}'),
-      [sourceLiteral(runtime.connectedTo), literal(runtime.connectedTo)],
+      [
+        sourceLiteral(sourceRuntime.connectedTo),
+        localizedLiteral(targetRuntime.connectedTo, transform),
+      ],
       [
         compileCardinalPlural(
-          utxo.receivedEvents,
+          sourceUtxo.receivedEvents,
           "events",
           "eventPluralRules",
           "eventNumberFormat",
         ),
         compileCardinalPlural(
-          pseudoLocalizeMessage(utxo.receivedEvents),
+          transform === "pseudo"
+            ? pseudoLocalizeMessage(targetUtxo.receivedEvents)
+            : targetUtxo.receivedEvents,
           "events",
           "eventPluralRules",
           "eventNumberFormat",
         ),
       ],
       [
-        `log(${sourceLiteral(runtime.event)}, event);`,
-        `log(${literal(runtime.event)}, event);`,
+        `log(${sourceLiteral(sourceRuntime.event)}, event);`,
+        `log(${localizedLiteral(targetRuntime.event, transform)}, event);`,
       ],
       [
-        sourceLiteral(utxo.noticeManyUtxos, { term: "UTXOs" }),
-        JSON.stringify(pseudoMessage(utxo.noticeManyUtxos, { term: "UTXOs" })),
+        sourceLiteral(sourceUtxo.noticeManyUtxos, { term: "UTXOs" }),
+        localizedLiteral(targetUtxo.noticeManyUtxos, transform, {
+          term: "UTXOs",
+        }),
       ],
       [
-        sourceLiteral(utxo.noticeManualTesting, {
+        sourceLiteral(sourceUtxo.noticeManualTesting, {
           api: "UtxoProcessor",
           term: "UTXOs",
         }),
-        JSON.stringify(
-          pseudoMessage(utxo.noticeManualTesting, {
-            api: "UtxoProcessor",
-            term: "UTXOs",
-          }),
-        ),
+        localizedLiteral(targetUtxo.noticeManualTesting, transform, {
+          api: "UtxoProcessor",
+          term: "UTXOs",
+        }),
       ],
       [
-        `placeholder=" ${substituteMessage(utxo.addressPlaceholder, { network: "${network}" })}"`,
-        `placeholder="${pseudoMessage(utxo.addressPlaceholder, { network: "${network}" })}"`,
+        `placeholder=" ${substituteMessage(sourceUtxo.addressPlaceholder, { network: "${network}" })}"`,
+        `placeholder="${localizedMessage(targetUtxo.addressPlaceholder, { network: "${network}" }, transform)}"`,
       ],
-      [utxo.monitorAddress, pseudoMessage(utxo.monitorAddress)],
-      [`>${utxo.restart}<`, `>${pseudoMessage(utxo.restart)}<`],
-      [sourceLiteral(utxo.trackingAddress), literal(utxo.trackingAddress)],
-      [sourceLiteral(utxo.error), literal(utxo.error)],
-      [sourceLiteral(utxo.restarting), literal(utxo.restarting)],
-      [sourceLiteral(utxo.stoppingProcessor), literal(utxo.stoppingProcessor)],
-      [sourceLiteral(utxo.startingProcessor), literal(utxo.startingProcessor)],
-      [sourceLiteral(utxo.processorStarted), literal(utxo.processorStarted)],
+      [
+        sourceUtxo.monitorAddress,
+        localizedMessage(targetUtxo.monitorAddress, {}, transform),
+      ],
+      [
+        `>${sourceUtxo.restart}<`,
+        `>${localizedMessage(targetUtxo.restart, {}, transform)}<`,
+      ],
+      [
+        sourceLiteral(sourceUtxo.trackingAddress),
+        localizedLiteral(targetUtxo.trackingAddress, transform),
+      ],
+      [
+        sourceLiteral(sourceUtxo.error),
+        localizedLiteral(targetUtxo.error, transform),
+      ],
+      [
+        sourceLiteral(sourceUtxo.restarting),
+        localizedLiteral(targetUtxo.restarting, transform),
+      ],
+      [
+        sourceLiteral(sourceUtxo.stoppingProcessor),
+        localizedLiteral(targetUtxo.stoppingProcessor, transform),
+      ],
+      [
+        sourceLiteral(sourceUtxo.startingProcessor),
+        localizedLiteral(targetUtxo.startingProcessor, transform),
+      ],
+      [
+        sourceLiteral(sourceUtxo.processorStarted),
+        localizedLiteral(targetUtxo.processorStarted, transform),
+      ],
     ],
   };
 }
 
 function buildUtilsReplacements(
-  messages: BuildArtifactMessages,
+  sourceMessages: BuildArtifactMessages,
+  targetMessages: BuildArtifactMessages,
+  locale: BuildArtifactLocale,
+  transform: MessageTransform,
 ): readonly Replacement[] {
-  const { controls, runtime } = messages;
+  const { controls: sourceControls, runtime: sourceRuntime } = sourceMessages;
+  const { controls: targetControls, runtime: targetRuntime } = targetMessages;
+  const localizedBuildPath = `/${locale}/build`;
   return [
     [
-      `<- ${controls.back}</a> | ${controls.network}:`,
-      `<- ${pseudoMessage(controls.back)}</a> | ${pseudoMessage(controls.network)}:`,
+      `<- ${sourceControls.back}</a> | ${sourceControls.network}:`,
+      `<- ${localizedMessage(targetControls.back, {}, transform)}</a> | ${localizedMessage(targetControls.network, {}, transform)}:`,
     ],
-    ['href="/build#try-live"', 'href="/en-XA/build#try-live"'],
-    ["'/build'", "'/en-XA/build'", 2],
-    ["'/build#try-live'", "'/en-XA/build#try-live'"],
+    ['href="/build#try-live"', `href="${localizedBuildPath}#try-live"`],
+    ["'/build'", `'${localizedBuildPath}'`, 2],
+    ["'/build#try-live'", `'${localizedBuildPath}#try-live'`],
     [
-      `console.log(${sourceLiteral(runtime.networkConsole)},network);`,
-      `console.log(${literal(runtime.networkConsole)},network);`,
+      `console.log(${sourceLiteral(sourceRuntime.networkConsole)},network);`,
+      `console.log(${localizedLiteral(targetRuntime.networkConsole, transform)},network);`,
     ],
     [
-      `>${controls.disconnect}</a>`,
-      `>${pseudoMessage(controls.disconnect)}</a>`,
+      `>${sourceControls.disconnect}</a>`,
+      `>${localizedMessage(targetControls.disconnect, {}, transform)}</a>`,
       2,
     ],
-    [`>${controls.reconnect}</a>`, `>${pseudoMessage(controls.reconnect)}</a>`],
     [
-      sourceTemplate(` ${controls.connecting}`),
-      template(controls.connecting, {}),
+      `>${sourceControls.reconnect}</a>`,
+      `>${localizedMessage(targetControls.reconnect, {}, transform)}</a>`,
+    ],
+    [
+      sourceTemplate(` ${sourceControls.connecting}`),
+      localizedTemplate(targetControls.connecting, {}, transform),
     ],
   ];
 }
 
-function generatePseudoHtml(
+function artifactTransform(locale: BuildArtifactLocale): MessageTransform {
+  return locale === "en-XA" ? "pseudo" : "identity";
+}
+
+function localizedArtifactPaths(
+  locale: BuildArtifactLocale,
+): readonly string[] {
+  return locale === "en-XA"
+    ? PSEUDO_BUILD_EXAMPLE_PATHS
+    : SPANISH_BUILD_EXAMPLE_PATHS;
+}
+
+function generateLocalizedHtml(
   name: (typeof BUILD_EXAMPLE_NAMES)[number],
   source: string,
-  messages: BuildArtifactMessages,
+  sourceMessages: BuildArtifactMessages,
+  targetMessages: BuildArtifactMessages,
+  locale: BuildArtifactLocale,
 ) {
+  const transform = artifactTransform(locale);
   let generated = replaceExactlyOnce(
     source,
-    ['<html lang="en" dir="ltr">', '<html lang="en-XA" dir="ltr">'],
+    ['<html lang="en" dir="ltr">', `<html lang="${locale}" dir="ltr">`],
     `${name}.html`,
   );
   generated = replaceExactlyOnce(
     generated,
-    ["from './resources/utils.js';", "from './resources/utils.en-XA.js';"],
+    ["from './resources/utils.js';", `from './resources/utils.${locale}.js';`],
     `${name}.html`,
   );
 
-  for (const replacement of buildHtmlReplacements(messages)[name]) {
+  for (const replacement of buildHtmlReplacements(
+    sourceMessages,
+    targetMessages,
+    transform,
+  )[name]) {
     generated = replaceExactlyOnce(generated, replacement, `${name}.html`);
   }
 
   return generated
     .replace(
       "<!DOCTYPE html>",
-      "<!DOCTYPE html>\n<!-- Generated private pseudo artifact; do not edit. -->",
+      `<!DOCTYPE html>\n<!-- Generated ${locale} Build artifact; do not edit. -->`,
     )
     .replace(
       "    <head>",
@@ -576,41 +711,74 @@ function generatePseudoHtml(
     );
 }
 
-function generatePseudoUtils(
+function generateLocalizedUtils(
   source: string,
-  messages: BuildArtifactMessages,
+  sourceMessages: BuildArtifactMessages,
+  targetMessages: BuildArtifactMessages,
+  locale: BuildArtifactLocale,
 ): string {
   let generated = source;
-  for (const replacement of buildUtilsReplacements(messages)) {
+  for (const replacement of buildUtilsReplacements(
+    sourceMessages,
+    targetMessages,
+    locale,
+    artifactTransform(locale),
+  )) {
     generated = replaceExactlyOnce(generated, replacement, SOURCE_UTILS_PATH);
   }
-  return `// Generated private pseudo artifact; do not edit.\n${generated}`;
+  return `// Generated ${locale} Build artifact; do not edit.\n${generated}`;
 }
 
-export function generatePseudoBuildArtifacts(
+export function generateLocalizedBuildArtifacts(
   sources: BuildExampleSources,
-  messages: BuildArtifactMessages,
+  sourceMessages: BuildArtifactMessages,
+  targetMessages: BuildArtifactMessages,
+  locale: BuildArtifactLocale,
 ): GeneratedBuildExampleArtifacts {
   const artifacts: Record<string, string> = {};
   for (const name of BUILD_EXAMPLE_NAMES) {
     const sourcePath = `${name}.html`;
     const source = sources[sourcePath];
     if (source === undefined) throw new Error(`Missing source ${sourcePath}`);
-    artifacts[`${name}.en-XA.html`] = generatePseudoHtml(
+    artifacts[`${name}.${locale}.html`] = generateLocalizedHtml(
       name,
       source,
-      messages,
+      sourceMessages,
+      targetMessages,
+      locale,
     );
   }
 
   const sourceUtils = sources[SOURCE_UTILS_PATH];
   if (sourceUtils === undefined)
     throw new Error(`Missing source ${SOURCE_UTILS_PATH}`);
-  artifacts["resources/utils.en-XA.js"] = generatePseudoUtils(
+  artifacts[`resources/utils.${locale}.js`] = generateLocalizedUtils(
     sourceUtils,
-    messages,
+    sourceMessages,
+    targetMessages,
+    locale,
   );
   return artifacts;
+}
+
+export function generatePseudoBuildArtifacts(
+  sources: BuildExampleSources,
+  messages: BuildArtifactMessages,
+): GeneratedBuildExampleArtifacts {
+  return generateLocalizedBuildArtifacts(sources, messages, messages, "en-XA");
+}
+
+export function generateSpanishBuildArtifacts(
+  sources: BuildExampleSources,
+  englishMessages: BuildArtifactMessages,
+  spanishMessages: BuildArtifactMessages,
+): GeneratedBuildExampleArtifacts {
+  return generateLocalizedBuildArtifacts(
+    sources,
+    englishMessages,
+    spanishMessages,
+    "es",
+  );
 }
 
 function validateEnglishSources(sources: BuildExampleSources): string[] {
@@ -624,7 +792,7 @@ function validateEnglishSources(sources: BuildExampleSources): string[] {
     const actualHash = createHash("sha256").update(source).digest("hex");
     if (actualHash !== expectedHash) {
       errors.push(
-        `${path} changed; review its human-readable string inventory and update the pseudo artifact contract`,
+        `${path} changed; review its human-readable string inventory and update the localized artifact contract`,
       );
     }
   }
@@ -656,27 +824,28 @@ function validateEnglishSources(sources: BuildExampleSources): string[] {
   return errors;
 }
 
-export function validatePseudoBuildArtifacts(
+export function validateLocalizedBuildArtifacts(
   sources: BuildExampleSources,
   artifacts: GeneratedBuildExampleArtifacts,
+  locale: BuildArtifactLocale,
 ): string[] {
   const errors = validateEnglishSources(sources);
   const actualPaths = Object.keys(artifacts).sort();
-  const expectedPaths = [...PSEUDO_BUILD_EXAMPLE_PATHS].sort();
+  const expectedPaths = [...localizedArtifactPaths(locale)].sort();
   if (JSON.stringify(actualPaths) !== JSON.stringify(expectedPaths)) {
     errors.push(
-      `pseudo artifact set differs: expected ${expectedPaths.join(", ")}; received ${actualPaths.join(", ")}`,
+      `${locale} artifact set differs: expected ${expectedPaths.join(", ")}; received ${actualPaths.join(", ")}`,
     );
   }
 
   for (const name of BUILD_EXAMPLE_NAMES) {
-    const path = `${name}.en-XA.html`;
+    const path = `${name}.${locale}.html`;
     const artifact = artifacts[path] ?? "";
-    if (!artifact.includes('<html lang="en-XA" dir="ltr">')) {
-      errors.push(`${path} must declare static lang="en-XA" and dir="ltr"`);
+    if (!artifact.includes(`<html lang="${locale}" dir="ltr">`)) {
+      errors.push(`${path} must declare static lang="${locale}" and dir="ltr"`);
     }
-    if (!artifact.includes("from './resources/utils.en-XA.js'")) {
-      errors.push(`${path} must import pseudo-localized shared controls`);
+    if (!artifact.includes(`from './resources/utils.${locale}.js'`)) {
+      errors.push(`${path} must import ${locale} shared controls`);
     }
     if (
       !artifact.includes('<meta name="robots" content="noindex, nofollow">')
@@ -692,29 +861,34 @@ export function validatePseudoBuildArtifacts(
         `${path} must not publish canonical, alternate, or OG metadata`,
       );
     }
-    if (!artifact.includes("[!! ")) {
+    if (locale === "en-XA" && !artifact.includes("[!! ")) {
       errors.push(`${path} contains no visible pseudo-localized output`);
+    }
+    if (locale === "es" && artifact.includes("[!! ")) {
+      errors.push(`${path} must contain Spanish rather than pseudo output`);
     }
   }
 
-  const utils = artifacts["resources/utils.en-XA.js"] ?? "";
+  const utilsPath = `resources/utils.${locale}.js`;
+  const utils = artifacts[utilsPath] ?? "";
   for (const contract of [
-    "'/en-XA/build'",
-    "'/en-XA/build#try-live'",
+    `'/${locale}/build'`,
+    `'/${locale}/build#try-live'`,
     "resolveBuildExampleReturnPath",
-    "[!! ",
+    ...(locale === "en-XA" ? ["[!! "] : []),
   ]) {
     if (!utils.includes(contract)) {
-      errors.push(
-        `resources/utils.en-XA.js is missing ${JSON.stringify(contract)}`,
-      );
+      errors.push(`${utilsPath} is missing ${JSON.stringify(contract)}`);
     }
+  }
+  if (locale === "es" && utils.includes("[!! ")) {
+    errors.push(`${utilsPath} must contain Spanish rather than pseudo output`);
   }
 
   for (const [path, artifact] of Object.entries(artifacts)) {
     const sourcePath = path
-      .replace(".en-XA.html", ".html")
-      .replace("utils.en-XA.js", "utils.js");
+      .replace(`.${locale}.html`, ".html")
+      .replace(`utils.${locale}.js`, "utils.js");
     const source = sources[sourcePath] ?? "";
     for (const identifier of [
       "GetServerInfo",
@@ -733,6 +907,20 @@ export function validatePseudoBuildArtifacts(
     }
   }
   return errors;
+}
+
+export function validatePseudoBuildArtifacts(
+  sources: BuildExampleSources,
+  artifacts: GeneratedBuildExampleArtifacts,
+): string[] {
+  return validateLocalizedBuildArtifacts(sources, artifacts, "en-XA");
+}
+
+export function validateSpanishBuildArtifacts(
+  sources: BuildExampleSources,
+  artifacts: GeneratedBuildExampleArtifacts,
+): string[] {
+  return validateLocalizedBuildArtifacts(sources, artifacts, "es");
 }
 
 function examplesDirectory(repositoryRoot: string): string {
@@ -869,29 +1057,27 @@ async function listLocalizedArtifactCandidates(
   repositoryRoot: string,
 ): Promise<string[]> {
   const directory = examplesDirectory(repositoryRoot);
-  const topLevel = await readdir(directory, { withFileTypes: true });
-  const resources = await readdir(join(directory, "resources"), {
-    withFileTypes: true,
-  });
-  return [
-    ...topLevel
-      .filter(
-        (entry) =>
-          entry.isFile() && localizedArtifactSourcePath(entry.name) !== null,
-      )
-      .map((entry) => entry.name),
-    ...resources
-      .filter(
-        (entry) =>
-          entry.isFile() &&
-          localizedArtifactSourcePath(`resources/${entry.name}`) !== null,
-      )
-      .map((entry) => `resources/${entry.name}`),
-  ].sort();
+  const walk = async (relativeDirectory: string): Promise<string[]> => {
+    const entries = await readdir(join(directory, relativeDirectory), {
+      withFileTypes: true,
+    });
+    const nested = await Promise.all(
+      entries.map(async (entry): Promise<string[]> => {
+        const path = relativeDirectory
+          ? `${relativeDirectory}/${entry.name}`
+          : entry.name;
+        if (entry.isDirectory()) return walk(path);
+        return localizedArtifactSourcePath(path) === null ? [] : [path];
+      }),
+    );
+    return nested.flat();
+  };
+
+  return (await walk("")).sort();
 }
 
 function assertNoUnexpectedLocalizedArtifacts(candidates: readonly string[]) {
-  const expected = new Set<string>(PSEUDO_BUILD_EXAMPLE_PATHS);
+  const expected = new Set<string>(LOCALIZED_BUILD_EXAMPLE_PATHS);
   const unexpected = candidates.filter((path) => !expected.has(path));
   if (unexpected.length) {
     throw new Error(
@@ -900,12 +1086,12 @@ function assertNoUnexpectedLocalizedArtifacts(candidates: readonly string[]) {
   }
 }
 
-export async function cleanPseudoBuildArtifacts(repositoryRoot: string) {
+export async function cleanLocalizedBuildArtifacts(repositoryRoot: string) {
   const candidates = await listLocalizedArtifactCandidates(repositoryRoot);
   assertNoUnexpectedLocalizedArtifacts(candidates);
   const directory = examplesDirectory(repositoryRoot);
   await Promise.all(
-    PSEUDO_BUILD_EXAMPLE_PATHS.map(async (path) => {
+    LOCALIZED_BUILD_EXAMPLE_PATHS.map(async (path) => {
       try {
         await unlink(join(directory, path));
       } catch (error) {
@@ -930,21 +1116,43 @@ async function assertReturnPathRuntimeMatches(repositoryRoot: string) {
   }
 }
 
-export async function syncPseudoBuildArtifacts(
+export async function syncLocalizedBuildArtifacts(
   repositoryRoot: string,
   buildTarget: I18nBuildTarget,
 ) {
-  await cleanPseudoBuildArtifacts(repositoryRoot);
+  await cleanLocalizedBuildArtifacts(repositoryRoot);
   await assertReturnPathRuntimeMatches(repositoryRoot);
-  const [sources, messages] = await Promise.all([
+  const [sources, englishMessages, spanishMessages] = await Promise.all([
     loadEnglishSources(repositoryRoot),
     loadEnglishBuildArtifactMessages(repositoryRoot),
+    loadBuildArtifactMessages(repositoryRoot, "es"),
   ]);
-  const generated = generatePseudoBuildArtifacts(sources, messages);
-  const regenerated = generatePseudoBuildArtifacts(sources, messages);
-  const errors = validatePseudoBuildArtifacts(sources, generated);
+  const generatedByLocale = {
+    "en-XA": generatePseudoBuildArtifacts(sources, englishMessages),
+    es: generateSpanishBuildArtifacts(
+      sources,
+      englishMessages,
+      spanishMessages,
+    ),
+  } satisfies Record<BuildArtifactLocale, GeneratedBuildExampleArtifacts>;
+  const regeneratedByLocale = {
+    "en-XA": generatePseudoBuildArtifacts(sources, englishMessages),
+    es: generateSpanishBuildArtifacts(
+      sources,
+      englishMessages,
+      spanishMessages,
+    ),
+  } satisfies Record<BuildArtifactLocale, GeneratedBuildExampleArtifacts>;
+  const generated: Record<string, string> = Object.assign(
+    {},
+    ...Object.values(generatedByLocale),
+  );
+  const regenerated = Object.assign({}, ...Object.values(regeneratedByLocale));
+  const errors = BUILD_ARTIFACT_LOCALES.flatMap((locale) =>
+    validateLocalizedBuildArtifacts(sources, generatedByLocale[locale], locale),
+  );
   if (JSON.stringify(generated) !== JSON.stringify(regenerated)) {
-    errors.push("pseudo build artifact generation is not deterministic");
+    errors.push("localized Build artifact generation is not deterministic");
   }
   if (errors.length) throw new Error(errors.join("\n"));
 
@@ -960,45 +1168,59 @@ export async function syncPseudoBuildArtifacts(
       }),
     );
   } catch (error) {
-    await cleanPseudoBuildArtifacts(repositoryRoot);
+    await cleanLocalizedBuildArtifacts(repositoryRoot);
     throw error;
   }
 
   const written = await listLocalizedArtifactCandidates(repositoryRoot);
   if (
     JSON.stringify(written) !==
-    JSON.stringify([...PSEUDO_BUILD_EXAMPLE_PATHS].sort())
+    JSON.stringify([...LOCALIZED_BUILD_EXAMPLE_PATHS].sort())
   ) {
     throw new Error(
-      `Generated pseudo artifact set is incomplete: ${written.join(", ")}`,
+      `Generated localized artifact set is incomplete: ${written.join(", ")}`,
     );
   }
 }
 
-export async function checkPseudoBuildArtifacts(
+export async function checkLocalizedBuildArtifacts(
   repositoryRoot: string,
   buildTarget: I18nBuildTarget,
 ) {
   if (buildTarget === "production") {
-    await cleanPseudoBuildArtifacts(repositoryRoot);
+    await cleanLocalizedBuildArtifacts(repositoryRoot);
   } else {
     const candidates = await listLocalizedArtifactCandidates(repositoryRoot);
     assertNoUnexpectedLocalizedArtifacts(candidates);
   }
   await assertReturnPathRuntimeMatches(repositoryRoot);
-  const [sources, messages] = await Promise.all([
+  const [sources, englishMessages, spanishMessages] = await Promise.all([
     loadEnglishSources(repositoryRoot),
     loadEnglishBuildArtifactMessages(repositoryRoot),
+    loadBuildArtifactMessages(repositoryRoot, "es"),
   ]);
-  const generated = generatePseudoBuildArtifacts(sources, messages);
-  const errors = validatePseudoBuildArtifacts(sources, generated);
+  const generatedByLocale = {
+    "en-XA": generatePseudoBuildArtifacts(sources, englishMessages),
+    es: generateSpanishBuildArtifacts(
+      sources,
+      englishMessages,
+      spanishMessages,
+    ),
+  } satisfies Record<BuildArtifactLocale, GeneratedBuildExampleArtifacts>;
+  const generated: Record<string, string> = Object.assign(
+    {},
+    ...Object.values(generatedByLocale),
+  );
+  const errors = BUILD_ARTIFACT_LOCALES.flatMap((locale) =>
+    validateLocalizedBuildArtifacts(sources, generatedByLocale[locale], locale),
+  );
   if (errors.length) throw new Error(errors.join("\n"));
 
   const candidates = await listLocalizedArtifactCandidates(repositoryRoot);
   if (buildTarget === "production") {
     if (candidates.length) {
       throw new Error(
-        `Production contains private pseudo artifacts: ${candidates.join(", ")}`,
+        `Production contains disabled localized artifacts: ${candidates.join(", ")}`,
       );
     }
     return;
@@ -1012,10 +1234,10 @@ export async function checkPseudoBuildArtifacts(
         "utf8",
       );
     } catch {
-      throw new Error(`Missing generated pseudo artifact ${path}`);
+      throw new Error(`Missing generated localized artifact ${path}`);
     }
     if (actual !== expected)
-      throw new Error(`Stale generated pseudo artifact ${path}`);
+      throw new Error(`Stale generated localized artifact ${path}`);
   }
 }
 
@@ -1068,46 +1290,46 @@ async function main() {
   );
 
   if (mode === "clean") {
-    await cleanPseudoBuildArtifacts(repositoryRoot);
-    console.log("private Build pseudo artifacts removed");
+    await cleanLocalizedBuildArtifacts(repositoryRoot);
+    console.log("generated localized Build artifacts removed");
     return;
   }
   if (mode === "prepare-vendor") {
     await prepareVendoredBuildExamples(repositoryRoot);
-    await syncPseudoBuildArtifacts(repositoryRoot, buildTarget);
+    await syncLocalizedBuildArtifacts(repositoryRoot, buildTarget);
     console.log(`Vendored Build artifacts prepared for ${buildTarget}`);
     return;
   }
   if (mode === "check") {
-    await checkPseudoBuildArtifacts(repositoryRoot, buildTarget);
+    await checkLocalizedBuildArtifacts(repositoryRoot, buildTarget);
     console.log(`Build artifacts valid for ${buildTarget}`);
     return;
   }
   if (mode === "sync") {
-    await syncPseudoBuildArtifacts(repositoryRoot, buildTarget);
+    await syncLocalizedBuildArtifacts(repositoryRoot, buildTarget);
     console.log(`Build artifacts synchronized for ${buildTarget}`);
     return;
   }
 
   if (mode === "build") {
-    await syncPseudoBuildArtifacts(repositoryRoot, buildTarget);
+    await syncLocalizedBuildArtifacts(repositoryRoot, buildTarget);
     try {
       await runCommand(command[0], command.slice(1));
     } catch (error) {
-      await cleanPseudoBuildArtifacts(repositoryRoot);
+      await cleanLocalizedBuildArtifacts(repositoryRoot);
       throw error;
     }
     if (buildTarget === "production") {
-      await cleanPseudoBuildArtifacts(repositoryRoot);
+      await cleanLocalizedBuildArtifacts(repositoryRoot);
     }
     return;
   }
 
-  await syncPseudoBuildArtifacts(repositoryRoot, buildTarget);
+  await syncLocalizedBuildArtifacts(repositoryRoot, buildTarget);
   try {
     await runCommand(command[0], command.slice(1));
   } finally {
-    await cleanPseudoBuildArtifacts(repositoryRoot);
+    await cleanLocalizedBuildArtifacts(repositoryRoot);
   }
 }
 

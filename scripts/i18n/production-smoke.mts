@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 
-import { PSEUDO_BUILD_EXAMPLE_URLS } from "./build-example-artifacts.mts";
+import {
+  PSEUDO_BUILD_EXAMPLE_URLS,
+  SPANISH_BUILD_EXAMPLE_URLS,
+} from "./build-example-artifacts.mts";
 import {
   RESERVED_NOT_FOUND_PATHNAME,
   ROUTE_MISS_HEADER,
@@ -46,7 +49,12 @@ async function main() {
       "/missing",
       "/es/missing",
       "/zz/missing",
+      "/es",
       "/es/lore",
+      "/es/build",
+      "/es/assets",
+      "/es/hodl",
+      "/es/opengraph-image",
       "/missing.txt",
       "/api/nope",
       "/_vercel/missing",
@@ -59,6 +67,7 @@ async function main() {
       "/en-XA/hodl",
       "/en-XA/missing",
       "/en-XA/opengraph-image",
+      ...SPANISH_BUILD_EXAMPLE_URLS,
     ]) {
       const response = await request(pathname, 404, {
         [ROUTE_MISS_HEADER]: "1",
@@ -73,6 +82,7 @@ async function main() {
     const proofCatalog = await request("/api/i18n/home-proof/en", 200);
     assert.match(await proofCatalog.text(), /"trigger":"Verify the proof"/u);
     await request("/api/i18n/home-proof/en-XA", 404);
+    await request("/api/i18n/home-proof/es", 404);
     await request("/icon.svg", 200);
     await request("/opengraph-image", 200);
     await delay(250);

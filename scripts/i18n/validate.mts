@@ -3,9 +3,11 @@ import { join, relative } from "node:path";
 
 import {
   isPseudoLocaleEnabled,
+  isSpanishLocaleEnabled,
   defaultLocale,
   localeCodes,
   pseudoLocale,
+  spanishLocale,
 } from "../../src/i18n/config.ts";
 import {
   RESERVED_NOT_FOUND_PATHNAME,
@@ -27,6 +29,7 @@ import {
   validateCatalogSource,
   type MessageCatalog,
 } from "./catalog-contract.mts";
+import { validateSpanishCatalogContract } from "./spanish-contract.mts";
 
 const repositoryRoot = process.cwd();
 const errors: string[] = [];
@@ -151,6 +154,15 @@ for (const locale of catalogLocales) {
       for (const issue of compareCatalogs(sourceCatalog, result.catalog)) {
         fail(location, issue);
       }
+      if (locale === spanishLocale) {
+        for (const issue of validateSpanishCatalogContract(
+          namespace,
+          sourceCatalog,
+          result.catalog,
+        )) {
+          fail(location, issue);
+        }
+      }
     }
   }
 }
@@ -216,6 +228,17 @@ for (const routeId of routeIds) {
 if (isPseudoLocaleEnabled) {
   try {
     assertPreviewLocaleComplete(pseudoLocale);
+  } catch (error) {
+    fail(
+      "src/i18n/site.ts",
+      error instanceof Error ? error.message : String(error),
+    );
+  }
+}
+
+if (isSpanishLocaleEnabled) {
+  try {
+    assertPreviewLocaleComplete(spanishLocale);
   } catch (error) {
     fail(
       "src/i18n/site.ts",
@@ -314,6 +337,6 @@ if (errors.length) {
   process.exitCode = 1;
 } else {
   console.log(
-    `i18n validation passed: ${localeCodes.length} locale, ${routeIds.length} routes, Phase 3 full-site contracts valid`,
+    `i18n validation passed: ${localeCodes.length} locales, ${routeIds.length} routes, Phase 4 private Spanish contracts valid`,
   );
 }

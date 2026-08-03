@@ -4,7 +4,8 @@ import { pathToFileURL } from "node:url";
 
 import {
   pseudoLocale,
-  resolveLocale,
+  resolveSupportedLocale,
+  supportedLocaleCodes,
   type Locale,
 } from "../../src/i18n/config.ts";
 import {
@@ -106,11 +107,7 @@ function resolveInternalRoute(internalPath: string): {
   const segments = internalPath.split("/").filter(Boolean);
   if (!segments.length) return null;
   const requestedLocale = segments[0];
-  const locale =
-    resolveLocale(requestedLocale) ??
-    (requestedLocale.toLowerCase() === pseudoLocale.toLowerCase()
-      ? pseudoLocale
-      : null);
+  const locale = resolveSupportedLocale(requestedLocale);
   if (!locale) return null;
   const pathname =
     segments.length === 1 ? "/" : `/${segments.slice(1).join("/")}`;
@@ -127,10 +124,7 @@ function isLocalizedOpenGraphRoute(internalPath: string): boolean {
   const segments = internalPath.split("/").filter(Boolean);
   if (segments.length !== 2 || segments[1] !== "opengraph-image") return false;
   const requestedLocale = segments[0];
-  return (
-    resolveLocale(requestedLocale) !== null ||
-    requestedLocale.toLowerCase() === pseudoLocale.toLowerCase()
-  );
+  return resolveSupportedLocale(requestedLocale) !== null;
 }
 
 export function listExpectedPrerenderedPageRoutes(): string[] {
@@ -153,10 +147,7 @@ export function validatePrerenderedPageRouteSet(
       const segments = internalPath.split("/").filter(Boolean);
       const requestedLocale = segments[0];
       if (!requestedLocale) return false;
-      return (
-        resolveLocale(requestedLocale) !== null ||
-        requestedLocale.toLowerCase() === pseudoLocale.toLowerCase()
-      );
+      return resolveSupportedLocale(requestedLocale) !== null;
     }),
   );
   const errors: string[] = [];
@@ -298,25 +289,35 @@ function readCatalogMessage(catalog: unknown, path: string): string {
 export async function readServerOnlyCatalogFingerprints(
   root = repositoryRoot,
 ): Promise<string[]> {
-  const [errorsCatalog, sharedCatalog, ...routeCatalogs] = await Promise.all([
-    readJson(join(root, "messages/en/errors.json")),
-    readJson(join(root, "messages/en/shared.json")),
-    ...routeIds.map((routeId) =>
-      readJson(join(root, `messages/en/${routeId}.json`)),
-    ),
-  ]);
-  const fingerprints = new Set<string>([
-    readCatalogMessage(errorsCatalog, "metadata.description"),
-    readCatalogMessage(sharedCatalog, "structuredData.organizationDescription"),
-  ]);
+  const catalogLocales = supportedLocaleCodes.filter(
+    (locale) => locale !== pseudoLocale,
+  );
+  const fingerprints = new Set<string>();
 
-  for (const catalog of routeCatalogs) {
-    fingerprints.add(readCatalogMessage(catalog, "metadata.title"));
-    fingerprints.add(readCatalogMessage(catalog, "metadata.description"));
-    fingerprints.add(readCatalogMessage(catalog, "openGraph.imageAlt"));
+  for (const locale of catalogLocales) {
+    const [errorsCatalog, sharedCatalog, ...routeCatalogs] = await Promise.all([
+      readJson(join(root, `messages/${locale}/errors.json`)),
+      readJson(join(root, `messages/${locale}/shared.json`)),
+      ...routeIds.map((routeId) =>
+        readJson(join(root, `messages/${locale}/${routeId}.json`)),
+      ),
+    ]);
+    fingerprints.add(readCatalogMessage(errorsCatalog, "metadata.description"));
+    fingerprints.add(
+      readCatalogMessage(
+        sharedCatalog,
+        "structuredData.organizationDescription",
+      ),
+    );
+
+    for (const catalog of routeCatalogs) {
+      fingerprints.add(readCatalogMessage(catalog, "metadata.title"));
+      fingerprints.add(readCatalogMessage(catalog, "metadata.description"));
+      fingerprints.add(readCatalogMessage(catalog, "openGraph.imageAlt"));
+    }
+    const homeCatalog = routeCatalogs[routeIds.indexOf("home")];
+    fingerprints.add(readCatalogMessage(homeCatalog, "openGraph.tagline"));
   }
-  const homeCatalog = routeCatalogs[routeIds.indexOf("home")];
-  fingerprints.add(readCatalogMessage(homeCatalog, "openGraph.tagline"));
   return [...fingerprints].sort();
 }
 

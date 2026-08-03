@@ -14,8 +14,8 @@ import { createRequire } from "node:module";
 import { join, relative, sep } from "node:path";
 
 import {
-  cleanPseudoBuildArtifacts,
-  syncPseudoBuildArtifacts,
+  cleanLocalizedBuildArtifacts,
+  syncLocalizedBuildArtifacts,
 } from "./build-example-artifacts.mts";
 import { resolveI18nBuildTarget } from "../../src/i18n/config.ts";
 
@@ -149,7 +149,7 @@ export async function buildProductionFixture(
     environment.NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET ??
       process.env.NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET,
   );
-  await syncPseudoBuildArtifacts(cwd, buildTarget);
+  await syncLocalizedBuildArtifacts(cwd, buildTarget);
 
   const child = spawn(process.execPath, [nextCliPath, "build"], {
     cwd,
@@ -178,11 +178,11 @@ export async function buildProductionFixture(
       child.once("exit", (code, signal) => resolve({ code, signal }));
     });
   } catch (error) {
-    await cleanPseudoBuildArtifacts(cwd);
+    await cleanLocalizedBuildArtifacts(cwd);
     throw error;
   }
   if (result.code !== 0) {
-    await cleanPseudoBuildArtifacts(cwd);
+    await cleanLocalizedBuildArtifacts(cwd);
     throw new Error(
       `unpublished-route fixture build failed (${result.signal ?? result.code})\n${logs}`,
     );

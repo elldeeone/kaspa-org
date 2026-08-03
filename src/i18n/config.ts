@@ -24,11 +24,19 @@ export const i18nBuildTarget = resolveI18nBuildTarget(
   process.env.NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET,
 );
 export const pseudoLocale = "en-XA" as const;
-export type Locale = "en" | typeof pseudoLocale;
+export const spanishLocale = "es" as const;
+export const supportedLocaleCodes = [
+  "en",
+  pseudoLocale,
+  spanishLocale,
+] as const;
+export type Locale = (typeof supportedLocaleCodes)[number];
 export const isPseudoLocaleEnabled = i18nBuildTarget !== "production";
-export const localeCodes: readonly Locale[] = isPseudoLocaleEnabled
-  ? ["en", pseudoLocale]
-  : ["en"];
+export const isSpanishLocaleEnabled = i18nBuildTarget !== "production";
+export const localeCodes: readonly Locale[] =
+  isPseudoLocaleEnabled && isSpanishLocaleEnabled
+    ? ["en", pseudoLocale, spanishLocale]
+    : ["en"];
 
 export const defaultLocale: Locale = "en";
 
@@ -54,6 +62,12 @@ const localeDefinitions: Record<Locale, LocaleDefinition> = {
     hrefLang: "en-XA",
     dir: "ltr",
   },
+  es: {
+    code: "es",
+    label: "Español",
+    hrefLang: "es",
+    dir: "ltr",
+  },
 };
 
 export const isAiDeploymentEnabled = AI_ENABLED_VALUES.has(
@@ -72,10 +86,26 @@ export function resolveLocale(value: string | undefined): Locale | null {
   );
 }
 
+export function resolveSupportedLocale(
+  value: string | undefined,
+): Locale | null {
+  if (!value) return null;
+  const normalized = value.toLowerCase();
+  return (
+    supportedLocaleCodes.find(
+      (locale) => locale.toLowerCase() === normalized,
+    ) ?? null
+  );
+}
+
 export function getLocaleDefinition(locale: Locale): LocaleDefinition {
   return localeDefinitions[locale];
 }
 
 export function listEnabledLocales(): readonly Locale[] {
   return localeCodes;
+}
+
+export function listSelectableLocales(): readonly Locale[] {
+  return localeCodes.filter((locale) => locale !== pseudoLocale);
 }

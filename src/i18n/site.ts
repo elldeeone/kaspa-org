@@ -5,6 +5,7 @@ import {
   getLocaleDefinition,
   isAiDeploymentEnabled,
   listEnabledLocales as getEnabledLocaleCodes,
+  listSelectableLocales as getSelectableLocaleCodes,
   type Locale,
   type LocaleDefinition,
 } from "./config.ts";
@@ -75,12 +76,12 @@ const routeDefinitions: Record<RouteId, RouteDefinition> = {
 };
 
 const aiLocaleContracts: Record<SiteSurfaceId, Record<Locale, boolean>> = {
-  home: { en: true, "en-XA": false },
-  lore: { en: true, "en-XA": false },
-  build: { en: true, "en-XA": false },
-  assets: { en: false, "en-XA": false },
-  hodl: { en: true, "en-XA": false },
-  "not-found": { en: true, "en-XA": false },
+  home: { en: true, "en-XA": false, es: false },
+  lore: { en: true, "en-XA": false, es: false },
+  build: { en: true, "en-XA": false, es: false },
+  assets: { en: false, "en-XA": false, es: false },
+  hodl: { en: true, "en-XA": false, es: false },
+  "not-found": { en: true, "en-XA": false, es: false },
 };
 
 export type RouteContext = {
@@ -146,6 +147,10 @@ export function listPublishedLocales(routeId: RouteId): readonly Locale[] {
 
 export function listEnabledLocales(): readonly Locale[] {
   return getEnabledLocaleCodes();
+}
+
+export function listSelectableLocales(): readonly Locale[] {
+  return getSelectableLocaleCodes();
 }
 
 export function listDiscoverableLocales(routeId: RouteId): readonly Locale[] {

@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import { cp, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 
 import {
@@ -19,6 +22,7 @@ import {
   getHomeProofClientMessages,
   getSharedClientMessages,
 } from "../../src/i18n/messages.ts";
+import { i18nBuildTarget, spanishLocale } from "../../src/i18n/config.ts";
 import { routeIds } from "../../src/i18n/manifest.ts";
 
 const emptyPolicy = {
@@ -189,6 +193,16 @@ test("canonical route policies keep server routes lean and client routes exact",
   );
 });
 
+test("Production omits private selector messages from the shared payload", () => {
+  const navigation = getSharedClientMessages("en").shared.navigation;
+  if (i18nBuildTarget === "production") {
+    assert.equal("language" in navigation, false);
+  } else {
+    assert.ok("language" in navigation);
+    assert.deepEqual(navigation.language, { label: "Language" });
+  }
+});
+
 test("route policies reject metadata, Open Graph copy, and unrelated catalogs", () => {
   const policy = createRoutePolicies().build;
   assert.deepEqual(
@@ -232,6 +246,47 @@ test("route policies reject metadata, Open Graph copy, and unrelated catalogs", 
   );
 });
 
+test(
+  "Spanish Preview client payloads contain only route-owned messages",
+  { skip: i18nBuildTarget === "production" },
+  () => {
+    const policies = createRoutePolicies();
+    const shared = getSharedClientMessages(spanishLocale);
+    assert.ok("language" in shared.shared.navigation);
+    assert.deepEqual(shared.shared.navigation.language, {
+      label: "Idioma",
+    });
+    assert.deepEqual(
+      validateClientMessagePayloads(
+        [
+          { locale: spanishLocale, messages: null },
+          { locale: spanishLocale, messages: shared },
+          {
+            locale: spanishLocale,
+            messages: getBuildClientMessages(spanishLocale),
+          },
+        ],
+        policies.build,
+      ),
+      [],
+    );
+    assert.deepEqual(
+      validateClientMessagePayloads(
+        [
+          { locale: spanishLocale, messages: null },
+          { locale: spanishLocale, messages: shared },
+          {
+            locale: spanishLocale,
+            messages: getHodlClientMessages(spanishLocale),
+          },
+        ],
+        policies.hodl,
+      ),
+      [],
+    );
+  },
+);
+
 test("prerender validation requires the exact localized page set", () => {
   const expected = ["/en", "/en/lore"];
   assert.deepEqual(
@@ -261,8 +316,33 @@ test("server-only fingerprints cover metadata and Open Graph catalogs", async ()
     "Kaspa Developer Docs, SDKs, APIs, and Node Access | Kaspa",
     "Buy KAS, Set Up a Wallet, and Self-Custody | Kaspa",
     "Kaspa — Real-time Decentralization",
+    "Documentación, SDKs, APIs y acceso a nodos para desarrolladores | Kaspa",
+    "Comprar KAS, configurar una billetera y usar la autocustodia | Kaspa",
+    "Kaspa — Descentralización en tiempo real",
   ]) {
     assert.ok(fingerprints.includes(expected), expected);
+  }
+});
+
+test("server-only fingerprints ignore unconfigured partial locale work", async () => {
+  const fixture = await mkdtemp(join(tmpdir(), "kaspa-i18n-payload-"));
+  try {
+    await cp(join(process.cwd(), "messages"), join(fixture, "messages"), {
+      recursive: true,
+    });
+    await mkdir(join(fixture, "messages/fr"), { recursive: true });
+    await writeFile(
+      join(fixture, "messages/fr/shared.json"),
+      JSON.stringify({ navigation: { language: { label: "Langue" } } }),
+    );
+
+    const fingerprints = await readServerOnlyCatalogFingerprints(fixture);
+    assert.ok(fingerprints.includes("Kaspa — Real-time Decentralization"));
+    assert.ok(
+      fingerprints.includes("Kaspa — Descentralización en tiempo real"),
+    );
+  } finally {
+    await rm(fixture, { recursive: true, force: true });
   }
 });
 
