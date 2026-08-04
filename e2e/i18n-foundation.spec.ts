@@ -15,10 +15,10 @@ const publicRoutes = [
     path: "/",
     internalPath: "/en",
     baselineBytes: 37_238,
-    // Phase 4 adds locale-neutral long-word wrapping to the rendered hero class
-    // so translated headings stay inside narrow screens. Keep the original
-    // baseline and budget only that HTML-only layout marker.
-    localizedLayoutBudgetBytes: 64,
+    // Phase 4 adds locale-neutral responsive markers for translated hero text
+    // and equal-width mobile proof actions. Keep the original baseline and
+    // budget only those HTML-only layout classes.
+    localizedLayoutBudgetBytes: 192,
     title: "Kaspa | Proof-of-Work blockDAG for Real-Time Decentralization",
     description:
       "Kaspa is a fair-launched proof-of-work blockDAG cryptocurrency running at 10 blocks per second, built for real-time decentralization.",

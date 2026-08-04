@@ -21,7 +21,9 @@ import {
   type ProductionFixture,
 } from "../scripts/i18n/unpublished-route-fixture.mts";
 import {
+  assertEqualControlRow,
   assertNoHorizontalOverflow,
+  assertWordsStayOnSingleLine,
   installStandaloneExampleMocks,
   measureOpenGraphImage,
   standaloneBasePath,
@@ -141,6 +143,20 @@ let fixture: ProductionFixture | undefined;
 let server: ProductionServer | undefined;
 let api: APIRequestContext | undefined;
 let activeProject = false;
+
+function getVisibleLanguageSelector(page: Page) {
+  return page.locator("[data-language-selector]:visible");
+}
+
+async function openLanguageMenu(page: Page, label: string) {
+  const selector = getVisibleLanguageSelector(page);
+  const trigger = selector.getByRole("button", { name: label, exact: true });
+  await expect(trigger).toBeVisible();
+  await trigger.click();
+  const menu = selector.getByRole("menu", { name: label });
+  await expect(menu).toBeVisible();
+  return { menu, selector, trigger };
+}
 
 function flattenCatalog(
   value: MessageCatalog,
@@ -520,39 +536,64 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
     }
 
     await page.goto("/es/lore?source=spanish-gate&step=4#roadmap");
-    const spanishSelector = page.getByRole("combobox", { name: "Idioma" });
-    await expect(spanishSelector).toHaveValue("es");
-    await expect(spanishSelector.locator("option")).toHaveText([
-      "English",
-      "Español",
-    ]);
-    await expect(spanishSelector.locator('option[value="en-XA"]')).toHaveCount(
-      0,
-    );
-    await spanishSelector.focus();
-    await expect(spanishSelector).toBeFocused();
-    await spanishSelector.press("ArrowUp");
+    const spanishSelector = getVisibleLanguageSelector(page);
+    const spanishTrigger = spanishSelector.getByRole("button", {
+      name: "Idioma",
+      exact: true,
+    });
+    await spanishTrigger.focus();
+    await expect(spanishTrigger).toBeFocused();
+    await spanishTrigger.press("ArrowDown");
+    const spanishMenu = spanishSelector.getByRole("menu", { name: "Idioma" });
+    await expect(spanishMenu).toBeVisible();
+    await expect(spanishMenu).not.toContainText("EN-XA");
+    const currentSpanish = spanishMenu.getByRole("menuitemradio", {
+      name: "Español",
+    });
+    await expect(currentSpanish).toHaveAttribute("aria-checked", "true");
+    await expect(currentSpanish).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(spanishMenu).toHaveCount(0);
+    await expect(spanishTrigger).toBeFocused();
+
+    await spanishTrigger.press("Enter");
+    const switchToEnglish = spanishSelector.getByRole("menuitemradio", {
+      name: "English",
+    });
+    await switchToEnglish.press("Enter");
     await expect(page).toHaveURL(
       /\/lore\?source=spanish-gate&step=4#roadmap$/u,
     );
-    const englishSelector = page.getByRole("combobox", { name: "Language" });
-    await englishSelector.focus();
-    await expect(englishSelector).toBeFocused();
-    await englishSelector.press("ArrowDown");
+    const englishSelector = getVisibleLanguageSelector(page);
+    const englishTrigger = englishSelector.getByRole("button", {
+      name: "Language",
+      exact: true,
+    });
+    await englishTrigger.press("Enter");
+    const englishMenu = englishSelector.getByRole("menu", {
+      name: "Language",
+    });
+    await expect(
+      englishMenu.getByRole("menuitemradio", { name: "English" }),
+    ).toHaveAttribute("aria-checked", "true");
+    const switchToSpanish = englishMenu.getByRole("menuitemradio", {
+      name: "Español",
+    });
+    await switchToSpanish.press("Enter");
     await expect(page).toHaveURL(
       /\/es\/lore\?source=spanish-gate&step=4#roadmap$/u,
     );
 
     await page.goto("/%65%73/lore?source=encoded-locale#roadmap");
-    const encodedSelector = page.getByRole("combobox", { name: "Idioma" });
-    await expect(encodedSelector).toHaveValue("es");
-    await encodedSelector.selectOption("en");
+    const { menu: encodedMenu } = await openLanguageMenu(page, "Idioma");
+    await encodedMenu.getByRole("menuitemradio", { name: "English" }).click();
     await expect(page).toHaveURL(/\/lore\?source=encoded-locale#roadmap$/u);
 
     await page.goto("/es/%256core");
-    const unknownPathSelector = page.getByRole("combobox", { name: "Idioma" });
-    await expect(unknownPathSelector).toHaveValue("es");
-    await unknownPathSelector.selectOption("en");
+    const { menu: unknownPathMenu } = await openLanguageMenu(page, "Idioma");
+    await unknownPathMenu
+      .getByRole("menuitemradio", { name: "English" })
+      .click();
     await expect(page).toHaveURL(/\/%256core$/u);
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
     await expect(
@@ -564,7 +605,12 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
 
     await page.goto("/es/missing");
     await expect(page.locator("html")).toHaveAttribute("lang", "es");
-    await expect(page.getByRole("combobox", { name: "Idioma" })).toBeVisible();
+    await expect(
+      getVisibleLanguageSelector(page).getByRole("button", {
+        name: "Idioma",
+        exact: true,
+      }),
+    ).toBeVisible();
 
     await page.goto("/es/missing.txt");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
@@ -613,34 +659,43 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
       isMobile: true,
     });
     const page = await context.newPage();
-    const menu = page.locator('button[aria-controls="mobile-nav-links"]');
-
     await page.goto("/es/lore?source=spanish-mobile-gate&step=4#roadmap");
-    await menu.click();
-    const spanishSelector = page.getByRole("combobox", { name: "Idioma" });
-    await expect(spanishSelector).toBeVisible();
-    await expect(spanishSelector).toHaveValue("es");
-    await expect(spanishSelector.locator("option")).toHaveText([
-      "English",
-      "Español",
-    ]);
-    await expect(spanishSelector.locator('option[value="en-XA"]')).toHaveCount(
-      0,
-    );
-    await spanishSelector.focus();
-    await expect(spanishSelector).toBeFocused();
-    await spanishSelector.selectOption("en");
+    const spanishSelector = getVisibleLanguageSelector(page);
+    const spanishTrigger = spanishSelector.getByRole("button", {
+      name: "Idioma",
+      exact: true,
+    });
+    await spanishTrigger.focus();
+    await spanishTrigger.press("Enter");
+    const spanishMenu = spanishSelector.getByRole("menu", { name: "Idioma" });
+    await expect(spanishMenu).not.toContainText("EN-XA");
+    await expect(
+      spanishMenu.getByRole("menuitemradio", { name: "Español" }),
+    ).toHaveAttribute("aria-checked", "true");
+    const switchToEnglish = spanishMenu.getByRole("menuitemradio", {
+      name: "English",
+    });
+    await switchToEnglish.press("Enter");
     await expect(page).toHaveURL(
       /\/lore\?source=spanish-mobile-gate&step=4#roadmap$/u,
     );
 
-    await menu.click();
-    const englishSelector = page.getByRole("combobox", { name: "Language" });
-    await expect(englishSelector).toBeVisible();
-    await expect(englishSelector).toHaveValue("en");
-    await englishSelector.focus();
-    await expect(englishSelector).toBeFocused();
-    await englishSelector.selectOption("es");
+    const englishSelector = getVisibleLanguageSelector(page);
+    const englishTrigger = englishSelector.getByRole("button", {
+      name: "Language",
+      exact: true,
+    });
+    await englishTrigger.press("Enter");
+    const englishMenu = englishSelector.getByRole("menu", {
+      name: "Language",
+    });
+    await expect(
+      englishMenu.getByRole("menuitemradio", { name: "English" }),
+    ).toHaveAttribute("aria-checked", "true");
+    const switchToSpanish = englishMenu.getByRole("menuitemradio", {
+      name: "Español",
+    });
+    await switchToSpanish.press("Enter");
     await expect(page).toHaveURL(
       /\/es\/lore\?source=spanish-mobile-gate&step=4#roadmap$/u,
     );
@@ -730,6 +785,7 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
 
     for (const viewport of [
       { width: 1440, height: 900 },
+      { width: 430, height: 932 },
       { width: 390, height: 844 },
       { width: 375, height: 812 },
       { width: 320, height: 640 },
@@ -750,6 +806,33 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
           viewport.width,
           `${route.path} initial`,
         );
+
+        if (route.path === "/es" && viewport.width < 768) {
+          await assertWordsStayOnSingleLine(
+            page.locator("main h1").first(),
+            `${viewport.width}px Spanish home hero`,
+          );
+          await assertEqualControlRow(
+            page.locator("#verify .btn-primary, #verify .btn-ghost"),
+            `${viewport.width}px Spanish proof actions`,
+          );
+
+          const languageTrigger = getVisibleLanguageSelector(page).getByRole(
+            "button",
+            { name: "Idioma", exact: true },
+          );
+          await languageTrigger.click();
+          await expect(languageTrigger).toHaveAttribute(
+            "aria-expanded",
+            "true",
+          );
+          await assertNoHorizontalOverflow(
+            page,
+            viewport.width,
+            `${route.path} language menu open`,
+          );
+          await page.keyboard.press("Escape");
+        }
 
         await page.evaluate(() =>
           window.scrollTo(0, document.body.scrollHeight),

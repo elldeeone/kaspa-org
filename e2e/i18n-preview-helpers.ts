@@ -1,4 +1,4 @@
-import { expect, type Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 
 export const standaloneExampleNames = [
   "get-server-info",
@@ -231,4 +231,69 @@ export async function assertNoHorizontalOverflow(
     Math.max(dimensions.body, dimensions.document),
     `${viewportWidth}px ${state}; overflowing: ${JSON.stringify(dimensions.overflowing)}`,
   ).toBeLessThanOrEqual(dimensions.client + 1);
+}
+
+export async function assertWordsStayOnSingleLine(
+  heading: Locator,
+  state: string,
+) {
+  const splitWords = await heading.evaluate((element) => {
+    const split: string[] = [];
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const text = node.textContent ?? "";
+      for (const match of text.matchAll(/\S+/gu)) {
+        const lineTops = new Set<number>();
+        for (
+          let index = match.index;
+          index < match.index + match[0].length;
+          index += 1
+        ) {
+          const range = document.createRange();
+          range.setStart(node, index);
+          range.setEnd(node, index + 1);
+          lineTops.add(Math.round(range.getBoundingClientRect().top));
+        }
+        if (lineTops.size > 1) split.push(match[0]);
+      }
+    }
+
+    return split;
+  });
+
+  expect(splitWords, `${state}; split words`).toEqual([]);
+}
+
+export async function assertEqualControlRow(controls: Locator, state: string) {
+  await expect(controls, state).toHaveCount(2);
+  const geometry = await controls.evaluateAll((elements) =>
+    elements.map((element) => {
+      const rect = element.getBoundingClientRect();
+      return {
+        height: rect.height,
+        overflow: element.scrollWidth > element.clientWidth + 1,
+        width: rect.width,
+        y: rect.y,
+      };
+    }),
+  );
+  const [first, second] = geometry;
+  if (!first || !second) throw new Error(`${state}; proof controls missing`);
+
+  expect(Math.abs(first.y - second.y), `${state}; controls share a row`).toBe(
+    0,
+  );
+  expect(
+    Math.abs(first.width - second.width),
+    `${state}; controls have equal widths`,
+  ).toBeLessThanOrEqual(1);
+  expect(
+    Math.abs(first.height - second.height),
+    `${state}; controls have equal heights`,
+  ).toBeLessThanOrEqual(1);
+  expect(
+    geometry.some(({ overflow }) => overflow),
+    `${state}; control content overflows`,
+  ).toBe(false);
 }

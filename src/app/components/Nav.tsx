@@ -289,11 +289,14 @@ export default function Nav() {
               disabledClassName={navLinkDisabledDesktop}
             />
           </div>
-          {hasMultipleSelectableLocales ? <LanguageSelector /> : null}
-          <ThemeToggle />
+          <div className="flex items-center gap-1">
+            {hasMultipleSelectableLocales ? <LanguageSelector /> : null}
+            <ThemeToggle />
+          </div>
         </div>
 
         <div className="flex items-center gap-1 sm:gap-1.5 md:hidden">
+          {hasMultipleSelectableLocales ? <LanguageSelector compact /> : null}
           <ThemeToggle compact />
           <button
             onClick={() => setMenuOpen((value) => !value)}
@@ -338,7 +341,6 @@ export default function Nav() {
             onNavigate={() => setMenuOpen(false)}
             tabIndex={menuOpen ? 0 : -1}
           />
-          {hasMultipleSelectableLocales ? <LanguageSelector showLabel /> : null}
         </div>
       </div>
 

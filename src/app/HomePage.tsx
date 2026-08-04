@@ -57,7 +57,7 @@ export default async function HomePage({
 
           <div className="relative z-10 mx-auto -mt-[20vh] w-full px-6 text-center sm:mt-0 sm:pt-8 md:px-12 md:pt-10 xl:mx-0 xl:max-w-[55vw] xl:px-20 xl:pt-20 xl:text-left">
             <h1
-              className={`text-[clamp(2.6rem,13vw,3.25rem)] leading-[0.9] font-bold tracking-[-0.03em] wrap-break-word max-[399px]:text-[clamp(2.35rem,11.5vw,2.75rem)] sm:text-[56px] md:text-[80px] md:tracking-[-0.04em] lg:text-[96px] ${locale === "en-XA" ? "break-all" : ""}`}
+              className={`text-[clamp(1.75rem,8.75vw,2.5rem)] leading-[0.9] font-bold tracking-[-0.03em] text-balance sm:text-[56px] md:text-[80px] md:tracking-[-0.04em] lg:text-[96px] ${locale === "en-XA" ? "break-all" : "wrap-normal"}`}
             >
               {heroLines.map((line, index) => (
                 <Fragment key={`${line}-${index}`}>
@@ -111,13 +111,16 @@ export default async function HomePage({
               {t("verify.explanation")}
             </p>
 
-            <div className="mt-10 flex flex-wrap gap-3">
-              <ProofTrigger labels={clientLabels.proof} />
+            <div className="mt-10 grid w-full grid-cols-2 gap-3 sm:flex sm:w-auto sm:flex-wrap">
+              <ProofTrigger
+                labels={clientLabels.proof}
+                className="btn-proof-action"
+              />
               <a
                 href="https://github.com/kaspagang/kaspad-py-explorer/blob/main/src/genesis_proof.ipynb"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-ghost"
+                className="btn-ghost btn-proof-action"
               >
                 {t("verify.runProof")} <ArrowUpRightIcon size={14} />
               </a>

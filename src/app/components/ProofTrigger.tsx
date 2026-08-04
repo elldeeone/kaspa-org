@@ -105,8 +105,10 @@ function useProofParamState(): {
 }
 
 export default function ProofTrigger({
+  className = "",
   labels,
 }: {
+  className?: string;
   labels: ProofShellLabels;
 }): React.JSX.Element {
   const { open, openOverlay, closeOverlay } = useProofParamState();
@@ -122,7 +124,7 @@ export default function ProofTrigger({
         ref={triggerRef}
         type="button"
         onClick={openOverlay}
-        className="btn-primary"
+        className={`btn-primary ${className}`}
       >
         {labels.trigger}
       </button>

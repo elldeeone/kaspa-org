@@ -1,5 +1,11 @@
 import { expect, test } from "@playwright/test";
 
+import {
+  assertEqualControlRow,
+  assertWordsStayOnSingleLine,
+  waitForStableLayout,
+} from "./i18n-preview-helpers";
+
 test("home hero stays within a 320px mobile viewport", async ({
   browser,
 }, testInfo) => {
@@ -17,6 +23,7 @@ test("home hero stays within a 320px mobile viewport", async ({
   const page = await context.newPage();
 
   await page.goto(baseURL, { waitUntil: "domcontentloaded" });
+  await waitForStableLayout(page);
 
   const heading = page.getByRole("heading", {
     level: 1,
@@ -33,6 +40,7 @@ test("home hero stays within a 320px mobile viewport", async ({
 
   await expect(heading).toBeVisible();
   await expect(subtitle).toBeVisible();
+  await assertWordsStayOnSingleLine(heading, "320px English home hero");
 
   const dimensions = await page.evaluate(() => ({
     clientWidth: document.documentElement.clientWidth,
@@ -56,4 +64,30 @@ test("home hero stays within a 320px mobile viewport", async ({
   }
 
   await context.close();
+});
+
+test("home proof actions stay equal and side-by-side on mobile", async ({
+  browser,
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name !== "desktop-chromium",
+    "Custom mobile viewport coverage runs once",
+  );
+
+  const baseURL = testInfo.project.use.baseURL as string;
+  for (const width of [320, 375, 430]) {
+    const context = await browser.newContext({
+      viewport: { width, height: 844 },
+      isMobile: true,
+      hasTouch: true,
+    });
+    const page = await context.newPage();
+    await page.goto(baseURL, { waitUntil: "domcontentloaded" });
+    await waitForStableLayout(page);
+    await assertEqualControlRow(
+      page.locator("#verify .btn-primary, #verify .btn-ghost"),
+      `${width}px English proof actions`,
+    );
+    await context.close();
+  }
 });
