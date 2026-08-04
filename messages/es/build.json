@@ -31,7 +31,7 @@
       "disconnect": "Desconectar",
       "apiRequest": "Solicitud de {api}...",
       "apiResponse": "Respuesta de {api}:",
-      "subscribingEvent": "Suscribiéndose a {event}...",
+      "subscribingBlockAdded": "Suscribiéndose al evento de bloque añadido...",
       "registeringProtocolNotifications": "Registrando notificaciones de {protocol}...",
       "subscribingProtocolScore": "Suscribiéndose a la puntuación de {protocol}...",
       "event": "evento:",
@@ -348,7 +348,7 @@
       "toccata": {
         "label": "Bifurcación dura",
         "title": "{toccata}: covenants y {zk}",
-        "description": "Bifurcación dura que agrupa códigos de operación de script ampliados ({kip17}), identificadores de covenant ({kip20}), códigos de operación {zk} con un subsistema de precompilados de verificación ({kip16}) y compromisos de secuenciación ({kip21}). Actualmente está activo en {tn12} antes de su activación en la red principal."
+        "description": "Bifurcación dura que agrupa códigos de operación de script ampliados ({kip17}), identificadores de covenant ({kip20}), códigos de operación {zk} con un subsistema de precompilados de verificación ({kip16}) y compromisos de secuenciación ({kip21}). Actualmente está activa en {tn12} antes de su activación en la red principal."
       },
       "silverscript": {
         "label": "Programabilidad",
@@ -358,7 +358,7 @@
       "vprogs": {
         "label": "Programabilidad",
         "title": "{vprogs}",
-        "description": "Investigación inicial sobre programas verificables: secuenciación en cadena con ejecución fuera de la cadena liquidada mediante pruebas {zk}. Se basa en las primitivas de script que llegarán con {toccata}."
+        "description": "Investigación inicial sobre programas verificables: secuenciación en cadena con ejecución fuera de la cadena y liquidación de sus resultados mediante pruebas {zk}. Se basa en las primitivas de script que llegarán con {toccata}."
       },
       "python": {
         "label": "{sdk}",

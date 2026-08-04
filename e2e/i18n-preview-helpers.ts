@@ -13,7 +13,7 @@ export const standaloneRuntimeFingerprints: Readonly<
 > = {
   "get-server-info": "GetServerInfo",
   "get-block-dag-info": "GetBlockDagInfo",
-  "subscribe-block-added": "Block Added",
+  "subscribe-block-added": "Ɓļööçķ ÅÅďďëëď",
   "subscribe-daa-changed": "DAA",
   "utxo-context": "UtxoProcessor",
 };

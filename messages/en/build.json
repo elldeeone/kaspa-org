@@ -31,7 +31,7 @@
       "disconnect": "Disconnect",
       "apiRequest": "{api} request...",
       "apiResponse": "{api} response:",
-      "subscribingEvent": "Subscribing to {event}...",
+      "subscribingBlockAdded": "Subscribing to Block Added...",
       "registeringProtocolNotifications": "Registering for {protocol} notifications...",
       "subscribingProtocolScore": "Subscribing to {protocol} score...",
       "event": "event:",

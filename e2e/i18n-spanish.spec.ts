@@ -127,7 +127,7 @@ const spanishRuntimeOutput: Readonly<
 > = {
   "get-server-info": "Respuesta de GetServerInfo:",
   "get-block-dag-info": "Respuesta de GetBlockDagInfo:",
-  "subscribe-block-added": "Suscribiéndose a Block Added...",
+  "subscribe-block-added": "Suscribiéndose al evento de bloque añadido...",
   "subscribe-daa-changed": "Registrando notificaciones de DAA...",
   "utxo-context": "Esta demostración está pensada para pruebas manuales",
 };
@@ -684,6 +684,7 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
     expect(utils).toContain("Red:");
     expect(utils).toContain("'/es/build'");
     expect(utils).toContain("'/es/build#try-live'");
+    expect(utils).toContain("innerHTML = ` | Conectando...`;");
 
     const context = await browser.newContext({ baseURL: server.baseUrl });
     const page = await context.newPage();

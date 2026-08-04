@@ -44,21 +44,21 @@
     "live": {
       "eyebrow": "Histórico · Actual · Continuo",
       "title": "Suministro en vivo frente al calendario de emisión",
-      "body": "El suministro circulante de Kaspa puede volver a calcularse a partir de principios fundamentales. Un nodo en vivo informa el total actual. El total histórico en el punto de control del 22 de noviembre de 2021 está comprometido por el génesis integrado mediante su conjunto UTXO, y cada moneda emitida después de ese punto de control sigue el calendario de emisión determinista."
+      "body": "El suministro circulante de Kaspa puede volver a calcularse a partir de principios fundamentales. Un nodo en vivo informa el total actual. El total histórico en el punto de control del 22 de noviembre de 2021 queda vinculado criptográficamente al génesis integrado mediante el compromiso de su conjunto UTXO, y cada moneda emitida después de ese punto de control sigue el calendario de emisión determinista."
     },
     "origin": {
       "eyebrow": "Origen",
       "title": "Dónde comienza el suministro",
       "supplyBody": "Cada moneda se remonta a un único bloque en el que el suministro era <strong>cero</strong>. Su compromiso UTXO es la huella matemática de un conjunto vacío, la misma constante en cualquier máquina que la calcule. El suministro comienza aquí, y cada moneda posterior es una emisión programada, no una asignación.",
-      "verseBody": "Dentro de la coinbase de ese bloque hay un versículo de <reference>Ezra 7:18</reference>, escrito en arameo, que celebra los valores de libertad promovidos por los antiguos reyes persas.",
+      "verseBody": "Dentro de la coinbase de ese bloque hay un versículo de <reference>Esdras 7:18</reference>, escrito en arameo, que celebra los valores de libertad promovidos por los antiguos reyes persas.",
       "translatedQuotation": "«Y lo que a ti y a tus hermanos les parezca bien hacer con el resto de la plata y el oro, háganlo conforme a la voluntad de su Dios».",
-      "quotationAttribution": "Ezra 7:18, en la coinbase del génesis",
-      "timestampBody": "La coinbase también contiene el hash del <bitcoinBlock>bloque de Bitcoin #708,639</bitcoinBlock>, lo que demuestra que el bloque se produjo después de ese momento, sin preminado."
+      "quotationAttribution": "Esdras 7:18, en la coinbase del génesis",
+      "timestampBody": "La coinbase también contiene el hash del <bitcoinBlock>bloque de Bitcoin #708 639</bitcoinBlock>, lo que demuestra que el bloque se produjo después de ese momento, sin preminado."
     },
     "run": {
       "eyebrow": "No confíes, verifica",
       "title": "Ejecútala tú mismo",
-      "intro": "Reproduce la prueba desde el génesis hasta la punta actual. El cuaderno recorre hacia atrás la cadena de hashes de bloques de puntos de poda hasta el génesis, verifica el compromiso UTXO con la huella del conjunto vacío y comprueba los hashes de bloques de Bitcoin que sirven de anclaje. Para obtener como número el suministro histórico en el punto de control del 22 de noviembre de 2021, un paso adicional suma el conjunto UTXO comprometido por la prueba.",
+      "intro": "Reproduce la prueba desde el génesis hasta la punta actual. El cuaderno recorre hacia atrás la cadena de hashes de bloques de puntos de poda hasta el génesis, verifica el compromiso UTXO con la huella del conjunto vacío y comprueba los hashes de bloques de Bitcoin que sirven de anclaje. Para obtener como número el suministro histórico en el punto de control del 22 de noviembre de 2021, un paso adicional suma los importes del conjunto UTXO al que se vincula el compromiso criptográfico de la prueba.",
       "notebookTitle": "El cuaderno de la prueba",
       "notebookBody": "Clona, ejecuta e inspecciona. El cuaderno verifica el génesis y el vínculo con el punto de control, pero no muestra por sí mismo la cifra del suministro histórico.",
       "notebookAction": "Abrir en GitHub",
@@ -66,14 +66,14 @@
       "checkpointStep1": "Ejecuta el cuaderno para verificar el génesis integrado, el vínculo con el punto de control, el origen del conjunto vacío y los anclajes de Bitcoin.",
       "checkpointStep2": "Abre la versión histórica <kaspad>kaspad v0.11.5-2</kaspad> y observa que <processor>el procesador de bloques</processor> carga y verifica el punto de control incorporado <code>utxos.gz</code> con respecto al compromiso UTXO del génesis integrado.",
       "checkpointStep3": "Analiza <utxos>utxos.gz</utxos> con el formato de <serialization>serialization.go</serialization> y suma el importe de cada UTXO.",
-      "checkpointStep4": "Esa suma es el suministro histórico en el punto de control DAA <daa>1,312,860</daa> (22 de noviembre de 2021): <supply>984,222,544.04487171 KAS</supply>",
+      "checkpointStep4": "Esa suma es el suministro histórico en el punto de control DAA <daa>1 312 860</daa> (22 de noviembre de 2021): <supply>984 222 544,04487171 KAS</supply>",
       "checkpointNote": "A partir de este punto, la emisión es determinista. Al añadir la emisión programada desde el punto de control, se obtiene el suministro esperado para cualquier DAA, que debería coincidir con el que informa un nodo en vivo."
     },
     "supply": {
       "intro": {
         "eyebrow": "Verificación continua",
         "title": "Suministro en vivo frente al calendario de emisión",
-        "body": "Compara el suministro circulante de un nodo en vivo con el suministro esperado anclado al punto de control: el total del punto de control del 22 de noviembre de 2021 comprometido por el génesis integrado, ampliado mediante el calendario de emisión determinista de Kaspa."
+        "body": "Compara el suministro circulante de un nodo en vivo con el suministro esperado anclado al punto de control: el total del punto de control del 22 de noviembre de 2021 vinculado criptográficamente al génesis integrado mediante el compromiso de su conjunto UTXO, ampliado mediante el calendario de emisión determinista de Kaspa."
       },
       "emissionHistory": "Historial de emisión",
       "connection": {
@@ -91,18 +91,18 @@
       "anchor": {
         "label": "Anclaje",
         "title": "Punto de control del 22 de noviembre de 2021",
-        "body": "El suministro histórico en el punto de control del 22 de noviembre de 2021 está comprometido por el génesis integrado mediante su conjunto UTXO. Cada moneda emitida después de ese punto sigue un calendario de consenso determinista, por lo que el suministro informado por el nodo y el suministro esperado anclado al punto de control deberían coincidir. Las pequeñas diferencias del orden de cientos de KAS se deben a la desviación entre DAA y el recuento de bloques, y al redondeo de enteros en la tabla de subsidios del consenso, como ocurre de forma similar en Bitcoin y otras emisiones mediante prueba de trabajo."
+        "body": "El suministro histórico en el punto de control del 22 de noviembre de 2021 queda vinculado criptográficamente al génesis integrado mediante el compromiso de su conjunto UTXO. Cada moneda emitida después de ese punto sigue un calendario de consenso determinista, por lo que el suministro informado por el nodo y el suministro esperado anclado al punto de control deberían coincidir. Las pequeñas diferencias del orden de cientos de KAS se deben a la desviación entre DAA y el recuento de bloques, y al redondeo de enteros en la tabla de subsidios del consenso, como ocurre de forma similar en Bitcoin y otras emisiones mediante prueba de trabajo."
       },
       "timeline": {
         "genesis": {
           "label": "Génesis",
           "date": "{date, date, medium}",
-          "description": "El conjunto UTXO está vacío, por lo que existen cero monedas. El génesis original está anclado al bloque de Bitcoin #708,639."
+          "description": "El conjunto UTXO está vacío, por lo que existen cero monedas. El génesis original está anclado al bloque de Bitcoin #708 639."
         },
         "checkpoint": {
           "label": "Punto de control",
           "date": "{date, date, medium}",
-          "description": "Las recompensas por bloque variaron aleatoriamente entre 1 y 1000 KAS por bloque durante las primeras ~2 semanas de la red principal, lo que emitió +327,792,544 KAS antes de que una bifurcación dura fijara la recompensa por bloque. El suministro histórico está comprometido por el génesis integrado."
+          "description": "Las recompensas por bloque variaron aleatoriamente entre 1 y 1000 KAS por bloque durante las primeras ~2 semanas de la red principal, lo que emitió +327 792 544 KAS antes de que una bifurcación dura fijara la recompensa por bloque. El suministro histórico queda vinculado criptográficamente al génesis integrado mediante el compromiso de su conjunto UTXO."
         },
         "preDeflationary": {
           "label": "Fase predeflacionaria",

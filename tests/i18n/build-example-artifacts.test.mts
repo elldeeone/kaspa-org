@@ -110,6 +110,14 @@ test("Build pseudo artifacts preserve technical and runtime interfaces", async (
     /subscribeBlockAdded/u,
   );
   assert.match(
+    artifacts["subscribe-block-added.en-XA.html"],
+    /Šüüƀšçřïïƀïïńĝ ţöö Ɓļööçķ ÅÅďďëëď/u,
+  );
+  assert.doesNotMatch(
+    artifacts["subscribe-block-added.en-XA.html"],
+    /Subscribing to Block Added/u,
+  );
+  assert.match(
     artifacts["subscribe-daa-changed.en-XA.html"],
     /subscribeVirtualDaaScoreChanged/u,
   );
@@ -132,6 +140,7 @@ test("Build pseudo artifacts preserve technical and runtime interfaces", async (
   const controls = artifacts["resources/utils.en-XA.js"];
   assert.match(controls, /\/en-XA\/build#try-live/u);
   assert.match(controls, /\[!! Ďïïšçööńńëëçţ !!\]/u);
+  assert.match(controls, /innerHTML = ` \[!! \| Çööńńëëçţïïńĝ/u);
   assert.match(controls, /mainnet/u);
   assert.match(controls, /testnet-10/u);
   assert.match(controls, /testnet-11/u);
@@ -189,7 +198,11 @@ test("Spanish Build artifacts are deterministic, complete, and catalog-backed", 
     first["get-block-dag-info.es.html"],
     /Respuesta de GetBlockDagInfo/u,
   );
-  assert.match(first["subscribe-block-added.es.html"], /Block Added/u);
+  assert.match(
+    first["subscribe-block-added.es.html"],
+    /Suscribiéndose al evento de bloque añadido/u,
+  );
+  assert.doesNotMatch(first["subscribe-block-added.es.html"], /Block Added/u);
   assert.match(first["subscribe-daa-changed.es.html"], /DAA/u);
   assert.match(first["utxo-context.es.html"], /Se recibió/u);
   assert.match(first["utxo-context.es.html"], /Se recibieron/u);
@@ -200,6 +213,7 @@ test("Spanish Build artifacts are deterministic, complete, and catalog-backed", 
   assert.match(controls, /<- Volver<\/a> \| Red:/u);
   assert.match(controls, />Desconectar<\/a>/u);
   assert.match(controls, />Reconectar<\/a>/u);
+  assert.match(controls, /innerHTML = ` \| Conectando\.\.\.`;/u);
   assert.match(controls, /mainnet/u);
   assert.match(controls, /testnet-10/u);
   assert.match(controls, /testnet-11/u);

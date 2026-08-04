@@ -135,7 +135,7 @@ export type BuildArtifactMessages = {
     disconnect: string;
     apiRequest: string;
     apiResponse: string;
-    subscribingEvent: string;
+    subscribingBlockAdded: string;
     registeringProtocolNotifications: string;
     subscribingProtocolScore: string;
     event: string;
@@ -169,7 +169,7 @@ const ARTIFACT_MESSAGE_KEYS = {
     "disconnect",
     "apiRequest",
     "apiResponse",
-    "subscribingEvent",
+    "subscribingBlockAdded",
     "registeringProtocolNotifications",
     "subscribingProtocolScore",
     "event",
@@ -481,12 +481,8 @@ function buildHtmlReplacements(
         localizedLiteral(targetRuntime.connectedTo, transform),
       ],
       [
-        sourceLiteral(sourceRuntime.subscribingEvent, {
-          event: "Block Added",
-        }),
-        localizedLiteral(targetRuntime.subscribingEvent, transform, {
-          event: "Block Added",
-        }),
+        sourceLiteral(sourceRuntime.subscribingBlockAdded),
+        localizedLiteral(targetRuntime.subscribingBlockAdded, transform),
       ],
       [
         sourceLiteral(sourceRuntime.disconnectedFrom),
@@ -654,7 +650,7 @@ function buildUtilsReplacements(
     ],
     [
       sourceTemplate(` ${sourceControls.connecting}`),
-      localizedTemplate(targetControls.connecting, {}, transform),
+      `\` ${localizedMessage(targetControls.connecting, {}, transform)}\``,
     ],
   ];
 }

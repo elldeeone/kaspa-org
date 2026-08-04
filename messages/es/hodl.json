@@ -209,7 +209,7 @@
     "criteria": {
       "control": {
         "label": "Control",
-        "description": "Algunas billeteras te dan un control total sobre tus KAS. Esto significa que ningún tercero puede congelar o retirar tus fondos. Sin embargo, tú sigues siendo responsable de proteger tu billetera y de hacer una copia de seguridad."
+        "description": "Algunas billeteras te dan un control total sobre tus KAS. Esto significa que ningún tercero puede congelar ni confiscar tus fondos. Sin embargo, tú sigues siendo responsable de proteger tu billetera y de hacer una copia de seguridad."
       },
       "validation": {
         "label": "Validación",
@@ -239,7 +239,7 @@
       }
     },
     "ratings": {
-      "good": "Bueno",
+      "good": "Bien",
       "acceptable": "Aceptable",
       "caution": "Precaución",
       "not_applicable": "No aplicable",
@@ -263,7 +263,7 @@
           "caution": "Es de código cerrado. El código no se puede auditar de forma independiente."
         },
         "fees": {
-          "good": "Permite establecer una comisión personalizada en cada transacción.",
+          "good": "Permite establecer libremente una comisión totalmente personalizada en cada transacción.",
           "acceptable": "Ofrece niveles de comisión predefinidos, pero no permite establecer una comisión totalmente personalizada.",
           "caution": "Las comisiones son obligatorias u ocultas y el usuario no puede controlarlas."
         }
