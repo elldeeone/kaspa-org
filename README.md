@@ -112,8 +112,8 @@ npm run test:e2e:headed
 npm run test:e2e:ui
 ```
 
-Phase 5 publishes the complete Spanish site atomically while keeping the
-`en-XA` pseudo-site private. Run their full browser gates with:
+Production publishes the complete Spanish site atomically while keeping the
+`en-XA` pseudo-site private. Run both full browser gates with:
 
 ```bash
 npm run i18n:pseudo:generate
@@ -166,10 +166,11 @@ when either browser suite fails.
 
 ## Project Notes
 
-- Localized route metadata and namespaces live in `src/i18n/site.ts`; locale
-  lifecycle lives in `src/i18n/config.ts`, and atomic route publication is
-  derived in `src/i18n/manifest.ts`. Guarded `[locale]` page adapters expose
-  metadata through `generateMetadata`.
+- Route topology, namespaces, sitemap settings, and atomic publication
+  decisions live in `src/i18n/manifest.ts`; locale lifecycle lives in
+  `src/i18n/config.ts`, and localized metadata is created in
+  `src/i18n/site.ts`. Guarded `[locale]` page adapters in
+  `src/i18n/page-route.ts` expose metadata through `generateMetadata`.
 - The home page DAG experience is implemented from `src/dag-viz/` and mounted through the app components.
 - The AI launcher requires both `NEXT_PUBLIC_KASPA_AI_ENABLED` and the route-locale
   capability in `src/i18n/site.ts`; keep the deployment flag false until a working

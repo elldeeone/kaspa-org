@@ -1,5 +1,5 @@
-import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
+import { randomBytes } from "node:crypto";
 import {
   cp,
   mkdir,
@@ -11,7 +11,18 @@ import {
   writeFile,
 } from "node:fs/promises";
 import { createRequire } from "node:module";
-import { join, relative, sep } from "node:path";
+import { isAbsolute, join, relative, sep } from "node:path";
+
+import {
+  createI18nFixturePolicyMarker,
+  I18N_FIXTURE_NONCE_ENV,
+  I18N_FIXTURE_POLICY_ENV,
+  I18N_FIXTURE_POLICY_MARKER,
+  I18N_FIXTURE_REQUESTED_NONCE_ENV,
+  I18N_FIXTURE_REQUESTED_POLICY_ENV,
+  parseI18nFixturePolicyMarker,
+  type I18nFixturePolicyMarker,
+} from "../../src/i18n/publication-policy-validation.ts";
 
 const require = createRequire(import.meta.url);
 const nextCliPath = require.resolve("next/dist/bin/next");
@@ -34,6 +45,81 @@ export type ProductionFixture = {
 
 export type UnpublishedRouteFixture = ProductionFixture;
 
+async function readFixturePolicyMarker(
+  fixtureRoot: string,
+): Promise<I18nFixturePolicyMarker | null> {
+  try {
+    return parseI18nFixturePolicyMarker(
+      JSON.parse(
+        await readFile(join(fixtureRoot, I18N_FIXTURE_POLICY_MARKER), "utf8"),
+      ),
+    );
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    throw error;
+  }
+}
+
+async function resolveFixtureEnvironment(
+  fixtureRoot: string,
+  environment: Readonly<Record<string, string | undefined>>,
+): Promise<NodeJS.ProcessEnv> {
+  const marker = await readFixturePolicyMarker(fixtureRoot);
+  const resolvedEnvironment: NodeJS.ProcessEnv = {
+    ...process.env,
+    ...environment,
+    NEXT_TELEMETRY_DISABLED: "1",
+  };
+  const suppliedRequestedPolicy =
+    resolvedEnvironment[I18N_FIXTURE_REQUESTED_POLICY_ENV];
+  const suppliedRequestedNonce =
+    resolvedEnvironment[I18N_FIXTURE_REQUESTED_NONCE_ENV];
+  const suppliedAuthorizedPolicy = resolvedEnvironment[I18N_FIXTURE_POLICY_ENV];
+  const suppliedAuthorizedNonce = resolvedEnvironment[I18N_FIXTURE_NONCE_ENV];
+  delete resolvedEnvironment[I18N_FIXTURE_REQUESTED_POLICY_ENV];
+  delete resolvedEnvironment[I18N_FIXTURE_REQUESTED_NONCE_ENV];
+  delete resolvedEnvironment[I18N_FIXTURE_POLICY_ENV];
+  delete resolvedEnvironment[I18N_FIXTURE_NONCE_ENV];
+
+  if (
+    suppliedAuthorizedPolicy !== undefined ||
+    suppliedAuthorizedNonce !== undefined
+  ) {
+    throw new Error(
+      "Fixture commands cannot accept a pre-authorized publication environment",
+    );
+  }
+
+  if (!marker) {
+    if (
+      suppliedRequestedPolicy !== undefined ||
+      suppliedRequestedNonce !== undefined
+    ) {
+      throw new Error("Fixture policy environment requires a fixture marker");
+    }
+    return resolvedEnvironment;
+  }
+
+  for (const [name, expected] of [
+    [I18N_FIXTURE_REQUESTED_POLICY_ENV, marker.policy],
+    [I18N_FIXTURE_REQUESTED_NONCE_ENV, marker.nonce],
+  ] as const) {
+    const supplied =
+      name === I18N_FIXTURE_REQUESTED_POLICY_ENV
+        ? suppliedRequestedPolicy
+        : suppliedRequestedNonce;
+    if (supplied !== undefined && supplied !== (expected ?? undefined)) {
+      throw new Error(`${name} does not match the fixture policy marker`);
+    }
+  }
+
+  if (marker.policy !== null) {
+    resolvedEnvironment[I18N_FIXTURE_REQUESTED_POLICY_ENV] = marker.policy;
+  }
+  resolvedEnvironment[I18N_FIXTURE_REQUESTED_NONCE_ENV] = marker.nonce;
+  return resolvedEnvironment;
+}
+
 function shouldCopy(repositoryRoot: string, source: string) {
   const relativePath = relative(repositoryRoot, source);
   if (!relativePath) return true;
@@ -44,7 +130,11 @@ function shouldCopy(repositoryRoot: string, source: string) {
 async function createProductionFixtureInternal(
   repositoryRoot: string,
   prefix: string,
+  fixturePolicy: unknown | null,
 ): Promise<ProductionFixture> {
+  if (!repositoryRoot.trim() || !isAbsolute(repositoryRoot)) {
+    throw new Error("fixture repository root must be an absolute path");
+  }
   const fixtureDirectory = join(repositoryRoot, ".next");
   await mkdir(fixtureDirectory, { recursive: true });
   const fixtureParent = await mkdtemp(join(fixtureDirectory, prefix));
@@ -67,21 +157,14 @@ async function createProductionFixtureInternal(
       join(fixtureRoot, "node_modules"),
       process.platform === "win32" ? "junction" : "dir",
     );
-
-    const nextConfigPath = join(fixtureRoot, "next.config.ts");
-    const nextConfig = await readFile(nextConfigPath, "utf8");
-    const configOpening = "const nextConfig: NextConfig = {\n";
-    assert.equal(
-      nextConfig.split(configOpening).length - 1,
-      1,
-      "fixture expected one Next.js configuration object",
+    const marker = createI18nFixturePolicyMarker(
+      fixturePolicy,
+      randomBytes(32).toString("hex"),
+      repositoryRoot,
     );
     await writeFile(
-      nextConfigPath,
-      nextConfig.replace(
-        configOpening,
-        `${configOpening}  outputFileTracingRoot: ${JSON.stringify(repositoryRoot)},\n  turbopack: { root: ${JSON.stringify(repositoryRoot)} },\n`,
-      ),
+      join(fixtureRoot, I18N_FIXTURE_POLICY_MARKER),
+      `${JSON.stringify(marker, null, 2)}\n`,
       "utf8",
     );
 
@@ -103,131 +186,53 @@ async function createProductionFixtureInternal(
 export function createProductionFixture(
   repositoryRoot: string,
 ): Promise<ProductionFixture> {
-  return createProductionFixtureInternal(repositoryRoot, "i18n-production-");
+  return createProductionFixtureInternal(
+    repositoryRoot,
+    "i18n-production-",
+    null,
+  );
 }
 
-export async function createUnpublishedAssetsFixture(
+export function createUnpublishedAssetsFixture(
   repositoryRoot: string,
 ): Promise<UnpublishedRouteFixture> {
-  const fixture = await createProductionFixtureInternal(
+  return createProductionFixtureInternal(
     repositoryRoot,
     "i18n-unpublished-assets-",
+    { routePublicationOverrides: { en: { assets: null } } },
   );
-  try {
-    const manifestPath = join(fixture.root, "src", "i18n", "manifest.ts");
-    const manifest = await readFile(manifestPath, "utf8");
-    const assetsPublication = /(\bassets:\s*)"public"/gu;
-    const matches = [...manifest.matchAll(assetsPublication)];
-    assert.equal(
-      matches.length,
-      1,
-      "fixture expected exactly one English Assets publication flag",
-    );
-    await writeFile(
-      manifestPath,
-      manifest.replace(assetsPublication, "$1false"),
-      "utf8",
-    );
-    return fixture;
-  } catch (error) {
-    await fixture.dispose();
-    throw error;
-  }
 }
 
-export async function createEnglishOnlyProductionFixture(
+export function createEnglishOnlyProductionFixture(
   repositoryRoot: string,
 ): Promise<ProductionFixture> {
-  const fixture = await createProductionFixtureInternal(
-    repositoryRoot,
-    "i18n-english-only-",
-  );
-  try {
-    const configPath = join(fixture.root, "src", "i18n", "config.ts");
-    const config = await readFile(configPath, "utf8");
-    const spanishLifecycle =
-      /(\bes:\s*\{[\s\S]*?\bcode:\s*"es"[\s\S]*?\blifecycle:\s*)"production"/gu;
-    const matches = [...config.matchAll(spanishLifecycle)];
-    assert.equal(
-      matches.length,
-      1,
-      "fixture expected exactly one Spanish production lifecycle",
-    );
-    await writeFile(
-      configPath,
-      config.replace(spanishLifecycle, '$1"preview"'),
-      "utf8",
-    );
-    return fixture;
-  } catch (error) {
-    await fixture.dispose();
-    throw error;
-  }
+  return createProductionFixtureInternal(repositoryRoot, "i18n-english-only-", {
+    localeLifecycleOverrides: { es: "preview" },
+  });
 }
 
-export async function createPartialSpanishProductionFixture(
+export function createPartialSpanishProductionFixture(
   repositoryRoot: string,
 ): Promise<ProductionFixture> {
-  const fixture = await createProductionFixtureInternal(
+  return createProductionFixtureInternal(
     repositoryRoot,
     "i18n-partial-spanish-",
+    { routePublicationOverrides: { es: { assets: null } } },
   );
-  try {
-    const manifestPath = join(fixture.root, "src", "i18n", "manifest.ts");
-    const manifest = await readFile(manifestPath, "utf8");
-    const atomicPublication =
-      '  return isLocaleProductionReady(locale) ? "public" : "preview";';
-    assert.equal(
-      manifest.split(atomicPublication).length - 1,
-      1,
-      "fixture expected exactly one atomic locale publication",
-    );
-    await writeFile(
-      manifestPath,
-      manifest.replace(
-        atomicPublication,
-        `  if (locale === "es" && routeId === "assets") return null;\n${atomicPublication}`,
-      ),
-      "utf8",
-    );
-    return fixture;
-  } catch (error) {
-    await fixture.dispose();
-    throw error;
-  }
 }
 
-export async function buildProductionFixture(
+async function runFixtureCommand(
   cwd: string,
-  environment: Readonly<Record<string, string | undefined>> = {},
+  environment: Readonly<Record<string, string | undefined>>,
+  args: readonly string[],
+  failureLabel: string,
 ): Promise<string> {
-  const artifactScript = join(
+  const fixtureEnvironment = await resolveFixtureEnvironment(cwd, environment);
+  const child = spawn(process.execPath, args, {
     cwd,
-    "scripts",
-    "i18n",
-    "build-example-artifacts.mts",
-  );
-  const child = spawn(
-    process.execPath,
-    [
-      "--no-warnings=MODULE_TYPELESS_PACKAGE_JSON",
-      "--experimental-strip-types",
-      artifactScript,
-      "--for-build",
-      process.execPath,
-      nextCliPath,
-      "build",
-    ],
-    {
-      cwd,
-      env: {
-        ...process.env,
-        ...environment,
-        NEXT_TELEMETRY_DISABLED: "1",
-      },
-      stdio: "pipe",
-    },
-  );
+    env: fixtureEnvironment,
+    stdio: "pipe",
+  });
   let logs = "";
   child.stdout.on("data", (chunk: Buffer) => {
     logs += chunk.toString();
@@ -236,49 +241,6 @@ export async function buildProductionFixture(
     logs += chunk.toString();
   });
 
-  const result: {
-    code: number | null;
-    signal: NodeJS.Signals | null;
-  } = await new Promise((resolve, reject) => {
-    child.once("error", reject);
-    child.once("exit", (code, signal) => resolve({ code, signal }));
-  });
-  if (result.code !== 0) {
-    throw new Error(
-      `production fixture build failed (${result.signal ?? result.code})\n${logs}`,
-    );
-  }
-  return logs;
-}
-
-export async function validateProductionFixtureClientPayload(
-  cwd: string,
-  environment: Readonly<Record<string, string | undefined>> = {},
-): Promise<string> {
-  const child = spawn(
-    process.execPath,
-    [
-      "--no-warnings=MODULE_TYPELESS_PACKAGE_JSON",
-      "--experimental-strip-types",
-      "scripts/i18n/validate-client-payload.mts",
-    ],
-    {
-      cwd,
-      env: {
-        ...process.env,
-        ...environment,
-        NEXT_TELEMETRY_DISABLED: "1",
-      },
-      stdio: "pipe",
-    },
-  );
-  let logs = "";
-  child.stdout.on("data", (chunk: Buffer) => {
-    logs += chunk.toString();
-  });
-  child.stderr.on("data", (chunk: Buffer) => {
-    logs += chunk.toString();
-  });
   const result = await new Promise<{
     code: number | null;
     signal: NodeJS.Signals | null;
@@ -288,8 +250,44 @@ export async function validateProductionFixtureClientPayload(
   });
   if (result.code !== 0) {
     throw new Error(
-      `fixture client-payload validation failed (${result.signal ?? result.code})\n${logs}`,
+      `${failureLabel} failed (${result.signal ?? result.code})\n${logs}`,
     );
   }
   return logs;
+}
+
+export function buildProductionFixture(
+  cwd: string,
+  environment: Readonly<Record<string, string | undefined>> = {},
+): Promise<string> {
+  return runFixtureCommand(
+    cwd,
+    environment,
+    [
+      "--no-warnings=MODULE_TYPELESS_PACKAGE_JSON",
+      "--experimental-strip-types",
+      join(cwd, "scripts", "i18n", "build-example-artifacts.mts"),
+      "--for-build",
+      process.execPath,
+      nextCliPath,
+      "build",
+    ],
+    "production fixture build",
+  );
+}
+
+export function validateProductionFixtureClientPayload(
+  cwd: string,
+  environment: Readonly<Record<string, string | undefined>> = {},
+): Promise<string> {
+  return runFixtureCommand(
+    cwd,
+    environment,
+    [
+      "--no-warnings=MODULE_TYPELESS_PACKAGE_JSON",
+      "--experimental-strip-types",
+      "scripts/i18n/validate-client-payload.mts",
+    ],
+    "fixture client-payload validation",
+  );
 }

@@ -1,3 +1,11 @@
+import {
+  decodeAuthorizedI18nFixturePublicationPolicy,
+  getFixtureLocaleLifecycleOverride,
+  I18N_FIXTURE_POLICY_ENV,
+  type I18nFixturePublicationPolicy,
+  type LocaleLifecycle,
+} from "./publication-policy.ts";
+
 const AI_ENABLED_VALUES = new Set(["1", "true", "yes", "on"]);
 
 export const i18nBuildTargets = ["production", "preview", "test"] as const;
@@ -32,11 +40,7 @@ export const supportedLocaleCodes = [
 ] as const;
 export type Locale = (typeof supportedLocaleCodes)[number];
 export type TextDirection = "ltr" | "rtl";
-export type LocaleLifecycle =
-  | "production"
-  | "preview"
-  | "test-only"
-  | "disabled";
+export type { LocaleLifecycle } from "./publication-policy.ts";
 
 export type LocaleDefinition = {
   code: Locale;
@@ -72,6 +76,15 @@ export const localeRegistry: Readonly<Record<Locale, LocaleDefinition>> = {
 
 export const defaultLocale = "en" as const satisfies Locale;
 
+export const i18nFixturePublicationPolicy =
+  decodeAuthorizedI18nFixturePublicationPolicy(
+    process.env.NEXT_PUBLIC_KASPA_I18N_AUTHORIZED_FIXTURE_POLICY,
+    process.env.NEXT_PUBLIC_KASPA_I18N_AUTHORIZED_FIXTURE_NONCE,
+  );
+if (i18nFixturePublicationPolicy && i18nBuildTarget !== "production") {
+  throw new Error(`${I18N_FIXTURE_POLICY_ENV} requires the production target`);
+}
+
 export function isLifecycleEnabledForTarget(
   lifecycle: LocaleLifecycle,
   target: I18nBuildTarget,
@@ -88,16 +101,33 @@ export function isLifecycleSelectable(lifecycle: LocaleLifecycle): boolean {
 export function isLocaleEnabledForTarget(
   locale: Locale,
   target: I18nBuildTarget,
+  fixturePolicy: I18nFixturePublicationPolicy | null = i18nFixturePublicationPolicy,
 ): boolean {
-  return isLifecycleEnabledForTarget(localeRegistry[locale].lifecycle, target);
+  return isLifecycleEnabledForTarget(
+    getLocaleLifecycle(locale, fixturePolicy),
+    target,
+  );
 }
 
 export function isLocaleEnabled(locale: Locale): boolean {
   return isLocaleEnabledForTarget(locale, i18nBuildTarget);
 }
 
-export function isLocaleProductionReady(locale: Locale): boolean {
-  return localeRegistry[locale].lifecycle === "production";
+export function getLocaleLifecycle(
+  locale: Locale,
+  fixturePolicy: I18nFixturePublicationPolicy | null = i18nFixturePublicationPolicy,
+): LocaleLifecycle {
+  return (
+    getFixtureLocaleLifecycleOverride(fixturePolicy, locale) ??
+    localeRegistry[locale].lifecycle
+  );
+}
+
+export function isLocaleProductionReady(
+  locale: Locale,
+  fixturePolicy: I18nFixturePublicationPolicy | null = i18nFixturePublicationPolicy,
+): boolean {
+  return getLocaleLifecycle(locale, fixturePolicy) === "production";
 }
 
 export const localeCodes: readonly Locale[] =
@@ -142,6 +172,6 @@ export function listEnabledLocales(): readonly Locale[] {
 
 export function listSelectableLocales(): readonly Locale[] {
   return localeCodes.filter((locale) =>
-    isLifecycleSelectable(localeRegistry[locale].lifecycle),
+    isLifecycleSelectable(getLocaleLifecycle(locale)),
   );
 }

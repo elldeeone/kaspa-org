@@ -2,24 +2,8 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import {
-  expect,
-  request as requestFactory,
-  test,
-  type APIRequestContext,
-  type Page,
-} from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
-import {
-  startProductionServer,
-  type ProductionServer,
-} from "../scripts/i18n/production-server.mts";
-import {
-  buildProductionFixture,
-  createProductionFixture,
-  validateProductionFixtureClientPayload,
-  type ProductionFixture,
-} from "../scripts/i18n/unpublished-route-fixture.mts";
 import {
   assertEqualControlRow,
   assertNoHorizontalOverflow,
@@ -30,6 +14,14 @@ import {
   standaloneExampleNames,
   waitForStableLayout,
 } from "./i18n-preview-helpers";
+import {
+  isGoldenEnglishPublicPath,
+  localizePublicPath,
+  localizePublicRouteGolden,
+  publicRouteGolden,
+  readPrerenderRoutePathnames,
+  useBuiltLocaleScenario,
+} from "./i18n-scenario-harness";
 
 const productionEnvironment = {
   NEXT_PUBLIC_KASPA_AI_ENABLED: "true",
@@ -37,39 +29,7 @@ const productionEnvironment = {
   VERCEL_ENV: "production",
 } as const;
 
-const spanishRoutes = [
-  {
-    id: "home",
-    path: "/es",
-    internalPath: "/es",
-    englishFingerprint: "Get started",
-  },
-  {
-    id: "lore",
-    path: "/es/lore",
-    internalPath: "/es/lore",
-    englishFingerprint:
-      "Kaspa is a live proof-of-work blockDAG running at 10 blocks per second.",
-  },
-  {
-    id: "build",
-    path: "/es/build",
-    internalPath: "/es/build",
-    englishFingerprint: "Build on Kaspa",
-  },
-  {
-    id: "assets",
-    path: "/es/assets",
-    internalPath: "/es/assets",
-    englishFingerprint: "Kaspa logo assets",
-  },
-  {
-    id: "hodl",
-    path: "/es/hodl",
-    internalPath: "/es/hodl",
-    englishFingerprint: "Buy KAS and move it into a wallet you control.",
-  },
-] as const;
+const spanishRoutes = localizePublicRouteGolden("es");
 
 type SpanishRouteId = (typeof spanishRoutes)[number]["id"];
 type MessageCatalog = Record<string, unknown>;
@@ -77,13 +37,6 @@ type MessageCatalog = Record<string, unknown>;
 const spanishRoutePathnames = new Set<string>(
   spanishRoutes.map((route) => route.path),
 );
-const forbiddenEnglishRoutePathnames = new Set([
-  "/",
-  "/lore",
-  "/build",
-  "/assets",
-  "/hodl",
-]);
 const translatedSlugPaths = [
   "/es/historia",
   "/es/construir",
@@ -138,11 +91,6 @@ const localizedReturnPath = "/es/build#try-live";
 const localizedReturnQuery = new URLSearchParams({
   returnTo: localizedReturnPath,
 }).toString();
-
-let fixture: ProductionFixture | undefined;
-let server: ProductionServer | undefined;
-let api: APIRequestContext | undefined;
-let activeProject = false;
 
 function getVisibleLanguageSelector(page: Page) {
   return page.locator("[data-language-selector]:visible");
@@ -280,44 +228,17 @@ function assertPublicSpanishHtml(html: string, pathname: string) {
   expect(html, pathname).toContain("https://kaspa.org/es/opengraph-image");
 }
 
-test.describe("Phase 5 complete public Spanish Production", () => {
-  test.skip(
-    process.env.PLAYWRIGHT_E2E_SPANISH_ONLY !== "1",
-    "run with npm run test:e2e:i18n:spanish",
-  );
-  test.describe.configure({ mode: "serial", timeout: 240_000 });
-
-  test.beforeAll(async ({}, testInfo) => {
-    if (testInfo.project.name !== "desktop-chromium") return;
-    activeProject = true;
-    fixture = await createProductionFixture(process.cwd());
-    await buildProductionFixture(fixture.root, productionEnvironment);
-    await validateProductionFixtureClientPayload(
-      fixture.root,
-      productionEnvironment,
-    );
-    server = await startProductionServer(fixture.root, productionEnvironment);
-    api = await requestFactory.newContext({ baseURL: server.baseUrl });
-  });
-
-  test.afterAll(async () => {
-    await api?.dispose();
-    await server?.stop();
-    await fixture?.dispose();
+test.describe("complete public Spanish production contract", () => {
+  const scenario = useBuiltLocaleScenario({
+    enabled: process.env.PLAYWRIGHT_E2E_SPANISH_ONLY === "1",
+    enabledHint: "run with npm run test:e2e:i18n:spanish",
+    environment: productionEnvironment,
+    name: "Spanish production build matrix",
   });
 
   test("renders the complete static, public route and error contract", async () => {
-    test.skip(!activeProject, "Spanish Production matrix runs once");
-    if (!api || !fixture || !server) {
-      throw new Error("Spanish Production fixture was not started");
-    }
-
-    const prerenderManifest = JSON.parse(
-      await readFile(
-        join(fixture.root, ".next", "prerender-manifest.json"),
-        "utf8",
-      ),
-    ) as { routes: Record<string, unknown> };
+    const { fixtureRoot, readLogs, request: api } = scenario.require();
+    const prerenderRoutes = await readPrerenderRoutePathnames(fixtureRoot);
 
     for (const route of spanishRoutes) {
       const response = await api.get(route.path);
@@ -333,10 +254,9 @@ test.describe("Phase 5 complete public Spanish Production", () => {
       expect(html, `${route.path} must not expose Spanish AI`).not.toContain(
         "Pregunta lo que quieras",
       );
-      expect(
-        Object.hasOwn(prerenderManifest.routes, route.internalPath),
-        route.internalPath,
-      ).toBe(true);
+      expect(prerenderRoutes.has(route.internalPath), route.internalPath).toBe(
+        true,
+      );
     }
 
     for (const translatedPath of translatedSlugPaths) {
@@ -403,18 +323,12 @@ test.describe("Phase 5 complete public Spanish Production", () => {
     const sitemapText = await sitemap.text();
     expect(
       [...sitemapText.matchAll(/<loc>(.*?)<\/loc>/gu)].map((match) => match[1]),
-    ).toEqual([
-      "https://kaspa.org",
-      "https://kaspa.org/es",
-      "https://kaspa.org/lore",
-      "https://kaspa.org/es/lore",
-      "https://kaspa.org/build",
-      "https://kaspa.org/es/build",
-      "https://kaspa.org/assets",
-      "https://kaspa.org/es/assets",
-      "https://kaspa.org/hodl",
-      "https://kaspa.org/es/hodl",
-    ]);
+    ).toEqual(
+      publicRouteGolden.flatMap(({ path }) => [
+        `https://kaspa.org${path === "/" ? "" : path}`,
+        `https://kaspa.org${localizePublicPath("es", path)}`,
+      ]),
+    );
     expect(sitemapText).not.toContain("hreflang");
 
     const languageInvariant = await api.get("/", {
@@ -432,7 +346,7 @@ test.describe("Phase 5 complete public Spanish Production", () => {
     expect(proofText).toContain('"trigger":"Verificar la prueba"');
     expect(proofText).not.toContain('"trigger":"Verify the proof"');
 
-    expect(server.readLogs()).not.toMatch(
+    expect(readLogs()).not.toMatch(
       /NoFallbackError|ERR_INVALID_URL|Internal Server Error|TypeError: Invalid URL/u,
     );
   });
@@ -440,12 +354,9 @@ test.describe("Phase 5 complete public Spanish Production", () => {
   test("renders exact Spanish structured data and a safe Open Graph image", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "Spanish Production matrix runs once");
-    if (!fixture || !server) {
-      throw new Error("Spanish Production fixture was not started");
-    }
+    const { baseUrl, fixtureRoot } = scenario.require();
 
-    const sharedCatalog = await loadCatalog(fixture.root, "es", "shared");
+    const sharedCatalog = await loadCatalog(fixtureRoot, "es", "shared");
     const structuredData = sharedCatalog.structuredData as MessageCatalog;
     const expectedStructuredData = {
       "@context": "https://schema.org",
@@ -473,7 +384,7 @@ test.describe("Phase 5 complete public Spanish Production", () => {
       ],
     };
 
-    const context = await browser.newContext({ baseURL: server.baseUrl });
+    const context = await browser.newContext({ baseURL: baseUrl });
     const page = await context.newPage();
     for (const route of spanishRoutes) {
       await page.goto(route.path, { waitUntil: "domcontentloaded" });
@@ -500,20 +411,17 @@ test.describe("Phase 5 complete public Spanish Production", () => {
   test("keeps navigation, CTAs, selector state, and key interactions in Spanish", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "Spanish Production matrix runs once");
-    if (!api || !fixture || !server) {
-      throw new Error("Spanish Production fixture was not started");
-    }
+    const { baseUrl, fixtureRoot } = scenario.require();
 
-    const context = await browser.newContext({ baseURL: server.baseUrl });
+    const context = await browser.newContext({ baseURL: baseUrl });
     const page = await context.newPage();
     const observedSpanishRoutes = new Set<string>();
 
     for (const route of spanishRoutes) {
       await page.goto(route.path, { waitUntil: "domcontentloaded" });
       await waitForStableLayout(page);
-      await auditRenderedSpanishText(page, fixture.root, route.id);
-      const routeCatalog = await loadCatalog(fixture.root, "es", route.id);
+      await auditRenderedSpanishText(page, fixtureRoot, route.id);
+      const routeCatalog = await loadCatalog(fixtureRoot, "es", route.id);
       const metadata = routeCatalog.metadata as Record<string, unknown>;
       expect(await page.title(), `${route.path} title`).toBe(metadata.title);
       await expect(
@@ -532,9 +440,9 @@ test.describe("Phase 5 complete public Spanish Production", () => {
         );
       for (const href of hrefs) {
         const url = new URL(href);
-        if (url.origin !== new URL(server.baseUrl).origin) continue;
+        if (url.origin !== new URL(baseUrl).origin) continue;
         expect(
-          forbiddenEnglishRoutePathnames.has(url.pathname),
+          isGoldenEnglishPublicPath(url.pathname),
           `${route.path} leaked an English route link: ${url.pathname}`,
         ).toBe(false);
         expect(
@@ -702,11 +610,10 @@ test.describe("Phase 5 complete public Spanish Production", () => {
   test("keeps the mobile language selector accessible and route-preserving", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "Spanish Production matrix runs once");
-    if (!server) throw new Error("Spanish Production fixture was not started");
+    const { baseUrl } = scenario.require();
 
     const context = await browser.newContext({
-      baseURL: server.baseUrl,
+      baseURL: baseUrl,
       viewport: { width: 390, height: 844 },
       hasTouch: true,
       isMobile: true,
@@ -759,10 +666,7 @@ test.describe("Phase 5 complete public Spanish Production", () => {
   test("serves and runs every Spanish standalone artifact deterministically", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "Spanish Production matrix runs once");
-    if (!api || !server) {
-      throw new Error("Spanish Production fixture was not started");
-    }
+    const { baseUrl, request: api } = scenario.require();
 
     for (const name of standaloneExampleNames) {
       const pathname = `${standaloneBasePath}/${name}.es.html`;
@@ -794,7 +698,7 @@ test.describe("Phase 5 complete public Spanish Production", () => {
     expect(utils).toContain("'/es/build#try-live'");
     expect(utils).toContain("innerHTML = ` | Conectando...`;");
 
-    const context = await browser.newContext({ baseURL: server.baseUrl });
+    const context = await browser.newContext({ baseURL: baseUrl });
     const page = await context.newPage();
     const interceptedSdkModules = await installStandaloneExampleMocks(page);
     for (const name of standaloneExampleNames) {
@@ -833,8 +737,7 @@ test.describe("Phase 5 complete public Spanish Production", () => {
   test("has no desktop or mobile overflow and preserves key modal behavior", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "Spanish Production matrix runs once");
-    if (!server) throw new Error("Spanish Production fixture was not started");
+    const { baseUrl } = scenario.require();
 
     for (const viewport of [
       { width: 1440, height: 900 },
@@ -844,7 +747,7 @@ test.describe("Phase 5 complete public Spanish Production", () => {
       { width: 320, height: 640 },
     ]) {
       const context = await browser.newContext({
-        baseURL: server.baseUrl,
+        baseURL: baseUrl,
         viewport,
         hasTouch: viewport.width < 768,
         isMobile: viewport.width < 768,

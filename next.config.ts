@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
+import { authorizedI18nFixturePolicyMarker } from "./src/i18n/publication-policy-site-node";
 import {
   RESERVED_NOT_FOUND_PATHNAME,
   ROUTE_MISS_HEADER,
@@ -69,6 +70,14 @@ const allowedDevOrigins = Array.from(
 );
 
 const nextConfig: NextConfig = {
+  ...(authorizedI18nFixturePolicyMarker
+    ? {
+        outputFileTracingRoot: authorizedI18nFixturePolicyMarker.repositoryRoot,
+        turbopack: {
+          root: authorizedI18nFixturePolicyMarker.repositoryRoot,
+        },
+      }
+    : {}),
   allowedDevOrigins,
   experimental: {
     globalNotFound: true,

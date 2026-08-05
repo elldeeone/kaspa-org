@@ -1,67 +1,72 @@
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 
 import { expect, test } from "@playwright/test";
 
-import { startProductionServer } from "../scripts/i18n/production-server.mts";
+import { createUnpublishedAssetsFixture } from "../scripts/i18n/unpublished-route-fixture.mts";
 import {
-  buildProductionFixture,
-  createUnpublishedAssetsFixture,
-} from "../scripts/i18n/unpublished-route-fixture.mts";
+  localizePublicPath,
+  publicRouteGolden,
+  readPrerenderRoutePathnames,
+  runOnlyInProject,
+  startBuiltLocaleScenario,
+  type PublicRouteId,
+} from "./i18n-scenario-harness";
 
 const productionLocaleSelectorBudgetBytes = 3_000;
 
-const publicRoutes = [
-  {
-    path: "/",
-    internalPath: "/en",
+type EnglishRouteExpectation = {
+  baselineBytes: number;
+  description: string;
+  localizedClientPayloadBudgetBytes?: number;
+  localizedLayoutBudgetBytes?: number;
+  title: string;
+};
+
+const englishRouteExpectations = {
+  home: {
     baselineBytes: 37_238,
-    // Phase 4 adds locale-neutral responsive markers for translated hero text
-    // and equal-width mobile proof actions. Keep the original baseline and
-    // budget only those HTML-only layout classes.
+    // Locale-neutral responsive markers support translated hero text and
+    // equal-width mobile proof actions. Budget only those HTML layout classes.
     localizedLayoutBudgetBytes: 192,
     title: "Kaspa | Proof-of-Work blockDAG for Real-Time Decentralization",
     description:
       "Kaspa is a fair-launched proof-of-work blockDAG cryptocurrency running at 10 blocks per second, built for real-time decentralization.",
   },
-  {
-    path: "/lore",
-    internalPath: "/en/lore",
+  lore: {
     baselineBytes: 62_860,
     title: "LORE | Kaspa",
     description:
       "Kaspa is a fair-launched proof-of-work blockDAG focused on real-time decentralization, with no premine, no insider allocation, and 10 BPS mainnet performance.",
   },
-  {
-    path: "/build",
-    internalPath: "/en/build",
+  build: {
     baselineBytes: 98_334,
-    // Phase 3 keeps this interactive route client-side and serializes only its
-    // reviewed route catalog. Preserve the original baseline for other growth.
+    // This interactive route serializes only its reviewed route catalog.
+    // Preserve the original baseline for unrelated payload growth.
     localizedClientPayloadBudgetBytes: 12_500,
     title: "Kaspa Developer Docs, SDKs, APIs, and Node Access | Kaspa",
     description:
       "Everything you need to start building on Kaspa. WASM SDK, Rust libraries, live API playground, node access, and developer tooling.",
   },
-  {
-    path: "/assets",
-    internalPath: "/en/assets",
+  assets: {
     baselineBytes: 72_650,
     title: "Kaspa Logos & Assets | Kaspa",
     description:
       "Download the official Kaspa logo set — horizontal and stacked lockups, the icon, and brand colors. SVG and high-resolution PNG.",
   },
-  {
-    path: "/hodl",
-    internalPath: "/en/hodl",
+  hodl: {
     baselineBytes: 91_253,
     // The wallet finder has the same reviewed, route-scoped client-catalog cost.
     localizedClientPayloadBudgetBytes: 12_500,
     title: "Buy KAS, Set Up a Wallet, and Self-Custody | Kaspa",
     description: "Get a wallet, buy KAS, and transfer to self-custody.",
   },
-] as const;
+} as const satisfies Record<PublicRouteId, EnglishRouteExpectation>;
+
+const publicRoutes = publicRouteGolden.map((route) => ({
+  ...route,
+  ...englishRouteExpectations[route.id],
+  internalPath: localizePublicPath("en", route.path),
+}));
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -151,13 +156,8 @@ function readCanonical(html: string) {
   return html.match(/<link rel="canonical" href="([^"]+)"\s*\/>/u)?.[1] ?? null;
 }
 
-test.describe("Phase 5 production i18n foundation", () => {
-  test.beforeEach(async ({}, testInfo) => {
-    test.skip(
-      testInfo.project.name !== "desktop-chromium",
-      "HTTP foundation contract runs once",
-    );
-  });
+test.describe("production i18n foundation contract", () => {
+  runOnlyInProject("HTTP foundation contract runs once");
 
   test("keeps all English routes static and preserves exact metadata", async ({
     page,
@@ -268,16 +268,9 @@ test.describe("Phase 5 production i18n foundation", () => {
       );
     }
 
-    const prerenderManifest = JSON.parse(
-      readFileSync(
-        join(process.cwd(), ".next/prerender-manifest.json"),
-        "utf8",
-      ),
-    ) as { routes: Record<string, unknown> };
+    const prerenderRoutes = await readPrerenderRoutePathnames(process.cwd());
     for (const route of publicRoutes) {
-      expect(Object.hasOwn(prerenderManifest.routes, route.internalPath)).toBe(
-        true,
-      );
+      expect(prerenderRoutes.has(route.internalPath)).toBe(true);
     }
 
     await page.goto("/");
@@ -408,18 +401,12 @@ test.describe("Phase 5 production i18n foundation", () => {
     const sitemap = await sitemapResponse.text();
     expect(
       [...sitemap.matchAll(/<loc>(.*?)<\/loc>/gu)].map((match) => match[1]),
-    ).toEqual([
-      "https://kaspa.org",
-      "https://kaspa.org/es",
-      "https://kaspa.org/lore",
-      "https://kaspa.org/es/lore",
-      "https://kaspa.org/build",
-      "https://kaspa.org/es/build",
-      "https://kaspa.org/assets",
-      "https://kaspa.org/es/assets",
-      "https://kaspa.org/hodl",
-      "https://kaspa.org/es/hodl",
-    ]);
+    ).toEqual(
+      publicRouteGolden.flatMap(({ path }) => [
+        `https://kaspa.org${path === "/" ? "" : path}`,
+        `https://kaspa.org${localizePublicPath("es", path)}`,
+      ]),
+    );
     expect(sitemap).not.toContain("hreflang");
     expect(sitemap).not.toContain("/en");
 
@@ -448,35 +435,26 @@ test.describe("Phase 5 production i18n foundation", () => {
 
   test("routes an enabled but unpublished page through the production miss stack", async ({
     page,
-    request,
   }) => {
     test.setTimeout(180_000);
-    const fixture = await createUnpublishedAssetsFixture(process.cwd());
-    let fixtureServer: Awaited<
-      ReturnType<typeof startProductionServer>
-    > | null = null;
+    const scenario = await startBuiltLocaleScenario({
+      createFixture: createUnpublishedAssetsFixture,
+      validateClientPayload: false,
+    });
 
     try {
-      await buildProductionFixture(fixture.root);
-      const prerenderManifest = JSON.parse(
-        readFileSync(
-          join(fixture.root, ".next", "prerender-manifest.json"),
-          "utf8",
-        ),
-      ) as { routes: Record<string, unknown> };
-      expect(Object.hasOwn(prerenderManifest.routes, "/en/assets")).toBe(false);
-
-      fixtureServer = await startProductionServer(fixture.root);
-      const unpublishedResponse = await request.get(
-        `${fixtureServer.baseUrl}/assets`,
-        {
-          headers: {
-            "x-kaspa-i18n-route-miss": "1",
-            "x-next-intl-locale": "es",
-          },
-          maxRedirects: 0,
-        },
+      const prerenderRoutes = await readPrerenderRoutePathnames(
+        scenario.fixtureRoot,
       );
+      expect(prerenderRoutes.has("/en/assets")).toBe(false);
+
+      const unpublishedResponse = await scenario.request.get("/assets", {
+        headers: {
+          "x-kaspa-i18n-route-miss": "1",
+          "x-next-intl-locale": "es",
+        },
+        maxRedirects: 0,
+      });
       expect(unpublishedResponse.status()).toBe(404);
       expect(unpublishedResponse.headers().location).toBeUndefined();
       const unpublishedHtml = await unpublishedResponse.text();
@@ -485,13 +463,11 @@ test.describe("Phase 5 production i18n foundation", () => {
       expect(unpublishedHtml).toContain("Wrong route.");
       expect(unpublishedHtml).toContain("Right network.");
 
-      const publishedResponse = await request.get(
-        `${fixtureServer.baseUrl}/lore`,
-      );
+      const publishedResponse = await scenario.request.get("/lore");
       expect(publishedResponse.status()).toBe(200);
       expect(publishedResponse.headers()["x-nextjs-cache"]).toBe("HIT");
 
-      await page.goto(`${fixtureServer.baseUrl}/`);
+      await page.goto(`${scenario.baseUrl}/`);
       const logo = page.getByRole("link", { name: "Kaspa home" });
       await expect(logo).not.toHaveAttribute("aria-haspopup");
       await expect(logo).not.toHaveAttribute("aria-expanded");
@@ -516,11 +492,10 @@ test.describe("Phase 5 production i18n foundation", () => {
         /Internal Server Error/u,
         /TypeError: Invalid URL/u,
       ]) {
-        expect(fixtureServer.readLogs()).not.toMatch(forbidden);
+        expect(scenario.readLogs()).not.toMatch(forbidden);
       }
     } finally {
-      await fixtureServer?.stop();
-      await fixture.dispose();
+      await scenario.dispose();
     }
   });
 });

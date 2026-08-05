@@ -6,10 +6,8 @@ import test from "node:test";
 
 import {
   assertClientMessagePolicyCoverage,
-  decodeEmbeddedFlight,
-  extractNextIntlProviderPayloads,
-  readNextIntlProviderModuleId,
-  validateClientMessagePayloads,
+  auditClientPayloadArtifacts,
+  type ClientMessagePolicy,
 } from "../../scripts/i18n/client-payload-policy.mts";
 import {
   createRoutePolicies,
@@ -42,18 +40,69 @@ const manifest = [
   })};`,
 ].join("\n");
 
-test("client manifest lookup finds the NextIntl provider module", () => {
-  assert.equal(readNextIntlProviderModuleId(manifest), "77");
-  assert.throws(
+type FixturePayload = {
+  locale: unknown;
+  messages: unknown;
+};
+
+function createFlightFixture(payloads: readonly FixturePayload[]): string {
+  return [
+    'a:I[77,[],"default"]',
+    ...payloads.map(
+      (payload, index) =>
+        `${(index + 11).toString(36)}:["$","$La",null,${JSON.stringify(payload)}]`,
+    ),
+  ].join("\n");
+}
+
+async function auditPayloadFixture(
+  payloads: readonly FixturePayload[],
+  policy: ClientMessagePolicy,
+  expectedLocale = "en",
+): Promise<string[]> {
+  return auditClientPayloadArtifacts({
+    routePath: "/fixture",
+    manifestSource: manifest,
+    artifacts: [
+      {
+        kind: "rsc",
+        path: "fixture.rsc",
+        source: createFlightFixture(payloads),
+        providerRequired: true,
+      },
+    ],
+    policy,
+    expectedLocale,
+  });
+}
+
+test("client payload audit finds the provider through the Next manifest", async () => {
+  assert.deepEqual(
+    await auditPayloadFixture([{ locale: "en", messages: null }], emptyPolicy),
+    [],
+  );
+  await assert.rejects(
     () =>
-      readNextIntlProviderModuleId(
-        'globalThis.__RSC_MANIFEST["/page"] = {"clientModules":{}};',
-      ),
+      auditClientPayloadArtifacts({
+        routePath: "/fixture",
+        manifestSource:
+          'globalThis.__RSC_MANIFEST["/page"] = {"clientModules":{}};',
+        artifacts: [
+          {
+            kind: "rsc",
+            path: "fixture.rsc",
+            source: createFlightFixture([{ locale: "en", messages: null }]),
+            providerRequired: true,
+          },
+        ],
+        policy: emptyPolicy,
+        expectedLocale: "en",
+      }),
     /NextIntlClientProvider module/u,
   );
 });
 
-test("Flight extraction reads null, direct, and referenced provider messages", () => {
+test("client payload audit accepts direct and referenced Flight props", async () => {
   const flight = [
     'a:I[77,[],"default"]',
     'b:["$","$La",null,{"locale":"en","messages":null}]',
@@ -61,30 +110,164 @@ test("Flight extraction reads null, direct, and referenced provider messages", (
     'd:["$","$La",null,"$c"]',
   ].join("\n");
 
-  assert.deepEqual(extractNextIntlProviderPayloads(manifest, flight), [
-    { locale: "en", messages: null },
-    {
-      locale: "en",
-      messages: { shared: { navigation: { home: "Home" } } },
-    },
-  ]);
+  assert.deepEqual(
+    await auditClientPayloadArtifacts({
+      routePath: "/fixture",
+      manifestSource: manifest,
+      artifacts: [
+        {
+          kind: "rsc",
+          path: "fixture.rsc",
+          source: flight,
+          providerRequired: true,
+        },
+      ],
+      policy: {
+        allowedPaths: ["shared.navigation"],
+        requiredNamespaces: ["shared"],
+        requiredPaths: ["shared.navigation"],
+      },
+      expectedLocale: "en",
+    }),
+    [],
+  );
 });
 
-test("HTML extraction decodes embedded Flight chunks", () => {
+test("client payload audit reads embedded Flight chunks from HTML", async () => {
   const first = 'a:I[77,[],"default"]\n';
   const second = 'b:["$","$La",null,{"locale":"en-XA","messages":null}]\n';
   const html = `<script>self.__next_f.push([1,${JSON.stringify(first)}])</script><script>self.__next_f.push([1,${JSON.stringify(second)}])</script>`;
 
-  assert.equal(decodeEmbeddedFlight(html), `${first}${second}`);
   assert.deepEqual(
-    extractNextIntlProviderPayloads(manifest, decodeEmbeddedFlight(html)),
-    [{ locale: "en-XA", messages: null }],
+    await auditClientPayloadArtifacts({
+      routePath: "/fixture",
+      manifestSource: manifest,
+      artifacts: [
+        {
+          kind: "html",
+          path: "fixture.html",
+          source: html,
+          providerRequired: true,
+        },
+      ],
+      policy: emptyPolicy,
+      expectedLocale: "en-XA",
+    }),
+    [],
   );
 });
 
-test("payload policy requires a null root and permits only route-owned paths", () => {
+test("client payload audit combines required and optional build artifacts", async () => {
+  const rootFlight = [
+    'a:I[77,[],"default"]',
+    'b:["$","$La",null,{"locale":"en","messages":null}]',
+  ].join("\n");
+  const html = `<script>self.__next_f.push([1,${JSON.stringify(rootFlight)}])</script>`;
+
   assert.deepEqual(
-    validateClientMessagePayloads(
+    await auditClientPayloadArtifacts({
+      routePath: "/fixture",
+      manifestSource: manifest,
+      artifacts: [
+        {
+          kind: "html",
+          path: "fixture.html",
+          source: html,
+          providerRequired: true,
+        },
+        {
+          kind: "rsc",
+          path: "fixture.rsc",
+          source: createFlightFixture([
+            {
+              locale: "en",
+              messages: { shared: { navigation: { home: "Home" } } },
+            },
+          ]),
+          providerRequired: false,
+        },
+        {
+          kind: "rsc",
+          path: "fixture.segments/header.rsc",
+          source: 'c:["$","header",null,{}]',
+          providerRequired: false,
+        },
+      ],
+      policy: {
+        allowedPaths: ["shared.navigation"],
+        requiredNamespaces: ["shared"],
+        requiredPaths: ["shared.navigation"],
+      },
+      expectedLocale: "en",
+    }),
+    [],
+  );
+});
+
+test("client payload audit parses each artifact before reading the next", async () => {
+  const events: string[] = [];
+
+  async function* artifacts() {
+    events.push("read fixture.rsc");
+    yield {
+      kind: "rsc" as const,
+      path: "fixture.rsc",
+      source: ['a:I[77,[],"default"]', 'b:["$","$La",null,{}]'].join("\n"),
+      providerRequired: true,
+    };
+    events.push("read later.rsc");
+    throw new Error("later artifact read failed");
+  }
+
+  await assert.rejects(
+    () =>
+      auditClientPayloadArtifacts({
+        routePath: "/fixture",
+        manifestSource: manifest,
+        artifacts: artifacts(),
+        policy: emptyPolicy,
+        expectedLocale: "en",
+      }),
+    /provider props do not contain messages/u,
+  );
+  assert.deepEqual(events, ["read fixture.rsc"]);
+});
+
+test("client payload audit preserves artifact and route error context", async () => {
+  assert.deepEqual(
+    await auditClientPayloadArtifacts({
+      routePath: "/fixture",
+      manifestSource: manifest,
+      artifacts: [
+        {
+          kind: "rsc",
+          path: "fixture.rsc",
+          source: 'b:["$","div",null,{}]',
+          providerRequired: true,
+        },
+      ],
+      policy: emptyPolicy,
+      expectedLocale: "en",
+    }),
+    [
+      "fixture.rsc: no NextIntlClientProvider payload found",
+      "/fixture: root NextIntlClientProvider must serialize messages=null",
+    ],
+  );
+
+  assert.deepEqual(
+    await auditPayloadFixture(
+      [{ locale: "es", messages: null }],
+      emptyPolicy,
+      "en",
+    ),
+    ['/fixture: provider locale "es" does not match en'],
+  );
+});
+
+test("payload policy requires a null root and permits only route-owned paths", async () => {
+  assert.deepEqual(
+    await auditPayloadFixture(
       [
         { locale: "en", messages: null },
         {
@@ -105,7 +288,7 @@ test("payload policy requires a null root and permits only route-owned paths", (
   );
 
   assert.deepEqual(
-    validateClientMessagePayloads(
+    await auditPayloadFixture(
       [
         {
           locale: "en",
@@ -122,9 +305,9 @@ test("payload policy requires a null root and permits only route-owned paths", (
       },
     ),
     [
-      "root NextIntlClientProvider must serialize messages=null",
-      "client message path home.metadata.title is not allowed",
-      "required client message path home.proof is missing",
+      "/fixture: root NextIntlClientProvider must serialize messages=null",
+      "/fixture: client message path home.metadata.title is not allowed",
+      "/fixture: required client message path home.proof is missing",
     ],
   );
 });
@@ -139,7 +322,7 @@ test("payload policy coverage rejects an omitted canonical route", () => {
   );
 });
 
-test("canonical route policies keep server routes lean and client routes exact", () => {
+test("canonical route policies keep server routes lean and client routes exact", async () => {
   const policies = createRoutePolicies();
   assert.deepEqual(Object.keys(policies), routeIds);
 
@@ -170,7 +353,7 @@ test("canonical route policies keep server routes lean and client routes exact",
   }
 
   assert.deepEqual(
-    validateClientMessagePayloads(
+    await auditPayloadFixture(
       [
         { locale: "en", messages: null },
         { locale: "en", messages: getSharedClientMessages("en") },
@@ -181,7 +364,7 @@ test("canonical route policies keep server routes lean and client routes exact",
     [],
   );
   assert.deepEqual(
-    validateClientMessagePayloads(
+    await auditPayloadFixture(
       [
         { locale: "en", messages: null },
         { locale: "en", messages: getSharedClientMessages("en") },
@@ -199,10 +382,10 @@ test("Production includes selector messages for public Spanish", () => {
   assert.deepEqual(navigation.language, { label: "Language" });
 });
 
-test("route policies reject metadata, Open Graph copy, and unrelated catalogs", () => {
+test("route policies reject metadata, Open Graph copy, and unrelated catalogs", async () => {
   const policy = createRoutePolicies().build;
   assert.deepEqual(
-    validateClientMessagePayloads(
+    await auditPayloadFixture(
       [
         { locale: "en", messages: null },
         {
@@ -219,30 +402,30 @@ test("route policies reject metadata, Open Graph copy, and unrelated catalogs", 
       policy,
     ),
     [
-      "client message path build.metadata.title is not allowed",
-      "client message path build.openGraph.imageAlt is not allowed",
-      "client message path lore.article.heading is not allowed",
-      "required client message namespace shared is missing",
-      "required client message path shared.footer is missing",
-      "required client message path shared.logoMenu is missing",
-      "required client message path shared.navigation is missing",
-      "required client message path shared.theme is missing",
-      "required client message path build.access is missing",
-      "required client message path build.developments is missing",
-      "required client message path build.help is missing",
-      "required client message path build.navigation is missing",
-      "required client message path build.paths is missing",
-      "required client message path build.runNode is missing",
-      "required client message path build.start is missing",
-      "required client message path build.terms is missing",
-      "required client message path build.tooling is missing",
-      "required client message path build.tryLive is missing",
-      "required client message path shared.pageSections is missing",
+      "/fixture: client message path build.metadata.title is not allowed",
+      "/fixture: client message path build.openGraph.imageAlt is not allowed",
+      "/fixture: client message path lore.article.heading is not allowed",
+      "/fixture: required client message namespace shared is missing",
+      "/fixture: required client message path shared.footer is missing",
+      "/fixture: required client message path shared.logoMenu is missing",
+      "/fixture: required client message path shared.navigation is missing",
+      "/fixture: required client message path shared.theme is missing",
+      "/fixture: required client message path build.access is missing",
+      "/fixture: required client message path build.developments is missing",
+      "/fixture: required client message path build.help is missing",
+      "/fixture: required client message path build.navigation is missing",
+      "/fixture: required client message path build.paths is missing",
+      "/fixture: required client message path build.runNode is missing",
+      "/fixture: required client message path build.start is missing",
+      "/fixture: required client message path build.terms is missing",
+      "/fixture: required client message path build.tooling is missing",
+      "/fixture: required client message path build.tryLive is missing",
+      "/fixture: required client message path shared.pageSections is missing",
     ],
   );
 });
 
-test("Spanish client payloads contain only route-owned messages", () => {
+test("Spanish client payloads contain only route-owned messages", async () => {
   const policies = createRoutePolicies();
   const shared = getSharedClientMessages(spanishLocale);
   assert.ok("language" in shared.shared.navigation);
@@ -250,7 +433,7 @@ test("Spanish client payloads contain only route-owned messages", () => {
     label: "Idioma",
   });
   assert.deepEqual(
-    validateClientMessagePayloads(
+    await auditPayloadFixture(
       [
         { locale: spanishLocale, messages: null },
         { locale: spanishLocale, messages: shared },
@@ -260,11 +443,12 @@ test("Spanish client payloads contain only route-owned messages", () => {
         },
       ],
       policies.build,
+      spanishLocale,
     ),
     [],
   );
   assert.deepEqual(
-    validateClientMessagePayloads(
+    await auditPayloadFixture(
       [
         { locale: spanishLocale, messages: null },
         { locale: spanishLocale, messages: shared },
@@ -274,6 +458,7 @@ test("Spanish client payloads contain only route-owned messages", () => {
         },
       ],
       policies.hodl,
+      spanishLocale,
     ),
     [],
   );
@@ -338,39 +523,63 @@ test("server-only fingerprints ignore unconfigured partial locale work", async (
   }
 });
 
-test("payload policy fails closed for malformed provider props", () => {
-  assert.throws(
+test("payload policy fails closed for malformed provider props", async () => {
+  await assert.rejects(
     () =>
-      extractNextIntlProviderPayloads(
-        manifest,
-        ['a:I[77,[],"default"]', 'b:["$","$La",null,{}]'].join("\n"),
-      ),
+      auditClientPayloadArtifacts({
+        routePath: "/fixture",
+        manifestSource: manifest,
+        artifacts: [
+          {
+            kind: "rsc",
+            path: "fixture.rsc",
+            source: ['a:I[77,[],"default"]', 'b:["$","$La",null,{}]'].join(
+              "\n",
+            ),
+            providerRequired: true,
+          },
+        ],
+        policy: emptyPolicy,
+        expectedLocale: "en",
+      }),
     /provider props do not contain messages/u,
   );
-  assert.throws(
+  await assert.rejects(
     () =>
-      extractNextIntlProviderPayloads(
-        manifest,
-        ['a:I[77,[],"default"]', 'b:["$","div",null,{}]'].join("\n"),
-      ),
+      auditClientPayloadArtifacts({
+        routePath: "/fixture",
+        manifestSource: manifest,
+        artifacts: [
+          {
+            kind: "rsc",
+            path: "fixture.rsc",
+            source: ['a:I[77,[],"default"]', 'b:["$","div",null,{}]'].join(
+              "\n",
+            ),
+            providerRequired: true,
+          },
+        ],
+        policy: emptyPolicy,
+        expectedLocale: "en",
+      }),
     /imports NextIntlClientProvider but contains no provider element/u,
   );
 
   assert.deepEqual(
-    validateClientMessagePayloads(
-      [{ locale: "en", messages: ["unexpected"] }],
-      { allowedPaths: [], requiredNamespaces: [] },
-    ),
+    await auditPayloadFixture([{ locale: "en", messages: ["unexpected"] }], {
+      allowedPaths: [],
+      requiredNamespaces: [],
+    }),
     [
-      "root NextIntlClientProvider must serialize messages=null",
-      "NextIntlClientProvider messages must be null or a plain object",
+      "/fixture: root NextIntlClientProvider must serialize messages=null",
+      "/fixture: NextIntlClientProvider messages must be null or a plain object",
     ],
   );
 });
 
-test("lazy Home proof responses contain only the proof catalog", () => {
+test("lazy Home proof responses contain only the proof catalog", async () => {
   assert.deepEqual(
-    validateClientMessagePayloads(
+    await auditPayloadFixture(
       [
         { locale: "en", messages: null },
         { locale: "en", messages: getHomeProofClientMessages("en") },

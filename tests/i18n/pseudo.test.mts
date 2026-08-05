@@ -38,7 +38,7 @@ test("pseudo localization preserves approved proper nouns and code", () => {
   );
 });
 
-test("Phase 3 glossary terms expand during full-site pseudo QA", () => {
+test("glossary terms expand during full-site pseudo-locale QA", () => {
   const terms = [
     "blockDAG",
     "proof-of-work",

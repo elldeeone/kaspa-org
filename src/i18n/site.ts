@@ -29,6 +29,7 @@ import {
   type MessageNamespace,
 } from "./messages.ts";
 import { createOpenGraphImageDescriptor } from "./opengraph-contract.ts";
+import { localizePathname } from "./pathname.ts";
 
 export { routeIds, stablePathnames } from "./manifest.ts";
 export type { RouteId, StablePathname } from "./manifest.ts";
@@ -40,44 +41,6 @@ export type { RouteRequest } from "./route-request.ts";
 
 export const siteUrl = "https://kaspa.org";
 export type SiteSurfaceId = RouteId | "not-found";
-
-type RouteDefinition = {
-  id: RouteId;
-  pathname: StablePathname;
-  namespaces: readonly MessageNamespace[];
-  sitemap: {
-    changeFrequency: "weekly" | "monthly";
-    priority: number;
-  };
-};
-
-const routeDefinitions: Record<RouteId, RouteDefinition> = {
-  home: {
-    ...routeManifest.home,
-    namespaces: ["shared", "home"],
-    sitemap: { changeFrequency: "weekly", priority: 1 },
-  },
-  lore: {
-    ...routeManifest.lore,
-    namespaces: ["shared", "lore"],
-    sitemap: { changeFrequency: "monthly", priority: 0.8 },
-  },
-  build: {
-    ...routeManifest.build,
-    namespaces: ["shared", "build"],
-    sitemap: { changeFrequency: "weekly", priority: 0.9 },
-  },
-  assets: {
-    ...routeManifest.assets,
-    namespaces: ["shared", "assets"],
-    sitemap: { changeFrequency: "monthly", priority: 0.7 },
-  },
-  hodl: {
-    ...routeManifest.hodl,
-    namespaces: ["shared", "hodl"],
-    sitemap: { changeFrequency: "weekly", priority: 0.9 },
-  },
-};
 
 const aiLocaleContracts: Record<SiteSurfaceId, Record<Locale, boolean>> = {
   home: { en: true, "en-XA": false, es: false },
@@ -101,13 +64,8 @@ export type RouteContext = {
   availableInBuild: true;
 };
 
-function localizePathname(pathname: StablePathname, locale: Locale): string {
-  if (locale === defaultLocale) return pathname;
-  return pathname === "/" ? `/${locale}` : `/${locale}${pathname}`;
-}
-
-export function getRouteDefinition(routeId: RouteId): RouteDefinition {
-  return routeDefinitions[routeId];
+export function getRouteDefinition(routeId: RouteId) {
+  return routeManifest[routeId];
 }
 
 export function resolvePublishedRoute(
@@ -117,7 +75,7 @@ export function resolvePublishedRoute(
   const publication = getRoutePublication(routeId, locale);
   if (!publication) return null;
 
-  const definition = routeDefinitions[routeId];
+  const definition = getRouteDefinition(routeId);
   const canonicalPathname = localizePathname(definition.pathname, locale);
   const languageAlternatives = Object.fromEntries(
     listDiscoverableLocales(routeId).map((publishedLocale) => {
@@ -164,7 +122,9 @@ export function listDiscoverableLocales(routeId: RouteId): readonly Locale[] {
 }
 
 export function listProductionLocales(): readonly Locale[] {
-  return getEnabledLocaleCodes().filter(isLocaleProductionReady);
+  return getEnabledLocaleCodes().filter((locale) =>
+    isLocaleProductionReady(locale),
+  );
 }
 
 export function listPublishedRoutes(): readonly RouteContext[] {
@@ -251,8 +211,8 @@ export function isAiAvailable(
 function assertRouteContentComplete(routeId: RouteId, locale: Locale): void {
   const definition = getRouteDefinition(routeId);
   if (
-    !definition.namespaces.includes("shared") ||
-    !definition.namespaces.includes(routeId)
+    definition.namespaces[0] !== "shared" ||
+    definition.namespaces[1] !== routeId
   ) {
     throw new Error(
       `${routeId}:${locale} is missing its shared or route message namespace`,

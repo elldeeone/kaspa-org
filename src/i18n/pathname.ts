@@ -4,6 +4,7 @@ import {
   resolveSupportedLocale,
   type Locale,
 } from "./config.ts";
+import type { StablePathname } from "./manifest.ts";
 
 function normalizePathnameShape(pathname: string): string {
   const withLeadingSlash = pathname.startsWith("/") ? pathname : `/${pathname}`;
@@ -35,6 +36,14 @@ export function normalizePathname(pathname: string): string | null {
     : normalizePathnameShape(decodedPathname);
 }
 
+export function localizePathname(
+  pathname: StablePathname,
+  locale: Locale,
+): string;
+export function localizePathname(
+  pathname: string,
+  locale: Locale,
+): string | null;
 export function localizePathname(
   pathname: string,
   locale: Locale,

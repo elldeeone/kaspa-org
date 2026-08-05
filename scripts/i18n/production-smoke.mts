@@ -1,9 +1,7 @@
 import assert from "node:assert/strict";
 
-import {
-  PSEUDO_BUILD_EXAMPLE_URLS,
-  SPANISH_BUILD_EXAMPLE_URLS,
-} from "./build-example-artifacts.mts";
+import "../../src/i18n/publication-policy-site-node.ts";
+import { buildExampleArtifactManifest } from "./build-example-artifacts.mts";
 import {
   RESERVED_NOT_FOUND_PATHNAME,
   ROUTE_MISS_HEADER,
@@ -54,11 +52,11 @@ async function main() {
     const prefixed = await request("/en/lore", 307);
     assert.equal(prefixed.headers.get("location"), "/lore");
 
-    for (const pathname of PSEUDO_BUILD_EXAMPLE_URLS) {
+    for (const pathname of buildExampleArtifactManifest.urlsByLocale["en-XA"]) {
       await request(pathname, 404);
     }
 
-    for (const pathname of SPANISH_BUILD_EXAMPLE_URLS) {
+    for (const pathname of buildExampleArtifactManifest.urlsByLocale.es) {
       const response = await request(pathname, 200);
       if (pathname.endsWith(".html")) {
         assert.match(await response.text(), /<html lang="es" dir="ltr">/u);

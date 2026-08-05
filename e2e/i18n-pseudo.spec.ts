@@ -1,24 +1,6 @@
 import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 
-import {
-  expect,
-  request as requestFactory,
-  test,
-  type APIRequestContext,
-} from "@playwright/test";
-
-import {
-  startProductionServer,
-  type ProductionServer,
-} from "../scripts/i18n/production-server.mts";
-import {
-  buildProductionFixture,
-  createProductionFixture,
-  validateProductionFixtureClientPayload,
-  type ProductionFixture,
-} from "../scripts/i18n/unpublished-route-fixture.mts";
+import { expect, test } from "@playwright/test";
 import {
   assertNoHorizontalOverflow,
   installStandaloneExampleMocks,
@@ -27,6 +9,12 @@ import {
   standaloneRuntimeFingerprints,
   waitForStableLayout,
 } from "./i18n-preview-helpers";
+import {
+  isGoldenEnglishPublicPath,
+  localizePublicRouteGolden,
+  readPrerenderRoutePathnames,
+  useBuiltLocaleScenario,
+} from "./i18n-scenario-harness";
 
 const previewEnvironment = {
   NEXT_PUBLIC_KASPA_AI_ENABLED: "true",
@@ -34,34 +22,7 @@ const previewEnvironment = {
   VERCEL_ENV: "preview",
 } as const;
 
-const pseudoRoutes = [
-  {
-    path: "/en-XA",
-    internalPath: "/en-XA",
-    englishFingerprint: "Get started",
-  },
-  {
-    path: "/en-XA/lore",
-    internalPath: "/en-XA/lore",
-    englishFingerprint:
-      "Kaspa is a live proof-of-work blockDAG running at 10 blocks per second.",
-  },
-  {
-    path: "/en-XA/build",
-    internalPath: "/en-XA/build",
-    englishFingerprint: "Build on Kaspa",
-  },
-  {
-    path: "/en-XA/assets",
-    internalPath: "/en-XA/assets",
-    englishFingerprint: "Kaspa logo assets",
-  },
-  {
-    path: "/en-XA/hodl",
-    internalPath: "/en-XA/hodl",
-    englishFingerprint: "Buy KAS and move it into a wallet you control.",
-  },
-] as const;
+const pseudoRoutes = localizePublicRouteGolden("en-XA");
 
 const localizedReturnPath = "/en-XA/build#try-live";
 const localizedReturnQuery = new URLSearchParams({
@@ -70,18 +31,6 @@ const localizedReturnQuery = new URLSearchParams({
 const pseudoRoutePathnames = new Set<string>(
   pseudoRoutes.map((route) => route.path),
 );
-const forbiddenEnglishRoutePathnames = new Set([
-  "/",
-  "/lore",
-  "/build",
-  "/assets",
-  "/hodl",
-]);
-
-let fixture: ProductionFixture | undefined;
-let server: ProductionServer | undefined;
-let api: APIRequestContext | undefined;
-let activeProject = false;
 
 function assertPrivatePseudoHtml(html: string, pathname: string) {
   expect(html, pathname).toContain('<html lang="en-XA" dir="ltr"');
@@ -99,42 +48,17 @@ function assertPrivatePseudoHtml(html: string, pathname: string) {
   );
 }
 
-test.describe("Phase 3 full-site private pseudo-locale", () => {
-  test.skip(
-    process.env.PLAYWRIGHT_E2E_PSEUDO_ONLY !== "1",
-    "run with npm run test:e2e:i18n:pseudo",
-  );
-  test.describe.configure({ mode: "serial", timeout: 240_000 });
-
-  test.beforeAll(async ({}, testInfo) => {
-    if (testInfo.project.name !== "desktop-chromium") return;
-    activeProject = true;
-    fixture = await createProductionFixture(process.cwd());
-    await buildProductionFixture(fixture.root, previewEnvironment);
-    await validateProductionFixtureClientPayload(
-      fixture.root,
-      previewEnvironment,
-    );
-    server = await startProductionServer(fixture.root, previewEnvironment);
-    api = await requestFactory.newContext({ baseURL: server.baseUrl });
-  });
-
-  test.afterAll(async () => {
-    await api?.dispose();
-    await server?.stop();
-    await fixture?.dispose();
+test.describe("private full-site pseudo-locale contract", () => {
+  const scenario = useBuiltLocaleScenario({
+    enabled: process.env.PLAYWRIGHT_E2E_PSEUDO_ONLY === "1",
+    enabledHint: "run with npm run test:e2e:i18n:pseudo",
+    environment: previewEnvironment,
+    name: "pseudo-locale build matrix",
   });
 
   test("renders every route statically, privately, and pseudo-localized", async () => {
-    test.skip(!activeProject, "pseudo build matrix runs once");
-    if (!api || !fixture) throw new Error("pseudo fixture was not started");
-
-    const prerenderManifest = JSON.parse(
-      await readFile(
-        join(fixture.root, ".next", "prerender-manifest.json"),
-        "utf8",
-      ),
-    ) as { routes: Record<string, unknown> };
+    const { fixtureRoot, readLogs, request: api } = scenario.require();
+    const prerenderRoutes = await readPrerenderRoutePathnames(fixtureRoot);
 
     for (const route of pseudoRoutes) {
       const response = await api.get(route.path);
@@ -151,10 +75,9 @@ test.describe("Phase 3 full-site private pseudo-locale", () => {
         html,
         `${route.path} must not expose the disabled AI capability`,
       ).not.toContain("[!! ÅÅšķ ååńÿţħïïńĝ !!]");
-      expect(
-        Object.hasOwn(prerenderManifest.routes, route.internalPath),
-        route.internalPath,
-      ).toBe(true);
+      expect(prerenderRoutes.has(route.internalPath), route.internalPath).toBe(
+        true,
+      );
     }
 
     const lowercase = await api.get("/en-xa", { maxRedirects: 0 });
@@ -209,8 +132,7 @@ test.describe("Phase 3 full-site private pseudo-locale", () => {
     expect(sitemap.status()).toBe(200);
     expect(await sitemap.text()).not.toContain("en-XA");
 
-    if (!server) throw new Error("pseudo fixture server is unavailable");
-    expect(server.readLogs()).not.toMatch(
+    expect(readLogs()).not.toMatch(
       /NoFallbackError|ERR_INVALID_URL|Internal Server Error|TypeError: Invalid URL/u,
     );
   });
@@ -218,10 +140,9 @@ test.describe("Phase 3 full-site private pseudo-locale", () => {
   test("restores every ordinary localized destination and key interaction", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "pseudo build matrix runs once");
-    if (!api || !server) throw new Error("pseudo fixture was not started");
+    const { baseUrl, request: api } = scenario.require();
 
-    const context = await browser.newContext({ baseURL: server.baseUrl });
+    const context = await browser.newContext({ baseURL: baseUrl });
     const page = await context.newPage();
     const observedPseudoRoutes = new Set<string>();
 
@@ -239,9 +160,9 @@ test.describe("Phase 3 full-site private pseudo-locale", () => {
         );
       for (const href of hrefs) {
         const url = new URL(href);
-        if (url.origin !== new URL(server.baseUrl).origin) continue;
+        if (url.origin !== new URL(baseUrl).origin) continue;
         expect(
-          forbiddenEnglishRoutePathnames.has(url.pathname),
+          isGoldenEnglishPublicPath(url.pathname),
           `${route.path} leaked an English route link: ${url.pathname}`,
         ).toBe(false);
         if (!pseudoRoutePathnames.has(url.pathname)) continue;
@@ -318,8 +239,7 @@ test.describe("Phase 3 full-site private pseudo-locale", () => {
   test("serves the exact Preview-only standalone artifact set", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "pseudo build matrix runs once");
-    if (!api || !server) throw new Error("pseudo fixture was not started");
+    const { baseUrl, request: api } = scenario.require();
 
     for (const name of standaloneExampleNames) {
       const pathname = `${standaloneBasePath}/${name}.en-XA.html`;
@@ -350,7 +270,7 @@ test.describe("Phase 3 full-site private pseudo-locale", () => {
     expect(utils).toContain("'/en-XA/build'");
     expect(utils).toContain("'/en-XA/build#try-live'");
 
-    const context = await browser.newContext({ baseURL: server.baseUrl });
+    const context = await browser.newContext({ baseURL: baseUrl });
     const page = await context.newPage();
     const interceptedSdkModules = await installStandaloneExampleMocks(page);
     for (const name of standaloneExampleNames) {
@@ -390,8 +310,7 @@ test.describe("Phase 3 full-site private pseudo-locale", () => {
   test("has no horizontal overflow across every route and target width", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "pseudo build matrix runs once");
-    if (!server) throw new Error("pseudo fixture was not started");
+    const { baseUrl } = scenario.require();
 
     for (const viewport of [
       { width: 1440, height: 900 },
@@ -399,7 +318,7 @@ test.describe("Phase 3 full-site private pseudo-locale", () => {
       { width: 320, height: 640 },
     ]) {
       const context = await browser.newContext({
-        baseURL: server.baseUrl,
+        baseURL: baseUrl,
         viewport,
         hasTouch: viewport.width < 768,
         isMobile: viewport.width < 768,
@@ -544,10 +463,9 @@ test.describe("Phase 3 full-site private pseudo-locale", () => {
   test("lets keyboard users close the proof while its catalog loads", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "pseudo build matrix runs once");
-    if (!server) throw new Error("pseudo fixture was not started");
+    const { baseUrl } = scenario.require();
 
-    const context = await browser.newContext({ baseURL: server.baseUrl });
+    const context = await browser.newContext({ baseURL: baseUrl });
     const page = await context.newPage();
     await page.route("**/api/i18n/home-proof/en-XA", async (route) => {
       await new Promise((resolve) => setTimeout(resolve, 1_000));
@@ -567,10 +485,9 @@ test.describe("Phase 3 full-site private pseudo-locale", () => {
   test("rejects malformed proof payloads and keeps focus inside on retry", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "pseudo build matrix runs once");
-    if (!server) throw new Error("pseudo fixture was not started");
+    const { baseUrl } = scenario.require();
 
-    const context = await browser.newContext({ baseURL: server.baseUrl });
+    const context = await browser.newContext({ baseURL: baseUrl });
     const page = await context.newPage();
     let requests = 0;
     await page.route("**/api/i18n/home-proof/en-XA", async (route) => {

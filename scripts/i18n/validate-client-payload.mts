@@ -2,6 +2,8 @@ import { readFile, readdir } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
+import "../../src/i18n/publication-policy-site-node.ts";
+
 import {
   pseudoLocale,
   resolveSupportedLocale,
@@ -17,11 +19,8 @@ import {
 import { isAiAvailable, listPublishedRoutes } from "../../src/i18n/site.ts";
 import {
   assertClientMessagePolicyCoverage,
-  decodeEmbeddedFlight,
-  extractNextIntlProviderPayloads,
-  validateClientMessagePayloads,
+  auditClientPayloadArtifacts,
   type ClientMessagePolicy,
-  type NextIntlProviderPayload,
 } from "./client-payload-policy.mts";
 
 const repositoryRoot = process.cwd();
@@ -32,6 +31,12 @@ const sharedClientPaths = [
   "shared.logoMenu",
   "shared.navigation",
   "shared.theme",
+] as const;
+
+const serverOnlyValidationFingerprints = [
+  "fixture publication policy must be an object",
+  "fixture publication policy must contain an override",
+  "Fixture publication policy does not match its marker and nonce.",
 ] as const;
 
 const routeClientPaths: Readonly<
@@ -228,42 +233,34 @@ async function validateRoute(
   const manifestPath = manifestPathForRoute(route.routeSegments);
   const manifestSource = await readFile(manifestPath, "utf8");
   const artifacts = await readRouteArtifacts(internalPath);
-  const payloads: NextIntlProviderPayload[] = [];
 
-  for (const artifact of artifacts) {
-    const source = await readFile(artifact.path, "utf8");
-    const flight =
-      artifact.kind === "html" ? decodeEmbeddedFlight(source) : source;
-    const artifactPayloads = extractNextIntlProviderPayloads(
+  async function* readAuditArtifacts() {
+    for (const artifact of artifacts) {
+      yield {
+        kind: artifact.kind,
+        path: relative(repositoryRoot, artifact.path),
+        source: await readFile(artifact.path, "utf8"),
+        providerRequired:
+          artifact.path ===
+            join(
+              nextDirectory,
+              "server",
+              "app",
+              `${internalPath.slice(1)}.rsc`,
+            ) || artifact.kind === "html",
+      };
+    }
+  }
+
+  errors.push(
+    ...(await auditClientPayloadArtifacts({
+      routePath: internalPath,
       manifestSource,
-      flight,
-    );
-    if (
-      (artifact.path ===
-        join(nextDirectory, "server", "app", `${internalPath.slice(1)}.rsc`) ||
-        artifact.kind === "html") &&
-      !artifactPayloads.length
-    ) {
-      errors.push(
-        `${relative(repositoryRoot, artifact.path)}: no NextIntlClientProvider payload found`,
-      );
-    }
-    payloads.push(...artifactPayloads);
-  }
-
-  for (const issue of validateClientMessagePayloads(
-    payloads,
-    resolveRoutePolicy(route.routeId, route.locale as Locale),
-  )) {
-    errors.push(`${internalPath}: ${issue}`);
-  }
-  for (const payload of payloads) {
-    if (payload.locale !== route.locale) {
-      errors.push(
-        `${internalPath}: provider locale ${JSON.stringify(payload.locale)} does not match ${route.locale}`,
-      );
-    }
-  }
+      artifacts: readAuditArtifacts(),
+      policy: resolveRoutePolicy(route.routeId, route.locale as Locale),
+      expectedLocale: route.locale,
+    })),
+  );
 
   return { artifacts: artifacts.length, errors };
 }
@@ -335,6 +332,13 @@ async function validateStaticChunks(): Promise<string[]> {
       if (source.includes(fingerprint)) {
         errors.push(
           `${relative(repositoryRoot, chunk)}: contains a server-only catalog fingerprint`,
+        );
+      }
+    }
+    for (const fingerprint of serverOnlyValidationFingerprints) {
+      if (source.includes(fingerprint)) {
+        errors.push(
+          `${relative(repositoryRoot, chunk)}: contains server-only fixture-policy validation code`,
         );
       }
     }

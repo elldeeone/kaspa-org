@@ -1,6 +1,8 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 
+import "../../src/i18n/publication-policy-site-node.ts";
+
 import {
   isLocaleProductionReady,
   defaultLocale,
