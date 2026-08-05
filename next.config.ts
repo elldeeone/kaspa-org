@@ -5,7 +5,11 @@ import {
   RESERVED_NOT_FOUND_PATHNAME,
   ROUTE_MISS_HEADER,
 } from "./src/i18n/manifest";
-import { isPseudoLocaleEnabled } from "./src/i18n/config";
+import { defaultLocale, isPseudoLocaleEnabled } from "./src/i18n/config";
+import {
+  assertProductionLocaleComplete,
+  listProductionLocales,
+} from "./src/i18n/site";
 
 const isProductionDeployment =
   process.env.VERCEL_ENV === "production" ||
@@ -15,6 +19,11 @@ if (isPseudoLocaleEnabled && isProductionDeployment) {
   throw new Error(
     "The private en-XA pseudo-locale cannot be enabled in a production deployment.",
   );
+}
+
+for (const locale of listProductionLocales()) {
+  if (locale === defaultLocale) continue;
+  assertProductionLocaleComplete(locale);
 }
 
 const legacyRedirects = [

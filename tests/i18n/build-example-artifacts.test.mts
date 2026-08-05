@@ -12,6 +12,7 @@ import { dirname, join } from "node:path";
 import test from "node:test";
 
 import {
+  BUILD_ARTIFACT_LOCALES,
   BUILD_EXAMPLE_NAMES,
   LOCALIZED_BUILD_EXAMPLE_PATHS,
   LOCALIZED_BUILD_EXAMPLE_URLS,
@@ -24,16 +25,38 @@ import {
   generateSpanishBuildArtifacts,
   loadBuildArtifactMessages,
   loadEnglishBuildArtifactMessages,
+  listBuildArtifactLocalesForTarget,
   validatePseudoBuildArtifacts,
   validateSpanishBuildArtifacts,
+  buildExamplePathsForLocale,
   type BuildExampleSources,
 } from "../../scripts/i18n/build-example-artifacts.mts";
 import { resolveBuildExampleReturnPath } from "../../scripts/i18n/build-example-return-path.mjs";
+import { defaultLocale, supportedLocaleCodes } from "../../src/i18n/config.ts";
 
 const examplesDirectory = join(
   process.cwd(),
   "public/vendor/kaspa-wasm/2.0.0/examples/web",
 );
+
+test("artifact locale selection follows the central lifecycle registry", () => {
+  assert.deepEqual(
+    BUILD_ARTIFACT_LOCALES,
+    supportedLocaleCodes.filter((locale) => locale !== defaultLocale),
+  );
+  for (const locale of BUILD_ARTIFACT_LOCALES) {
+    assert.deepEqual(buildExamplePathsForLocale(locale), [
+      ...BUILD_EXAMPLE_NAMES.map((name) => `${name}.${locale}.html`),
+      `resources/utils.${locale}.js`,
+    ]);
+  }
+  assert.deepEqual(listBuildArtifactLocalesForTarget("production"), ["es"]);
+  assert.deepEqual(listBuildArtifactLocalesForTarget("preview"), [
+    "en-XA",
+    "es",
+  ]);
+  assert.deepEqual(listBuildArtifactLocalesForTarget("test"), ["en-XA", "es"]);
+});
 
 async function loadSources(): Promise<BuildExampleSources> {
   const sources: Record<string, string> = {};

@@ -112,8 +112,8 @@ npm run test:e2e:headed
 npm run test:e2e:ui
 ```
 
-Phase 4 keeps both the complete `en-XA` pseudo-site and the complete Spanish
-site private. Run their full preview-build browser gates with:
+Phase 5 publishes the complete Spanish site atomically while keeping the
+`en-XA` pseudo-site private. Run their full browser gates with:
 
 ```bash
 npm run i18n:pseudo:generate
@@ -121,9 +121,9 @@ npm run test:e2e:i18n:pseudo
 npm run test:e2e:i18n:spanish
 ```
 
-For a manual local preview, build and start with the preview target, then inspect
-all five routes beginning at `http://localhost:3000/en-XA` and
-`http://localhost:3000/es`:
+For a manual test build, use the preview target to include `en-XA`, then inspect
+all five routes beginning at `http://localhost:3000/en-XA` and the public
+Spanish routes beginning at `http://localhost:3000/es`:
 
 ```bash
 NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview npm run build
@@ -131,21 +131,21 @@ NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview npm start
 ```
 
 The Preview build generates ignored `en-XA` and `es` Build-example siblings
-under `public/vendor/kaspa-wasm` and keeps them available for `npm start`. After
-stopping the server, remove those private derived files with:
+under `public/vendor/kaspa-wasm`. Production generates only the approved `es`
+siblings. After stopping the server, remove those derived files with:
 
 ```bash
 npm run -s i18n:artifacts -- --clean
 ```
 
-A Production build performs that cleanup before compiling. Preview fixtures
-generate the same files only inside their isolated disposable copies.
+Browser-test fixtures generate the same files only inside their isolated
+disposable copies.
 
 Set `NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview` only in Vercel Preview. Leave
 it unset or set it to `production` in Vercel Production; the production build
-fails closed if either private locale is enabled there. Spanish remains pending
-fluent and Kaspa technical review. Terminology and review status will be managed
-in the selected translation platform before Spanish is approved for Production.
+fails closed if the private pseudo-locale is enabled there. Locale launch state
+lives in the central registry in `src/i18n/config.ts`: a real locale becomes
+public across every route only when its lifecycle changes to `production`.
 
 ## CI
 
@@ -166,9 +166,10 @@ when either browser suite fails.
 
 ## Project Notes
 
-- Localized route metadata and namespaces live in `src/i18n/site.ts`; route
-  publication lives in `src/i18n/manifest.ts`. Guarded `[locale]` page adapters
-  expose metadata through `generateMetadata`.
+- Localized route metadata and namespaces live in `src/i18n/site.ts`; locale
+  lifecycle lives in `src/i18n/config.ts`, and atomic route publication is
+  derived in `src/i18n/manifest.ts`. Guarded `[locale]` page adapters expose
+  metadata through `generateMetadata`.
 - The home page DAG experience is implemented from `src/dag-viz/` and mounted through the app components.
 - The AI launcher requires both `NEXT_PUBLIC_KASPA_AI_ENABLED` and the route-locale
   capability in `src/i18n/site.ts`; keep the deployment flag false until a working

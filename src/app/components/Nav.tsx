@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { listSelectableLocales } from "@/i18n/config";
 import { Link, useIsPathnamePublished } from "@/i18n/link";
+import { localizedDestinationInventory } from "@/i18n/manifest";
 import {
   KASPA_MARK_SIGNAL,
   type KaspaMarkSignalDetail,
@@ -97,7 +98,9 @@ export default function Nav() {
   const isDark = isClient && resolvedTheme === "dark";
   const showGlyphLogo = isDark && logoReplaced;
   const activeLogoFlight = isDark ? logoFlight : null;
-  const assetsPublished = useIsPathnamePublished("/assets");
+  const assetsPublished = useIsPathnamePublished(
+    localizedDestinationInventory.logoAssets.pathname,
+  );
 
   const logoSrc = isDark ? "/kaspa-logo-dark.svg" : "/kaspa-logo.svg";
 
@@ -238,7 +241,7 @@ export default function Nav() {
       <div className="flex h-16 items-center justify-between px-5 sm:px-6 md:h-20 md:px-12 lg:px-20">
         <Link
           ref={logoTargetRef}
-          href="/"
+          href={localizedDestinationInventory.navigationHome.pathname}
           onContextMenu={assetsPublished ? handleLogoContextMenu : undefined}
           onTouchStart={assetsPublished ? handleLogoTouchStart : undefined}
           onTouchEnd={assetsPublished ? clearLongPress : undefined}

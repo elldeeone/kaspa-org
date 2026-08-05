@@ -13,12 +13,6 @@ import {
 import { createRequire } from "node:module";
 import { join, relative, sep } from "node:path";
 
-import {
-  cleanLocalizedBuildArtifacts,
-  syncLocalizedBuildArtifacts,
-} from "./build-example-artifacts.mts";
-import { resolveI18nBuildTarget } from "../../src/i18n/config.ts";
-
 const require = createRequire(import.meta.url);
 const nextCliPath = require.resolve("next/dist/bin/next");
 const excludedRootEntries = new Set([
@@ -122,7 +116,7 @@ export async function createUnpublishedAssetsFixture(
   try {
     const manifestPath = join(fixture.root, "src", "i18n", "manifest.ts");
     const manifest = await readFile(manifestPath, "utf8");
-    const assetsPublication = /(\bassets:\s*\{\s*en:\s*)"public"/gu;
+    const assetsPublication = /(\bassets:\s*)"public"/gu;
     const matches = [...manifest.matchAll(assetsPublication)];
     assert.equal(
       matches.length,
@@ -141,25 +135,99 @@ export async function createUnpublishedAssetsFixture(
   }
 }
 
+export async function createEnglishOnlyProductionFixture(
+  repositoryRoot: string,
+): Promise<ProductionFixture> {
+  const fixture = await createProductionFixtureInternal(
+    repositoryRoot,
+    "i18n-english-only-",
+  );
+  try {
+    const configPath = join(fixture.root, "src", "i18n", "config.ts");
+    const config = await readFile(configPath, "utf8");
+    const spanishLifecycle =
+      /(\bes:\s*\{[\s\S]*?\bcode:\s*"es"[\s\S]*?\blifecycle:\s*)"production"/gu;
+    const matches = [...config.matchAll(spanishLifecycle)];
+    assert.equal(
+      matches.length,
+      1,
+      "fixture expected exactly one Spanish production lifecycle",
+    );
+    await writeFile(
+      configPath,
+      config.replace(spanishLifecycle, '$1"preview"'),
+      "utf8",
+    );
+    return fixture;
+  } catch (error) {
+    await fixture.dispose();
+    throw error;
+  }
+}
+
+export async function createPartialSpanishProductionFixture(
+  repositoryRoot: string,
+): Promise<ProductionFixture> {
+  const fixture = await createProductionFixtureInternal(
+    repositoryRoot,
+    "i18n-partial-spanish-",
+  );
+  try {
+    const manifestPath = join(fixture.root, "src", "i18n", "manifest.ts");
+    const manifest = await readFile(manifestPath, "utf8");
+    const atomicPublication =
+      '  return isLocaleProductionReady(locale) ? "public" : "preview";';
+    assert.equal(
+      manifest.split(atomicPublication).length - 1,
+      1,
+      "fixture expected exactly one atomic locale publication",
+    );
+    await writeFile(
+      manifestPath,
+      manifest.replace(
+        atomicPublication,
+        `  if (locale === "es" && routeId === "assets") return null;\n${atomicPublication}`,
+      ),
+      "utf8",
+    );
+    return fixture;
+  } catch (error) {
+    await fixture.dispose();
+    throw error;
+  }
+}
+
 export async function buildProductionFixture(
   cwd: string,
   environment: Readonly<Record<string, string | undefined>> = {},
 ): Promise<string> {
-  const buildTarget = resolveI18nBuildTarget(
-    environment.NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET ??
-      process.env.NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET,
-  );
-  await syncLocalizedBuildArtifacts(cwd, buildTarget);
-
-  const child = spawn(process.execPath, [nextCliPath, "build"], {
+  const artifactScript = join(
     cwd,
-    env: {
-      ...process.env,
-      ...environment,
-      NEXT_TELEMETRY_DISABLED: "1",
+    "scripts",
+    "i18n",
+    "build-example-artifacts.mts",
+  );
+  const child = spawn(
+    process.execPath,
+    [
+      "--no-warnings=MODULE_TYPELESS_PACKAGE_JSON",
+      "--experimental-strip-types",
+      artifactScript,
+      "--for-build",
+      process.execPath,
+      nextCliPath,
+      "build",
+    ],
+    {
+      cwd,
+      env: {
+        ...process.env,
+        ...environment,
+        NEXT_TELEMETRY_DISABLED: "1",
+      },
+      stdio: "pipe",
     },
-    stdio: "pipe",
-  });
+  );
   let logs = "";
   child.stdout.on("data", (chunk: Buffer) => {
     logs += chunk.toString();
@@ -168,23 +236,16 @@ export async function buildProductionFixture(
     logs += chunk.toString();
   });
 
-  let result: {
+  const result: {
     code: number | null;
     signal: NodeJS.Signals | null;
-  };
-  try {
-    result = await new Promise((resolve, reject) => {
-      child.once("error", reject);
-      child.once("exit", (code, signal) => resolve({ code, signal }));
-    });
-  } catch (error) {
-    await cleanLocalizedBuildArtifacts(cwd);
-    throw error;
-  }
+  } = await new Promise((resolve, reject) => {
+    child.once("error", reject);
+    child.once("exit", (code, signal) => resolve({ code, signal }));
+  });
   if (result.code !== 0) {
-    await cleanLocalizedBuildArtifacts(cwd);
     throw new Error(
-      `unpublished-route fixture build failed (${result.signal ?? result.code})\n${logs}`,
+      `production fixture build failed (${result.signal ?? result.code})\n${logs}`,
     );
   }
   return logs;

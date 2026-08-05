@@ -14,8 +14,8 @@ import spanishLore from "../../messages/es/lore.json" with { type: "json" };
 import spanishShared from "../../messages/es/shared.json" with { type: "json" };
 
 import {
+  isLocaleEnabled,
   isPseudoLocaleEnabled,
-  isSpanishLocaleEnabled,
   listSelectableLocales,
   pseudoLocale,
   spanishLocale,
@@ -67,9 +67,9 @@ export function getMessages(locale: Locale): LocaleMessages {
       generatedPseudoMessages ??= pseudoLocalizeCatalog(englishMessages);
       return generatedPseudoMessages;
     case spanishLocale:
-      if (!isSpanishLocaleEnabled) {
+      if (!isLocaleEnabled(spanishLocale)) {
         throw new Error(
-          `${spanishLocale} messages are unavailable in production builds`,
+          `${spanishLocale} messages are unavailable in this build target`,
         );
       }
       return spanishMessages;

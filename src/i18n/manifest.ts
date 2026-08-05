@@ -1,6 +1,7 @@
 import {
-  isPseudoLocaleEnabled,
-  isSpanishLocaleEnabled,
+  defaultLocale,
+  isLocaleEnabled,
+  isLocaleProductionReady,
   type Locale,
 } from "./config.ts";
 
@@ -27,6 +28,26 @@ export const stablePathnames = routeIds.map(
 );
 export type StablePathname = (typeof routeManifest)[RouteId]["pathname"];
 
+export type LocalizedDestination = {
+  pathname: StablePathname;
+  hash?: string;
+};
+
+// Internal links that must remain valid for every production locale. UI
+// surfaces consume this inventory directly so their hrefs cannot drift from
+// the fixed route manifest or adopt translated slugs independently.
+export const localizedDestinationInventory = {
+  navigationHome: { pathname: routeManifest.home.pathname },
+  navigationLore: { pathname: routeManifest.lore.pathname },
+  navigationHodl: { pathname: routeManifest.hodl.pathname },
+  navigationBuild: { pathname: routeManifest.build.pathname },
+  logoAssets: { pathname: routeManifest.assets.pathname },
+  homeGetStarted: { pathname: routeManifest.lore.pathname },
+  homeGetWallet: { pathname: routeManifest.hodl.pathname, hash: "wallet" },
+  homeBuyKaspa: { pathname: routeManifest.hodl.pathname, hash: "buy" },
+  notFoundHome: { pathname: routeManifest.home.pathname },
+} as const satisfies Record<string, LocalizedDestination>;
+
 export function getRouteIdForPathname(pathname: string): RouteId | null {
   return (
     routeIds.find((routeId) => routeManifest[routeId].pathname === pathname) ??
@@ -36,39 +57,26 @@ export function getRouteIdForPathname(pathname: string): RouteId | null {
 
 export type RoutePublication = "public" | "preview";
 
-const publicationMatrix = {
-  home: {
-    en: "public",
-    "en-XA": isPseudoLocaleEnabled ? "preview" : false,
-    es: isSpanishLocaleEnabled ? "preview" : false,
-  },
-  lore: {
-    en: "public",
-    "en-XA": isPseudoLocaleEnabled ? "preview" : false,
-    es: isSpanishLocaleEnabled ? "preview" : false,
-  },
-  build: {
-    en: "public",
-    "en-XA": isPseudoLocaleEnabled ? "preview" : false,
-    es: isSpanishLocaleEnabled ? "preview" : false,
-  },
-  assets: {
-    en: "public",
-    "en-XA": isPseudoLocaleEnabled ? "preview" : false,
-    es: isSpanishLocaleEnabled ? "preview" : false,
-  },
-  hodl: {
-    en: "public",
-    "en-XA": isPseudoLocaleEnabled ? "preview" : false,
-    es: isSpanishLocaleEnabled ? "preview" : false,
-  },
-} as const satisfies Record<RouteId, Record<Locale, RoutePublication | false>>;
+// Default-locale routes can still be exercised individually by the publication
+// proxy fixture. Every non-default locale is derived from one lifecycle state,
+// so it can only publish the complete fixed-route set or none of it.
+const defaultLocaleRoutePublication = {
+  home: "public",
+  lore: "public",
+  build: "public",
+  assets: "public",
+  hodl: "public",
+} as const satisfies Record<RouteId, RoutePublication | false>;
 
 export function getRoutePublication(
   routeId: RouteId,
   locale: Locale,
 ): RoutePublication | null {
-  return publicationMatrix[routeId][locale] || null;
+  if (locale === defaultLocale) {
+    return defaultLocaleRoutePublication[routeId] || null;
+  }
+  if (!isLocaleEnabled(locale)) return null;
+  return isLocaleProductionReady(locale) ? "public" : "preview";
 }
 
 export function isRoutePublished(routeId: RouteId, locale: Locale): boolean {

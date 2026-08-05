@@ -74,7 +74,7 @@ jobs:
       - name: Run private pseudo-locale suite
         run: npm run test:e2e:i18n:pseudo
 
-      - name: Run private Spanish suite
+      - name: Run production Spanish suite
         run: npm run test:e2e:i18n:spanish
 
       - name: Upload Playwright artifacts

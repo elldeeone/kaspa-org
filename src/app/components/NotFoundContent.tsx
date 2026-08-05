@@ -1,5 +1,6 @@
 import { Link } from "@/i18n/link";
 import type { Locale } from "@/i18n/config";
+import { localizedDestinationInventory } from "@/i18n/manifest";
 
 import LocalizedAiLauncherEntry from "./LocalizedAiLauncherEntry";
 import { ArrowUpRightIcon } from "./icons";
@@ -55,7 +56,7 @@ export default function NotFoundContent({
 
             <div className="mt-12">
               <Link
-                href="/"
+                href={localizedDestinationInventory.notFoundHome.pathname}
                 className="group inline-flex w-fit items-center gap-3 rounded-full px-6 py-3 text-[15px] font-medium transition-transform hover:-translate-y-0.5"
                 style={{
                   background: "var(--text-primary)",

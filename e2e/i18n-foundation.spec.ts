@@ -10,6 +10,8 @@ import {
   createUnpublishedAssetsFixture,
 } from "../scripts/i18n/unpublished-route-fixture.mts";
 
+const productionLocaleSelectorBudgetBytes = 3_000;
+
 const publicRoutes = [
   {
     path: "/",
@@ -149,7 +151,7 @@ function readCanonical(html: string) {
   return html.match(/<link rel="canonical" href="([^"]+)"\s*\/>/u)?.[1] ?? null;
 }
 
-test.describe("Phase 1 i18n foundation", () => {
+test.describe("Phase 5 production i18n foundation", () => {
   test.beforeEach(async ({}, testInfo) => {
     test.skip(
       testInfo.project.name !== "desktop-chromium",
@@ -177,7 +179,8 @@ test.describe("Phase 1 i18n foundation", () => {
             : 0) +
           ("localizedLayoutBudgetBytes" in route
             ? route.localizedLayoutBudgetBytes
-            : 0),
+            : 0) +
+          productionLocaleSelectorBudgetBytes,
       );
       expect(html, route.path).toContain('<html lang="en" dir="ltr"');
       expect(readMeta(html, "name", "viewport"), route.path).toBe(
@@ -192,6 +195,18 @@ test.describe("Phase 1 i18n foundation", () => {
       );
       const canonical = `https://kaspa.org${route.path === "/" ? "" : route.path}`;
       expect(readCanonical(html), route.path).toBe(canonical);
+      for (const [hrefLang, href] of [
+        ["en", canonical],
+        [
+          "es",
+          `https://kaspa.org${route.path === "/" ? "/es" : `/es${route.path}`}`,
+        ],
+        ["x-default", canonical],
+      ] as const) {
+        expect(html, `${route.path} ${hrefLang}`).toContain(
+          `<link rel="alternate" hrefLang="${hrefLang}" href="${href}"/>`,
+        );
+      }
       expect(readMeta(html, "property", "og:title"), route.path).toBe(
         route.title,
       );
@@ -330,14 +345,7 @@ test.describe("Phase 1 i18n foundation", () => {
   }) => {
     const unknownPaths = [
       "/missing",
-      "/es",
-      "/es/missing",
       "/zz/missing",
-      "/es/lore",
-      "/es/build",
-      "/es/hodl",
-      "/es/assets",
-      "/es/historia",
       "/missing.txt",
       "/api/nope",
       "/_vercel/missing",
@@ -367,6 +375,22 @@ test.describe("Phase 1 i18n foundation", () => {
         "noindex, nofollow",
       ]);
     }
+
+    for (const pathname of ["/es/missing", "/es/historia"]) {
+      const spanishMissing = await request.get(pathname, {
+        headers: {
+          "x-kaspa-i18n-route-miss": "1",
+          "x-next-intl-locale": "en",
+        },
+        maxRedirects: 0,
+      });
+      expect(spanishMissing.status(), pathname).toBe(404);
+      const spanishMissingHtml = await spanishMissing.text();
+      expect(spanishMissingHtml, pathname).toContain(
+        '<html lang="es" dir="ltr"',
+      );
+      expect(spanishMissingHtml, pathname).toContain("Ruta incorrecta.");
+    }
   });
 
   test("preserves sitemap, API, static files, and the exact English OG image", async ({
@@ -386,10 +410,15 @@ test.describe("Phase 1 i18n foundation", () => {
       [...sitemap.matchAll(/<loc>(.*?)<\/loc>/gu)].map((match) => match[1]),
     ).toEqual([
       "https://kaspa.org",
+      "https://kaspa.org/es",
       "https://kaspa.org/lore",
+      "https://kaspa.org/es/lore",
       "https://kaspa.org/build",
+      "https://kaspa.org/es/build",
       "https://kaspa.org/assets",
+      "https://kaspa.org/es/assets",
       "https://kaspa.org/hodl",
+      "https://kaspa.org/es/hodl",
     ]);
     expect(sitemap).not.toContain("hreflang");
     expect(sitemap).not.toContain("/en");
@@ -406,11 +435,15 @@ test.describe("Phase 1 i18n foundation", () => {
       "43e466707bb8d7808d4706194cf9bf47e233116a4a0f1d6606025f4c7419e615",
     );
 
-    for (const pathname of ["/en/opengraph-image", "/es/opengraph-image"]) {
-      const response = await request.get(pathname, { maxRedirects: 0 });
-      expect(response.status(), pathname).toBe(404);
-      expect(response.headers().location, pathname).toBeUndefined();
-    }
+    const redundantEnglishImage = await request.get("/en/opengraph-image", {
+      maxRedirects: 0,
+    });
+    expect(redundantEnglishImage.status()).toBe(404);
+    expect(redundantEnglishImage.headers().location).toBeUndefined();
+
+    const spanishImage = await request.get("/es/opengraph-image");
+    expect(spanishImage.status()).toBe(200);
+    expect(spanishImage.headers()["content-type"]).toBe("image/png");
   });
 
   test("routes an enabled but unpublished page through the production miss stack", async ({

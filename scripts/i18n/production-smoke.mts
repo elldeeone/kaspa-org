@@ -35,7 +35,20 @@ async function main() {
     };
 
     for (const pathname of ["/", "/lore", "/build", "/hodl", "/assets"]) {
-      await request(pathname, 200);
+      const response = await request(pathname, 200);
+      assert.equal(response.headers.get("link"), null, pathname);
+    }
+
+    for (const pathname of [
+      "/es",
+      "/es/lore",
+      "/es/build",
+      "/es/assets",
+      "/es/hodl",
+    ]) {
+      const response = await request(pathname, 200);
+      assert.equal(response.headers.get("link"), null, pathname);
+      assert.match(await response.text(), /<html lang="es" dir="ltr"/u);
     }
 
     const prefixed = await request("/en/lore", 307);
@@ -45,16 +58,16 @@ async function main() {
       await request(pathname, 404);
     }
 
+    for (const pathname of SPANISH_BUILD_EXAMPLE_URLS) {
+      const response = await request(pathname, 200);
+      if (pathname.endsWith(".html")) {
+        assert.match(await response.text(), /<html lang="es" dir="ltr">/u);
+      }
+    }
+
     for (const pathname of [
       "/missing",
-      "/es/missing",
       "/zz/missing",
-      "/es",
-      "/es/lore",
-      "/es/build",
-      "/es/assets",
-      "/es/hodl",
-      "/es/opengraph-image",
       "/missing.txt",
       "/api/nope",
       "/_vercel/missing",
@@ -67,7 +80,6 @@ async function main() {
       "/en-XA/hodl",
       "/en-XA/missing",
       "/en-XA/opengraph-image",
-      ...SPANISH_BUILD_EXAMPLE_URLS,
     ]) {
       const response = await request(pathname, 404, {
         [ROUTE_MISS_HEADER]: "1",
@@ -78,13 +90,26 @@ async function main() {
       assert.match(html, /data-kaspa-global-not-found="true"/u, pathname);
     }
 
+    const spanishMissing = await request("/es/missing", 404, {
+      [ROUTE_MISS_HEADER]: "1",
+      [NEXT_INTL_LOCALE_HEADER]: "en",
+    });
+    const spanishMissingHtml = await spanishMissing.text();
+    assert.match(spanishMissingHtml, /<html lang="es" dir="ltr"/u);
+    assert.match(spanishMissingHtml, /data-kaspa-global-not-found="true"/u);
+
     await request("/api/ask", 405);
     const proofCatalog = await request("/api/i18n/home-proof/en", 200);
     assert.match(await proofCatalog.text(), /"trigger":"Verify the proof"/u);
     await request("/api/i18n/home-proof/en-XA", 404);
-    await request("/api/i18n/home-proof/es", 404);
+    const spanishProofCatalog = await request("/api/i18n/home-proof/es", 200);
+    assert.match(
+      await spanishProofCatalog.text(),
+      /"trigger":"Verificar la prueba"/u,
+    );
     await request("/icon.svg", 200);
     await request("/opengraph-image", 200);
+    await request("/es/opengraph-image", 200);
     await delay(250);
 
     for (const forbidden of [

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/link";
+import { localizedDestinationInventory } from "@/i18n/manifest";
 
 export type LogoMenuPosition = { x: number; y: number };
 export const LOGO_MENU_ID = "kaspa-logo-menu";
@@ -88,7 +89,7 @@ export default function LogoContextMenu({
       <Link
         ref={menuItemRef}
         role="menuitem"
-        href="/assets"
+        href={localizedDestinationInventory.logoAssets.pathname}
         onClick={onClose}
         className="text-secondary hover:text-primary flex items-center justify-between gap-6 rounded-lg px-3 py-2 text-[14px] transition-colors hover:bg-[var(--surface)]"
       >

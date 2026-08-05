@@ -31,10 +31,10 @@ import {
   waitForStableLayout,
 } from "./i18n-preview-helpers";
 
-const previewEnvironment = {
+const productionEnvironment = {
   NEXT_PUBLIC_KASPA_AI_ENABLED: "true",
-  NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET: "preview",
-  VERCEL_ENV: "preview",
+  NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET: "production",
+  VERCEL_ENV: "production",
 } as const;
 
 const spanishRoutes = [
@@ -247,19 +247,40 @@ async function auditRenderedSpanishText(
   }
 }
 
-function assertPrivateSpanishHtml(html: string, pathname: string) {
+function assertPublicSpanishHtml(html: string, pathname: string) {
+  const englishPathname = pathname.slice("/es".length) || "/";
+  const englishUrl =
+    englishPathname === "/"
+      ? "https://kaspa.org"
+      : `https://kaspa.org${englishPathname}`;
+  const spanishUrl = `https://kaspa.org${pathname}`;
+  const xDefault = englishPathname === "/" ? "https://kaspa.org" : englishUrl;
+
   expect(html, pathname).toContain('<html lang="es" dir="ltr"');
-  expect(html, pathname).toContain(
+  expect(html, pathname).not.toContain(
     '<meta name="robots" content="noindex, nofollow"/>',
   );
-  expect(html, pathname).not.toContain('<link rel="canonical"');
-  expect(html, pathname).not.toContain('hreflang="');
-  expect(html, pathname).not.toContain('property="og:');
-  expect(html, pathname).not.toContain('name="twitter:');
-  expect(html, pathname).not.toContain("https://kaspa.org/es/opengraph-image");
+  expect(html, pathname).toContain(
+    `<link rel="canonical" href="${spanishUrl}"/>`,
+  );
+  for (const [hrefLang, href] of [
+    ["en", englishUrl],
+    ["es", spanishUrl],
+    ["x-default", xDefault],
+  ] as const) {
+    expect(html, `${pathname} ${hrefLang}`).toMatch(
+      new RegExp(
+        `<link rel="alternate" hrefLang="${hrefLang}" href="${href.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&")}"\\s*/>`,
+        "u",
+      ),
+    );
+  }
+  expect(html, pathname).toContain('property="og:');
+  expect(html, pathname).toContain('name="twitter:');
+  expect(html, pathname).toContain("https://kaspa.org/es/opengraph-image");
 }
 
-test.describe("Phase 4 complete private Spanish Preview", () => {
+test.describe("Phase 5 complete public Spanish Production", () => {
   test.skip(
     process.env.PLAYWRIGHT_E2E_SPANISH_ONLY !== "1",
     "run with npm run test:e2e:i18n:spanish",
@@ -270,12 +291,12 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
     if (testInfo.project.name !== "desktop-chromium") return;
     activeProject = true;
     fixture = await createProductionFixture(process.cwd());
-    await buildProductionFixture(fixture.root, previewEnvironment);
+    await buildProductionFixture(fixture.root, productionEnvironment);
     await validateProductionFixtureClientPayload(
       fixture.root,
-      previewEnvironment,
+      productionEnvironment,
     );
-    server = await startProductionServer(fixture.root, previewEnvironment);
+    server = await startProductionServer(fixture.root, productionEnvironment);
     api = await requestFactory.newContext({ baseURL: server.baseUrl });
   });
 
@@ -285,10 +306,10 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
     await fixture?.dispose();
   });
 
-  test("renders the complete static, private route and error contract", async () => {
-    test.skip(!activeProject, "Spanish Preview matrix runs once");
+  test("renders the complete static, public route and error contract", async () => {
+    test.skip(!activeProject, "Spanish Production matrix runs once");
     if (!api || !fixture || !server) {
-      throw new Error("Spanish Preview fixture was not started");
+      throw new Error("Spanish Production fixture was not started");
     }
 
     const prerenderManifest = JSON.parse(
@@ -306,7 +327,8 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
         "1",
       );
       const html = await response.text();
-      assertPrivateSpanishHtml(html, route.path);
+      assertPublicSpanishHtml(html, route.path);
+      expect(response.headers()["link"], route.path).toBeUndefined();
       expect(html, route.path).not.toContain(route.englishFingerprint);
       expect(html, `${route.path} must not expose Spanish AI`).not.toContain(
         "Pregunta lo que quieras",
@@ -378,7 +400,30 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
 
     const sitemap = await api.get("/sitemap.xml");
     expect(sitemap.status()).toBe(200);
-    expect(await sitemap.text()).not.toContain("/es");
+    const sitemapText = await sitemap.text();
+    expect(
+      [...sitemapText.matchAll(/<loc>(.*?)<\/loc>/gu)].map((match) => match[1]),
+    ).toEqual([
+      "https://kaspa.org",
+      "https://kaspa.org/es",
+      "https://kaspa.org/lore",
+      "https://kaspa.org/es/lore",
+      "https://kaspa.org/build",
+      "https://kaspa.org/es/build",
+      "https://kaspa.org/assets",
+      "https://kaspa.org/es/assets",
+      "https://kaspa.org/hodl",
+      "https://kaspa.org/es/hodl",
+    ]);
+    expect(sitemapText).not.toContain("hreflang");
+
+    const languageInvariant = await api.get("/", {
+      headers: { "accept-language": "es-ES,es;q=0.9" },
+    });
+    expect(languageInvariant.status()).toBe(200);
+    expect(await languageInvariant.text()).toContain(
+      '<html lang="en" dir="ltr"',
+    );
 
     expect((await api.get("/api/ask")).status()).toBe(405);
     const proofCatalog = await api.get("/api/i18n/home-proof/es");
@@ -395,9 +440,9 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
   test("renders exact Spanish structured data and a safe Open Graph image", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "Spanish Preview matrix runs once");
+    test.skip(!activeProject, "Spanish Production matrix runs once");
     if (!fixture || !server) {
-      throw new Error("Spanish Preview fixture was not started");
+      throw new Error("Spanish Production fixture was not started");
     }
 
     const sharedCatalog = await loadCatalog(fixture.root, "es", "shared");
@@ -455,9 +500,9 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
   test("keeps navigation, CTAs, selector state, and key interactions in Spanish", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "Spanish Preview matrix runs once");
+    test.skip(!activeProject, "Spanish Production matrix runs once");
     if (!api || !fixture || !server) {
-      throw new Error("Spanish Preview fixture was not started");
+      throw new Error("Spanish Production fixture was not started");
     }
 
     const context = await browser.newContext({ baseURL: server.baseUrl });
@@ -601,7 +646,15 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
     ).toBeVisible();
 
     await page.goto("/en-XA/lore");
-    await expect(page.locator("[data-language-selector]")).toHaveCount(0);
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    const unavailablePseudoSelector = getVisibleLanguageSelector(page);
+    const { menu: unavailablePseudoMenu } = await openLanguageMenu(
+      page,
+      "Language",
+    );
+    await expect(unavailablePseudoSelector).toBeVisible();
+    await expect(unavailablePseudoMenu).not.toContainText("Pseudo");
+    await page.keyboard.press("Escape");
 
     await page.goto("/es/missing");
     await expect(page.locator("html")).toHaveAttribute("lang", "es");
@@ -649,8 +702,8 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
   test("keeps the mobile language selector accessible and route-preserving", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "Spanish Preview matrix runs once");
-    if (!server) throw new Error("Spanish Preview fixture was not started");
+    test.skip(!activeProject, "Spanish Production matrix runs once");
+    if (!server) throw new Error("Spanish Production fixture was not started");
 
     const context = await browser.newContext({
       baseURL: server.baseUrl,
@@ -706,9 +759,9 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
   test("serves and runs every Spanish standalone artifact deterministically", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "Spanish Preview matrix runs once");
+    test.skip(!activeProject, "Spanish Production matrix runs once");
     if (!api || !server) {
-      throw new Error("Spanish Preview fixture was not started");
+      throw new Error("Spanish Production fixture was not started");
     }
 
     for (const name of standaloneExampleNames) {
@@ -780,8 +833,8 @@ test.describe("Phase 4 complete private Spanish Preview", () => {
   test("has no desktop or mobile overflow and preserves key modal behavior", async ({
     browser,
   }) => {
-    test.skip(!activeProject, "Spanish Preview matrix runs once");
-    if (!server) throw new Error("Spanish Preview fixture was not started");
+    test.skip(!activeProject, "Spanish Production matrix runs once");
+    if (!server) throw new Error("Spanish Production fixture was not started");
 
     for (const viewport of [
       { width: 1440, height: 900 },

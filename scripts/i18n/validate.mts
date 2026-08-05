@@ -2,8 +2,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 
 import {
-  isPseudoLocaleEnabled,
-  isSpanishLocaleEnabled,
+  isLocaleProductionReady,
   defaultLocale,
   localeCodes,
   pseudoLocale,
@@ -16,6 +15,7 @@ import {
 } from "../../src/i18n/manifest.ts";
 import {
   assertPreviewLocaleComplete,
+  assertProductionLocaleComplete,
   getRouteDefinition,
   listPublishedLocales,
   resolvePublishedRoute,
@@ -225,20 +225,14 @@ for (const routeId of routeIds) {
   }
 }
 
-if (isPseudoLocaleEnabled) {
+for (const locale of localeCodes) {
+  if (locale === defaultLocale) continue;
   try {
-    assertPreviewLocaleComplete(pseudoLocale);
-  } catch (error) {
-    fail(
-      "src/i18n/site.ts",
-      error instanceof Error ? error.message : String(error),
-    );
-  }
-}
-
-if (isSpanishLocaleEnabled) {
-  try {
-    assertPreviewLocaleComplete(spanishLocale);
+    if (isLocaleProductionReady(locale)) {
+      assertProductionLocaleComplete(locale);
+    } else {
+      assertPreviewLocaleComplete(locale);
+    }
   } catch (error) {
     fail(
       "src/i18n/site.ts",
@@ -337,6 +331,6 @@ if (errors.length) {
   process.exitCode = 1;
 } else {
   console.log(
-    `i18n validation passed: ${localeCodes.length} locales, ${routeIds.length} routes, Phase 4 private Spanish contracts valid`,
+    `i18n validation passed: ${localeCodes.length} locales, ${routeIds.length} routes, atomic locale publication contracts valid`,
   );
 }

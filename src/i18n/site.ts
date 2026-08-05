@@ -4,6 +4,7 @@ import {
   defaultLocale,
   getLocaleDefinition,
   isAiDeploymentEnabled,
+  isLocaleProductionReady,
   listEnabledLocales as getEnabledLocaleCodes,
   listSelectableLocales as getSelectableLocaleCodes,
   type Locale,
@@ -11,8 +12,10 @@ import {
 } from "./config.ts";
 import {
   getRoutePublication,
+  getRouteIdForPathname,
   isRouteDiscoverable,
   isRoutePublished,
+  localizedDestinationInventory,
   routeIds,
   routeManifest,
   type RoutePublication,
@@ -160,6 +163,10 @@ export function listDiscoverableLocales(routeId: RouteId): readonly Locale[] {
   );
 }
 
+export function listProductionLocales(): readonly Locale[] {
+  return getEnabledLocaleCodes().filter(isLocaleProductionReady);
+}
+
 export function listPublishedRoutes(): readonly RouteContext[] {
   return routeIds.flatMap((routeId) =>
     listPublishedLocales(routeId).map((locale) => {
@@ -241,7 +248,33 @@ export function isAiAvailable(
   return isAiDeploymentEnabled && aiLocaleContracts[surfaceId][locale];
 }
 
+function assertRouteContentComplete(routeId: RouteId, locale: Locale): void {
+  const definition = getRouteDefinition(routeId);
+  if (
+    !definition.namespaces.includes("shared") ||
+    !definition.namespaces.includes(routeId)
+  ) {
+    throw new Error(
+      `${routeId}:${locale} is missing its shared or route message namespace`,
+    );
+  }
+
+  const routeMessages = getRouteMessages(locale, routeId);
+  if (
+    !routeMessages.metadata.title ||
+    !routeMessages.metadata.description ||
+    !routeMessages.openGraph.imageAlt
+  ) {
+    throw new Error(
+      `${routeId}:${locale} is missing metadata or Open Graph copy`,
+    );
+  }
+}
+
 export function assertPreviewLocaleComplete(locale: Locale): void {
+  if (isLocaleProductionReady(locale)) {
+    throw new Error(`${locale} is production-ready rather than preview-only`);
+  }
   for (const routeId of routeIds) {
     if (getRoutePublication(routeId, locale) !== "preview") {
       throw new Error(
@@ -252,31 +285,63 @@ export function assertPreviewLocaleComplete(locale: Locale): void {
       throw new Error(`${routeId}:${locale} must remain private`);
     }
 
-    const definition = getRouteDefinition(routeId);
-    if (
-      !definition.namespaces.includes("shared") ||
-      !definition.namespaces.includes(routeId)
-    ) {
-      throw new Error(
-        `${routeId}:${locale} is missing its shared or route message namespace`,
-      );
-    }
-
-    const routeMessages = getRouteMessages(locale, routeId);
-    if (
-      !routeMessages.metadata.title ||
-      !routeMessages.metadata.description ||
-      !routeMessages.openGraph.imageAlt
-    ) {
-      throw new Error(
-        `${routeId}:${locale} is missing metadata or Open Graph copy`,
-      );
-    }
+    assertRouteContentComplete(routeId, locale);
     if (aiLocaleContracts[routeId][locale] !== false) {
       throw new Error(
         `${routeId}:${locale} must explicitly disable AI while it is private`,
       );
     }
+  }
+}
+
+export function assertProductionLocaleComplete(
+  locale: Locale,
+  resolvePublication: typeof getRoutePublication = getRoutePublication,
+): void {
+  if (!isLocaleProductionReady(locale)) {
+    throw new Error(`${locale} is not marked production-ready`);
+  }
+  if (!getSelectableLocaleCodes().includes(locale)) {
+    throw new Error(
+      `${locale} is production-ready but missing from the selector`,
+    );
+  }
+
+  for (const [surface, destination] of Object.entries(
+    localizedDestinationInventory,
+  )) {
+    const destinationRouteId = getRouteIdForPathname(destination.pathname);
+    if (
+      !destinationRouteId ||
+      resolvePublication(destinationRouteId, locale) !== "public"
+    ) {
+      throw new Error(
+        `${surface}:${locale} requires public destination ${destination.pathname}`,
+      );
+    }
+  }
+
+  for (const routeId of routeIds) {
+    if (resolvePublication(routeId, locale) !== "public") {
+      throw new Error(
+        `${locale} is not publicly available for the complete route set: ${routeId}`,
+      );
+    }
+    if (!isRouteDiscoverable(routeId, locale)) {
+      throw new Error(`${routeId}:${locale} is not discoverable`);
+    }
+
+    assertRouteContentComplete(routeId, locale);
+    if (typeof aiLocaleContracts[routeId][locale] !== "boolean") {
+      throw new Error(
+        `${routeId}:${locale} is missing an explicit AI capability decision`,
+      );
+    }
+  }
+
+  const messages = getMessages(locale);
+  if (!messages.shared || !messages.errors) {
+    throw new Error(`${locale} is missing its shared or error catalog`);
   }
 }
 

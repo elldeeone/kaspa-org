@@ -13,8 +13,12 @@ import {
 } from "@formatjs/icu-messageformat-parser";
 
 import {
+  defaultLocale,
+  isLocaleEnabledForTarget,
   resolveI18nBuildTarget,
+  supportedLocaleCodes,
   type I18nBuildTarget,
+  type Locale,
 } from "../../src/i18n/config.ts";
 import { pseudoLocalizeMessage } from "../../src/i18n/pseudo.ts";
 
@@ -26,18 +30,26 @@ export const BUILD_EXAMPLE_NAMES = [
   "utxo-context",
 ] as const;
 
-export const PSEUDO_BUILD_EXAMPLE_PATHS = [
-  ...BUILD_EXAMPLE_NAMES.map((name) => `${name}.en-XA.html`),
-  "resources/utils.en-XA.js",
-] as const;
-export const SPANISH_BUILD_EXAMPLE_PATHS = [
-  ...BUILD_EXAMPLE_NAMES.map((name) => `${name}.es.html`),
-  "resources/utils.es.js",
-] as const;
-export const LOCALIZED_BUILD_EXAMPLE_PATHS = [
-  ...PSEUDO_BUILD_EXAMPLE_PATHS,
-  ...SPANISH_BUILD_EXAMPLE_PATHS,
-] as const;
+export type BuildArtifactLocale = Exclude<Locale, typeof defaultLocale>;
+
+export const BUILD_ARTIFACT_LOCALES = supportedLocaleCodes.filter(
+  (locale): locale is BuildArtifactLocale => locale !== defaultLocale,
+);
+
+export function buildExamplePathsForLocale(
+  locale: BuildArtifactLocale,
+): readonly string[] {
+  return [
+    ...BUILD_EXAMPLE_NAMES.map((name) => `${name}.${locale}.html`),
+    `resources/utils.${locale}.js`,
+  ];
+}
+
+export const PSEUDO_BUILD_EXAMPLE_PATHS = buildExamplePathsForLocale("en-XA");
+export const SPANISH_BUILD_EXAMPLE_PATHS = buildExamplePathsForLocale("es");
+export const LOCALIZED_BUILD_EXAMPLE_PATHS = BUILD_ARTIFACT_LOCALES.flatMap(
+  buildExamplePathsForLocale,
+);
 
 export const BUILD_EXAMPLES_PUBLIC_BASE_PATH =
   "/vendor/kaspa-wasm/2.0.0/examples/web";
@@ -51,7 +63,13 @@ export const LOCALIZED_BUILD_EXAMPLE_URLS = LOCALIZED_BUILD_EXAMPLE_PATHS.map(
   (path) => `${BUILD_EXAMPLES_PUBLIC_BASE_PATH}/${path}`,
 );
 
-export type BuildArtifactLocale = "en-XA" | "es";
+export function listBuildArtifactLocalesForTarget(
+  buildTarget: I18nBuildTarget,
+): readonly BuildArtifactLocale[] {
+  return BUILD_ARTIFACT_LOCALES.filter((locale) =>
+    isLocaleEnabledForTarget(locale, buildTarget),
+  );
+}
 
 const EXAMPLES_RELATIVE_DIRECTORY =
   "public/vendor/kaspa-wasm/2.0.0/examples/web";
@@ -662,9 +680,7 @@ function artifactTransform(locale: BuildArtifactLocale): MessageTransform {
 function localizedArtifactPaths(
   locale: BuildArtifactLocale,
 ): readonly string[] {
-  return locale === "en-XA"
-    ? PSEUDO_BUILD_EXAMPLE_PATHS
-    : SPANISH_BUILD_EXAMPLE_PATHS;
+  return buildExamplePathsForLocale(locale);
 }
 
 function generateLocalizedHtml(
@@ -1150,11 +1166,15 @@ export async function syncLocalizedBuildArtifacts(
       spanishMessages,
     ),
   } satisfies Record<BuildArtifactLocale, GeneratedBuildExampleArtifacts>;
+  const enabledLocales = listBuildArtifactLocalesForTarget(buildTarget);
   const generated: Record<string, string> = Object.assign(
     {},
-    ...Object.values(generatedByLocale),
+    ...enabledLocales.map((locale) => generatedByLocale[locale]),
   );
-  const regenerated = Object.assign({}, ...Object.values(regeneratedByLocale));
+  const regenerated = Object.assign(
+    {},
+    ...enabledLocales.map((locale) => regeneratedByLocale[locale]),
+  );
   const errors = [
     ...validatePseudoBuildArtifacts(sources, generatedByLocale["en-XA"]),
     ...validateSpanishBuildArtifacts(
@@ -1168,8 +1188,6 @@ export async function syncLocalizedBuildArtifacts(
     errors.push("localized Build artifact generation is not deterministic");
   }
   if (errors.length) throw new Error(errors.join("\n"));
-
-  if (buildTarget === "production") return;
 
   const directory = examplesDirectory(repositoryRoot);
   try {
@@ -1186,10 +1204,10 @@ export async function syncLocalizedBuildArtifacts(
   }
 
   const written = await listLocalizedArtifactCandidates(repositoryRoot);
-  if (
-    JSON.stringify(written) !==
-    JSON.stringify([...LOCALIZED_BUILD_EXAMPLE_PATHS].sort())
-  ) {
+  const expectedPaths = enabledLocales
+    .flatMap((locale) => localizedArtifactPaths(locale))
+    .sort();
+  if (JSON.stringify(written) !== JSON.stringify(expectedPaths)) {
     throw new Error(
       `Generated localized artifact set is incomplete: ${written.join(", ")}`,
     );
@@ -1200,12 +1218,8 @@ export async function checkLocalizedBuildArtifacts(
   repositoryRoot: string,
   buildTarget: I18nBuildTarget,
 ) {
-  if (buildTarget === "production") {
-    await cleanLocalizedBuildArtifacts(repositoryRoot);
-  } else {
-    const candidates = await listLocalizedArtifactCandidates(repositoryRoot);
-    assertNoUnexpectedLocalizedArtifacts(candidates);
-  }
+  const candidates = await listLocalizedArtifactCandidates(repositoryRoot);
+  assertNoUnexpectedLocalizedArtifacts(candidates);
   await assertReturnPathRuntimeMatches(repositoryRoot);
   const [sources, englishMessages, spanishMessages] = await Promise.all([
     loadEnglishSources(repositoryRoot),
@@ -1220,9 +1234,10 @@ export async function checkLocalizedBuildArtifacts(
       spanishMessages,
     ),
   } satisfies Record<BuildArtifactLocale, GeneratedBuildExampleArtifacts>;
+  const enabledLocales = listBuildArtifactLocalesForTarget(buildTarget);
   const generated: Record<string, string> = Object.assign(
     {},
-    ...Object.values(generatedByLocale),
+    ...enabledLocales.map((locale) => generatedByLocale[locale]),
   );
   const errors = [
     ...validatePseudoBuildArtifacts(sources, generatedByLocale["en-XA"]),
@@ -1235,14 +1250,13 @@ export async function checkLocalizedBuildArtifacts(
   ];
   if (errors.length) throw new Error(errors.join("\n"));
 
-  const candidates = await listLocalizedArtifactCandidates(repositoryRoot);
-  if (buildTarget === "production") {
-    if (candidates.length) {
-      throw new Error(
-        `Production contains disabled localized artifacts: ${candidates.join(", ")}`,
-      );
-    }
-    return;
+  const expectedPaths = enabledLocales
+    .flatMap((locale) => localizedArtifactPaths(locale))
+    .sort();
+  if (JSON.stringify(candidates) !== JSON.stringify(expectedPaths)) {
+    throw new Error(
+      `${buildTarget} localized artifact set differs: expected ${expectedPaths.join(", ")}; received ${candidates.join(", ")}`,
+    );
   }
 
   for (const [path, expected] of Object.entries(generated)) {
@@ -1337,9 +1351,6 @@ async function main() {
     } catch (error) {
       await cleanLocalizedBuildArtifacts(repositoryRoot);
       throw error;
-    }
-    if (buildTarget === "production") {
-      await cleanLocalizedBuildArtifacts(repositoryRoot);
     }
     return;
   }

@@ -31,44 +31,78 @@ export const supportedLocaleCodes = [
   spanishLocale,
 ] as const;
 export type Locale = (typeof supportedLocaleCodes)[number];
-export const isPseudoLocaleEnabled = i18nBuildTarget !== "production";
-export const isSpanishLocaleEnabled = i18nBuildTarget !== "production";
-export const localeCodes: readonly Locale[] =
-  isPseudoLocaleEnabled && isSpanishLocaleEnabled
-    ? ["en", pseudoLocale, spanishLocale]
-    : ["en"];
-
-export const defaultLocale: Locale = "en";
-
 export type TextDirection = "ltr" | "rtl";
+export type LocaleLifecycle =
+  | "production"
+  | "preview"
+  | "test-only"
+  | "disabled";
 
 export type LocaleDefinition = {
   code: Locale;
   label: string;
   hrefLang: string;
   dir: TextDirection;
+  lifecycle: LocaleLifecycle;
 };
 
-const localeDefinitions: Record<Locale, LocaleDefinition> = {
+export const localeRegistry: Readonly<Record<Locale, LocaleDefinition>> = {
   en: {
     code: "en",
     label: "English",
     hrefLang: "en",
     dir: "ltr",
+    lifecycle: "production",
   },
   "en-XA": {
     code: "en-XA",
     label: "Pseudo",
     hrefLang: "en-XA",
     dir: "ltr",
+    lifecycle: "test-only",
   },
   es: {
     code: "es",
     label: "Español",
     hrefLang: "es",
     dir: "ltr",
+    lifecycle: "production",
   },
 };
+
+export const defaultLocale = "en" as const satisfies Locale;
+
+export function isLifecycleEnabledForTarget(
+  lifecycle: LocaleLifecycle,
+  target: I18nBuildTarget,
+): boolean {
+  if (lifecycle === "disabled") return false;
+  if (target === "production") return lifecycle === "production";
+  return true;
+}
+
+export function isLifecycleSelectable(lifecycle: LocaleLifecycle): boolean {
+  return lifecycle === "production" || lifecycle === "preview";
+}
+
+export function isLocaleEnabledForTarget(
+  locale: Locale,
+  target: I18nBuildTarget,
+): boolean {
+  return isLifecycleEnabledForTarget(localeRegistry[locale].lifecycle, target);
+}
+
+export function isLocaleEnabled(locale: Locale): boolean {
+  return isLocaleEnabledForTarget(locale, i18nBuildTarget);
+}
+
+export function isLocaleProductionReady(locale: Locale): boolean {
+  return localeRegistry[locale].lifecycle === "production";
+}
+
+export const localeCodes: readonly Locale[] =
+  supportedLocaleCodes.filter(isLocaleEnabled);
+export const isPseudoLocaleEnabled = isLocaleEnabled(pseudoLocale);
 
 export const isAiDeploymentEnabled = AI_ENABLED_VALUES.has(
   (process.env.NEXT_PUBLIC_KASPA_AI_ENABLED ?? "").trim().toLowerCase(),
@@ -99,7 +133,7 @@ export function resolveSupportedLocale(
 }
 
 export function getLocaleDefinition(locale: Locale): LocaleDefinition {
-  return localeDefinitions[locale];
+  return localeRegistry[locale];
 }
 
 export function listEnabledLocales(): readonly Locale[] {
@@ -107,5 +141,7 @@ export function listEnabledLocales(): readonly Locale[] {
 }
 
 export function listSelectableLocales(): readonly Locale[] {
-  return localeCodes.filter((locale) => locale !== pseudoLocale);
+  return localeCodes.filter((locale) =>
+    isLifecycleSelectable(localeRegistry[locale].lifecycle),
+  );
 }

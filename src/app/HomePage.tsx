@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import type { Locale } from "@/i18n/config";
 import { Link } from "@/i18n/link";
+import { localizedDestinationInventory } from "@/i18n/manifest";
 import { getHomeClientLabels } from "@/i18n/messages";
 
 import Nav from "./components/Nav";
@@ -72,19 +73,19 @@ export default async function HomePage({
 
             <div className="mt-10 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:justify-center sm:gap-4 xl:justify-start">
               <HeroCta
-                href="/lore"
+                href={localizedDestinationInventory.homeGetStarted}
                 className="btn-primary w-full justify-center py-5 text-[18px] sm:w-auto sm:justify-start sm:py-3 sm:text-[15px]"
               >
                 {t("hero.getStarted")} <ChevronRightIcon />
               </HeroCta>
               <HeroCta
-                href={{ pathname: "/hodl", hash: "wallet" }}
+                href={localizedDestinationInventory.homeGetWallet}
                 className="btn-ghost w-full justify-center py-5 text-[18px] sm:w-auto sm:justify-start sm:py-3 sm:text-[15px]"
               >
                 {t("hero.getWallet")} <ChevronRightIcon />
               </HeroCta>
               <HeroCta
-                href={{ pathname: "/hodl", hash: "buy" }}
+                href={localizedDestinationInventory.homeBuyKaspa}
                 className="btn-ghost w-full justify-center py-5 text-[18px] sm:w-auto sm:justify-start sm:py-3 sm:text-[15px]"
               >
                 {t("hero.buyKaspa")} <ChevronRightIcon />

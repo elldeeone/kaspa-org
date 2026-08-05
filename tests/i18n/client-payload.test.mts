@@ -22,7 +22,7 @@ import {
   getHomeProofClientMessages,
   getSharedClientMessages,
 } from "../../src/i18n/messages.ts";
-import { i18nBuildTarget, spanishLocale } from "../../src/i18n/config.ts";
+import { spanishLocale } from "../../src/i18n/config.ts";
 import { routeIds } from "../../src/i18n/manifest.ts";
 
 const emptyPolicy = {
@@ -193,14 +193,10 @@ test("canonical route policies keep server routes lean and client routes exact",
   );
 });
 
-test("Production omits private selector messages from the shared payload", () => {
+test("Production includes selector messages for public Spanish", () => {
   const navigation = getSharedClientMessages("en").shared.navigation;
-  if (i18nBuildTarget === "production") {
-    assert.equal("language" in navigation, false);
-  } else {
-    assert.ok("language" in navigation);
-    assert.deepEqual(navigation.language, { label: "Language" });
-  }
+  assert.ok("language" in navigation);
+  assert.deepEqual(navigation.language, { label: "Language" });
 });
 
 test("route policies reject metadata, Open Graph copy, and unrelated catalogs", () => {
@@ -246,46 +242,42 @@ test("route policies reject metadata, Open Graph copy, and unrelated catalogs", 
   );
 });
 
-test(
-  "Spanish Preview client payloads contain only route-owned messages",
-  { skip: i18nBuildTarget === "production" },
-  () => {
-    const policies = createRoutePolicies();
-    const shared = getSharedClientMessages(spanishLocale);
-    assert.ok("language" in shared.shared.navigation);
-    assert.deepEqual(shared.shared.navigation.language, {
-      label: "Idioma",
-    });
-    assert.deepEqual(
-      validateClientMessagePayloads(
-        [
-          { locale: spanishLocale, messages: null },
-          { locale: spanishLocale, messages: shared },
-          {
-            locale: spanishLocale,
-            messages: getBuildClientMessages(spanishLocale),
-          },
-        ],
-        policies.build,
-      ),
-      [],
-    );
-    assert.deepEqual(
-      validateClientMessagePayloads(
-        [
-          { locale: spanishLocale, messages: null },
-          { locale: spanishLocale, messages: shared },
-          {
-            locale: spanishLocale,
-            messages: getHodlClientMessages(spanishLocale),
-          },
-        ],
-        policies.hodl,
-      ),
-      [],
-    );
-  },
-);
+test("Spanish client payloads contain only route-owned messages", () => {
+  const policies = createRoutePolicies();
+  const shared = getSharedClientMessages(spanishLocale);
+  assert.ok("language" in shared.shared.navigation);
+  assert.deepEqual(shared.shared.navigation.language, {
+    label: "Idioma",
+  });
+  assert.deepEqual(
+    validateClientMessagePayloads(
+      [
+        { locale: spanishLocale, messages: null },
+        { locale: spanishLocale, messages: shared },
+        {
+          locale: spanishLocale,
+          messages: getBuildClientMessages(spanishLocale),
+        },
+      ],
+      policies.build,
+    ),
+    [],
+  );
+  assert.deepEqual(
+    validateClientMessagePayloads(
+      [
+        { locale: spanishLocale, messages: null },
+        { locale: spanishLocale, messages: shared },
+        {
+          locale: spanishLocale,
+          messages: getHodlClientMessages(spanishLocale),
+        },
+      ],
+      policies.hodl,
+    ),
+    [],
+  );
+});
 
 test("prerender validation requires the exact localized page set", () => {
   const expected = ["/en", "/en/lore"];
