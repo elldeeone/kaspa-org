@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { listSelectableLocales } from "@/i18n/config";
 import { Link, useIsPathnamePublished } from "@/i18n/link";
 import { localizedDestinationInventory } from "@/i18n/manifest";
 import {
@@ -28,7 +27,6 @@ const navLinkDisabledDesktop =
   "inline-flex min-h-10 items-center whitespace-nowrap py-2 text-[15px] text-secondary";
 const navLinkDisabledMobile =
   "inline-flex min-h-11 items-center whitespace-nowrap py-2 text-[17px] text-secondary";
-const hasMultipleSelectableLocales = listSelectableLocales().length > 1;
 
 type LogoFlight = {
   id: number;
@@ -293,13 +291,13 @@ export default function Nav() {
             />
           </div>
           <div className="flex items-center gap-1">
-            {hasMultipleSelectableLocales ? <LanguageSelector /> : null}
+            <LanguageSelector />
             <ThemeToggle />
           </div>
         </div>
 
         <div className="flex items-center gap-1 sm:gap-1.5 md:hidden">
-          {hasMultipleSelectableLocales ? <LanguageSelector compact /> : null}
+          <LanguageSelector compact />
           <ThemeToggle compact />
           <button
             onClick={() => setMenuOpen((value) => !value)}

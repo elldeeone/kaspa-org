@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 
+import { buildExampleContract } from "@/i18n/build-example-contract";
+
 import { RUSTY_KASPA_URL, RUSTY_RELEASE_URL } from "../constants";
 import type { PathCard } from "../types";
 import { useBuildTerms } from "../useBuildTerms";
@@ -25,7 +27,7 @@ export function useChoosePathCards(): PathCard[] {
           },
           {
             label: t("wasm.examples"),
-            href: "https://github.com/kaspanet/rusty-kaspa/tree/v2.0.0/wasm/examples",
+            href: buildExampleContract.sourceTreeUrl,
           },
         ],
       },

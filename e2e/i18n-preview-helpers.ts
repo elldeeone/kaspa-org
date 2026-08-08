@@ -1,12 +1,10 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 
-export const standaloneExampleNames = [
-  "get-server-info",
-  "get-block-dag-info",
-  "subscribe-block-added",
-  "subscribe-daa-changed",
-  "utxo-context",
-] as const;
+import { buildExampleContract } from "../src/i18n/build-example-contract.ts";
+
+export const standaloneExampleNames = Object.freeze(
+  buildExampleContract.examples.map(({ name }) => name),
+);
 
 export const standaloneRuntimeFingerprints: Readonly<
   Record<(typeof standaloneExampleNames)[number], string>
@@ -18,7 +16,7 @@ export const standaloneRuntimeFingerprints: Readonly<
   "utxo-context": "UtxoProcessor",
 };
 
-export const standaloneBasePath = "/vendor/kaspa-wasm/2.0.0/examples/web";
+export const standaloneBasePath = buildExampleContract.examplesPublicBasePath;
 
 export async function waitForStableLayout(page: Page) {
   await page.evaluate(async () => {
@@ -103,7 +101,7 @@ export async function installStandaloneExampleMocks(page: Page) {
   const interceptedModules = new Set<"core" | "rpc">();
 
   await page.route(
-    "**/vendor/kaspa-wasm/2.0.0/web/kaspa-rpc/kaspa.js",
+    `**${buildExampleContract.runtimeModulePaths.rpc}`,
     async (route) => {
       interceptedModules.add("rpc");
       await route.fulfill({
@@ -158,7 +156,7 @@ export async function installStandaloneExampleMocks(page: Page) {
   );
 
   await page.route(
-    "**/vendor/kaspa-wasm/2.0.0/web/kaspa-core/kaspa.js",
+    `**${buildExampleContract.runtimeModulePaths.core}`,
     async (route) => {
       interceptedModules.add("core");
       await route.fulfill({

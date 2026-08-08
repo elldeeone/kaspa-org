@@ -1,8 +1,5 @@
-import {
-  RESERVED_NOT_FOUND_PATHNAME,
-  ROUTE_MISS_HEADER,
-  isRoutePublished,
-} from "./manifest.ts";
+import { RESERVED_NOT_FOUND_PATHNAME, ROUTE_MISS_HEADER } from "./manifest.ts";
+import { isRoutePublished } from "./publication.ts";
 import {
   NEXT_INTL_LOCALE_HEADER,
   resolveRouteRequest,

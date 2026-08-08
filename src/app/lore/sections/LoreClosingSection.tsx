@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
-import type { Locale } from "@/i18n/config";
+import type { Locale } from "@/i18n/locale-registry";
 
 export async function LoreClosingSection({
   locale,

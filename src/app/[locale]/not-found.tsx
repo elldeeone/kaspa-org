@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 
 import NotFoundContent from "@/app/components/NotFoundContent";
-import { defaultLocale, isLocale } from "@/i18n/config";
+import { isLocale } from "@/i18n/config";
+import { defaultLocale } from "@/i18n/locale-registry";
 
 async function resolveLocale() {
   const requestLocale = await getLocale();

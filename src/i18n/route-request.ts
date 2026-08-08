@@ -1,4 +1,5 @@
-import { defaultLocale, resolveLocale, type Locale } from "./config.ts";
+import { resolveLocale } from "./config.ts";
+import { defaultLocale, type Locale } from "./locale-registry.ts";
 import {
   getRouteIdForPathname,
   routeManifest,

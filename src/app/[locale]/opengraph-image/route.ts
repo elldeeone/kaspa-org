@@ -1,4 +1,5 @@
-import { defaultLocale, isLocale } from "@/i18n/config";
+import { isLocale } from "@/i18n/config";
+import { defaultLocale } from "@/i18n/locale-registry";
 import { renderOpenGraphImage } from "@/i18n/opengraph";
 import { listPublishedLocales } from "@/i18n/site";
 

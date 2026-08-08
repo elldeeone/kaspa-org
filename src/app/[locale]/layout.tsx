@@ -1,28 +1,18 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
-import Script from "next/script";
-import { NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 
-import { getLocaleDefinition, isLocale } from "@/i18n/config";
+import { isLocale } from "@/i18n/config";
 import { siteViewport } from "@/i18n/document";
+import { getLocaleDefinition } from "@/i18n/locale-registry";
 import { getSharedClientMessages } from "@/i18n/messages";
 import { createStructuredData } from "@/i18n/site";
 
 import "../globals.css";
-import Providers from "../providers";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  preload: false,
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  preload: false,
-});
+import {
+  SiteDocumentContent,
+  siteDocumentBodyClassName,
+  StructuredDataScript,
+} from "../document-shell";
 
 export const viewport = siteViewport;
 
@@ -49,33 +39,12 @@ export default async function LocaleLayout({
       data-scroll-behavior="smooth"
     >
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData),
-          }}
-        />
+        <StructuredDataScript data={structuredData} />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <NextIntlClientProvider locale={locale.code} messages={null}>
-          <Providers>
-            <NextIntlClientProvider
-              locale={locale.code}
-              messages={sharedMessages}
-            >
-              {children}
-            </NextIntlClientProvider>
-          </Providers>
-        </NextIntlClientProvider>
-        <Script
-          src="https://rybbit.kasmedia.com/api/script.js"
-          data-site-id="1"
-          strategy="afterInteractive"
-          integrity="sha384-H0pPS5ok8JJU1gmvnWE/8MDghtGFYeyfM5WjL8LYxEOh6lNozzFWp4AXrlPeUbJo"
-          crossOrigin="anonymous"
-        />
+      <body className={siteDocumentBodyClassName}>
+        <SiteDocumentContent locale={locale.code} messages={sharedMessages}>
+          {children}
+        </SiteDocumentContent>
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
-import type { Locale } from "@/i18n/config";
+import type { Locale } from "@/i18n/locale-registry";
 
 import type { Contributor } from "./contributors";
 import { LoreClosingSection } from "./sections/LoreClosingSection";

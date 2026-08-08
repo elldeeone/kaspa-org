@@ -1,4 +1,4 @@
-import { defaultLocale, type Locale } from "./config.ts";
+import { defaultLocale, type Locale } from "./locale-registry.ts";
 import type { RouteId } from "./manifest.ts";
 import { getHomeMessages, getRouteMessages } from "./messages.ts";
 

@@ -1,23 +1,10 @@
 import {
-  I18N_FIXTURE_POLICY_ENV,
-  type I18nFixturePublicationPolicy,
-  type LocaleLifecycle,
-  type RoutePublication,
-} from "./publication-policy.ts";
-
-export {
-  I18N_FIXTURE_NONCE_ENV,
-  I18N_FIXTURE_POLICY_ENV,
-  I18N_FIXTURE_POLICY_MARKER,
-  I18N_FIXTURE_REQUESTED_NONCE_ENV,
   I18N_FIXTURE_REQUESTED_POLICY_ENV,
-} from "./publication-policy.ts";
-
-export type I18nFixturePolicyMarker = {
-  policy: string | null;
-  nonce: string;
-  repositoryRoot: string;
-};
+  type I18nFixturePublicationPolicy,
+  type I18nFixturePolicyMarker,
+} from "./publication-fixture.ts";
+import type { LocaleLifecycle } from "./locale-registry.ts";
+import type { RoutePublication } from "./publication-profile-contract.ts";
 
 const localeLifecycles = new Set<LocaleLifecycle>([
   "production",
@@ -154,7 +141,7 @@ export function resolveI18nFixturePublicationPolicy(
   if (!value?.trim()) return null;
   if (!fixtureNonce || !/^[a-f0-9]{64}$/u.test(fixtureNonce)) {
     throw new Error(
-      `${I18N_FIXTURE_POLICY_ENV} requires a valid fixture nonce`,
+      `${I18N_FIXTURE_REQUESTED_POLICY_ENV} requires a valid fixture nonce`,
     );
   }
 
@@ -162,7 +149,9 @@ export function resolveI18nFixturePublicationPolicy(
   try {
     parsed = JSON.parse(value);
   } catch {
-    throw new Error(`${I18N_FIXTURE_POLICY_ENV} must contain valid JSON`);
+    throw new Error(
+      `${I18N_FIXTURE_REQUESTED_POLICY_ENV} must contain valid JSON`,
+    );
   }
   return defineI18nFixturePublicationPolicy(parsed);
 }

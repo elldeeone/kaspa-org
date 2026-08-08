@@ -1,13 +1,11 @@
 import { useTranslations } from "next-intl";
 
+import { buildExampleContract } from "@/i18n/build-example-contract";
+
 import ExternalLink from "../../components/ExternalLink";
 import SectionHeading from "../../components/SectionHeading";
 import type { BrowserExample } from "../content";
-import {
-  BROWSER_SDK_VERSION,
-  useBrowserExamples,
-  useBuildTerms,
-} from "../content";
+import { useBrowserExamples, useBuildTerms } from "../content";
 import { ArrowUpRightIcon } from "../icons";
 import { MetaPill } from "../ui";
 
@@ -38,7 +36,7 @@ export default function TryLiveSection({
             rustyKaspa: terms.rustyKaspa,
           })}
           description={t("heading.description", {
-            rustyKaspaVersion: BROWSER_SDK_VERSION,
+            rustyKaspaVersion: buildExampleContract.sdkLabel,
             sdk: terms.sdk,
           })}
           className="max-w-2xl lg:max-w-4xl"

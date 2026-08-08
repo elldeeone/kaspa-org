@@ -1,4 +1,4 @@
-import type { Locale } from "@/i18n/config";
+import type { Locale } from "@/i18n/locale-registry";
 
 import LocalizedAiLauncherEntry from "../components/LocalizedAiLauncherEntry";
 import MarketingPageShell from "../components/MarketingPageShell";

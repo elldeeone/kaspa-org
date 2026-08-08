@@ -4,8 +4,8 @@ import { forwardRef, type ComponentProps } from "react";
 import { useLocale } from "next-intl";
 
 import { isLocale } from "./config";
-import { isPathnamePublished } from "./manifest";
 import { Link as LocalizedLink } from "./navigation";
+import { isPathnamePublished } from "./publication";
 
 type LocalizedLinkProps = ComponentProps<typeof LocalizedLink>;
 

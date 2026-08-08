@@ -1,137 +1,41 @@
 import {
-  decodeAuthorizedI18nFixturePublicationPolicy,
-  getFixtureLocaleLifecycleOverride,
-  I18N_FIXTURE_POLICY_ENV,
-  type I18nFixturePublicationPolicy,
+  isLifecycleEnabledForTarget,
+  localeRegistry,
+  pseudoLocale,
+  type I18nBuildTarget,
+  type Locale,
   type LocaleLifecycle,
-} from "./publication-policy.ts";
+} from "./locale-registry.ts";
+import { i18nPublicationProfile } from "./publication-profile.ts";
 
 const AI_ENABLED_VALUES = new Set(["1", "true", "yes", "on"]);
 
-export const i18nBuildTargets = ["production", "preview", "test"] as const;
-export type I18nBuildTarget = (typeof i18nBuildTargets)[number];
-
-export function resolveI18nBuildTarget(
-  value: string | undefined,
-): I18nBuildTarget {
-  const normalized = value?.trim().toLowerCase();
-  if (!normalized) return "production";
-  if (
-    normalized === "production" ||
-    normalized === "preview" ||
-    normalized === "test"
-  ) {
-    return normalized;
-  }
-  throw new Error(
-    `Invalid NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET: ${JSON.stringify(value)}`,
-  );
-}
-
-export const i18nBuildTarget = resolveI18nBuildTarget(
-  process.env.NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET,
-);
-export const pseudoLocale = "en-XA" as const;
-export const spanishLocale = "es" as const;
-export const supportedLocaleCodes = [
-  "en",
-  pseudoLocale,
-  spanishLocale,
-] as const;
-export type Locale = (typeof supportedLocaleCodes)[number];
-export type TextDirection = "ltr" | "rtl";
-export type { LocaleLifecycle } from "./publication-policy.ts";
-
-export type LocaleDefinition = {
-  code: Locale;
-  label: string;
-  hrefLang: string;
-  dir: TextDirection;
-  lifecycle: LocaleLifecycle;
-};
-
-export const localeRegistry: Readonly<Record<Locale, LocaleDefinition>> = {
-  en: {
-    code: "en",
-    label: "English",
-    hrefLang: "en",
-    dir: "ltr",
-    lifecycle: "production",
-  },
-  "en-XA": {
-    code: "en-XA",
-    label: "Pseudo",
-    hrefLang: "en-XA",
-    dir: "ltr",
-    lifecycle: "test-only",
-  },
-  es: {
-    code: "es",
-    label: "Español",
-    hrefLang: "es",
-    dir: "ltr",
-    lifecycle: "production",
-  },
-};
-
-export const defaultLocale = "en" as const satisfies Locale;
-
-export const i18nFixturePublicationPolicy =
-  decodeAuthorizedI18nFixturePublicationPolicy(
-    process.env.NEXT_PUBLIC_KASPA_I18N_AUTHORIZED_FIXTURE_POLICY,
-    process.env.NEXT_PUBLIC_KASPA_I18N_AUTHORIZED_FIXTURE_NONCE,
-  );
-if (i18nFixturePublicationPolicy && i18nBuildTarget !== "production") {
-  throw new Error(`${I18N_FIXTURE_POLICY_ENV} requires the production target`);
-}
-
-export function isLifecycleEnabledForTarget(
-  lifecycle: LocaleLifecycle,
-  target: I18nBuildTarget,
-): boolean {
-  if (lifecycle === "disabled") return false;
-  if (target === "production") return lifecycle === "production";
-  return true;
-}
-
-export function isLifecycleSelectable(lifecycle: LocaleLifecycle): boolean {
-  return lifecycle === "production" || lifecycle === "preview";
-}
+export const i18nBuildTarget = i18nPublicationProfile.buildTarget;
 
 export function isLocaleEnabledForTarget(
   locale: Locale,
   target: I18nBuildTarget,
-  fixturePolicy: I18nFixturePublicationPolicy | null = i18nFixturePublicationPolicy,
 ): boolean {
-  return isLifecycleEnabledForTarget(
-    getLocaleLifecycle(locale, fixturePolicy),
-    target,
-  );
+  if (target === i18nPublicationProfile.buildTarget) {
+    return i18nPublicationProfile.enabledLocales.includes(locale);
+  }
+  return isLifecycleEnabledForTarget(localeRegistry[locale].lifecycle, target);
 }
 
 export function isLocaleEnabled(locale: Locale): boolean {
-  return isLocaleEnabledForTarget(locale, i18nBuildTarget);
+  return i18nPublicationProfile.enabledLocales.includes(locale);
 }
 
-export function getLocaleLifecycle(
-  locale: Locale,
-  fixturePolicy: I18nFixturePublicationPolicy | null = i18nFixturePublicationPolicy,
-): LocaleLifecycle {
-  return (
-    getFixtureLocaleLifecycleOverride(fixturePolicy, locale) ??
-    localeRegistry[locale].lifecycle
-  );
+export function getLocaleLifecycle(locale: Locale): LocaleLifecycle {
+  return i18nPublicationProfile.localeLifecycles[locale];
 }
 
-export function isLocaleProductionReady(
-  locale: Locale,
-  fixturePolicy: I18nFixturePublicationPolicy | null = i18nFixturePublicationPolicy,
-): boolean {
-  return getLocaleLifecycle(locale, fixturePolicy) === "production";
+export function isLocaleProductionReady(locale: Locale): boolean {
+  return i18nPublicationProfile.productionLocales.includes(locale);
 }
 
 export const localeCodes: readonly Locale[] =
-  supportedLocaleCodes.filter(isLocaleEnabled);
+  i18nPublicationProfile.enabledLocales;
 export const isPseudoLocaleEnabled = isLocaleEnabled(pseudoLocale);
 
 export const isAiDeploymentEnabled = AI_ENABLED_VALUES.has(
@@ -150,28 +54,10 @@ export function resolveLocale(value: string | undefined): Locale | null {
   );
 }
 
-export function resolveSupportedLocale(
-  value: string | undefined,
-): Locale | null {
-  if (!value) return null;
-  const normalized = value.toLowerCase();
-  return (
-    supportedLocaleCodes.find(
-      (locale) => locale.toLowerCase() === normalized,
-    ) ?? null
-  );
-}
-
-export function getLocaleDefinition(locale: Locale): LocaleDefinition {
-  return localeRegistry[locale];
-}
-
 export function listEnabledLocales(): readonly Locale[] {
-  return localeCodes;
+  return i18nPublicationProfile.enabledLocales;
 }
 
 export function listSelectableLocales(): readonly Locale[] {
-  return localeCodes.filter((locale) =>
-    isLifecycleSelectable(getLocaleLifecycle(locale)),
-  );
+  return i18nPublicationProfile.selectableLocales;
 }

@@ -12,17 +12,17 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
 
-import {
-  buildExampleArtifactManifest,
-  createBuildExampleArtifactWorkflow,
-} from "../../scripts/i18n/build-example-artifacts.mts";
+import { createBuildExampleArtifactWorkflow } from "../../scripts/i18n/build-example-artifacts.mts";
 import { resolveBuildExampleReturnPath } from "../../scripts/i18n/build-example-return-path.mjs";
-import { defaultLocale, supportedLocaleCodes } from "../../src/i18n/config.ts";
+import { buildExampleContract } from "../../src/i18n/build-example-contract.ts";
 
 const repositoryRoot = process.cwd();
-const examplesRelativeDirectory = "public/vendor/kaspa-wasm/2.0.0/examples/web";
+const examplesRelativeDirectory =
+  buildExampleContract.examplesRelativeDirectory;
 const examplesDirectory = join(repositoryRoot, examplesRelativeDirectory);
 const artifacts = createBuildExampleArtifactWorkflow(repositoryRoot);
+const manifest = buildExampleContract.artifactManifest;
+const exampleNames = buildExampleContract.examples.map(({ name }) => name);
 
 async function createArtifactFixture(
   files: Readonly<Record<string, string>>,
@@ -58,16 +58,10 @@ async function createWorkflowFixture(): Promise<string> {
   return root;
 }
 
-test("artifact manifest follows the central locale lifecycle registry", () => {
-  const { manifest } = artifacts;
-  assert.equal(manifest, buildExampleArtifactManifest);
-  assert.deepEqual(
-    manifest.locales,
-    supportedLocaleCodes.filter((locale) => locale !== defaultLocale),
-  );
+test("artifact manifest follows the central Build-example contract", () => {
   for (const locale of manifest.locales) {
     assert.deepEqual(manifest.pathsByLocale[locale], [
-      ...manifest.exampleNames.map((name) => `${name}.${locale}.html`),
+      ...exampleNames.map((name) => `${name}.${locale}.html`),
       `resources/utils.${locale}.js`,
     ]);
   }
@@ -78,16 +72,32 @@ test("artifact manifest follows the central locale lifecycle registry", () => {
   assert.equal(manifest.localizedUrls.length, 12);
   assert.ok(
     manifest.localizedUrls.every((path) =>
-      path.startsWith("/vendor/kaspa-wasm/2.0.0/examples/web/"),
+      path.startsWith(`${buildExampleContract.examplesPublicBasePath}/`),
     ),
   );
 });
 
+test("git ignores exactly the generated localized artifact contract", async () => {
+  const generatedPrefix = `/${examplesRelativeDirectory}/`;
+  const ignoredArtifacts = (
+    await readFile(join(repositoryRoot, ".gitignore"), "utf8")
+  )
+    .split(/\r?\n/u)
+    .filter((line) => line.startsWith(generatedPrefix))
+    .sort();
+  assert.deepEqual(
+    ignoredArtifacts,
+    manifest.localizedPaths
+      .map((pathname) => `${generatedPrefix}${pathname}`)
+      .sort(),
+  );
+});
+
 test("artifact manifest is deeply immutable and cannot change cleanup policy", () => {
-  const manifest = buildExampleArtifactManifest;
   for (const collection of [
+    buildExampleContract,
+    buildExampleContract.examples,
     manifest,
-    manifest.exampleNames,
     manifest.locales,
     manifest.pathsByLocale,
     manifest.pathsByLocale["en-XA"],
@@ -129,10 +139,10 @@ test("Build pseudo artifacts are deterministic, complete, and private", async ()
   assert.deepEqual(first, second);
   assert.deepEqual(
     Object.keys(first).sort(),
-    [...artifacts.manifest.localizedPaths].sort(),
+    [...manifest.localizedPaths].sort(),
   );
 
-  for (const name of artifacts.manifest.exampleNames) {
+  for (const name of exampleNames) {
     const source = await readFile(
       join(examplesDirectory, `${name}.html`),
       "utf8",
@@ -220,7 +230,7 @@ test("Spanish Build artifacts are deterministic, complete, and catalog-backed", 
   const second = await artifacts.compile("test");
 
   assert.deepEqual(first, second);
-  for (const name of artifacts.manifest.exampleNames) {
+  for (const name of exampleNames) {
     const spanish = first[`${name}.es.html`];
     assert.match(spanish, /<html lang="es" dir="ltr">/u);
     assert.match(spanish, /from '\.\/resources\/utils\.es\.js'/u);
@@ -304,9 +314,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
     (await readdir(directory))
       .filter((path) => /\.(?:en-XA|es)\.html$/u.test(path))
       .sort(),
-    artifacts.manifest.localizedPaths
-      .filter((path) => path.endsWith(".html"))
-      .sort(),
+    manifest.localizedPaths.filter((path) => path.endsWith(".html")).sort(),
   );
 
   await fixture.sync("production");
@@ -315,9 +323,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
     (await readdir(directory))
       .filter((path) => /\.(?:en-XA|es)\.html$/u.test(path))
       .sort(),
-    artifacts.manifest.pathsByLocale.es
-      .filter((path) => path.endsWith(".html"))
-      .sort(),
+    manifest.pathsByLocale.es.filter((path) => path.endsWith(".html")).sort(),
   );
 });
 

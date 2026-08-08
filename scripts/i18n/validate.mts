@@ -1,29 +1,12 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 
-import "../../src/i18n/publication-policy-site-node.ts";
-
 import {
-  isLocaleProductionReady,
   defaultLocale,
-  localeCodes,
   pseudoLocale,
   spanishLocale,
-} from "../../src/i18n/config.ts";
-import {
-  RESERVED_NOT_FOUND_PATHNAME,
-  routeIds,
-  stablePathnames,
-} from "../../src/i18n/manifest.ts";
-import {
-  assertPreviewLocaleComplete,
-  assertProductionLocaleComplete,
-  getRouteDefinition,
-  listPublishedLocales,
-  resolvePublishedRoute,
-} from "../../src/i18n/site.ts";
-import { englishMessages } from "../../src/i18n/messages.ts";
-import { shouldBypassLocaleRouting } from "../../src/i18n/proxy-policy.ts";
+} from "../../src/i18n/locale-registry.ts";
+import { installI18nPublicationProfile } from "../../src/i18n/publication-profile-node.ts";
 import { analyzeAppRouteFile, isAppRouteFile } from "./app-route-policy.mts";
 import {
   compareCatalogs,
@@ -32,6 +15,25 @@ import {
   type MessageCatalog,
 } from "./catalog-contract.mts";
 import { validateSpanishCatalogContract } from "./spanish-contract.mts";
+
+installI18nPublicationProfile();
+const [config, manifest, site, siteValidation, messages, proxyPolicy] =
+  await Promise.all([
+    import("../../src/i18n/config.ts"),
+    import("../../src/i18n/manifest.ts"),
+    import("../../src/i18n/site.ts"),
+    import("../../src/i18n/site-validation.ts"),
+    import("../../src/i18n/messages.ts"),
+    import("../../src/i18n/proxy-policy.ts"),
+  ]);
+const { isLocaleProductionReady, localeCodes } = config;
+const { RESERVED_NOT_FOUND_PATHNAME, routeIds, stablePathnames } = manifest;
+const { getRouteDefinition, listPublishedLocales, resolvePublishedRoute } =
+  site;
+const { assertPreviewLocaleComplete, assertProductionLocaleComplete } =
+  siteValidation;
+const { englishMessages } = messages;
+const { shouldBypassLocaleRouting } = proxyPolicy;
 
 const repositoryRoot = process.cwd();
 const errors: string[] = [];

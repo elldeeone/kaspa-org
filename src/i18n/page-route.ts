@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
-import { isLocale, type Locale } from "./config.ts";
+import { isLocale } from "./config.ts";
+import type { Locale } from "./locale-registry.ts";
 import type { RouteId } from "./manifest.ts";
 import {
   createRouteMetadata,

@@ -1,7 +1,8 @@
 import { getRequestConfig } from "next-intl/server";
 
-import { defaultLocale, resolveLocale } from "./config.ts";
-import { loadMessages } from "./site.ts";
+import { resolveLocale } from "./config.ts";
+import { defaultLocale } from "./locale-registry.ts";
+import { loadMessages } from "./messages.ts";
 
 export default getRequestConfig(
   async ({ locale: explicitLocale, requestLocale }) => {

@@ -1,6 +1,7 @@
 import { defineRouting } from "next-intl/routing";
 
-import { defaultLocale, localeCodes } from "./config.ts";
+import { localeCodes } from "./config.ts";
+import { defaultLocale } from "./locale-registry.ts";
 import { stablePathnameMap } from "./manifest.ts";
 
 export const routing = defineRouting({

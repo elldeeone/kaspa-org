@@ -3,22 +3,15 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
-import { isLocaleRouteSetComplete } from "@/i18n/manifest";
-import { usePathname } from "@/i18n/navigation";
+import { buildLanguageHref, usePathname } from "@/i18n/navigation";
 import { shouldBypassLocaleRouting } from "@/i18n/proxy-policy";
 
 import {
-  buildLanguageHref,
   isLanguageSelectorLocale,
+  isLanguageSelectorEnabled,
   LANGUAGE_SELECTOR_OPTIONS,
-  shouldShowLanguageSelector,
   type LanguageSelectorLocale,
-} from "./languageSelector";
-
-const selectorEnabled = shouldShowLanguageSelector(
-  LANGUAGE_SELECTOR_OPTIONS,
-  isLocaleRouteSetComplete,
-);
+} from "./language-selector-model";
 
 function LanguageIcon(): React.JSX.Element {
   return (
@@ -127,7 +120,7 @@ function EnabledLanguageSelector({
   }, [locale, menuOpen]);
 
   if (
-    !selectorEnabled ||
+    !isLanguageSelectorEnabled ||
     !isLanguageSelectorLocale(locale) ||
     shouldBypassLocaleRouting(pathname)
   ) {
@@ -257,6 +250,6 @@ export default function LanguageSelector({
 }: {
   compact?: boolean;
 }): React.JSX.Element | null {
-  if (!selectorEnabled) return null;
+  if (!isLanguageSelectorEnabled) return null;
   return <EnabledLanguageSelector compact={compact} />;
 }

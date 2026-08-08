@@ -1,7 +1,7 @@
 import { Fragment, type ComponentProps, type ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
 
-import type { Locale } from "@/i18n/config";
+import type { Locale } from "@/i18n/locale-registry";
 import { Link } from "@/i18n/link";
 import { localizedDestinationInventory } from "@/i18n/manifest";
 import { getHomeClientLabels } from "@/i18n/messages";

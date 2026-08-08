@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/link";
-import type { Locale } from "@/i18n/config";
+import type { Locale } from "@/i18n/locale-registry";
 import { localizedDestinationInventory } from "@/i18n/manifest";
 
 import LocalizedAiLauncherEntry from "./LocalizedAiLauncherEntry";

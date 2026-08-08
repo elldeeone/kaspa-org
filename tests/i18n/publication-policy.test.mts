@@ -9,27 +9,30 @@ import test from "node:test";
 
 import {
   defaultLocale,
-  getLocaleLifecycle,
-  isLocaleEnabledForTarget,
   pseudoLocale,
   spanishLocale,
   supportedLocaleCodes,
-} from "../../src/i18n/config.ts";
-import { createPublicationPolicy, routeIds } from "../../src/i18n/manifest.ts";
+} from "../../src/i18n/locale-registry.ts";
+import { routeIds } from "../../src/i18n/manifest.ts";
+import {
+  I18N_FIXTURE_POLICY_MARKER,
+  I18N_FIXTURE_REQUESTED_NONCE_ENV,
+  I18N_FIXTURE_REQUESTED_POLICY_ENV,
+} from "../../src/i18n/publication-fixture.ts";
 import {
   assertI18nFixturePolicyReferences,
   createI18nFixturePolicyMarker,
   defineI18nFixturePublicationPolicy,
-  I18N_FIXTURE_NONCE_ENV,
-  I18N_FIXTURE_POLICY_ENV,
-  I18N_FIXTURE_POLICY_MARKER,
-  I18N_FIXTURE_REQUESTED_NONCE_ENV,
-  I18N_FIXTURE_REQUESTED_POLICY_ENV,
   resolveI18nFixturePublicationPolicy,
   serializeI18nFixturePublicationPolicy,
 } from "../../src/i18n/publication-policy-validation.ts";
-import { authorizeI18nFixtureEnvironment } from "../../src/i18n/publication-policy-node.ts";
-import { assertProductionLocaleComplete } from "../../src/i18n/site.ts";
+import {
+  createI18nPublicationProfile,
+  I18N_PUBLICATION_PROFILE_ENV,
+  serializeI18nPublicationProfile,
+} from "../../src/i18n/publication-profile-contract.ts";
+import { installI18nPublicationProfile } from "../../src/i18n/publication-profile-node.ts";
+import { assertProductionLocaleComplete } from "../../src/i18n/site-validation.ts";
 
 const require = createRequire(import.meta.url);
 const repositoryRoot = resolve(
@@ -57,7 +60,10 @@ function describe(error) {
     process.cwd(),
     {rawConfig: true, silent: true}
   );
-  const config = loadedConfig.default ?? loadedConfig;
+  const exportedConfig = loadedConfig.default ?? loadedConfig;
+  const config = typeof exportedConfig === "function"
+    ? await exportedConfig(PHASE_PRODUCTION_BUILD, {defaultConfig: {}})
+    : await exportedConfig;
   process.stdout.write(JSON.stringify({
     outputFileTracingRoot: config.outputFileTracingRoot ?? null,
     turbopackRoot: config.turbopack?.root ?? null
@@ -72,26 +78,22 @@ const fixtureNonce = "a".repeat(64);
 const rollbackPolicy = defineI18nFixturePublicationPolicy({
   localeLifecycleOverrides: { es: "preview" },
 });
-const unpublishedAssetsPolicy = defineI18nFixturePublicationPolicy({
-  routePublicationOverrides: { en: { assets: null } },
-});
-const partialSpanishPolicy = defineI18nFixturePublicationPolicy({
-  routePublicationOverrides: { es: { assets: null } },
-});
-
 function runNextConfigProbe(
   cwd: string,
   environment: Readonly<Record<string, string | undefined>> = {},
 ) {
   const childEnvironment = { ...process.env };
-  delete childEnvironment[I18N_FIXTURE_POLICY_ENV];
-  delete childEnvironment[I18N_FIXTURE_NONCE_ENV];
+  delete childEnvironment[I18N_PUBLICATION_PROFILE_ENV];
   delete childEnvironment[I18N_FIXTURE_REQUESTED_POLICY_ENV];
   delete childEnvironment[I18N_FIXTURE_REQUESTED_NONCE_ENV];
-  Object.assign(childEnvironment, environment, {
-    NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET: "production",
-    NEXT_TELEMETRY_DISABLED: "1",
-  });
+  Object.assign(
+    childEnvironment,
+    {
+      NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET: "production",
+      NEXT_TELEMETRY_DISABLED: "1",
+    },
+    environment,
+  );
   return spawnSync(process.execPath, ["-e", configProbeScript], {
     cwd,
     env: childEnvironment,
@@ -121,7 +123,7 @@ async function createConfigProbeDirectory(label: string): Promise<string> {
   return cwd;
 }
 
-test("publication policies use one generic validated contract", () => {
+test("fixture policy resolves once into the generic publication profile", () => {
   const serializedRollback = serializeI18nFixturePublicationPolicy({
     localeLifecycleOverrides: { es: "preview" },
   });
@@ -131,58 +133,46 @@ test("publication policies use one generic validated contract", () => {
   );
   assert.equal(resolveI18nFixturePublicationPolicy(undefined, undefined), null);
 
-  const production = createPublicationPolicy("production");
-  const preview = createPublicationPolicy("preview");
-  const rollback = createPublicationPolicy("production", rollbackPolicy);
-  const unpublishedAssets = createPublicationPolicy(
-    "production",
-    unpublishedAssetsPolicy,
-  );
-  const partialSpanish = createPublicationPolicy(
-    "production",
-    partialSpanishPolicy,
-  );
+  const production = createI18nPublicationProfile("production");
+  const preview = createI18nPublicationProfile("preview");
+  const rollback = createI18nPublicationProfile("production", {
+    localeLifecycles: { es: "preview" },
+  });
+  const unpublishedAssets = createI18nPublicationProfile("production", {
+    routePublications: { en: { assets: null } },
+  });
+  const partialSpanish = createI18nPublicationProfile("production", {
+    routePublications: { es: { assets: null } },
+  });
 
   for (const routeId of routeIds) {
-    assert.equal(production.getRoutePublication(routeId, "en"), "public");
+    assert.equal(production.routePublications[routeId].en, "public");
     assert.equal(
-      production.getRoutePublication(routeId, spanishLocale),
+      production.routePublications[routeId][spanishLocale],
       "public",
     );
-    assert.equal(production.getRoutePublication(routeId, pseudoLocale), null);
-    assert.equal(preview.getRoutePublication(routeId, "en"), "public");
-    assert.equal(preview.getRoutePublication(routeId, spanishLocale), "public");
-    assert.equal(preview.getRoutePublication(routeId, pseudoLocale), "preview");
-    assert.equal(rollback.getRoutePublication(routeId, "en"), "public");
-    assert.equal(rollback.getRoutePublication(routeId, spanishLocale), null);
+    assert.equal(production.routePublications[routeId][pseudoLocale], null);
+    assert.equal(preview.routePublications[routeId].en, "public");
+    assert.equal(preview.routePublications[routeId][spanishLocale], "public");
+    assert.equal(preview.routePublications[routeId][pseudoLocale], "preview");
+    assert.equal(rollback.routePublications[routeId].en, "public");
+    assert.equal(rollback.routePublications[routeId][spanishLocale], null);
   }
 
-  assert.equal(getLocaleLifecycle(spanishLocale, rollbackPolicy), "preview");
+  assert.equal(rollback.localeLifecycles[spanishLocale], "preview");
+  assert.equal(rollback.enabledLocales.includes(spanishLocale), false);
+  assert.equal(unpublishedAssets.routePublications.assets[defaultLocale], null);
   assert.equal(
-    isLocaleEnabledForTarget(spanishLocale, "production", rollbackPolicy),
-    false,
-  );
-  assert.equal(
-    unpublishedAssets.getRoutePublication("assets", defaultLocale),
-    null,
-  );
-  assert.equal(
-    unpublishedAssets.getRoutePublication("lore", defaultLocale),
+    unpublishedAssets.routePublications.lore[defaultLocale],
     "public",
   );
-  assert.equal(
-    partialSpanish.getRoutePublication("assets", spanishLocale),
-    null,
-  );
-  assert.equal(
-    partialSpanish.getRoutePublication("lore", spanishLocale),
-    "public",
-  );
+  assert.equal(partialSpanish.routePublications.assets[spanishLocale], null);
+  assert.equal(partialSpanish.routePublications.lore[spanishLocale], "public");
   assert.throws(
     () =>
       assertProductionLocaleComplete(
         spanishLocale,
-        partialSpanish.getRoutePublication,
+        (routeId, locale) => partialSpanish.routePublications[routeId][locale],
       ),
     /logoAssets:es requires public destination \/assets/u,
   );
@@ -218,18 +208,19 @@ test("publication policies use one generic validated contract", () => {
   );
 });
 
-test("i18n CLIs authorize fixture policy before shared config", () => {
-  const serializedPolicy =
-    serializeI18nFixturePublicationPolicy(rollbackPolicy);
+test("i18n CLIs reject externally resolved publication profiles", () => {
   const unauthorizedEnvironment: NodeJS.ProcessEnv = {
     ...process.env,
-    [I18N_FIXTURE_POLICY_ENV]: serializedPolicy,
-    [I18N_FIXTURE_NONCE_ENV]: fixtureNonce,
+    [I18N_PUBLICATION_PROFILE_ENV]: serializeI18nPublicationProfile(
+      createI18nPublicationProfile("production", {
+        localeLifecycles: { es: "preview" },
+      }),
+    ),
   };
   assert.throws(
     () =>
-      authorizeI18nFixtureEnvironment(repositoryRoot, unauthorizedEnvironment),
-    /marker-backed request/u,
+      installI18nPublicationProfile(repositoryRoot, unauthorizedEnvironment),
+    /marker-backed Node adapter/u,
   );
 
   delete unauthorizedEnvironment[I18N_FIXTURE_REQUESTED_POLICY_ENV];
@@ -257,7 +248,7 @@ test("i18n CLIs authorize fixture policy before shared config", () => {
     assert.notEqual(result.status, 0, relativePath);
     assert.match(
       `${result.stdout}${result.stderr}`,
-      /marker-backed request/u,
+      /marker-backed Node adapter/u,
       relativePath,
     );
   }
@@ -304,6 +295,30 @@ test("next.config authorizes fixture markers before exposing fixture roots", asy
         outputFileTracingRoot: repositoryRoot,
         turbopackRoot: repositoryRoot,
       });
+    } finally {
+      await rm(cwd, { recursive: true, force: true });
+    }
+  });
+
+  await t.test("fixture policy requires the production target", async () => {
+    const cwd = await createConfigProbeDirectory("preview-policy");
+    try {
+      const marker = createI18nFixturePolicyMarker(
+        rollbackPolicy,
+        fixtureNonce,
+        repositoryRoot,
+      );
+      await writeFile(
+        join(cwd, I18N_FIXTURE_POLICY_MARKER),
+        JSON.stringify(marker),
+        "utf8",
+      );
+      const result = runNextConfigProbe(cwd, {
+        ...requestedEnvironment,
+        NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET: "preview",
+      });
+      assert.notEqual(result.status, 0);
+      assert.match(result.stderr, /requires the production target/u);
     } finally {
       await rm(cwd, { recursive: true, force: true });
     }

@@ -1,3 +1,5 @@
+import type { BuildExampleId } from "@/i18n/build-example-contract";
+
 export type SectionId =
   | "start"
   | "try-live"
@@ -19,7 +21,7 @@ export type StartRoute = {
 };
 
 export type BrowserExample = {
-  id: string;
+  id: BuildExampleId;
   title: string;
   shortLabel: string;
   mobileTabLabel: string;

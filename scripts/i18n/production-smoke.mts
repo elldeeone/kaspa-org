@@ -1,13 +1,15 @@
 import assert from "node:assert/strict";
 
-import "../../src/i18n/publication-policy-site-node.ts";
-import { buildExampleArtifactManifest } from "./build-example-artifacts.mts";
-import {
-  RESERVED_NOT_FOUND_PATHNAME,
-  ROUTE_MISS_HEADER,
-} from "../../src/i18n/manifest.ts";
-import { NEXT_INTL_LOCALE_HEADER } from "../../src/i18n/site.ts";
+import { buildExampleContract } from "../../src/i18n/build-example-contract.ts";
+import { I18N_PUBLICATION_PROFILE_ENV } from "../../src/i18n/publication-profile-contract.ts";
+import { installI18nPublicationProfile } from "../../src/i18n/publication-profile-node.ts";
+import { NEXT_INTL_LOCALE_HEADER } from "../../src/i18n/route-request.ts";
 import { startProductionServer } from "./production-server.mts";
+
+installI18nPublicationProfile();
+const manifest = await import("../../src/i18n/manifest.ts");
+delete process.env[I18N_PUBLICATION_PROFILE_ENV];
+const { RESERVED_NOT_FOUND_PATHNAME, ROUTE_MISS_HEADER } = manifest;
 
 function delay(milliseconds: number) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -52,11 +54,14 @@ async function main() {
     const prefixed = await request("/en/lore", 307);
     assert.equal(prefixed.headers.get("location"), "/lore");
 
-    for (const pathname of buildExampleArtifactManifest.urlsByLocale["en-XA"]) {
+    for (const pathname of buildExampleContract.artifactManifest.urlsByLocale[
+      "en-XA"
+    ]) {
       await request(pathname, 404);
     }
 
-    for (const pathname of buildExampleArtifactManifest.urlsByLocale.es) {
+    for (const pathname of buildExampleContract.artifactManifest.urlsByLocale
+      .es) {
       const response = await request(pathname, 200);
       if (pathname.endsWith(".html")) {
         assert.match(await response.text(), /<html lang="es" dir="ltr">/u);

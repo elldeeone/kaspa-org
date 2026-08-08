@@ -1,55 +1,35 @@
 import type { Metadata } from "next";
 
 import {
-  defaultLocale,
-  getLocaleDefinition,
-  isAiDeploymentEnabled,
-  isLocaleProductionReady,
   listEnabledLocales as getEnabledLocaleCodes,
   listSelectableLocales as getSelectableLocaleCodes,
-  type Locale,
-  type LocaleDefinition,
 } from "./config.ts";
 import {
-  getRoutePublication,
-  getRouteIdForPathname,
-  isRouteDiscoverable,
-  isRoutePublished,
-  localizedDestinationInventory,
+  defaultLocale,
+  getLocaleDefinition,
+  type Locale,
+  type LocaleDefinition,
+} from "./locale-registry.ts";
+import {
   routeIds,
   routeManifest,
-  type RoutePublication,
   type RouteId,
   type StablePathname,
 } from "./manifest.ts";
 import {
   getMessages,
   getRouteMessages,
-  loadMessages,
   type MessageNamespace,
 } from "./messages.ts";
 import { createOpenGraphImageDescriptor } from "./opengraph-contract.ts";
 import { localizePathname } from "./pathname.ts";
-
-export { routeIds, stablePathnames } from "./manifest.ts";
-export type { RouteId, StablePathname } from "./manifest.ts";
-export {
-  NEXT_INTL_LOCALE_HEADER,
-  resolveRouteRequest,
-} from "./route-request.ts";
-export type { RouteRequest } from "./route-request.ts";
-
+import {
+  getRoutePublication,
+  isRouteDiscoverable,
+  isRoutePublished,
+} from "./publication.ts";
+import type { RoutePublication } from "./publication-profile-contract.ts";
 export const siteUrl = "https://kaspa.org";
-export type SiteSurfaceId = RouteId | "not-found";
-
-const aiLocaleContracts: Record<SiteSurfaceId, Record<Locale, boolean>> = {
-  home: { en: true, "en-XA": false, es: false },
-  lore: { en: true, "en-XA": false, es: false },
-  build: { en: true, "en-XA": false, es: false },
-  assets: { en: false, "en-XA": false, es: false },
-  hodl: { en: true, "en-XA": false, es: false },
-  "not-found": { en: true, "en-XA": false, es: false },
-};
 
 export type RouteContext = {
   routeId: RouteId;
@@ -77,6 +57,9 @@ export function resolvePublishedRoute(
 
   const definition = getRouteDefinition(routeId);
   const canonicalPathname = localizePathname(definition.pathname, locale);
+  if (!canonicalPathname) {
+    throw new Error(`Unable to localize ${definition.pathname} for ${locale}`);
+  }
   const languageAlternatives = Object.fromEntries(
     listDiscoverableLocales(routeId).map((publishedLocale) => {
       const localeDefinition = getLocaleDefinition(publishedLocale);
@@ -121,12 +104,6 @@ export function listDiscoverableLocales(routeId: RouteId): readonly Locale[] {
   );
 }
 
-export function listProductionLocales(): readonly Locale[] {
-  return getEnabledLocaleCodes().filter((locale) =>
-    isLocaleProductionReady(locale),
-  );
-}
-
 export function listPublishedRoutes(): readonly RouteContext[] {
   return routeIds.flatMap((routeId) =>
     listPublishedLocales(routeId).map((locale) => {
@@ -146,8 +123,6 @@ export function listDiscoverableRoutes(): readonly RouteContext[] {
     (route) => route.publication === "public",
   );
 }
-
-export { loadMessages };
 
 export function createRouteMetadata(
   routeId: RouteId,
@@ -199,110 +174,6 @@ export function createRouteMetadata(
         },
     robots: isPrivate ? { index: false, follow: false } : undefined,
   };
-}
-
-export function isAiAvailable(
-  surfaceId: SiteSurfaceId,
-  locale: Locale,
-): boolean {
-  return isAiDeploymentEnabled && aiLocaleContracts[surfaceId][locale];
-}
-
-function assertRouteContentComplete(routeId: RouteId, locale: Locale): void {
-  const definition = getRouteDefinition(routeId);
-  if (
-    definition.namespaces[0] !== "shared" ||
-    definition.namespaces[1] !== routeId
-  ) {
-    throw new Error(
-      `${routeId}:${locale} is missing its shared or route message namespace`,
-    );
-  }
-
-  const routeMessages = getRouteMessages(locale, routeId);
-  if (
-    !routeMessages.metadata.title ||
-    !routeMessages.metadata.description ||
-    !routeMessages.openGraph.imageAlt
-  ) {
-    throw new Error(
-      `${routeId}:${locale} is missing metadata or Open Graph copy`,
-    );
-  }
-}
-
-export function assertPreviewLocaleComplete(locale: Locale): void {
-  if (isLocaleProductionReady(locale)) {
-    throw new Error(`${locale} is production-ready rather than preview-only`);
-  }
-  for (const routeId of routeIds) {
-    if (getRoutePublication(routeId, locale) !== "preview") {
-      throw new Error(
-        `${locale} is not preview-published for the complete route set: ${routeId}`,
-      );
-    }
-    if (isRouteDiscoverable(routeId, locale)) {
-      throw new Error(`${routeId}:${locale} must remain private`);
-    }
-
-    assertRouteContentComplete(routeId, locale);
-    if (aiLocaleContracts[routeId][locale] !== false) {
-      throw new Error(
-        `${routeId}:${locale} must explicitly disable AI while it is private`,
-      );
-    }
-  }
-}
-
-export function assertProductionLocaleComplete(
-  locale: Locale,
-  resolvePublication: typeof getRoutePublication = getRoutePublication,
-): void {
-  if (!isLocaleProductionReady(locale)) {
-    throw new Error(`${locale} is not marked production-ready`);
-  }
-  if (!getSelectableLocaleCodes().includes(locale)) {
-    throw new Error(
-      `${locale} is production-ready but missing from the selector`,
-    );
-  }
-
-  for (const [surface, destination] of Object.entries(
-    localizedDestinationInventory,
-  )) {
-    const destinationRouteId = getRouteIdForPathname(destination.pathname);
-    if (
-      !destinationRouteId ||
-      resolvePublication(destinationRouteId, locale) !== "public"
-    ) {
-      throw new Error(
-        `${surface}:${locale} requires public destination ${destination.pathname}`,
-      );
-    }
-  }
-
-  for (const routeId of routeIds) {
-    if (resolvePublication(routeId, locale) !== "public") {
-      throw new Error(
-        `${locale} is not publicly available for the complete route set: ${routeId}`,
-      );
-    }
-    if (!isRouteDiscoverable(routeId, locale)) {
-      throw new Error(`${routeId}:${locale} is not discoverable`);
-    }
-
-    assertRouteContentComplete(routeId, locale);
-    if (typeof aiLocaleContracts[routeId][locale] !== "boolean") {
-      throw new Error(
-        `${routeId}:${locale} is missing an explicit AI capability decision`,
-      );
-    }
-  }
-
-  const messages = getMessages(locale);
-  if (!messages.shared || !messages.errors) {
-    throw new Error(`${locale} is missing its shared or error catalog`);
-  }
 }
 
 const organizationId = `${siteUrl}#organization`;

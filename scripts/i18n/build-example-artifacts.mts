@@ -12,57 +12,30 @@ import {
   type MessageFormatElement,
 } from "@formatjs/icu-messageformat-parser";
 
-import "../../src/i18n/publication-policy-site-node.ts";
-
 import {
-  defaultLocale,
-  isLocaleEnabledForTarget,
   resolveI18nBuildTarget,
-  supportedLocaleCodes,
   type I18nBuildTarget,
-  type Locale,
-} from "../../src/i18n/config.ts";
+} from "../../src/i18n/locale-registry.ts";
+import {
+  buildExampleContract,
+  type BuildArtifactLocale,
+  type BuildExampleName,
+} from "../../src/i18n/build-example-contract.ts";
+import { I18N_PUBLICATION_PROFILE_ENV } from "../../src/i18n/publication-profile-contract.ts";
+import { installI18nPublicationProfile } from "../../src/i18n/publication-profile-node.ts";
 import { pseudoLocalizeMessage } from "../../src/i18n/pseudo.ts";
 
-const BUILD_EXAMPLE_NAMES = [
-  "get-server-info",
-  "get-block-dag-info",
-  "subscribe-block-added",
-  "subscribe-daa-changed",
-  "utxo-context",
-] as const;
+installI18nPublicationProfile();
+const { isLocaleEnabledForTarget } = await import("../../src/i18n/config.ts");
+delete process.env[I18N_PUBLICATION_PROFILE_ENV];
 
-type BuildArtifactLocale = Exclude<Locale, typeof defaultLocale>;
-
-const BUILD_ARTIFACT_LOCALES = supportedLocaleCodes.filter(
-  (locale): locale is BuildArtifactLocale => locale !== defaultLocale,
-);
-
-function buildExamplePathsForLocale(
-  locale: BuildArtifactLocale,
-): readonly string[] {
-  return [
-    ...BUILD_EXAMPLE_NAMES.map((name) => `${name}.${locale}.html`),
-    `resources/utils.${locale}.js`,
-  ];
-}
-
-const PSEUDO_BUILD_EXAMPLE_PATHS = buildExamplePathsForLocale("en-XA");
-const SPANISH_BUILD_EXAMPLE_PATHS = buildExamplePathsForLocale("es");
-const LOCALIZED_BUILD_EXAMPLE_PATHS = BUILD_ARTIFACT_LOCALES.flatMap(
-  buildExamplePathsForLocale,
-);
-
-const BUILD_EXAMPLES_PUBLIC_BASE_PATH = "/vendor/kaspa-wasm/2.0.0/examples/web";
-const PSEUDO_BUILD_EXAMPLE_URLS = PSEUDO_BUILD_EXAMPLE_PATHS.map(
-  (path) => `${BUILD_EXAMPLES_PUBLIC_BASE_PATH}/${path}`,
-);
-const SPANISH_BUILD_EXAMPLE_URLS = SPANISH_BUILD_EXAMPLE_PATHS.map(
-  (path) => `${BUILD_EXAMPLES_PUBLIC_BASE_PATH}/${path}`,
-);
-const LOCALIZED_BUILD_EXAMPLE_URLS = LOCALIZED_BUILD_EXAMPLE_PATHS.map(
-  (path) => `${BUILD_EXAMPLES_PUBLIC_BASE_PATH}/${path}`,
-);
+const BUILD_EXAMPLE_NAMES: readonly BuildExampleName[] =
+  buildExampleContract.examples.map(({ name }) => name);
+const BUILD_ARTIFACT_LOCALES = buildExampleContract.artifactManifest.locales;
+const SPANISH_BUILD_EXAMPLE_PATHS =
+  buildExampleContract.artifactManifest.pathsByLocale.es;
+const LOCALIZED_BUILD_EXAMPLE_PATHS =
+  buildExampleContract.artifactManifest.localizedPaths;
 
 function listBuildArtifactLocalesForTarget(
   buildTarget: I18nBuildTarget,
@@ -73,7 +46,7 @@ function listBuildArtifactLocalesForTarget(
 }
 
 const EXAMPLES_RELATIVE_DIRECTORY =
-  "public/vendor/kaspa-wasm/2.0.0/examples/web";
+  buildExampleContract.examplesRelativeDirectory;
 const SOURCE_UTILS_PATH = "resources/utils.js";
 const RETURN_PATH_RUNTIME = "resources/return-path.mjs";
 const RETURN_PATH_SOURCE = "scripts/i18n/build-example-return-path.mjs";
@@ -681,7 +654,7 @@ function artifactTransform(locale: BuildArtifactLocale): MessageTransform {
 function localizedArtifactPaths(
   locale: BuildArtifactLocale,
 ): readonly string[] {
-  return buildExamplePathsForLocale(locale);
+  return buildExampleContract.artifactManifest.pathsByLocale[locale];
 }
 
 function generateLocalizedHtml(
@@ -1287,28 +1260,8 @@ async function checkLocalizedBuildArtifacts(
   }
 }
 
-function immutableCopy<T>(values: readonly T[]): readonly T[] {
-  return Object.freeze([...values]);
-}
-
-export const buildExampleArtifactManifest = Object.freeze({
-  exampleNames: immutableCopy(BUILD_EXAMPLE_NAMES),
-  locales: immutableCopy(BUILD_ARTIFACT_LOCALES),
-  pathsByLocale: Object.freeze({
-    "en-XA": immutableCopy(PSEUDO_BUILD_EXAMPLE_PATHS),
-    es: immutableCopy(SPANISH_BUILD_EXAMPLE_PATHS),
-  }),
-  localizedPaths: immutableCopy(LOCALIZED_BUILD_EXAMPLE_PATHS),
-  urlsByLocale: Object.freeze({
-    "en-XA": immutableCopy(PSEUDO_BUILD_EXAMPLE_URLS),
-    es: immutableCopy(SPANISH_BUILD_EXAMPLE_URLS),
-  }),
-  localizedUrls: immutableCopy(LOCALIZED_BUILD_EXAMPLE_URLS),
-});
-
 export function createBuildExampleArtifactWorkflow(repositoryRoot: string) {
   return Object.freeze({
-    manifest: buildExampleArtifactManifest,
     async compile(buildTarget: I18nBuildTarget) {
       return (await compileBuildArtifacts(repositoryRoot, buildTarget, true))
         .generated;

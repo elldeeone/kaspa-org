@@ -1,4 +1,4 @@
-import type { StablePathname } from "@/i18n/site";
+import type { StablePathname } from "@/i18n/manifest";
 import { localizedDestinationInventory } from "@/i18n/manifest";
 
 type InternalNavLink = {

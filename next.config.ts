@@ -1,31 +1,12 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
-import { authorizedI18nFixturePolicyMarker } from "./src/i18n/publication-policy-site-node";
+import { defaultLocale } from "./src/i18n/locale-registry";
+import { installI18nPublicationProfile } from "./src/i18n/publication-profile-node";
 import {
-  RESERVED_NOT_FOUND_PATHNAME,
-  ROUTE_MISS_HEADER,
-} from "./src/i18n/manifest";
-import { defaultLocale, isPseudoLocaleEnabled } from "./src/i18n/config";
-import {
-  assertProductionLocaleComplete,
-  listProductionLocales,
-} from "./src/i18n/site";
-
-const isProductionDeployment =
-  process.env.VERCEL_ENV === "production" ||
-  process.env.AWS_BRANCH?.trim().toLowerCase() === "main";
-
-if (isPseudoLocaleEnabled && isProductionDeployment) {
-  throw new Error(
-    "The private en-XA pseudo-locale cannot be enabled in a production deployment.",
-  );
-}
-
-for (const locale of listProductionLocales()) {
-  if (locale === defaultLocale) continue;
-  assertProductionLocaleComplete(locale);
-}
+  I18N_PUBLICATION_PROFILE_ENV,
+  serializeI18nPublicationProfile,
+} from "./src/i18n/publication-profile-contract";
 
 const legacyRedirects = [
   { source: "/.well-known/llms.txt", destination: "/llms.txt" },
@@ -69,59 +50,86 @@ const allowedDevOrigins = Array.from(
   ]),
 );
 
-const nextConfig: NextConfig = {
-  ...(authorizedI18nFixturePolicyMarker
-    ? {
-        outputFileTracingRoot: authorizedI18nFixturePolicyMarker.repositoryRoot,
-        turbopack: {
-          root: authorizedI18nFixturePolicyMarker.repositoryRoot,
-        },
-      }
-    : {}),
-  allowedDevOrigins,
-  experimental: {
-    globalNotFound: true,
-  },
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "avatars.githubusercontent.com",
-      },
-    ],
-    dangerouslyAllowSVG: true,
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-  },
-  async redirects() {
-    return legacyRedirects.map(({ source, destination }) => ({
-      source,
-      destination,
-      permanent: true,
-    }));
-  },
-  async rewrites() {
-    return {
-      beforeFiles: [],
-      afterFiles: [
-        {
-          source: "/:path*",
-          has: [
-            {
-              type: "header",
-              key: ROUTE_MISS_HEADER,
-              value: "1",
-            },
-          ],
-          destination: RESERVED_NOT_FOUND_PATHNAME,
-        },
-      ],
-      fallback: [],
-    };
-  },
-};
-
 const withNextIntl = createNextIntlPlugin({
   requestConfig: "./src/i18n/request.ts",
 });
 
-export default withNextIntl(nextConfig);
+export default async function createNextConfig(): Promise<NextConfig> {
+  const { marker, profile } = installI18nPublicationProfile();
+  const serializedProfile = serializeI18nPublicationProfile(profile);
+  const [manifest, config, siteValidation] = await Promise.all([
+    import("./src/i18n/manifest.ts"),
+    import("./src/i18n/config.ts"),
+    import("./src/i18n/site-validation.ts"),
+  ]);
+  delete process.env[I18N_PUBLICATION_PROFILE_ENV];
+
+  const isProductionDeployment =
+    process.env.VERCEL_ENV === "production" ||
+    process.env.AWS_BRANCH?.trim().toLowerCase() === "main";
+
+  if (config.isPseudoLocaleEnabled && isProductionDeployment) {
+    throw new Error(
+      "The private en-XA pseudo-locale cannot be enabled in a production deployment.",
+    );
+  }
+
+  for (const locale of siteValidation.listProductionLocales()) {
+    if (locale === defaultLocale) continue;
+    siteValidation.assertProductionLocaleComplete(locale);
+  }
+
+  const nextConfig: NextConfig = {
+    env: {
+      [I18N_PUBLICATION_PROFILE_ENV]: serializedProfile,
+    },
+    ...(marker
+      ? {
+          outputFileTracingRoot: marker.repositoryRoot,
+          turbopack: { root: marker.repositoryRoot },
+        }
+      : {}),
+    allowedDevOrigins,
+    experimental: {
+      globalNotFound: true,
+    },
+    images: {
+      remotePatterns: [
+        {
+          protocol: "https",
+          hostname: "avatars.githubusercontent.com",
+        },
+      ],
+      dangerouslyAllowSVG: true,
+      contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    },
+    async redirects() {
+      return legacyRedirects.map(({ source, destination }) => ({
+        source,
+        destination,
+        permanent: true,
+      }));
+    },
+    async rewrites() {
+      return {
+        beforeFiles: [],
+        afterFiles: [
+          {
+            source: "/:path*",
+            has: [
+              {
+                type: "header",
+                key: manifest.ROUTE_MISS_HEADER,
+                value: "1",
+              },
+            ],
+            destination: manifest.RESERVED_NOT_FOUND_PATHNAME,
+          },
+        ],
+        fallback: [],
+      };
+    },
+  };
+
+  return withNextIntl(nextConfig);
+}

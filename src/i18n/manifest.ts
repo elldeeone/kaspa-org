@@ -1,17 +1,3 @@
-import {
-  i18nBuildTarget,
-  i18nFixturePublicationPolicy,
-  isLocaleEnabledForTarget,
-  isLocaleProductionReady,
-  type I18nBuildTarget,
-  type Locale,
-} from "./config.ts";
-import {
-  getFixtureRoutePublicationOverride,
-  type I18nFixturePublicationPolicy,
-  type RoutePublication,
-} from "./publication-policy.ts";
-
 export const RESERVED_NOT_FOUND_PATHNAME =
   "/__kaspa_i18n_unpublished__/not/found";
 export const ROUTE_MISS_HEADER = "x-kaspa-i18n-route-miss";
@@ -103,68 +89,4 @@ export function getRouteIdForPathname(pathname: string): RouteId | null {
     routeIds.find((routeId) => routeManifest[routeId].pathname === pathname) ??
     null
   );
-}
-
-export type { RoutePublication } from "./publication-policy.ts";
-
-export type PublicationPolicy = {
-  getRoutePublication: (
-    routeId: RouteId,
-    locale: Locale,
-  ) => RoutePublication | null;
-};
-
-export function createPublicationPolicy(
-  buildTarget: I18nBuildTarget,
-  fixturePolicy: I18nFixturePublicationPolicy | null = null,
-): PublicationPolicy {
-  return {
-    getRoutePublication(routeId, locale) {
-      if (!isLocaleEnabledForTarget(locale, buildTarget, fixturePolicy)) {
-        return null;
-      }
-      const override = getFixtureRoutePublicationOverride(
-        fixturePolicy,
-        locale,
-        routeId,
-      );
-      if (override !== undefined) return override;
-      return isLocaleProductionReady(locale, fixturePolicy)
-        ? "public"
-        : "preview";
-    },
-  };
-}
-
-export const publicationPolicy = createPublicationPolicy(
-  i18nBuildTarget,
-  i18nFixturePublicationPolicy,
-);
-
-export function getRoutePublication(
-  routeId: RouteId,
-  locale: Locale,
-): RoutePublication | null {
-  return publicationPolicy.getRoutePublication(routeId, locale);
-}
-
-export function isRoutePublished(routeId: RouteId, locale: Locale): boolean {
-  return getRoutePublication(routeId, locale) !== null;
-}
-
-export function isRouteDiscoverable(routeId: RouteId, locale: Locale): boolean {
-  return getRoutePublication(routeId, locale) === "public";
-}
-
-export function isLocaleRouteSetComplete(locale: Locale): boolean {
-  return routeIds.every((routeId) => isRoutePublished(routeId, locale));
-}
-
-export function isPathnamePublished(
-  pathname: string,
-  locale: Locale,
-  resolvePublication: typeof isRoutePublished = isRoutePublished,
-): boolean {
-  const routeId = getRouteIdForPathname(pathname);
-  return routeId ? resolvePublication(routeId, locale) : false;
 }

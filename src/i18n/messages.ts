@@ -17,10 +17,8 @@ import {
   isLocaleEnabled,
   isPseudoLocaleEnabled,
   listSelectableLocales,
-  pseudoLocale,
-  spanishLocale,
-  type Locale,
 } from "./config.ts";
+import { pseudoLocale, spanishLocale, type Locale } from "./locale-registry.ts";
 import type { RouteId } from "./manifest.ts";
 import { pseudoLocalizeCatalog } from "./pseudo.ts";
 

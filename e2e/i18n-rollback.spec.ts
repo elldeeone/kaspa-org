@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { buildExampleArtifactManifest } from "../scripts/i18n/build-example-artifacts.mts";
+import { buildExampleContract } from "../src/i18n/build-example-contract.ts";
 import {
   buildProductionFixture,
   createEnglishOnlyProductionFixture,
@@ -111,8 +111,8 @@ test.describe("atomic locale publication profiles", () => {
       for (const pathname of [
         "/es/opengraph-image",
         "/api/i18n/home-proof/es",
-        ...buildExampleArtifactManifest.urlsByLocale.es,
-        ...buildExampleArtifactManifest.urlsByLocale["en-XA"],
+        ...buildExampleContract.artifactManifest.urlsByLocale.es,
+        ...buildExampleContract.artifactManifest.urlsByLocale["en-XA"],
       ]) {
         const response = await scenario.request.get(pathname, {
           maxRedirects: 0,

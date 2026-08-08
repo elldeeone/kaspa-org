@@ -6,3 +6,7 @@ export const siteViewport: Viewport = {
   viewportFit: "cover",
   interactiveWidget: "resizes-content",
 };
+
+export function serializeJsonLd(value: unknown): string {
+  return JSON.stringify(value).replace(/</gu, "\\u003c");
+}

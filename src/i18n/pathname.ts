@@ -3,8 +3,7 @@ import {
   getLocaleDefinition,
   resolveSupportedLocale,
   type Locale,
-} from "./config.ts";
-import type { StablePathname } from "./manifest.ts";
+} from "./locale-registry.ts";
 
 function normalizePathnameShape(pathname: string): string {
   const withLeadingSlash = pathname.startsWith("/") ? pathname : `/${pathname}`;
@@ -16,7 +15,12 @@ function normalizePathnameShape(pathname: string): string {
   return normalized;
 }
 
-function decodeSafePathname(pathname: string): string | null {
+export type SafePathname = {
+  decoded: string;
+  encoded: string;
+};
+
+export function analyzeSafePathname(pathname: string): SafePathname | null {
   let decodedPathname: string;
   try {
     decodedPathname = decodeURI(pathname);
@@ -24,35 +28,26 @@ function decodeSafePathname(pathname: string): string | null {
     return null;
   }
 
-  return /[\\\u0000-\u001f\u007f]/u.test(decodedPathname)
-    ? null
-    : decodedPathname;
+  if (/[\\\u0000-\u001f\u007f]/u.test(decodedPathname)) return null;
+  return {
+    decoded: normalizePathnameShape(decodedPathname),
+    encoded: normalizePathnameShape(pathname),
+  };
 }
 
 export function normalizePathname(pathname: string): string | null {
-  const decodedPathname = decodeSafePathname(pathname);
-  return decodedPathname === null
-    ? null
-    : normalizePathnameShape(decodedPathname);
+  return analyzeSafePathname(pathname)?.decoded ?? null;
 }
 
-export function localizePathname(
-  pathname: StablePathname,
-  locale: Locale,
-): string;
-export function localizePathname(
-  pathname: string,
-  locale: Locale,
-): string | null;
 export function localizePathname(
   pathname: string,
   locale: Locale,
 ): string | null {
-  if (decodeSafePathname(pathname) === null) return null;
-  const normalizedPathname = normalizePathnameShape(pathname);
+  const safePathname = analyzeSafePathname(pathname);
+  if (!safePathname) return null;
 
-  const localeSegmentEnd = normalizedPathname.indexOf("/", 1);
-  const encodedLocaleSegment = normalizedPathname.slice(
+  const localeSegmentEnd = safePathname.encoded.indexOf("/", 1);
+  const encodedLocaleSegment = safePathname.encoded.slice(
     1,
     localeSegmentEnd === -1 ? undefined : localeSegmentEnd,
   );
@@ -62,15 +57,15 @@ export function localizePathname(
   } catch {
     return null;
   }
+
   const hasLocalePrefix = resolveSupportedLocale(localeSegment) !== null;
   const unprefixedPathname = hasLocalePrefix
     ? localeSegmentEnd === -1
       ? "/"
-      : normalizedPathname.slice(localeSegmentEnd)
-    : normalizedPathname;
+      : safePathname.encoded.slice(localeSegmentEnd)
+    : safePathname.encoded;
 
   if (locale === defaultLocale) return unprefixedPathname;
-
   const localeCode = getLocaleDefinition(locale).code;
   return unprefixedPathname === "/"
     ? `/${localeCode}`

@@ -8,7 +8,7 @@ import {
   createLocalizedPageAdapter,
   type LocalizedPageProps,
 } from "@/i18n/page-route";
-import { isAiAvailable } from "@/i18n/site";
+import { isAiAvailable } from "@/i18n/site-capabilities";
 
 const routeId = "build";
 const pageRoute = createLocalizedPageAdapter(routeId);

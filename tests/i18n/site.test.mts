@@ -2,28 +2,32 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { analyzeAppRouteFile } from "../../scripts/i18n/app-route-policy.mts";
+import { serializeJsonLd } from "../../src/i18n/document.ts";
+import { i18nBuildTarget, resolveLocale } from "../../src/i18n/config.ts";
 import {
   defaultLocale,
-  i18nBuildTarget,
-  isLifecycleEnabledForTarget,
-  isLifecycleSelectable,
   localeRegistry,
   pseudoLocale,
-  resolveLocale,
   resolveSupportedLocale,
   spanishLocale,
   supportedLocaleCodes,
-} from "../../src/i18n/config.ts";
+} from "../../src/i18n/locale-registry.ts";
+import {
+  isLifecycleEnabledForTarget,
+  isLifecycleSelectable,
+} from "../../src/i18n/locale-registry.ts";
 import {
   RESERVED_NOT_FOUND_PATHNAME,
   ROUTE_MISS_HEADER,
-  isLocaleRouteSetComplete,
-  isPathnamePublished,
   localizedDestinationInventory,
   routeIds,
   stablePathnames,
 } from "../../src/i18n/manifest.ts";
 import { spanishMessages } from "../../src/i18n/messages.ts";
+import {
+  isLocaleRouteSetComplete,
+  isPathnamePublished,
+} from "../../src/i18n/publication.ts";
 import {
   createOpenGraphImageDescriptor,
   createOpenGraphRenderContract,
@@ -37,21 +41,25 @@ import {
   shouldBypassLocaleRouting,
 } from "../../src/i18n/proxy-policy.ts";
 import {
-  NEXT_INTL_LOCALE_HEADER,
-  assertPreviewLocaleComplete,
-  assertProductionLocaleComplete,
   createRouteMetadata,
-  isAiAvailable,
   listEnabledLocales,
-  listProductionLocales,
   listSelectableLocales,
   listDiscoverableRoutes,
   listPublishedLocales,
   listPublishedRoutes,
   resolvePublishedRoute,
-  resolveRouteRequest,
   siteUrl,
 } from "../../src/i18n/site.ts";
+import { isAiAvailable } from "../../src/i18n/site-capabilities.ts";
+import {
+  NEXT_INTL_LOCALE_HEADER,
+  resolveRouteRequest,
+} from "../../src/i18n/route-request.ts";
+import {
+  assertPreviewLocaleComplete,
+  assertProductionLocaleComplete,
+  listProductionLocales,
+} from "../../src/i18n/site-validation.ts";
 
 const completeRouteMatrix = [
   { routeId: "home", locale: "en", canonicalPathname: "/" },
@@ -102,6 +110,13 @@ const completeRouteMatrix = [
     canonicalPathname: "/es/hodl",
   },
 ] as const;
+
+test("JSON-LD serialization cannot terminate its script element", () => {
+  assert.equal(
+    serializeJsonLd({ value: "</script><script>alert(1)</script>" }),
+    '{"value":"\\u003c/script>\\u003cscript>alert(1)\\u003c/script>"}',
+  );
+});
 
 test("the active build profile publishes approved Spanish atomically", () => {
   const pseudoEnabled = i18nBuildTarget !== "production";

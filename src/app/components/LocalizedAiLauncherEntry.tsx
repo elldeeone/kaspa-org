@@ -2,7 +2,7 @@ import "server-only";
 
 import { NextIntlClientProvider } from "next-intl";
 
-import type { Locale } from "@/i18n/config";
+import type { Locale } from "@/i18n/locale-registry";
 import { getAiClientMessages } from "@/i18n/messages";
 
 import AiLauncherEntry from "./AiLauncherEntry";

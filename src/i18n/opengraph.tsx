@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
-import type { Locale } from "./config.ts";
+import type { Locale } from "./locale-registry.ts";
 import {
   createOpenGraphRenderContract,
   openGraphContentType,

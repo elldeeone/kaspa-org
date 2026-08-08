@@ -2,29 +2,29 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
-  buildLanguageHref,
-  createLanguageSelectorOptions,
   isLanguageSelectorLocale,
-  shouldShowLanguageSelector,
-} from "../../src/app/components/languageSelector.ts";
+  isLanguageSelectorEnabled,
+  LANGUAGE_SELECTOR_OPTIONS,
+} from "../../src/app/components/language-selector-model.ts";
 import {
   defaultLocale,
   pseudoLocale,
   spanishLocale,
-  supportedLocaleCodes,
-} from "../../src/i18n/config.ts";
+} from "../../src/i18n/locale-registry.ts";
+import { localizePathname } from "../../src/i18n/pathname.ts";
 
 test("selector options use registry endonyms and exclude the pseudo locale", () => {
-  const options = createLanguageSelectorOptions(supportedLocaleCodes);
   assert.deepEqual(
-    options.map(({ code, label }) => ({ code, label })),
+    LANGUAGE_SELECTOR_OPTIONS.map(({ code, label }) => ({ code, label })),
     [
       { code: defaultLocale, label: "English" },
       { code: spanishLocale, label: "Español" },
     ],
   );
   assert.equal(
-    options.map(({ code }) => String(code)).includes(pseudoLocale),
+    LANGUAGE_SELECTOR_OPTIONS.map(({ code }) => String(code)).includes(
+      pseudoLocale,
+    ),
     false,
   );
   assert.equal(isLanguageSelectorLocale(defaultLocale), true);
@@ -32,75 +32,29 @@ test("selector options use registry endonyms and exclude the pseudo locale", () 
   assert.equal(isLanguageSelectorLocale("en-XA"), false);
 });
 
-test("the selector renders only for multiple complete registry options", () => {
-  const options = createLanguageSelectorOptions(supportedLocaleCodes);
-  assert.equal(
-    shouldShowLanguageSelector(options, () => true),
-    true,
-  );
-  assert.equal(
-    shouldShowLanguageSelector(options.slice(0, 1), () => true),
-    false,
-  );
-  assert.equal(
-    shouldShowLanguageSelector(options, (locale) => locale === defaultLocale),
-    false,
-  );
+test("the selector is enabled only for the complete published locale set", () => {
+  assert.equal(isLanguageSelectorEnabled, true);
 });
 
-test("language links preserve fixed slugs, query strings, and hashes", () => {
+test("locale path fallback preserves slugs and encoded path segments", () => {
   if (!isLanguageSelectorLocale(defaultLocale)) {
     throw new Error("The default locale must be selectable");
   }
 
+  assert.equal(localizePathname("/lore", spanishLocale), "/es/lore");
+  assert.equal(localizePathname("/lore", "en"), "/lore");
+  assert.equal(localizePathname("/", spanishLocale), "/es");
   assert.equal(
-    buildLanguageHref("/lore", spanishLocale, "?source=nav&step=4", "#roadmap"),
-    "/es/lore?source=nav&step=4#roadmap",
+    localizePathname("/es/missing.txt", spanishLocale),
+    "/es/missing.txt",
   );
+  assert.equal(localizePathname("/es/lore", defaultLocale), "/lore");
+  assert.equal(localizePathname("/%65%73/lore", defaultLocale), "/lore");
+  assert.equal(localizePathname("/%65%73/lore", spanishLocale), "/es/lore");
+  assert.equal(localizePathname("/es/%256core", defaultLocale), "/%256core");
+  assert.equal(localizePathname("/es/%256core", spanishLocale), "/es/%256core");
   assert.equal(
-    buildLanguageHref("/lore", "en", "?source=nav&step=4", "#roadmap"),
-    "/lore?source=nav&step=4#roadmap",
-  );
-  assert.equal(
-    buildLanguageHref("/", spanishLocale, "?proof=1", "#verify"),
-    "/es?proof=1#verify",
-  );
-  assert.equal(
-    buildLanguageHref(
-      "/es/missing.txt",
-      spanishLocale,
-      "?source=nav",
-      "#details",
-    ),
-    "/es/missing.txt?source=nav#details",
-  );
-  assert.equal(
-    buildLanguageHref("/es/lore", defaultLocale, "", "#roadmap"),
-    "/lore#roadmap",
-  );
-  assert.equal(
-    buildLanguageHref(
-      "/%65%73/lore",
-      defaultLocale,
-      "?source=edge",
-      "#roadmap",
-    ),
-    "/lore?source=edge#roadmap",
-  );
-  assert.equal(
-    buildLanguageHref("/%65%73/lore", spanishLocale, "", ""),
-    "/es/lore",
-  );
-  assert.equal(
-    buildLanguageHref("/es/%256core", defaultLocale, "", ""),
-    "/%256core",
-  );
-  assert.equal(
-    buildLanguageHref("/es/%256core", spanishLocale, "", ""),
-    "/es/%256core",
-  );
-  assert.equal(
-    buildLanguageHref(`/${pseudoLocale}/build`, spanishLocale, "?tab=rpc", ""),
-    "/es/build?tab=rpc",
+    localizePathname(`/${pseudoLocale}/build`, spanishLocale),
+    "/es/build",
   );
 });

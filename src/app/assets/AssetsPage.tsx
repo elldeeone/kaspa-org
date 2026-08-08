@@ -1,4 +1,4 @@
-import type { Locale } from "@/i18n/config";
+import type { Locale } from "@/i18n/locale-registry";
 
 import MarketingPageShell from "../components/MarketingPageShell";
 import LogoLibrary from "./LogoLibrary";

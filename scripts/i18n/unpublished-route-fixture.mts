@@ -14,15 +14,16 @@ import { createRequire } from "node:module";
 import { isAbsolute, join, relative, sep } from "node:path";
 
 import {
-  createI18nFixturePolicyMarker,
-  I18N_FIXTURE_NONCE_ENV,
-  I18N_FIXTURE_POLICY_ENV,
   I18N_FIXTURE_POLICY_MARKER,
   I18N_FIXTURE_REQUESTED_NONCE_ENV,
   I18N_FIXTURE_REQUESTED_POLICY_ENV,
-  parseI18nFixturePolicyMarker,
   type I18nFixturePolicyMarker,
+} from "../../src/i18n/publication-fixture.ts";
+import {
+  createI18nFixturePolicyMarker,
+  parseI18nFixturePolicyMarker,
 } from "../../src/i18n/publication-policy-validation.ts";
+import { I18N_PUBLICATION_PROFILE_ENV } from "../../src/i18n/publication-profile-contract.ts";
 
 const require = createRequire(import.meta.url);
 const nextCliPath = require.resolve("next/dist/bin/next");
@@ -74,19 +75,15 @@ async function resolveFixtureEnvironment(
     resolvedEnvironment[I18N_FIXTURE_REQUESTED_POLICY_ENV];
   const suppliedRequestedNonce =
     resolvedEnvironment[I18N_FIXTURE_REQUESTED_NONCE_ENV];
-  const suppliedAuthorizedPolicy = resolvedEnvironment[I18N_FIXTURE_POLICY_ENV];
-  const suppliedAuthorizedNonce = resolvedEnvironment[I18N_FIXTURE_NONCE_ENV];
+  const suppliedPublicationProfile =
+    resolvedEnvironment[I18N_PUBLICATION_PROFILE_ENV];
   delete resolvedEnvironment[I18N_FIXTURE_REQUESTED_POLICY_ENV];
   delete resolvedEnvironment[I18N_FIXTURE_REQUESTED_NONCE_ENV];
-  delete resolvedEnvironment[I18N_FIXTURE_POLICY_ENV];
-  delete resolvedEnvironment[I18N_FIXTURE_NONCE_ENV];
+  delete resolvedEnvironment[I18N_PUBLICATION_PROFILE_ENV];
 
-  if (
-    suppliedAuthorizedPolicy !== undefined ||
-    suppliedAuthorizedNonce !== undefined
-  ) {
+  if (suppliedPublicationProfile !== undefined) {
     throw new Error(
-      "Fixture commands cannot accept a pre-authorized publication environment",
+      "Fixture commands cannot accept a pre-resolved publication profile",
     );
   }
 

@@ -2,26 +2,29 @@ import { readFile, readdir } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-import "../../src/i18n/publication-policy-site-node.ts";
-
 import {
   pseudoLocale,
   resolveSupportedLocale,
   supportedLocaleCodes,
   type Locale,
-} from "../../src/i18n/config.ts";
-import {
-  getRouteIdForPathname,
-  routeIds,
-  routeManifest,
-  type RouteId,
-} from "../../src/i18n/manifest.ts";
-import { isAiAvailable, listPublishedRoutes } from "../../src/i18n/site.ts";
+} from "../../src/i18n/locale-registry.ts";
+import type { RouteId } from "../../src/i18n/manifest.ts";
+import { installI18nPublicationProfile } from "../../src/i18n/publication-profile-node.ts";
 import {
   assertClientMessagePolicyCoverage,
   auditClientPayloadArtifacts,
   type ClientMessagePolicy,
 } from "./client-payload-policy.mts";
+
+installI18nPublicationProfile();
+const [manifest, site, siteCapabilities] = await Promise.all([
+  import("../../src/i18n/manifest.ts"),
+  import("../../src/i18n/site.ts"),
+  import("../../src/i18n/site-capabilities.ts"),
+]);
+const { getRouteIdForPathname, routeIds, routeManifest } = manifest;
+const { listPublishedRoutes } = site;
+const { isAiAvailable } = siteCapabilities;
 
 const repositoryRoot = process.cwd();
 const nextDirectory = join(repositoryRoot, ".next");

@@ -20,7 +20,7 @@ import {
   getHomeProofClientMessages,
   getSharedClientMessages,
 } from "../../src/i18n/messages.ts";
-import { spanishLocale } from "../../src/i18n/config.ts";
+import { spanishLocale } from "../../src/i18n/locale-registry.ts";
 import { routeIds } from "../../src/i18n/manifest.ts";
 
 const emptyPolicy = {
