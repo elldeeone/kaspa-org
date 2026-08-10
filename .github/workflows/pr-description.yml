@@ -21,6 +21,7 @@ jobs:
     steps:
       - name: Check PR description
         env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           REPO: ${{ github.repository }}
@@ -35,7 +36,11 @@ jobs:
             exit 1
           fi
 
-          if [ "$trimmed_body" = "##Summary##WalletsubmissionsIfthispullrequestaddsorupdatesawallet,filloutthewalletsubmissiontemplateinthePRdescriptionbeforerequestingreview:https://github.com/kaspamedia/kaspa-org/blob/main/.github/PULL_REQUEST_TEMPLATE/wallet-submission.mdWalletPRswithblankdescriptionsormissingwalletsubmissiondetailswillnotpassreview." ]; then
+          default_template="$(gh api "repos/$REPO/contents/.github/pull_request_template.md?ref=$BASE_SHA" --jq '.content' | base64 --decode)"
+          normalized_default_template="$(printf '%s' "$default_template" | tr -d '[:space:]')"
+          legacy_default_template='##Summary##WalletsubmissionsIfthispullrequestaddsorupdatesawallet,filloutthewalletsubmissiontemplateinthePRdescriptionbeforerequestingreview:https://github.com/kaspamedia/kaspa-org/blob/main/.github/PULL_REQUEST_TEMPLATE/wallet-submission.mdWalletPRswithblankdescriptionsormissingwalletsubmissiondetailswillnotpassreview.'
+
+          if [ "$trimmed_body" = "$normalized_default_template" ] || [ "$trimmed_body" = "$legacy_default_template" ]; then
             echo "::error::Pull request description still contains the untouched default template. Add a real summary before requesting review."
             exit 1
           fi
@@ -54,6 +59,11 @@ jobs:
 
           if [ "$touches_wallet_files" -eq 0 ]; then
             echo "PR description is present. No wallet data or wallet icon changes detected."
+            exit 0
+          fi
+
+          if grep -Eq '^- \[[xX]\] This PR changes wallet infrastructure only; it does not add or update any wallet record or icon\.[[:space:]]*$' <<<"$body"; then
+            echo "Wallet infrastructure declaration confirmed. No wallet listing submission detected."
             exit 0
           fi
 
@@ -84,7 +94,7 @@ jobs:
             exit 1
           fi
 
-          wallet_template="$(gh api "repos/$REPO/contents/.github/PULL_REQUEST_TEMPLATE/wallet-submission.md" --jq '.content' | base64 --decode)"
+          wallet_template="$(gh api "repos/$REPO/contents/.github/PULL_REQUEST_TEMPLATE/wallet-submission.md?ref=$BASE_SHA" --jq '.content' | base64 --decode)"
           normalized_wallet_template="$(printf '%s' "$wallet_template" | tr -d '[:space:]')"
 
           if [ "$trimmed_body" = "$normalized_wallet_template" ]; then
