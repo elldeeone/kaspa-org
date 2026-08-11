@@ -1,0 +1,53 @@
+name: Language request
+description: Suggest a translation correction, volunteer, or request a site language.
+title: "[Language]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for published-language corrections, translator or reviewer offers, and new-language requests. Please provide plain-language information; maintainers will handle repository placement and publication.
+  - type: dropdown
+    id: request-type
+    attributes:
+      label: Request type
+      options:
+        - Correct a published translation
+        - Volunteer to translate or review
+        - Request a new site language
+    validations:
+      required: true
+  - type: input
+    id: language
+    attributes:
+      label: Language and endonym
+      description: Give the English language name and the name used by its speakers.
+      placeholder: Spanish — Español
+    validations:
+      required: true
+  - type: input
+    id: locale
+    attributes:
+      label: Locale code
+      description: Provide the locale code if known.
+      placeholder: es or es-MX
+  - type: textarea
+    id: request
+    attributes:
+      label: Plain-language request
+      description: For a correction, include the page, existing text, and proposed wording.
+    validations:
+      required: true
+  - type: textarea
+    id: review-availability
+    attributes:
+      label: Fluency and reviewer availability
+      description: Describe your fluency and whether fluent translators or reviewers are available.
+    validations:
+      required: true
+  - type: checkboxes
+    id: publication-expectations
+    attributes:
+      label: Publication expectations
+      options:
+        - label: I understand that maintainers own repository placement and publish approved languages only as complete, reviewed, site-wide releases.
+          required: true

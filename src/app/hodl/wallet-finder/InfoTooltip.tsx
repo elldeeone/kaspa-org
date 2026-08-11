@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { useTranslations } from "next-intl";
 
 const TOOLTIP_WIDTH = 224;
 
@@ -15,6 +16,7 @@ export default function InfoTooltip({
   text?: string;
   ariaLabel?: string;
 }) {
+  const t = useTranslations("hodl");
   const [visible, setVisible] = useState(false);
   const [tipRect, setTipRect] = useState<DOMRect | null>(null);
   const ref = useRef<HTMLSpanElement>(null);
@@ -65,7 +67,7 @@ export default function InfoTooltip({
         role="button"
         tabIndex={0}
         aria-expanded={visible}
-        aria-label={ariaLabel ?? "More information"}
+        aria-label={ariaLabel ?? t("walletFinder.common.moreInformation")}
         className="inline-flex shrink-0 cursor-pointer items-center"
         onPointerEnter={(event) => {
           if (event.pointerType === "mouse") open();

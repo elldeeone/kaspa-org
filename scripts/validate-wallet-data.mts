@@ -14,6 +14,8 @@ import {
   WALLET_OS_IDS,
   WALLET_USER_TYPES,
 } from "../src/app/hodl/wallet-finder/taxonomy.ts";
+import { supportedLocaleCodes } from "../src/i18n/locale-registry.ts";
+import { getLocalizedWallets } from "../src/i18n/wallets.ts";
 
 const allowedOs = new Set<string>(WALLET_OS_IDS);
 const allowedUsers = new Set<string>(WALLET_USER_TYPES);
@@ -45,7 +47,7 @@ function fail(path: string, message: string) {
   errors.push(`${path}: ${message}`);
 }
 
-function isNonEmptyString(value: unknown) {
+function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
 
@@ -55,6 +57,23 @@ function hasValidUrl(value: string) {
 
 function hasUrl(value: string) {
   return /https?:\/\/|www\./i.test(value);
+}
+
+function validateWalletSummary(path: string, summary: unknown) {
+  if (!isNonEmptyString(summary)) {
+    fail(path, "must be a non-empty string");
+    return;
+  }
+
+  if (summary.length > maxSummaryLength) {
+    fail(path, `must be ${maxSummaryLength} characters or fewer`);
+  }
+  if (/[\r\n]/.test(summary)) {
+    fail(path, "must be a single line");
+  }
+  if (hasUrl(summary)) {
+    fail(path, "must not contain URLs");
+  }
 }
 
 function getPublicFilePath(publicPath: string) {
@@ -271,18 +290,7 @@ kaspaWallets.forEach((wallet, walletIndex) => {
   }
 
   if (isNonEmptyString(wallet.summary)) {
-    if (wallet.summary.length > maxSummaryLength) {
-      fail(
-        `${walletPath}.summary`,
-        `must be ${maxSummaryLength} characters or fewer`,
-      );
-    }
-    if (/[\r\n]/.test(wallet.summary)) {
-      fail(`${walletPath}.summary`, "must be a single line");
-    }
-    if (hasUrl(wallet.summary)) {
-      fail(`${walletPath}.summary`, "must not contain URLs");
-    }
+    validateWalletSummary(`${walletPath}.summary`, wallet.summary);
   }
 
   if (!allowedUsers.has(wallet.user)) {
@@ -460,6 +468,39 @@ kaspaWallets.forEach((wallet, walletIndex) => {
     }
   });
 });
+
+for (const locale of supportedLocaleCodes) {
+  try {
+    const localizedWallets = getLocalizedWallets(locale);
+    const localizedIds = localizedWallets.map((wallet) => wallet.id).sort();
+    if (
+      JSON.stringify(localizedIds) !== JSON.stringify([...walletIds].sort())
+    ) {
+      fail(
+        `wallet summaries:${locale}`,
+        "must exactly match the canonical wallet IDs",
+      );
+    }
+    for (const wallet of localizedWallets) {
+      if (!isNonEmptyString(wallet.summary)) {
+        fail(
+          `wallet summaries:${locale}.${wallet.id}`,
+          "must be a non-empty string",
+        );
+      } else if (/\r|\n/.test(wallet.summary)) {
+        fail(
+          `wallet summaries:${locale}.${wallet.id}`,
+          "must be a single line",
+        );
+      }
+    }
+  } catch (error) {
+    fail(
+      `wallet summaries:${locale}`,
+      error instanceof Error ? error.message : String(error),
+    );
+  }
+}
 
 if (errors.length > 0) {
   console.error("Wallet data validation failed:");

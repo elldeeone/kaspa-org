@@ -1,9 +1,5 @@
-export { aiPrompts } from "./resources-data/aiPrompts";
-export { networkAccessGroups } from "./resources-data/access";
-export { developmentCards } from "./resources-data/development";
-export { choosePathCards } from "./resources-data/pathCards";
-export {
-  communityTools,
-  emergingTools,
-  toolingCards,
-} from "./resources-data/tooling";
+export { useAiPrompts } from "./resources-data/aiPrompts";
+export { useNetworkAccessGroups } from "./resources-data/access";
+export { useDevelopmentCards } from "./resources-data/development";
+export { useChoosePathCards } from "./resources-data/pathCards";
+export { useToolingCards } from "./resources-data/tooling";

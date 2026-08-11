@@ -77,6 +77,7 @@ jobs:
             "### Acceptance evidence" \
             "### Supported platforms" \
             "### User type" \
+            "### Wallet summary" \
             "### Criteria ratings and evidence" \
             "### Features" \
             "### Acquisition actions" \
@@ -90,7 +91,7 @@ jobs:
 
           if [ "$missing" -ne 0 ]; then
             echo "Fill out the wallet submission template in the PR description before requesting review."
-            echo "Template: https://github.com/kaspamedia/kaspa-org/blob/main/.github/PULL_REQUEST_TEMPLATE/wallet-submission.md"
+            echo "Template: https://github.com/$REPO/blob/HEAD/.github/PULL_REQUEST_TEMPLATE/wallet-submission.md"
             exit 1
           fi
 

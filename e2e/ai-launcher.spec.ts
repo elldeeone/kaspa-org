@@ -16,6 +16,9 @@ async function sendLauncherQuestion(page: Page, question: string) {
   const sendButton = page.getByRole("button", { name: /send message/i });
 
   await expect(launcherInput).toBeVisible();
+  await expect(launcherInput.locator("xpath=ancestor::*[@inert]")).toHaveCount(
+    0,
+  );
   await launcherInput.fill(question);
   await expect(launcherInput).toHaveValue(question);
   await expect(sendButton).toBeEnabled();

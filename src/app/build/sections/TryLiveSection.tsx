@@ -1,7 +1,11 @@
+import { useTranslations } from "next-intl";
+
+import { buildExampleContract } from "@/i18n/build-example-contract";
+
 import ExternalLink from "../../components/ExternalLink";
 import SectionHeading from "../../components/SectionHeading";
 import type { BrowserExample } from "../content";
-import { browserExamples } from "../content";
+import { useBrowserExamples, useBuildTerms } from "../content";
 import { ArrowUpRightIcon } from "../icons";
 import { MetaPill } from "../ui";
 
@@ -12,6 +16,9 @@ export default function TryLiveSection({
   activeExampleId: BrowserExample["id"];
   onSelectExample: (id: BrowserExample["id"]) => void;
 }) {
+  const t = useTranslations("build.tryLive");
+  const terms = useBuildTerms();
+  const browserExamples = useBrowserExamples();
   const activeExample =
     browserExamples.find((example) => example.id === activeExampleId) ??
     browserExamples[0];
@@ -24,9 +31,14 @@ export default function TryLiveSection({
     >
       <div className="mx-auto max-w-6xl">
         <SectionHeading
-          label="Try live"
-          title="Run the Rusty Kaspa browser examples"
-          description="The examples below are served from the Rusty Kaspa v2.0.0 browser SDK release, so you can see the SDK behave without leaving the page."
+          label={t("heading.label")}
+          title={t("heading.title", {
+            rustyKaspa: terms.rustyKaspa,
+          })}
+          description={t("heading.description", {
+            rustyKaspaVersion: buildExampleContract.sdkLabel,
+            sdk: terms.sdk,
+          })}
           className="max-w-2xl lg:max-w-4xl"
         />
 
@@ -39,6 +51,7 @@ export default function TryLiveSection({
                 <button
                   key={example.id}
                   onClick={() => onSelectExample(example.id)}
+                  aria-pressed={isActive}
                   className={`rounded-[24px] border p-5 text-left transition-colors ${
                     isActive
                       ? ""
@@ -54,7 +67,7 @@ export default function TryLiveSection({
                   <div className="flex items-center justify-between gap-3">
                     <MetaPill accent={isActive}>{example.runtime}</MetaPill>
                     <span className="text-muted text-[12px] font-medium tracking-[0.08em] uppercase">
-                      upstream
+                      {t("upstream")}
                     </span>
                   </div>
                   <h3 className="mt-4 text-[22px] leading-[1.04] font-medium tracking-[-0.03em]">
@@ -90,7 +103,7 @@ export default function TryLiveSection({
                       color: "var(--btn-primary-text)",
                     }}
                   >
-                    Open standalone
+                    {t("actions.openStandalone")}
                     <span className="inline-flex transition-transform duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
                       <ArrowUpRightIcon size={11} />
                     </span>
@@ -103,7 +116,7 @@ export default function TryLiveSection({
                       color: "var(--btn-ghost-text)",
                     }}
                   >
-                    View source
+                    {t("actions.viewSource")}
                     <span className="inline-flex transition-transform duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
                       <ArrowUpRightIcon size={10} />
                     </span>
@@ -113,16 +126,18 @@ export default function TryLiveSection({
 
               <div className="text-muted mt-4 flex flex-wrap items-center gap-3 text-[12px] leading-[1.6] md:mt-5 md:text-[13px]">
                 <span>
-                  Runs against the{" "}
-                  <ExternalLink
-                    href="https://kaspa.aspectron.org/rpc/pnn.html"
-                    className="hover:text-secondary underline underline-offset-2"
-                  >
-                    Public Node Network
-                  </ExternalLink>
-                  , a decentralized pool of community-operated nodes fronted by
-                  the Kaspa Resolver. May take a few seconds to initialize, and
-                  is not recommended for large-scale production use.
+                  {t.rich("networkNotice", {
+                    kaspaResolver: terms.kaspaResolver,
+                    publicNodeNetwork: terms.publicNodeNetwork,
+                    network: (chunks) => (
+                      <ExternalLink
+                        href="https://kaspa.aspectron.org/rpc/pnn.html"
+                        className="hover:text-secondary underline underline-offset-2"
+                      >
+                        {chunks}
+                      </ExternalLink>
+                    ),
+                  })}
                 </span>
               </div>
 
@@ -136,6 +151,7 @@ export default function TryLiveSection({
                         <button
                           key={example.id}
                           onClick={() => onSelectExample(example.id)}
+                          aria-pressed={isActive}
                           className={`shrink-0 px-3.5 pt-2 pb-2 text-[11px] font-medium tracking-[0.02em] transition-colors ${
                             index === 0 ? "border-r" : "border-r border-l"
                           } ${

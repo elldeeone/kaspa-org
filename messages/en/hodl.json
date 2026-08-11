@@ -1,0 +1,294 @@
+{
+  "metadata": {
+    "title": "Buy KAS, Set Up a Wallet, and Self-Custody | Kaspa",
+    "description": "Get a wallet, buy KAS, and transfer to self-custody."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Real-time Decentralization"
+  },
+  "navigation": {
+    "current": "HODL",
+    "sections": {
+      "wallet": {
+        "label": "1. Get a wallet",
+        "compactLabel": "Wallet",
+        "description": "Set up a wallet to hold your KAS."
+      },
+      "buy": {
+        "label": "2. Buy KAS",
+        "compactLabel": "Buy",
+        "description": "Find KAS on major exchanges."
+      },
+      "transfer": {
+        "label": "3. Move to wallet",
+        "compactLabel": "Transfer",
+        "description": "Send KAS from the exchange to your wallet."
+      },
+      "help": {
+        "label": "Help",
+        "compactLabel": "Help",
+        "description": "Community help and explorer tools."
+      }
+    }
+  },
+  "start": {
+    "heading": "<flicker><source>H</source><replacement>K</replacement></flicker>ODL Kaspa",
+    "tagline": "Buy KAS and move it into a wallet you control."
+  },
+  "wallet": {
+    "heading": "Get a wallet",
+    "description": "Choose a wallet that fits how you plan to hold and use KAS.",
+    "safety": {
+      "label": "Important:",
+      "body": "Back up your recovery phrase or wallet instructions before moving meaningful funds. Send a small test transaction first, then move the rest only after it arrives."
+    }
+  },
+  "buy": {
+    "heading": "Buy KAS",
+    "description": "KAS is listed on many exchanges. Acquire it on a platform supported in your region, then transfer it to your private wallet.",
+    "moreExchanges": "And {count, number}+ more"
+  },
+  "transfer": {
+    "heading": "Take custody of your KAS",
+    "description": "Secure your assets by transferring them from the exchange to your private wallet.",
+    "receive": "Receive",
+    "screenReaderDiagram": "KAS moving from an exchange account to a private wallet",
+    "stepLabel": "Step {step}",
+    "steps": {
+      "receiveAddress": {
+        "title": "Get your receive address",
+        "description": "Open your Kaspium app, tap 'Receive', and copy your unique address."
+      },
+      "testTransaction": {
+        "title": "Send a test transaction",
+        "description": "Withdraw a tiny fraction of KAS from the exchange to verify the route is correct."
+      },
+      "balance": {
+        "title": "Transfer the balance",
+        "description": "Once the test transaction arrives safely in your wallet, withdraw the remaining balance."
+      }
+    },
+    "waitTimes": {
+      "label": "Exchange wait times:",
+      "body": "Native Kaspa transfers are practically instant, but exchanges apply their own internal delays. It is completely normal to wait 30–60 minutes for an exchange to release your funds to the network."
+    },
+    "security": {
+      "label": "Security Check:",
+      "body": "Always verify the first and last few characters of your address before confirming."
+    }
+  },
+  "help": {
+    "eyebrow": "Help",
+    "heading": "Keep moving",
+    "descriptionWithAi": "Ask Kaspa AI for instant answers on wallets, buying, and safety. For community help join Discord, or check a transaction on the explorer.",
+    "descriptionWithoutAi": "For community help join Discord, or check a transaction on the explorer.",
+    "openAi": "Open AI",
+    "community": "Community",
+    "discord": "Discord",
+    "trackTransaction": "Track a transaction",
+    "explorer": "Explorer",
+    "prompts": {
+      "backupWallet": "How do I back up my wallet?",
+      "buyKas": "Where can I buy KAS?",
+      "firstPurchase": "How do I buy KAS for the first time?",
+      "leaveOnExchange": "Should I leave my KAS on the exchange?",
+      "moveFromExchange": "How do I send KAS from an exchange to my wallet?",
+      "fees": "What fees should I expect when buying or moving KAS?",
+      "recoveryPhrase": "What is a recovery phrase?",
+      "walletVsExchange": "What's the difference between a wallet and an exchange?",
+      "receiveKas": "How do I receive KAS from someone else?",
+      "multipleWallets": "Can I have more than one Kaspa wallet?",
+      "maxSupply": "What is Kaspa's max supply?"
+    }
+  },
+  "media": {
+    "kaspiumScreenshotAlt": "Kaspium wallet app screenshot"
+  },
+  "walletFinder": {
+    "common": {
+      "optional": "Optional",
+      "notAvailable": "Not available",
+      "notAvailableSentence": "Not available.",
+      "moreInformation": "More information",
+      "pros": "Pros",
+      "cons": "Cons",
+      "newUser": "New",
+      "experiencedUser": "Experienced"
+    },
+    "operatingSystems": {
+      "android": "Android",
+      "ios": "iOS",
+      "windows": "Windows",
+      "mac": "macOS",
+      "linux": "Linux",
+      "hardware": "Hardware"
+    },
+    "guidance": {
+      "mobile": {
+        "title": "Mobile wallets",
+        "shortTitle": "Mobile",
+        "pros": {
+          "portable": "Portable and convenient; ideal when making transactions face-to-face",
+          "qr": "Designed to use QR codes to make quick and seamless transactions"
+        },
+        "cons": {
+          "marketplaces": "App marketplaces can delist/remove wallets, making future updates harder to receive",
+          "deviceLoss": "Damage or loss of the device can potentially lead to loss of funds"
+        }
+      },
+      "desktop": {
+        "title": "Desktop wallets",
+        "shortTitle": "Desktop",
+        "pros": {
+          "control": "Desktop environments can give users complete control over funds",
+          "advanced": "Some desktop wallets offer hardware wallet support or full-node operation"
+        },
+        "cons": {
+          "qr": "Less convenient for QR-code payments when making transactions in person",
+          "malware": "Compromised computers may expose users to malware, spyware, or viruses"
+        }
+      },
+      "hardware": {
+        "title": "Hardware wallets",
+        "shortTitle": "Hardware",
+        "pros": {
+          "secure": "One of the most secure methods to store funds",
+          "longTerm": "Ideal for storing large amounts of KAS long-term"
+        },
+        "cons": {
+          "mobile": "Less convenient while mobile and not designed for quick transactions",
+          "deviceLoss": "Loss of device without proper backup can make funds unrecoverable"
+        }
+      }
+    },
+    "wizard": {
+      "progress": "Step {step, number} of {total, number}",
+      "skip": "Skip →",
+      "skipAll": "Skip to all wallets →",
+      "prosAndCons": "Pros and cons",
+      "back": "Back",
+      "next": "Next",
+      "showWallets": "Show wallets",
+      "showMatchingWallets": "Show matching wallets",
+      "steps": {
+        "os": {
+          "title": "What is your operating system?",
+          "subtitle": "This filters the list to wallets that run on your OS."
+        },
+        "experience": {
+          "title": "How much do you know about Kaspa?",
+          "subtitle": "Helps us show wallets suited to your experience level."
+        },
+        "criteria": {
+          "title": "Which criteria are important to you?",
+          "subtitle": "Optional"
+        },
+        "features": {
+          "title": "What features are you looking for?",
+          "subtitle": "Optional"
+        }
+      },
+      "experience": {
+        "newDescription": "Show wallets ideal for new users.",
+        "experiencedDescription": "Show all of the wallets."
+      }
+    },
+    "filters": {
+      "heading": "Filter wallets",
+      "clearAll": "Clear all",
+      "operatingSystem": "Operating system",
+      "userType": "User type",
+      "criteria": "Criteria",
+      "features": "Features",
+      "showNewUsers": "Show wallets ideal for new users.",
+      "showExperiencedUsers": "Show all of the wallets.",
+      "show": "Filters",
+      "hide": "Hide filters",
+      "remove": "Remove filter {filter}"
+    },
+    "criteria": {
+      "control": {
+        "label": "Control",
+        "description": "Some wallets give you full control over your KAS. This means no third party can freeze or take away your funds. You are still responsible, however, for securing and backing up your wallet."
+      },
+      "validation": {
+        "label": "Validation",
+        "description": "Some wallets let you control which Kaspa node processes your transactions, either by running their own, or by letting you point them at any node you trust."
+      },
+      "transparency": {
+        "label": "Transparency",
+        "description": "Some wallets are open-source and can be built deterministically, a process of compiling software which ensures the resulting code can be reproduced to help ensure it hasn't been tampered with."
+      },
+      "fees": {
+        "label": "Fees",
+        "description": "Some wallets give you full control over setting the fee paid to the Kaspa network before making a transaction, to ensure that your transactions are confirmed in a timely manner without paying more than you have to."
+      }
+    },
+    "features": {
+      "two_fa": {
+        "label": "2FA",
+        "description": "Two-factor authentication (2FA) adds a second layer of security to your wallet. Beyond your password, a verification code from an app or text message is required to access your funds. Note that 2FA typically relies on a third-party service to provide the verification."
+      },
+      "hardware_wallet": {
+        "label": "Hardware wallet support",
+        "description": "Some software wallets can pair with a hardware wallet device (e.g. Ledger or Tangem), letting you keep your private keys isolated on the device while still using a familiar software interface."
+      },
+      "multisig": {
+        "label": "Multisig",
+        "description": "Some wallets support multi-signature transactions, which require more than one key to authorize a transfer. This can be used to divide responsibility across multiple parties or add an extra layer of protection for high-value holdings."
+      }
+    },
+    "ratings": {
+      "good": "Good",
+      "acceptable": "Acceptable",
+      "caution": "Caution",
+      "not_applicable": "Not applicable",
+      "notApplicableCompact": "N/A",
+      "aria": "{criterion}: {rating}",
+      "tooltipHeading": "{criterion}: {rating}",
+      "explanations": {
+        "control": {
+          "good": "Self-custodial. You hold your private keys, so no third party can freeze or seize your funds.",
+          "caution": "Custodial. A third party holds your keys and can freeze or seize your funds."
+        },
+        "validation": {
+          "good": "Runs its own full Kaspa node by default, so it validates transactions independently.",
+          "acceptable": "Lets you point it at any Kaspa node you trust, but cannot run as a node itself.",
+          "caution": "Connects only to fixed centralised infrastructure, so you have to trust the wallet's chosen node.",
+          "not_applicable": "Hardware device only. It does not handle transactions itself."
+        },
+        "transparency": {
+          "good": "Open source with reproducible builds, so the published binary can be verified against the source code.",
+          "acceptable": "Open source, but builds are not reproducible, so you have to trust that the published binary matches the source.",
+          "caution": "Closed source. The code cannot be independently audited."
+        },
+        "fees": {
+          "good": "Lets you set an arbitrary custom fee on each transaction.",
+          "acceptable": "Offers preset fee tiers, but does not let you set a fully custom fee.",
+          "caution": "Fees are forced or hidden, with no user control."
+        }
+      }
+    },
+    "results": {
+      "summary": "<strong>{matches, number}</strong> of {total, plural, one {# wallet} other {# wallets}}",
+      "compactSummary": "<strong>{matches, number}</strong> / {total, plural, one {# wallet} other {# wallets}}",
+      "helpChoose": "Help me choose",
+      "walletColumn": "Wallet",
+      "noMatches": "No matching wallets",
+      "removeFilters": "Try removing some filters.",
+      "noLinks": "No links available for this filter.",
+      "aboutCriterion": "About {criterion}"
+    },
+    "actions": {
+      "app_store": "App Store",
+      "google_play": "Google Play",
+      "download": "Download",
+      "open": "Open wallet",
+      "view_source": "View source"
+    },
+    "submission": {
+      "question": "Missing a wallet?",
+      "action": "Learn how to submit it on GitHub"
+    }
+  }
+}

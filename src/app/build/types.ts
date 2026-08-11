@@ -1,3 +1,5 @@
+import type { BuildExampleId } from "@/i18n/build-example-contract";
+
 export type SectionId =
   | "start"
   | "try-live"
@@ -19,12 +21,12 @@ export type StartRoute = {
 };
 
 export type BrowserExample = {
-  id: string;
+  id: BuildExampleId;
   title: string;
   shortLabel: string;
   mobileTabLabel: string;
   desc: string;
-  runtime: "RPC" | "Core";
+  runtime: string;
   path: string;
   source: string;
 };
@@ -60,6 +62,14 @@ export type LinkGroup = {
 };
 
 export type DevelopmentCard = {
+  id:
+    | "channel"
+    | "research"
+    | "toccata"
+    | "silverscript"
+    | "vprogs"
+    | "python"
+    | "kips";
   label: string;
   title: string;
   desc: string;

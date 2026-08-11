@@ -1,15 +1,23 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import type { RefObject } from "react";
 
 import { ACCENT } from "../content";
 import { ShieldKeyIcon } from "../icons";
 import { JourneyStepHeader } from "../ui";
 import WalletFinder from "../wallet-finder/WalletFinder";
+import type { KaspaWallet } from "../wallet-finder/types";
 
 export default function WalletSection({
   headingRef,
+  wallets,
 }: {
   headingRef?: RefObject<HTMLHeadingElement | null>;
+  wallets: KaspaWallet[];
 }) {
+  const t = useTranslations("hodl");
+
   return (
     <section
       id="wallet"
@@ -19,22 +27,22 @@ export default function WalletSection({
       <div className="mx-auto max-w-7xl lg:pl-[96px]">
         <JourneyStepHeader
           step={1}
-          title="Get a wallet"
-          description="Choose a wallet that fits how you plan to hold and use KAS."
+          title={t("wallet.heading")}
+          description={t("wallet.description")}
           headingRef={headingRef}
         />
 
-        <WalletFinder />
+        <WalletFinder wallets={wallets} />
 
         <div className="mt-6 flex items-start gap-3 rounded-[24px] bg-black/[0.03] px-5 py-4 dark:bg-white/[0.03]">
           <div className="mt-0.5 shrink-0" style={{ color: ACCENT }}>
             <ShieldKeyIcon />
           </div>
           <p className="text-secondary text-[14px] leading-[1.7]">
-            <strong className="text-primary font-medium">Important:</strong>{" "}
-            Back up your recovery phrase or wallet instructions before moving
-            meaningful funds. Send a small test transaction first, then move the
-            rest only after it arrives.
+            <strong className="text-primary font-medium">
+              {t("wallet.safety.label")}
+            </strong>{" "}
+            {t("wallet.safety.body")}
           </p>
         </div>
       </div>

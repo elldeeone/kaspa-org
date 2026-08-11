@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "title": "LORE | Kaspa",
+    "description": "Kaspa is a fair-launched proof-of-work blockDAG focused on real-time decentralization, with no premine, no insider allocation, and 10 BPS mainnet performance."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Real-time Decentralization"
+  },
+  "article": {
+    "heading": "Kaspa is a live proof-of-work blockDAG running at 10 blocks per second.",
+    "shift": {
+      "heading": "The shift",
+      "body": "It takes a different route from older proof-of-work chains. Parallel blocks are not discarded. They are ordered. Many of the limits associated with proof of work came from older chain architecture, not from proof of work itself. <paper>PHANTOM / GHOSTDAG paper</paper>"
+    },
+    "history": {
+      "heading": "Brief history",
+      "research": "Kaspa grew out of blockDAG research at the Hebrew University of Jerusalem and later Harvard. The research line dates back to the <ghost>GHOST protocol section of the Ethereum white paper</ghost>, surfaced early through the Bitcoin research circuit, and continued through SPECTRE and PHANTOM into the protocols running Kaspa today. <scaling>Scaling Bitcoin 2015</scaling> · <coindesk>CoinDesk, 2017</coindesk>",
+      "launch": "Mainnet launched in November 2021 as a fair-launched proof-of-work network. No premine, insider allocation, or pre-sales. Every coin in circulation has been mined in the open from genesis onward. That fair launch gave Kaspa a broad and loyal community. That remains one of its strongest achievements and one of its core strengths. <launchPlan>Launch plan</launchPlan> · <genesisProof>Genesis proof</genesisProof>"
+    },
+    "northStar": {
+      "heading": "North star",
+      "intro": "Real-time decentralization is Kaspa's north star.",
+      "urgency": "Real-time is a non-compromise. Impatience is Kaspa's primitive instinct - a tantrum against wait times, rejecting limits the adults just accept. And we demand this not only for speed but for the hardcore Satoshi properties as well - censorship resistance, permissionless settlement, competitive mining - all achieved in real time, not eventually. This is not achievable in real time without proof of work. <uniqueness>PoW uniqueness</uniqueness>",
+      "consensus": "Kaspa achieving RTD means the protocol samples the honest majority of the mining network in every consensus round. This allows transactions that confirm safely after an hour in Bitcoin to confirm in seconds on Kaspa; or it guarantees that Kaspa achieves censorship resistance within seconds - what takes an hour in Bitcoin. This matters not only for settlement speed but for every context where real-time sequencing is critical - market resolutions, liquidation cascades, anywhere a single consensus leader ordering transactions at its own discretion grants them too much power.",
+      "eventFeed": "Real-time sampling of the honest majority can also be utilized to achieve a trustless real-time data and event feed governed by the mining network. <post>RTD post</post>",
+      "resilience": "RTD has also a defensive side. Partial synchrony (with the upcoming DAGKnight) protocols uniquely implement the dual property of being fast when the network is healthy and slow-yet-secure when it is not. Kaspa sells speed to normies and wargrade money to cypherpunks."
+    },
+    "shipped": {
+      "heading": "Shipped and next",
+      "rewrite": "The original Golang node was rewritten from scratch in Rust. The rewrite was backed by a 100M KAS community grant and turned into a real open-source effort around <code>rusty-kaspa</code>, with a broad contributor base. <github>Rusty Kaspa GitHub</github>",
+      "crescendo": "That rewrite is what made Crescendo possible. Kaspa could not move to 10 blocks per second on mainnet without it. Crescendo is where the thesis became live. <reference>Crescendo reference</reference> · <release>Release notes</release>"
+    },
+    "roadmap": {
+      "toccata": {
+        "heading": "Toccata hardfork",
+        "overview": "The next hardfork is Toccata, introducing covenant-based base-layer programmability. Covenants are recursive spending rules that restrict who and how coins can be spent, opening the way to vaults, smart wallets, native assets, and ZK-assisted constructions.",
+        "implementation": "In Bitcoin, OP_CAT is the old opcode Satoshi disabled - proposed again, still debated, still not included. Toccata is closer to OP_CAT++, with a broader covenant surface and <silverscript>Silverscript</silverscript> as a dedicated compiler for writing covenants in Kaspa. A mature implementation is already up and running on <tn12>TN12</tn12>."
+      },
+      "dagKnight": {
+        "heading": "DAGKnight hardfork",
+        "overview": "DAGKnight is the consensus protocol upgrade that follows Toccata. It is a major leap for proof of work and for permissionless consensus: the only 49% BFT partially synchronous protocol (in the oblivious setup). It is a step toward netsplit-resilient proof of work. Block times are targeted for the 40-25 millisecond range. <paper>DAGKnight paper</paper>"
+      },
+      "hardfork2027": {
+        "heading": "2027 hardfork",
+        "performance": "10 millisecond block time - 100 blocks per second - would likely require DAG algorithmic adjustments to how miners reference DAG tips, alongside further node performance optimizations. Targeted for a 2027 hardfork.",
+        "resilience": "On the consensus side, DAGKnight already provides safety under netsplits: transactions confirmed before a split remain final. But it does not provide progress during a split - transactions cannot actually be confirmed until the split is over. The 2027 work aims to add practical progress through a combination of on-chain payment channels and hashrate-adaptive finality windows. This would make Kaspa wargrade hard money, with local payment flows surviving broken internet conditions."
+      }
+    },
+    "closing": {
+      "origin": "Kaspa did not come out of the usual hype cycle. It came out of veteran research, fair launch, open-source execution, and years of pushing where most of crypto stopped pushing.",
+      "summary": "A live blockDAG. 10 BPS on mainnet. Real-time decentralization as the north star. Toccata next. DAGKnight after that.",
+      "early": "If this reads like it's early, that's because it is."
+    }
+  },
+  "contributors": {
+    "viewOnGitHub": "View Rusty Kaspa contributors on GitHub",
+    "more": "+{count, plural, one {# contributor} other {# contributors}}"
+  }
+}

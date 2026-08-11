@@ -1,60 +1,87 @@
-import { BROWSER_EXAMPLES_BASE } from "./constants";
-import type { BrowserExample } from "./types";
+import { useMemo } from "react";
+import { useLocale, useTranslations } from "next-intl";
 
-export const browserExamples: BrowserExample[] = [
-  {
-    id: "server-info",
-    title: "Get server info",
-    shortLabel: "Server info",
-    mobileTabLabel: "Server",
-    desc: "Connect through the public resolver and fetch basic node information directly from the browser.",
-    runtime: "RPC",
-    path: `${BROWSER_EXAMPLES_BASE}/get-server-info.html`,
-    source:
-      "https://github.com/kaspanet/rusty-kaspa/blob/v2.0.0/wasm/examples/web/get-server-info.html",
-  },
-  {
-    id: "dag-info",
-    title: "Get block DAG info",
-    shortLabel: "DAG info",
-    mobileTabLabel: "DAG",
-    desc: "Read high-level DAG state from a live Kaspa node using the upstream browser RPC bindings.",
-    runtime: "RPC",
-    path: `${BROWSER_EXAMPLES_BASE}/get-block-dag-info.html`,
-    source:
-      "https://github.com/kaspanet/rusty-kaspa/blob/v2.0.0/wasm/examples/web/get-block-dag-info.html",
-  },
-  {
-    id: "block-added",
-    title: "Watch new blocks",
-    shortLabel: "New blocks",
-    mobileTabLabel: "Blocks",
-    desc: "Subscribe to block-added events and watch blocks arrive in real time from the browser.",
-    runtime: "RPC",
-    path: `${BROWSER_EXAMPLES_BASE}/subscribe-block-added.html`,
-    source:
-      "https://github.com/kaspanet/rusty-kaspa/blob/v2.0.0/wasm/examples/web/subscribe-block-added.html",
-  },
-  {
-    id: "daa-changed",
-    title: "Watch DAA changes",
-    shortLabel: "DAA changes",
-    mobileTabLabel: "DAA",
-    desc: "Subscribe to DAA score updates and watch the stream change in real time.",
-    runtime: "RPC",
-    path: `${BROWSER_EXAMPLES_BASE}/subscribe-daa-changed.html`,
-    source:
-      "https://github.com/kaspanet/rusty-kaspa/blob/v2.0.0/wasm/examples/web/subscribe-daa-changed.html",
-  },
-  {
-    id: "utxo-context",
-    title: "Track a UTXO context",
-    shortLabel: "UTXO context",
-    mobileTabLabel: "UTXO",
-    desc: "Use the core browser bindings to monitor an address and receive live UTXO events.",
-    runtime: "Core",
-    path: `${BROWSER_EXAMPLES_BASE}/utxo-context.html`,
-    source:
-      "https://github.com/kaspanet/rusty-kaspa/blob/v2.0.0/wasm/examples/web/utxo-context.html",
-  },
-];
+import {
+  buildExampleContract,
+  getBuildExampleHref,
+  getBuildExampleSourceUrl,
+} from "@/i18n/build-example-contract";
+
+import type { BrowserExample } from "./types";
+import { useBuildTerms } from "./useBuildTerms";
+
+export function useBrowserExamples(): BrowserExample[] {
+  const locale = useLocale();
+  const t = useTranslations("build.tryLive.examples");
+  const terms = useBuildTerms();
+
+  return useMemo(
+    () =>
+      buildExampleContract.examples.map((example): BrowserExample => {
+        const shared = {
+          id: example.id,
+          path: getBuildExampleHref(example, locale),
+          source: getBuildExampleSourceUrl(example),
+        };
+
+        switch (example.id) {
+          case "server-info":
+            return {
+              ...shared,
+              title: t("serverInfo.title"),
+              shortLabel: t("serverInfo.shortLabel"),
+              mobileTabLabel: t("serverInfo.mobileTabLabel"),
+              desc: t("serverInfo.description"),
+              runtime: t("serverInfo.runtime", { rpc: terms.rpc }),
+            };
+          case "dag-info":
+            return {
+              ...shared,
+              title: t("dagInfo.title", { dag: terms.dag }),
+              shortLabel: t("dagInfo.shortLabel", { dag: terms.dag }),
+              mobileTabLabel: t("dagInfo.mobileTabLabel", {
+                dag: terms.dag,
+              }),
+              desc: t("dagInfo.description", {
+                dag: terms.dag,
+                kaspa: terms.kaspa,
+                rpc: terms.rpc,
+              }),
+              runtime: t("dagInfo.runtime", { rpc: terms.rpc }),
+            };
+          case "block-added":
+            return {
+              ...shared,
+              title: t("blockAdded.title"),
+              shortLabel: t("blockAdded.shortLabel"),
+              mobileTabLabel: t("blockAdded.mobileTabLabel"),
+              desc: t("blockAdded.description"),
+              runtime: t("blockAdded.runtime", { rpc: terms.rpc }),
+            };
+          case "daa-changed":
+            return {
+              ...shared,
+              title: t("daaChanged.title", { daa: terms.daa }),
+              shortLabel: t("daaChanged.shortLabel", { daa: terms.daa }),
+              mobileTabLabel: t("daaChanged.mobileTabLabel", {
+                daa: terms.daa,
+              }),
+              desc: t("daaChanged.description", { daa: terms.daa }),
+              runtime: t("daaChanged.runtime", { rpc: terms.rpc }),
+            };
+          case "utxo-context":
+            return {
+              ...shared,
+              title: t("utxoContext.title", { utxo: terms.utxo }),
+              shortLabel: t("utxoContext.shortLabel", { utxo: terms.utxo }),
+              mobileTabLabel: t("utxoContext.mobileTabLabel", {
+                utxo: terms.utxo,
+              }),
+              desc: t("utxoContext.description", { utxo: terms.utxo }),
+              runtime: t("utxoContext.runtime", { core: terms.core }),
+            };
+        }
+      }),
+    [locale, t, terms],
+  );
+}

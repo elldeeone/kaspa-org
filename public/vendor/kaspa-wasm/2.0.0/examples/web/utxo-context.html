@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr">
     <head>
         <link rel="stylesheet" href="./resources/style.css">
         <script type="module">
@@ -34,9 +34,10 @@
                 await monitor.processor.start();
                 let context = new UtxoContext({ processor : monitor.processor });
                 let events = 0;
+                const eventPluralRules = new Intl.PluralRules(document.documentElement.lang);
+                const eventNumberFormat = new Intl.NumberFormat(document.documentElement.lang);
                 monitor.processor.addEventListener((event) => {
-                    document.getElementById("actions").innerHTML = `| Received ${events} event(s)`;
-                    // log("event:", JSON.stringify(event,null,2));
+                    document.getElementById("actions").innerHTML = eventPluralRules.select(events) === "one" ? ["| Received ", eventNumberFormat.format(events), " event"].join("") : ["| Received ", eventNumberFormat.format(events), " events"].join("");
                     log("event:", event);
                     events += 1;
                 });
@@ -45,12 +46,9 @@
                 // kaspa:qzeln8eue9nnrz85kn7x47smxhfqudyz6urv2wpquuvslq7ck4umys8gkt5x8
 
                 log("");
-                log("Please note that some addresses may have thousands of UTXOs which makes it");
-                log("impractical for the browser to display as a list. This type of data output");
-                log("should be paginated.") 
+                log("Please note that some addresses may have thousands of UTXOs which makes it impractical for the browser to display as a list. This type of data output should be paginated.");
                 log("");
-                log("This demo is meant for manual testing to demonstrate events emitted by the");
-                log("UtxoProcessor, your browser may have difficulty rendering large sets of UTXOs.");
+                log("This demo is meant for manual testing to demonstrate events emitted by the UtxoProcessor, your browser may have difficulty rendering large sets of UTXOs.");
 
                 let el = document.createElement("div");
                 document.body.appendChild(el);

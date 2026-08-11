@@ -1,33 +1,14 @@
 import type { MetadataRoute } from "next";
 
-const siteUrl = "https://kaspa.org";
+import { getRouteDefinition, listDiscoverableRoutes } from "@/i18n/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    {
-      url: siteUrl,
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: `${siteUrl}/lore`,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/build`,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${siteUrl}/assets`,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${siteUrl}/hodl`,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-  ];
+  return listDiscoverableRoutes().map((route) => {
+    const { sitemap: sitemapConfig } = getRouteDefinition(route.routeId);
+    return {
+      url: route.canonicalUrl,
+      changeFrequency: sitemapConfig.changeFrequency,
+      priority: sitemapConfig.priority,
+    };
+  });
 }

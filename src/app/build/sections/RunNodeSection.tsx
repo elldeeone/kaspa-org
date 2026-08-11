@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 import ExternalLink from "../../components/ExternalLink";
 import SectionHeading from "../../components/SectionHeading";
 import { copyTextToClipboard } from "../../components/copyTextToClipboard";
 import {
+  BUILD_TERMS,
   DOCKER_HUB_URL,
   DOCKER_RUN_COMMAND,
   RUSTY_KASPA_URL,
@@ -12,6 +14,7 @@ import { ArrowUpRightIcon, CheckIcon, ClipboardIcon } from "../icons";
 import { MetaPill } from "../ui";
 
 export default function RunNodeSection() {
+  const t = useTranslations("build.runNode");
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -31,9 +34,13 @@ export default function RunNodeSection() {
       <div className="mx-auto max-w-6xl lg:grid lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-12">
         <div className="h-fit lg:sticky lg:top-32">
           <SectionHeading
-            label="Node"
-            title="Run a node"
-            description="Spin up Rusty Kaspa locally with Docker. For a persistent setup, check Docker Hub or build from source."
+            label={t("heading.label")}
+            title={t("heading.title")}
+            description={t("heading.description", {
+              docker: BUILD_TERMS.docker,
+              dockerHub: BUILD_TERMS.dockerHub,
+              rustyKaspa: BUILD_TERMS.rustyKaspa,
+            })}
           />
         </div>
 
@@ -42,18 +49,26 @@ export default function RunNodeSection() {
             className="border-subtle rounded-[28px] border p-6 md:p-7"
             style={{ background: "var(--surface)" }}
           >
-            <MetaPill>Docker quickstart</MetaPill>
+            <MetaPill>
+              {t("quickstart", { docker: BUILD_TERMS.docker })}
+            </MetaPill>
             <h3 className="mt-5 text-[22px] leading-[1.1] font-medium tracking-[-0.03em] md:text-[24px]">
-              Run the latest Rusty Kaspa image
+              {t("title", { rustyKaspa: BUILD_TERMS.rustyKaspa })}
             </h3>
             <p className="text-tertiary mt-3 text-[15px] leading-[1.7]">
-              Exposes gRPC on port 16110 so you can talk to the node from your
-              dev machine. Ephemeral container &mdash; no persistent storage or
-              inbound P2P.
+              {t("description", {
+                grpc: BUILD_TERMS.grpc,
+                p2p: BUILD_TERMS.p2p,
+              })}
             </p>
 
             <button
               onClick={handleCopy}
+              aria-label={
+                copied
+                  ? t("commandCopied", { docker: BUILD_TERMS.docker })
+                  : t("copyCommand", { docker: BUILD_TERMS.docker })
+              }
               className="group border-subtle text-secondary hover:text-primary mt-6 flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left font-mono text-[13px] transition-colors hover:border-[var(--btn-ghost-hover-border)] hover:bg-[var(--btn-ghost-hover-bg)] md:text-[14px]"
               style={{ background: "var(--bg)" }}
             >
@@ -71,7 +86,7 @@ export default function RunNodeSection() {
                 href={DOCKER_HUB_URL}
                 className="group text-secondary hover:text-primary inline-flex items-center gap-1.5 text-[14px] font-medium transition-colors"
               >
-                Docker Hub
+                {t("dockerHub", { dockerHub: BUILD_TERMS.dockerHub })}
                 <span className="text-muted group-hover:text-secondary inline-flex transition-all duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
                   <ArrowUpRightIcon size={10} />
                 </span>
@@ -80,7 +95,7 @@ export default function RunNodeSection() {
                 href={RUSTY_KASPA_URL}
                 className="group text-secondary hover:text-primary inline-flex items-center gap-1.5 text-[14px] font-medium transition-colors"
               >
-                Compile from source
+                {t("compile")}
                 <span className="text-muted group-hover:text-secondary inline-flex transition-all duration-200 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]">
                   <ArrowUpRightIcon size={10} />
                 </span>

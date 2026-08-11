@@ -1,11 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 import ExternalLink from "../../components/ExternalLink";
 import { ArrowUpRightIcon } from "../../components/icons";
 import { ACCENT } from "../content";
-import { initialFilters, OS_OPTIONS } from "./constants";
+import { initialFilters } from "./constants";
 import FilterPanel, { type FilterPanelProps } from "./FilterPanel";
 import {
   selectOs,
@@ -14,15 +15,14 @@ import {
   toggleFeature,
 } from "./filterState";
 import { createWalletFinderModel } from "./filterWallets";
-import { kaspaWallets } from "@/data/wallets";
 import type {
+  KaspaWallet,
   WalletCriterion,
   WalletFeature,
   WalletFilters,
   WalletOs,
   WalletUserType,
 } from "./types";
-import { walletCriteria, walletFeatures } from "./walletMetadata";
 import { DesktopResults, MobileResults } from "./WalletResults";
 import WizardFlow, { type WizardPanelProps } from "./WizardFlow";
 
@@ -37,15 +37,16 @@ type ActiveFilterChip = {
   onRemove: () => void;
 };
 
-export default function WalletFinder() {
+export default function WalletFinder({ wallets }: { wallets: KaspaWallet[] }) {
+  const t = useTranslations("hodl");
   const [mode, setMode] = useState<WalletFinderMode>("guided");
   const [step, setStep] = useState(1);
   const [filters, setFilters] = useState<WalletFilters>(initialFilters);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const model = useMemo(
-    () => createWalletFinderModel(kaspaWallets, filters),
-    [filters],
+    () => createWalletFinderModel(wallets, filters),
+    [filters, wallets],
   );
 
   const setOs = (os: WalletOs | undefined) =>
@@ -98,9 +99,7 @@ export default function WalletFinder() {
 
   const activeChips: ActiveFilterChip[] = [];
   if (filters.os) {
-    const osLabel =
-      OS_OPTIONS.find((option) => option.id === filters.os)?.label ??
-      filters.os;
+    const osLabel = t(`walletFinder.operatingSystems.${filters.os}`);
     activeChips.push({
       key: `os-${filters.os}`,
       label: osLabel,
@@ -110,14 +109,15 @@ export default function WalletFinder() {
   if (filters.user) {
     activeChips.push({
       key: `user-${filters.user}`,
-      label: filters.user === "beginner" ? "New" : "Experienced",
+      label:
+        filters.user === "beginner"
+          ? t("walletFinder.common.newUser")
+          : t("walletFinder.common.experiencedUser"),
       onRemove: () => setUser(undefined),
     });
   }
   for (const criterionId of filters.important) {
-    const label =
-      walletCriteria.find((entry) => entry.id === criterionId)?.label ??
-      criterionId;
+    const label = t(`walletFinder.criteria.${criterionId}.label`);
     activeChips.push({
       key: `criterion-${criterionId}`,
       label,
@@ -125,9 +125,7 @@ export default function WalletFinder() {
     });
   }
   for (const featureId of filters.features) {
-    const label =
-      walletFeatures.find((entry) => entry.id === featureId)?.label ??
-      featureId;
+    const label = t(`walletFinder.features.${featureId}.label`);
     activeChips.push({
       key: `feature-${featureId}`,
       label,
@@ -158,11 +156,13 @@ export default function WalletFinder() {
               <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
                 <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
                   <p className="text-secondary text-[13px] whitespace-nowrap">
-                    <strong className="text-primary">
-                      {model.matches.length}
-                    </strong>
-                    <span className="text-muted"> / </span>
-                    {model.totalWallets} wallets
+                    {t.rich("walletFinder.results.compactSummary", {
+                      matches: model.matches.length,
+                      total: model.totalWallets,
+                      strong: (chunks) => (
+                        <strong className="text-primary">{chunks}</strong>
+                      ),
+                    })}
                   </p>
                   <button
                     type="button"
@@ -182,7 +182,7 @@ export default function WalletFinder() {
                         d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
                       />
                     </svg>
-                    Help me choose
+                    {t("walletFinder.results.helpChoose")}
                   </button>
                 </div>
                 <button
@@ -204,7 +204,9 @@ export default function WalletFinder() {
                       d="M3 6h18M6 12h12M9 18h6"
                     />
                   </svg>
-                  {mobileFiltersOpen ? "Hide filters" : "Filters"}
+                  {mobileFiltersOpen
+                    ? t("walletFinder.filters.hide")
+                    : t("walletFinder.filters.show")}
                   {activeChips.length > 0 && (
                     <span
                       className="ml-0.5 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1.5 text-[11px] font-semibold text-white"
@@ -224,7 +226,9 @@ export default function WalletFinder() {
                       type="button"
                       onClick={chip.onRemove}
                       className="border-subtle inline-flex items-center gap-1 rounded-full border bg-black/[0.02] py-0.5 pr-1.5 pl-2 text-[11.5px] font-medium text-[var(--text-secondary)] transition-colors hover:bg-black/[0.05] dark:bg-white/[0.03] dark:hover:bg-white/[0.06]"
-                      aria-label={`Remove filter ${chip.label}`}
+                      aria-label={t("walletFinder.filters.remove", {
+                        filter: chip.label,
+                      })}
                     >
                       {chip.label}
                       <svg
@@ -247,7 +251,7 @@ export default function WalletFinder() {
                       onClick={resetFilters}
                       className="text-tertiary hover:text-primary ml-1 text-[11.5px] font-medium underline-offset-2 transition-colors hover:underline"
                     >
-                      Clear all
+                      {t("walletFinder.filters.clearAll")}
                     </button>
                   )}
                 </div>
@@ -293,12 +297,12 @@ export default function WalletFinder() {
 
       <div className="border-subtle relative z-10 border-t px-5 py-3.5 text-center md:px-8">
         <p className="text-muted text-[12.5px] leading-relaxed">
-          Missing a wallet?{" "}
+          {t("walletFinder.submission.question")}{" "}
           <ExternalLink
             href={WALLET_SUBMISSION_GUIDE_URL}
             className="group text-tertiary hover:text-primary inline-flex items-center gap-1 font-medium underline-offset-2 transition-colors hover:underline"
           >
-            Learn how to submit it on GitHub
+            {t("walletFinder.submission.action")}
             <span className="opacity-40 transition-opacity group-hover:opacity-75">
               <ArrowUpRightIcon size={9} />
             </span>

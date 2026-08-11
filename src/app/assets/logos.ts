@@ -4,9 +4,27 @@
 
 export type AssetTone = "light" | "dark";
 
+export type LogoGroupId = "lockup" | "stacked" | "icon";
+
+export type LogoMessageKey =
+  | "lockupColor"
+  | "lockupReverse"
+  | "lockupBlack"
+  | "lockupWhite"
+  | "lockupOutline"
+  | "stackedColor"
+  | "stackedReverse"
+  | "stackedBlack"
+  | "stackedWhite"
+  | "stackedOutline"
+  | "iconGreen"
+  | "iconGreenDark"
+  | "iconBlack"
+  | "iconWhite";
+
 export type LogoAsset = {
   id: string;
-  name: string;
+  messageKey: LogoMessageKey;
   /** Backdrop the preview renders on so knockouts/reverses read correctly. */
   tone: AssetTone;
   svg: string;
@@ -14,8 +32,7 @@ export type LogoAsset = {
 };
 
 export type LogoGroup = {
-  id: string;
-  title: string;
+  id: LogoGroupId;
   /** How wide a single preview should sit within its tile. */
   previewClassName: string;
   assets: LogoAsset[];
@@ -27,40 +44,39 @@ const png = (name: string) => `/assets/png/${name}.png`;
 export const logoGroups: readonly LogoGroup[] = [
   {
     id: "lockup",
-    title: "Horizontal",
     previewClassName: "w-[200px] sm:w-[230px]",
     assets: [
       {
         id: "lockup-color",
-        name: "Full color",
+        messageKey: "lockupColor",
         tone: "light",
         svg: svg("kaspa-lockup-color"),
         png: png("kaspa-lockup-color"),
       },
       {
         id: "lockup-reverse",
-        name: "Reverse",
+        messageKey: "lockupReverse",
         tone: "dark",
         svg: svg("kaspa-lockup-reverse"),
         png: png("kaspa-lockup-reverse"),
       },
       {
         id: "lockup-black",
-        name: "Black",
+        messageKey: "lockupBlack",
         tone: "light",
         svg: svg("kaspa-lockup-black"),
         png: png("kaspa-lockup-black"),
       },
       {
         id: "lockup-white",
-        name: "White",
+        messageKey: "lockupWhite",
         tone: "dark",
         svg: svg("kaspa-lockup-white"),
         png: png("kaspa-lockup-white"),
       },
       {
         id: "lockup-outline",
-        name: "Outline",
+        messageKey: "lockupOutline",
         tone: "light",
         svg: svg("kaspa-lockup-outline"),
       },
@@ -68,40 +84,39 @@ export const logoGroups: readonly LogoGroup[] = [
   },
   {
     id: "stacked",
-    title: "Stacked",
     previewClassName: "w-[140px] sm:w-[156px]",
     assets: [
       {
         id: "stacked-color",
-        name: "Full color",
+        messageKey: "stackedColor",
         tone: "light",
         svg: svg("kaspa-stacked-color"),
         png: png("kaspa-stacked-color"),
       },
       {
         id: "stacked-reverse",
-        name: "Reverse",
+        messageKey: "stackedReverse",
         tone: "dark",
         svg: svg("kaspa-stacked-reverse"),
         png: png("kaspa-stacked-reverse"),
       },
       {
         id: "stacked-black",
-        name: "Black",
+        messageKey: "stackedBlack",
         tone: "light",
         svg: svg("kaspa-stacked-black"),
         png: png("kaspa-stacked-black"),
       },
       {
         id: "stacked-white",
-        name: "White",
+        messageKey: "stackedWhite",
         tone: "dark",
         svg: svg("kaspa-stacked-white"),
         png: png("kaspa-stacked-white"),
       },
       {
         id: "stacked-outline",
-        name: "Outline",
+        messageKey: "stackedOutline",
         tone: "light",
         svg: svg("kaspa-stacked-outline"),
       },
@@ -109,33 +124,32 @@ export const logoGroups: readonly LogoGroup[] = [
   },
   {
     id: "icon",
-    title: "Icon",
     previewClassName: "w-[104px] sm:w-[116px]",
     assets: [
       {
         id: "icon-green",
-        name: "Green",
+        messageKey: "iconGreen",
         tone: "light",
         svg: svg("kaspa-icon-green"),
         png: png("kaspa-icon-green"),
       },
       {
         id: "icon-green-dark",
-        name: "Green on dark",
+        messageKey: "iconGreenDark",
         tone: "dark",
         svg: svg("kaspa-icon-green-dark"),
         png: png("kaspa-icon-green-dark"),
       },
       {
         id: "icon-black",
-        name: "Black",
+        messageKey: "iconBlack",
         tone: "light",
         svg: svg("kaspa-icon-black"),
         png: png("kaspa-icon-black"),
       },
       {
         id: "icon-white",
-        name: "White",
+        messageKey: "iconWhite",
         tone: "dark",
         svg: svg("kaspa-icon-white"),
         png: png("kaspa-icon-white"),

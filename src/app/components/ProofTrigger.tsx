@@ -1,9 +1,9 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-const ProofOverlay = dynamic(() => import("./ProofOverlay"), {
+const ProofOverlay = dynamic(() => import("./ProofOverlayEntry"), {
   ssr: false,
 });
 
@@ -12,6 +12,15 @@ const PROOF_PARAM_VALUE = "1";
 const PROOF_PARAM_EVENT = "proof-param-change";
 
 type HistoryMode = "push" | "replace";
+
+export type ProofShellLabels = {
+  back: string;
+  error: string;
+  loading: string;
+  retry: string;
+  title: string;
+  trigger: string;
+};
 
 function readProofParam(): boolean {
   try {
@@ -95,15 +104,33 @@ function useProofParamState(): {
   };
 }
 
-export default function ProofTrigger(): React.JSX.Element {
+export default function ProofTrigger({
+  className = "",
+  labels,
+}: {
+  className?: string;
+  labels: ProofShellLabels;
+}): React.JSX.Element {
   const { open, openOverlay, closeOverlay } = useProofParamState();
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeAndRestoreFocus = useCallback(() => {
+    closeOverlay();
+    window.requestAnimationFrame(() => triggerRef.current?.focus());
+  }, [closeOverlay]);
 
   return (
     <>
-      <button type="button" onClick={openOverlay} className="btn-primary">
-        Verify the proof
+      <button
+        ref={triggerRef}
+        type="button"
+        onClick={openOverlay}
+        className={`btn-primary ${className}`}
+      >
+        {labels.trigger}
       </button>
-      {open ? <ProofOverlay onClose={closeOverlay} /> : null}
+      {open ? (
+        <ProofOverlay labels={labels} onClose={closeAndRestoreFocus} />
+      ) : null}
     </>
   );
 }

@@ -3,12 +3,18 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link, useIsPathnamePublished } from "@/i18n/link";
+import { localizedDestinationInventory } from "@/i18n/manifest";
 import {
   KASPA_MARK_SIGNAL,
   type KaspaMarkSignalDetail,
 } from "./kaspaMarkSignal";
-import LogoContextMenu, { type LogoMenuPosition } from "./LogoContextMenu";
+import LogoContextMenu, {
+  LOGO_MENU_ID,
+  type LogoMenuPosition,
+} from "./LogoContextMenu";
+import LanguageSelector from "./LanguageSelector";
 import NavLinksList from "./NavLinksList";
 import ThemeToggle from "./ThemeToggle";
 import { useIsClient } from "./useIsClient";
@@ -73,6 +79,7 @@ function KaspaGlyphLogo(): React.JSX.Element {
 }
 
 export default function Nav() {
+  const t = useTranslations("shared.navigation");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [logoReplaced, setLogoReplaced] = useState(false);
@@ -89,6 +96,9 @@ export default function Nav() {
   const isDark = isClient && resolvedTheme === "dark";
   const showGlyphLogo = isDark && logoReplaced;
   const activeLogoFlight = isDark ? logoFlight : null;
+  const assetsPublished = useIsPathnamePublished(
+    localizedDestinationInventory.logoAssets.pathname,
+  );
 
   const logoSrc = isDark ? "/kaspa-logo-dark.svg" : "/kaspa-logo.svg";
 
@@ -229,15 +239,20 @@ export default function Nav() {
       <div className="flex h-16 items-center justify-between px-5 sm:px-6 md:h-20 md:px-12 lg:px-20">
         <Link
           ref={logoTargetRef}
-          href="/"
-          onContextMenu={handleLogoContextMenu}
-          onTouchStart={handleLogoTouchStart}
-          onTouchEnd={clearLongPress}
-          onTouchMove={clearLongPress}
-          onTouchCancel={clearLongPress}
+          href={localizedDestinationInventory.navigationHome.pathname}
+          onContextMenu={assetsPublished ? handleLogoContextMenu : undefined}
+          onTouchStart={assetsPublished ? handleLogoTouchStart : undefined}
+          onTouchEnd={assetsPublished ? clearLongPress : undefined}
+          onTouchMove={assetsPublished ? clearLongPress : undefined}
+          onTouchCancel={assetsPublished ? clearLongPress : undefined}
           onClick={handleLogoClick}
-          className="text-primary relative flex h-12 w-[116px] shrink-0 items-center select-none [-webkit-touch-callout:none] sm:w-[126px] md:w-[140px]"
-          aria-label="Kaspa home"
+          className={`text-primary relative flex h-12 w-[116px] shrink-0 items-center select-none sm:w-[126px] md:w-[140px] ${
+            assetsPublished ? "[-webkit-touch-callout:none]" : ""
+          }`}
+          aria-label={t("homeAria")}
+          aria-haspopup={assetsPublished ? "menu" : undefined}
+          aria-expanded={assetsPublished ? logoMenu !== null : undefined}
+          aria-controls={assetsPublished && logoMenu ? LOGO_MENU_ID : undefined}
         >
           {showGlyphLogo ? (
             <span aria-hidden="true" className="text-primary flex">
@@ -275,19 +290,23 @@ export default function Nav() {
               disabledClassName={navLinkDisabledDesktop}
             />
           </div>
-          <ThemeToggle />
+          <div className="flex items-center gap-1">
+            <LanguageSelector />
+            <ThemeToggle />
+          </div>
         </div>
 
         <div className="flex items-center gap-1 sm:gap-1.5 md:hidden">
+          <LanguageSelector compact />
           <ThemeToggle compact />
           <button
             onClick={() => setMenuOpen((value) => !value)}
             className="text-primary relative flex h-11 w-11 items-center justify-center rounded-lg transition-colors hover:bg-[var(--surface)]"
-            aria-label="Toggle menu"
+            aria-label={t("toggleMenu")}
             aria-expanded={menuOpen}
             aria-controls="mobile-nav-links"
           >
-            <span className="sr-only">Menu</span>
+            <span className="sr-only">{t("menu")}</span>
             <span
               className={`absolute h-[1.5px] w-[18px] bg-current transition-all duration-300 ${
                 menuOpen ? "translate-y-0 rotate-45" : "-translate-y-[4.5px]"
@@ -312,7 +331,7 @@ export default function Nav() {
         inert={!menuOpen}
         className={`overflow-hidden transition-all duration-300 ease-in-out md:hidden ${
           menuOpen
-            ? "max-h-[320px] opacity-100"
+            ? "max-h-[420px] opacity-100"
             : "pointer-events-none max-h-0 opacity-0"
         }`}
       >
@@ -326,7 +345,7 @@ export default function Nav() {
         </div>
       </div>
 
-      {logoMenu ? (
+      {assetsPublished && logoMenu ? (
         <LogoContextMenu position={logoMenu} onClose={closeLogoMenu} />
       ) : null}
     </nav>

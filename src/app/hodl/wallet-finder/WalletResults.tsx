@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 import ExternalLink from "../../components/ExternalLink";
 import { ACCENT, accentAlpha } from "../content";
@@ -15,25 +16,10 @@ import {
   type WalletMatch,
 } from "./filterWallets";
 import { WALLET_CHECK_RATINGS } from "./taxonomy";
-import type { WalletCheckRating, WalletEntryAction, WalletOs } from "./types";
-import { walletCriteria, walletFeatures } from "./walletMetadata";
-
-const COMPACT_RATING_LABELS = {
-  good: "Good",
-  acceptable: "Acceptable",
-  caution: "Caution",
-  not_applicable: "N/A",
-} as const satisfies Record<WalletCheckRating, string>;
+import type { WalletEntryAction, WalletOs } from "./types";
+import { walletCriteria } from "./walletMetadata";
 
 const RATING_ORDER = WALLET_CHECK_RATINGS;
-
-const actionLabels: Record<WalletEntryAction, string> = {
-  app_store: "App Store",
-  google_play: "Google Play",
-  download: "Download",
-  open: "Open wallet",
-  view_source: "View source",
-};
 
 function getActionStoreIconOs(action: WalletEntryAction): WalletOs | null {
   if (action === "app_store") return "ios";
@@ -52,6 +38,7 @@ function WalletRow({
   isExpanded: boolean;
   onToggle: () => void;
 }) {
+  const t = useTranslations("hodl");
   const { wallet, primary } = match;
   const check = effectiveCheck(wallet, primary);
   const visibleActions = actionsForPlatform(wallet, filterOs);
@@ -109,7 +96,7 @@ function WalletRow({
               <div className="flex flex-wrap items-center gap-2 bg-black/[0.015] px-4 py-3 dark:bg-white/[0.02]">
                 {visibleActions.length === 0 ? (
                   <span className="text-muted text-[12.5px]">
-                    No links available for this filter.
+                    {t("walletFinder.results.noLinks")}
                   </span>
                 ) : (
                   visibleActions.map((entry, index) => {
@@ -129,7 +116,7 @@ function WalletRow({
                         }
                       >
                         {iconOs && getStoreIcon(iconOs, "h-3.5 w-3.5")}
-                        {actionLabels[entry.action]}
+                        {t(`walletFinder.actions.${entry.action}`)}
                       </ExternalLink>
                     );
                   })
@@ -150,6 +137,7 @@ function WalletCard({
   match: WalletMatch;
   filterOs: WalletOs | undefined;
 }) {
+  const t = useTranslations("hodl");
   const { wallet, platforms, primary } = match;
   const check = effectiveCheck(wallet, primary);
   const uniqueFeatures = Array.from(
@@ -184,10 +172,7 @@ function WalletCard({
       {uniqueFeatures.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1.5">
           {uniqueFeatures.map((feature) => {
-            const label =
-              walletFeatures.find(
-                (walletFeature) => walletFeature.id === feature,
-              )?.label ?? feature;
+            const label = t(`walletFinder.features.${feature}.label`);
             return (
               <span
                 key={feature}
@@ -213,12 +198,14 @@ function WalletCard({
             >
               <RatingSymbol rating={check[criterion.id]} />
               <span className="text-secondary text-[13px] font-medium">
-                {criterion.label}
+                {t(`walletFinder.criteria.${criterion.id}.label`)}
               </span>
             </RatingTooltip>
             <InfoTooltip
-              text={criterion.description}
-              ariaLabel={`About ${criterion.label}`}
+              text={t(`walletFinder.criteria.${criterion.id}.description`)}
+              ariaLabel={t("walletFinder.results.aboutCriterion", {
+                criterion: t(`walletFinder.criteria.${criterion.id}.label`),
+              })}
             />
           </div>
         ))}
@@ -241,7 +228,7 @@ function WalletCard({
               }
             >
               {iconOs && getStoreIcon(iconOs, "h-3.5 w-3.5")}
-              {actionLabels[entry.action]}
+              {t(`walletFinder.actions.${entry.action}`)}
             </ExternalLink>
           );
         })}
@@ -251,13 +238,17 @@ function WalletCard({
 }
 
 function MobileLegendBanner() {
+  const t = useTranslations("hodl");
+
   return (
     <div className="border-subtle mb-3 flex flex-nowrap items-center justify-between gap-x-2 rounded-[10px] border bg-black/[0.015] px-3 py-1.5 dark:bg-white/[0.02]">
       {RATING_ORDER.map((rating) => (
         <div key={rating} className="flex shrink-0 items-center gap-1.5">
           <RatingSymbol rating={rating} />
           <span className="text-secondary text-[11px] leading-none whitespace-nowrap">
-            {COMPACT_RATING_LABELS[rating]}
+            {rating === "not_applicable"
+              ? t("walletFinder.ratings.notApplicableCompact")
+              : t(`walletFinder.ratings.${rating}`)}
           </span>
         </div>
       ))}
@@ -266,13 +257,15 @@ function MobileLegendBanner() {
 }
 
 function EmptyResults() {
+  const t = useTranslations("hodl");
+
   return (
     <div className="border-subtle rounded-[20px] border px-6 py-12 text-center">
       <p className="text-primary text-[16px] font-medium">
-        No matching wallets
+        {t("walletFinder.results.noMatches")}
       </p>
       <p className="text-tertiary mx-auto mt-2 max-w-sm text-[14px]">
-        Try removing some filters.
+        {t("walletFinder.results.removeFilters")}
       </p>
     </div>
   );
@@ -293,6 +286,7 @@ export function DesktopResults({
   filterOs: WalletOs | undefined;
   hideHeader?: boolean;
 }) {
+  const t = useTranslations("hodl");
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   return (
@@ -300,8 +294,13 @@ export function DesktopResults({
       {!hideHeader && (
         <div className="mb-4 flex items-center justify-between gap-4">
           <p className="text-secondary text-[13px]">
-            <strong className="text-primary">{matches.length}</strong> of{" "}
-            {totalWallets} wallets
+            {t.rich("walletFinder.results.summary", {
+              matches: matches.length,
+              total: totalWallets,
+              strong: (chunks) => (
+                <strong className="text-primary">{chunks}</strong>
+              ),
+            })}
           </p>
           {mode === "table" && (
             <button
@@ -322,7 +321,7 @@ export function DesktopResults({
                   d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
                 />
               </svg>
-              Help me choose
+              {t("walletFinder.results.helpChoose")}
             </button>
           )}
         </div>
@@ -336,15 +335,17 @@ export function DesktopResults({
               <thead>
                 <tr>
                   <th className="pr-4 pb-3 text-left text-[11px] font-semibold tracking-[0.06em] text-[var(--text-muted)] uppercase">
-                    Wallet
+                    {t("walletFinder.results.walletColumn")}
                   </th>
                   {walletCriteria.map((criterion) => (
                     <th
                       key={criterion.id}
                       className="min-w-[64px] px-2 pb-3 text-center text-[11px] font-semibold tracking-[0.06em] whitespace-nowrap text-[var(--text-muted)] uppercase"
-                      title={criterion.description}
+                      title={t(
+                        `walletFinder.criteria.${criterion.id}.description`,
+                      )}
                     >
-                      {criterion.label}
+                      {t(`walletFinder.criteria.${criterion.id}.label`)}
                     </th>
                   ))}
                 </tr>
@@ -380,14 +381,16 @@ export function MobileResults({
   matches: WalletMatch[];
   filterOs: WalletOs | undefined;
 }) {
+  const t = useTranslations("hodl");
+
   if (matches.length === 0) {
     return (
       <div className="border-subtle rounded-[20px] border px-6 py-10 text-center">
         <p className="text-primary text-[16px] font-medium">
-          No matching wallets
+          {t("walletFinder.results.noMatches")}
         </p>
         <p className="text-tertiary mx-auto mt-2 max-w-sm text-[14px]">
-          Try removing some filters.
+          {t("walletFinder.results.removeFilters")}
         </p>
       </div>
     );

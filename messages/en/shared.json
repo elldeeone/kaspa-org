@@ -1,0 +1,112 @@
+{
+  "navigation": {
+    "homeAria": "Kaspa home",
+    "toggleMenu": "Toggle menu",
+    "menu": "Menu",
+    "language": {
+      "label": "Language"
+    },
+    "links": {
+      "lore": "LORE",
+      "hodl": "HODL",
+      "build": "BUIDL",
+      "think": "THINK",
+      "dagviz": "DAGVIZ"
+    }
+  },
+  "theme": {
+    "switchMode": "Switch to {mode} mode",
+    "light": "light",
+    "dark": "dark"
+  },
+  "logoMenu": {
+    "aria": "Kaspa logo",
+    "viewAssets": "View logo assets"
+  },
+  "pageSections": {
+    "onThisPage": "On this page",
+    "openAria": "Open page sections, current section {section}",
+    "dialogAria": "Page sections",
+    "close": "Close",
+    "current": "Current"
+  },
+  "footer": {
+    "glyphAria": "Kaspa glyph",
+    "operatedBy": "Operated by <operator>KasMedia.com</operator>",
+    "links": {
+      "explorer": "Explorer",
+      "github": "GitHub",
+      "x": "X"
+    }
+  },
+  "structuredData": {
+    "organizationDescription": "Kaspa is a fair-launched proof-of-work blockDAG cryptocurrency running at 10 blocks per second, built for real-time decentralization."
+  },
+  "ai": {
+    "externalPrompt": "Read {url}, I want to ask questions about it.",
+    "genericError": "Sorry, something went wrong. Please try again.",
+    "launcher": {
+      "askAnything": "Ask anything",
+      "beta": "Beta",
+      "betaTitle": "This feature is in active development — occasional issues may occur",
+      "betaAria": "Beta — occasional issues may occur",
+      "poweredBy": "Powered by <provider>kaspa.news/ask</provider>",
+      "collapsePanel": "Collapse panel",
+      "expandPanel": "Expand panel",
+      "closePanel": "Close panel",
+      "placeholder": "Ask anything...",
+      "sendMessage": "Send message",
+      "welcomeHeading": "Ask anything about Kaspa",
+      "welcomeBody": "Get quick answers below, or open a full conversation with your preferred AI.",
+      "ownAiDivider": "or use your own AI",
+      "ownAiLabel": "Use your own AI:",
+      "sources": "{count, plural, =0 {Sources} other {Sources (#)}}",
+      "copy": "copy",
+      "copied": "copied"
+    },
+    "suggestions": {
+      "kaspaPurpose": "What does Kaspa solve?",
+      "blockTimes": "What are the block times?",
+      "decentralization": "Why is real-time decentralization important?",
+      "premine": "Was there a premine?"
+    },
+    "providers": {
+      "chatgpt": "ChatGPT",
+      "claude": "Claude",
+      "perplexity": "Perplexity"
+    },
+    "loading": {
+      "atomicArc": "AtomicArc-ing safely...",
+      "ibd": "IBD-ing the new node...",
+      "ftr": "FTR-relaying the block...",
+      "kip": "activating the KIP...",
+      "template": "binding the template...",
+      "commitment": "bootstrapping from commitment...",
+      "blueSet": "braiding the blue set...",
+      "mergeDepth": "computing merge depth...",
+      "silverscript": "convincing silverscript to compile...",
+      "covenantId": "deriving the covenant_id...",
+      "covenantState": "encoding covenant state...",
+      "orphans": "evicting the orphans...",
+      "mempool": "filling the mempool...",
+      "fees": "lane-bucketing the fees...",
+      "covenants": "negotiating with covenants...",
+      "blocks": "parallel-dispatching blocks...",
+      "pruning": "pruning the past...",
+      "dagLayer": "publishing to the DAG layer...",
+      "stack": "pushing to the stack...",
+      "bps": "rebalancing the 10 BPS...",
+      "blueWork": "recalculating blue work...",
+      "l2": "reorg-filtering L2 events...",
+      "vprogBatch": "scheduling the vProg batch...",
+      "schnorr": "schnorring the signature...",
+      "virtualState": "serializing the virtual state...",
+      "utxoSet": "snapshotting the UTXO set...",
+      "anticone": "traversing the anticone...",
+      "transactions": "un-orphaning transactions...",
+      "utxo": "unlocking the UTXO...",
+      "vprogs": "virtualizing the vProgs...",
+      "crescendo": "waiting for crescendo..."
+    }
+  }
+}

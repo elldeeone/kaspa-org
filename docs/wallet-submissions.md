@@ -1,12 +1,12 @@
 # Wallet Submissions
 
 Wallet submissions are handled through pull requests. Each pull request should
-add or update exactly one wallet record in
+add or update exactly one complete English wallet record in
 [`src/data/wallets.ts`](../src/data/wallets.ts).
 
 ## Steps
 
-1. Add or update one wallet record in
+1. Add or update one wallet record, including its English `summary`, in
    [`src/data/wallets.ts`](../src/data/wallets.ts).
 2. Add the wallet icon at
    [`public/hodl/wallets/<wallet-id>/icon.<ext>`](../public/hodl/wallets).
@@ -61,6 +61,24 @@ must use `transparency: "caution"`.
 > support the proposed wallet record, maintainers may adjust ratings, wording,
 > links, OS support, feature claims, or assets, or decline the submission.
 
+## Translations
+
+Wallet submitters are required to provide only a short, neutral English
+summary in the wallet record. Maintainers arrange translations for every
+language currently published on the site before the wallet is published.
+Submitters do not edit the site's locale catalogs.
+
+If a submitter is fluent in a language currently published on the site, they
+may optionally provide a translation in the pull request for review. Optional
+translations are reviewed before publication. Translations for languages not
+currently supported cannot be added through a wallet submission; adding a new
+language starts with the
+[site-wide language request process](translations.md).
+
+A new wallet pull request may initially report a missing translation through
+the localization checks. This is a maintainer publication step and does not
+mean the submitter is expected to provide translations.
+
 ## Wallet Record Template
 
 ```ts
@@ -92,7 +110,7 @@ must use `transparency: "caution"`.
 | `title`             | yes      | Wallet name shown in the list. Wallets are displayed alphabetically by this value.                               |
 | `icon`              | yes      | `/hodl/wallets/<id>/icon.<ext>`.                                                                                 |
 | `user`              | yes      | `beginner` (approachable) or `experienced` (technical familiarity assumed).                                      |
-| `summary`           | yes      | Plain-English summary, 140 chars or fewer, single line, no URLs.                                                 |
+| `summary`           | yes      | Short, neutral English description. Maintainers own translated versions.                                         |
 | `platforms`         | yes      | Non-empty list of supported OSs from `windows`, `mac`, `linux`, `ios`, `android`, `hardware`.                    |
 | `features`          | yes      | Default features that apply to every platform. Use `[]` if none.                                                 |
 | `check`             | yes      | Default rating per criterion (`control`, `validation`, `transparency`, `fees`). Applies to every platform.       |
@@ -183,7 +201,7 @@ may fit. If it uses fixed wallet-controlled nodes, use `validation: "caution"`.
 
 ## Field Notes
 
-`summary` should be neutral and concise:
+The wallet `summary` should be neutral and concise:
 
 - 140 characters or fewer
 - single line
@@ -200,5 +218,7 @@ may fit. If it uses fixed wallet-controlled nodes, use `validation: "caution"`.
 - Do not bake a rounded square background into the icon.
 - Do not use remote icon URLs.
 
-CI validates the data shape with `npm run wallets:check`. Maintainers may adjust
-ratings, wording, links, OS support, feature claims, or assets before merge.
+CI validates both the wallet data and exact translation coverage with
+`npm run wallets:check`. A missing English summary or a missing published
+translation fails the check. Maintainers may adjust ratings, wording, links, OS
+support, feature claims, translations, or assets before merge.

@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+
 import type { ProviderLink } from "../types";
 import { LaunchProviderLink } from "./LaunchProviderLink";
 
@@ -8,6 +10,8 @@ type AiLauncherProviderLinksProps = {
 export function AiLauncherProviderLinks({
   providerLinks,
 }: AiLauncherProviderLinksProps): React.JSX.Element {
+  const t = useTranslations("shared.ai.launcher");
+
   return (
     <div className="border-subtle shrink-0 border-t px-5 py-2 md:px-8 lg:px-10">
       <div className="mx-auto flex max-w-3xl items-center gap-4 overflow-x-auto">
@@ -15,7 +19,7 @@ export function AiLauncherProviderLinks({
           className="shrink-0 text-[11px]"
           style={{ color: "var(--text-muted)" }}
         >
-          Use your own AI:
+          {t("ownAiLabel")}
         </span>
         <div className="flex items-center gap-3">
           {providerLinks.map((link) => (

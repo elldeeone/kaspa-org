@@ -1,4 +1,12 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+import { defaultLocale } from "./src/i18n/locale-registry";
+import { installI18nPublicationProfile } from "./src/i18n/publication-profile-node";
+import {
+  I18N_PUBLICATION_PROFILE_ENV,
+  serializeI18nPublicationProfile,
+} from "./src/i18n/publication-profile-contract";
 
 const legacyRedirects = [
   { source: "/.well-known/llms.txt", destination: "/llms.txt" },
@@ -42,25 +50,90 @@ const allowedDevOrigins = Array.from(
   ]),
 );
 
-const nextConfig: NextConfig = {
-  allowedDevOrigins,
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "avatars.githubusercontent.com",
-      },
-    ],
-    dangerouslyAllowSVG: true,
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-  },
-  async redirects() {
-    return legacyRedirects.map(({ source, destination }) => ({
-      source,
-      destination,
-      permanent: true,
-    }));
-  },
-};
+const withNextIntl = createNextIntlPlugin({
+  requestConfig: "./src/i18n/request.ts",
+});
 
-export default nextConfig;
+export default async function createNextConfig(): Promise<NextConfig> {
+  const { marker, profile } = installI18nPublicationProfile();
+  const serializedProfile = serializeI18nPublicationProfile(profile);
+  const [manifest, config, siteValidation] = await Promise.all([
+    import("./src/i18n/manifest.ts"),
+    import("./src/i18n/config.ts"),
+    import("./src/i18n/site-validation.ts"),
+  ]);
+  delete process.env[I18N_PUBLICATION_PROFILE_ENV];
+
+  const isProductionDeployment =
+    process.env.VERCEL_ENV === "production" ||
+    process.env.AWS_BRANCH?.trim().toLowerCase() === "main";
+
+  if (config.isPseudoLocaleEnabled && isProductionDeployment) {
+    throw new Error(
+      "The private en-XA pseudo-locale cannot be enabled in a production deployment.",
+    );
+  }
+
+  for (const locale of siteValidation.listProductionLocales()) {
+    if (locale === defaultLocale) continue;
+    siteValidation.assertProductionLocaleComplete(locale);
+  }
+
+  const nextConfig: NextConfig = {
+    env: {
+      [I18N_PUBLICATION_PROFILE_ENV]: serializedProfile,
+    },
+    ...(marker
+      ? {
+          outputFileTracingRoot: marker.repositoryRoot,
+          turbopack: { root: marker.repositoryRoot },
+        }
+      : {}),
+    allowedDevOrigins,
+    // Use the request's original production-server origin for proxy rewrites.
+    // Otherwise Next can emit default-locale rewrites against localhost even
+    // when `next start` is bound to another host, turning them into redirects.
+    skipProxyUrlNormalize: true,
+    experimental: {
+      globalNotFound: true,
+    },
+    images: {
+      remotePatterns: [
+        {
+          protocol: "https",
+          hostname: "avatars.githubusercontent.com",
+        },
+      ],
+      dangerouslyAllowSVG: true,
+      contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    },
+    async redirects() {
+      return legacyRedirects.map(({ source, destination }) => ({
+        source,
+        destination,
+        permanent: true,
+      }));
+    },
+    async rewrites() {
+      return {
+        beforeFiles: [],
+        afterFiles: [
+          {
+            source: "/:path*",
+            has: [
+              {
+                type: "header",
+                key: manifest.ROUTE_MISS_HEADER,
+                value: "1",
+              },
+            ],
+            destination: manifest.RESERVED_NOT_FOUND_PATHNAME,
+          },
+        ],
+        fallback: [],
+      };
+    },
+  };
+
+  return withNextIntl(nextConfig);
+}

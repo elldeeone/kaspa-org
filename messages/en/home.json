@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "title": "Kaspa | Proof-of-Work blockDAG for Real-Time Decentralization",
+    "description": "Kaspa is a fair-launched proof-of-work blockDAG cryptocurrency running at 10 blocks per second, built for real-time decentralization."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Real-time Decentralization",
+    "heading": "Real-time\nDecentralization",
+    "tagline": "bitcoin’s proof-of-work without the wait."
+  },
+  "hero": {
+    "heading": "Real-time\nDecentralization",
+    "tagline": "bitcoin's proof-of-work without the wait.",
+    "getStarted": "Get started",
+    "getWallet": "Get a wallet",
+    "buyKaspa": "Buy Kaspa",
+    "dagAnnotation": "pow in real-time"
+  },
+  "verify": {
+    "heading": "don't trust, verify.",
+    "history": "Every coin in Kaspa's history traces cryptographically back to an empty genesis.",
+    "fairLaunch": "No premine. No hidden allocation. Fair launch.",
+    "explanation": "The genesis proof follows the chain of pruning-point block hashes backward to the original genesis and verifies its UTXO commitment matches an empty set. Bitcoin block hashes embedded in the genesis coinbase serve as timestamps, ruling out hidden premining.",
+    "runProof": "Run the proof"
+  },
+  "proof": {
+    "trigger": "Verify the proof",
+    "loader": {
+      "loading": "Loading proof...",
+      "error": "The proof could not be loaded.",
+      "retry": "Try again"
+    },
+    "chrome": {
+      "back": "Back",
+      "title": "Verify the proof",
+      "sectionsAria": "Proof sections",
+      "jumpToSection": "Jump to {section}"
+    },
+    "sections": {
+      "live": "Live",
+      "origin": "Origin",
+      "runIt": "Run it"
+    },
+    "live": {
+      "eyebrow": "Historical · Current · Continuous",
+      "title": "Live supply vs. emission schedule",
+      "body": "Kaspa's circulating supply is recomputable from first principles. A live node reports the current total. The historical total at the Nov 22, 2021 checkpoint is committed to by the hardwired genesis via its UTXO set, and every coin issued after that checkpoint follows the deterministic emission schedule."
+    },
+    "origin": {
+      "eyebrow": "Origin",
+      "title": "Where the supply begins",
+      "supplyBody": "Every coin traces back to a single block where the supply was <strong>zero</strong>. Its UTXO commitment is the mathematical fingerprint of an empty set, the same constant on any machine that computes it. Supply starts here, and every coin since is scheduled emission, not allocation.",
+      "verseBody": "Inside that block's coinbase is a verse from <reference>Ezra 7:18</reference>, written in Aramaic, celebrating the values of liberty promoted by the ancient Persian kings.",
+      "translatedQuotation": "“And whatever seems good to you and your brothers to do with the rest of the silver and gold, do according to the will of your God.”",
+      "quotationAttribution": "Ezra 7:18, in the genesis coinbase",
+      "timestampBody": "The coinbase also carries the hash of <bitcoinBlock>Bitcoin block #708,639</bitcoinBlock>, proving the block was produced after that point in time, with no premine."
+    },
+    "run": {
+      "eyebrow": "Don't trust, verify",
+      "title": "Run it yourself",
+      "intro": "Reproduce the proof from genesis to the current tip. The notebook walks the chain of pruning-point block hashes back to genesis, verifies the UTXO commitment against the empty-set fingerprint, and checks the anchoring Bitcoin block hashes. To read the historical supply at the Nov 22, 2021 checkpoint as a number, one extra derivation step sums the proof-committed UTXO set.",
+      "notebookTitle": "The proof notebook",
+      "notebookBody": "Clone, run, inspect. The notebook verifies the genesis and checkpoint linkage but does not itself print the historical supply number.",
+      "notebookAction": "Open on GitHub",
+      "checkpointTitle": "Verify the checkpoint total",
+      "checkpointStep1": "Run the notebook to verify the hardwired genesis, checkpoint linkage, empty-set origin, and Bitcoin anchors.",
+      "checkpointStep2": "Open historical <kaspad>kaspad v0.11.5-2</kaspad> and note that <processor>the block processor</processor> loads and verifies the embedded checkpoint <code>utxos.gz</code> against the hardwired genesis UTXO commitment.",
+      "checkpointStep3": "Parse <utxos>utxos.gz</utxos> using the format in <serialization>serialization.go</serialization> and sum every UTXO amount.",
+      "checkpointStep4": "That sum is the historical supply at checkpoint DAA <daa>1,312,860</daa> (Nov 22, 2021): <supply>984,222,544.04487171 KAS</supply>",
+      "checkpointNote": "From this point forward, issuance is deterministic. Adding the scheduled issuance since the checkpoint gives the expected supply at any DAA, which should match what a live node reports."
+    },
+    "supply": {
+      "intro": {
+        "eyebrow": "Continuous Verify",
+        "title": "Live supply vs. emission schedule",
+        "body": "Compare a live node's circulating supply against the checkpoint-anchored expected supply — the Nov 22, 2021 checkpoint total committed to by the hardwired genesis, extended by Kaspa's deterministic emission schedule."
+      },
+      "emissionHistory": "Emission history",
+      "connection": {
+        "connectedTo": "Connected to {nodeUrl}",
+        "error": "Connection error",
+        "connecting": "Connecting to Kaspa network..."
+      },
+      "comparison": {
+        "nodeReported": "Node-reported supply",
+        "unit": "KAS",
+        "rpcSource": "via getCoinSupply RPC",
+        "expected": "Expected supply",
+        "expectedBasis": "checkpoint total + scheduled issuance since Nov 22, 2021"
+      },
+      "anchor": {
+        "label": "Anchor",
+        "title": "Nov 22, 2021 checkpoint",
+        "body": "The historical supply at the Nov 22, 2021 checkpoint is committed to by the hardwired genesis via its UTXO set. Every coin issued after that point follows a deterministic consensus schedule, so the node-reported supply and the checkpoint-anchored expected supply should match. Small differences on the order of hundreds of KAS come from DAA-vs-block-count drift and integer rounding in the consensus subsidy table, similarly to Bitcoin and other PoW minting."
+      },
+      "timeline": {
+        "genesis": {
+          "label": "Genesis",
+          "date": "{date, date, medium}",
+          "description": "Empty UTXO set, so zero coins exist. The original genesis is anchored to Bitcoin block #708,639."
+        },
+        "checkpoint": {
+          "label": "Checkpoint",
+          "date": "{date, date, medium}",
+          "description": "Block rewards were randomized between 1–1000 KAS per block for the first ~2 weeks of mainnet, emitting +327,792,544 KAS before a hardfork fixed the per-block reward. Historical supply committed to by the hardwired genesis."
+        },
+        "preDeflationary": {
+          "label": "Pre-deflationary phase",
+          "date": "{startDate, date, medium} – {endDate, date, medium}",
+          "description": "Fixed per-block reward for ~6 months after the checkpoint, before the deflationary schedule kicks in."
+        },
+        "chromatic": {
+          "label": "Chromatic phase begins",
+          "date": "~{date, date, medium}",
+          "description": "Pre-deflationary phase ends. Reward drops from 500 to 440 KAS/block and decreases geometrically each month."
+        },
+        "crescendo": {
+          "label": "Crescendo",
+          "date": "~{date, date, medium}",
+          "description": "10 blocks per second, with the per-block reward divided by 10."
+        },
+        "now": "Now",
+        "live": "live",
+        "circulating": "KAS circulating",
+        "expected": "KAS expected",
+        "loading": "Loading...",
+        "connecting": "Connecting to node..."
+      },
+      "stats": {
+        "mined": "Mined",
+        "blockReward": "Block reward",
+        "nodeDagBlocks": "Node DAG blocks",
+        "daaScore": "DAA score",
+        "blockCountAccessible": "Node DAG blocks: {count}"
+      }
+    }
+  }
+}

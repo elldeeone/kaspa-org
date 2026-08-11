@@ -1,6 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+
+import { Link } from "@/i18n/link";
 
 import { navLinks } from "./navLinks";
 
@@ -17,17 +19,20 @@ export default function NavLinksList({
   onNavigate,
   tabIndex,
 }: NavLinksListProps): React.JSX.Element {
+  const t = useTranslations("shared.navigation.links");
+
   return (
     <>
       {navLinks.map((link) => {
+        const label = t(link.id);
         if (link.disabled) {
           return (
             <span
-              key={link.label}
+              key={link.id}
               className={disabledClassName}
               aria-disabled="true"
             >
-              {link.label}
+              {label}
             </span>
           );
         }
@@ -35,7 +40,7 @@ export default function NavLinksList({
         if (link.external) {
           return (
             <a
-              key={link.label}
+              key={link.id}
               href={link.href}
               onClick={onNavigate}
               className={linkClassName}
@@ -43,20 +48,20 @@ export default function NavLinksList({
               rel="noopener noreferrer"
               tabIndex={tabIndex}
             >
-              {link.label}
+              {label}
             </a>
           );
         }
 
         return (
           <Link
-            key={link.label}
+            key={link.id}
             href={link.href}
             onClick={onNavigate}
             className={linkClassName}
             tabIndex={tabIndex}
           >
-            {link.label}
+            {label}
           </Link>
         );
       })}

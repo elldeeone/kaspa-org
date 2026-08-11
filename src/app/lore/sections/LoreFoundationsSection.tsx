@@ -1,137 +1,140 @@
-import { LoreLink } from "../LoreLink";
+import { getTranslations } from "next-intl/server";
+
+import type { Locale } from "@/i18n/locale-registry";
+
 import { ContributorStrip } from "../ContributorStrip";
+import { LoreLink } from "../LoreLink";
 import type { Contributor } from "../contributors";
 
 type LoreFoundationsSectionProps = {
   contributors: Contributor[];
+  locale: Locale;
   totalContributors: number;
 };
 
-export function LoreFoundationsSection({
+export async function LoreFoundationsSection({
   contributors,
+  locale,
   totalContributors,
-}: LoreFoundationsSectionProps): React.JSX.Element {
+}: LoreFoundationsSectionProps): Promise<React.JSX.Element> {
+  const t = await getTranslations({ locale, namespace: "lore.article" });
+
   return (
     <>
       <h2 className="text-primary mt-10 text-center text-[17px] font-bold">
-        The shift
+        {t("shift.heading")}
       </h2>
       <p className="text-secondary mt-3 text-[15px] leading-[1.72]">
-        It takes a different route from older proof-of-work chains. Parallel
-        blocks are not discarded. They are ordered. Many of the limits
-        associated with proof of work came from older chain architecture, not
-        from proof of work itself.{" "}
-        <LoreLink href="https://eprint.iacr.org/2018/104.pdf">
-          PHANTOM / GHOSTDAG paper
-        </LoreLink>{" "}
+        {t.rich("shift.body", {
+          paper: (chunks) => (
+            <LoreLink href="https://eprint.iacr.org/2018/104.pdf">
+              {chunks}
+            </LoreLink>
+          ),
+        })}
       </p>
 
       <h2 className="text-primary mt-10 text-center text-[17px] font-bold">
-        Brief history
+        {t("history.heading")}
       </h2>
       <p className="text-secondary mt-3 text-[15px] leading-[1.72]">
-        Kaspa grew out of blockDAG research at the Hebrew University of
-        Jerusalem and later Harvard. The research line dates back to the{" "}
-        <LoreLink href="https://ethereum.org/en/whitepaper/#modified-ghost-implementation">
-          GHOST protocol section of the Ethereum white paper
-        </LoreLink>
-        , surfaced early through the Bitcoin research circuit, and continued
-        through SPECTRE and PHANTOM into the protocols running Kaspa today.{" "}
-        <LoreLink href="https://youtu.be/8IlZ80mPWfE?si=metsyYxZ8pnBgRMf&t=1583">
-          Scaling Bitcoin 2015
-        </LoreLink>{" "}
-        ·{" "}
-        <LoreLink href="https://www.coindesk.com/markets/2017/10/25/spectre-creators-seek-vc-backing-for-blockchain-free-cryptocurrency">
-          CoinDesk, 2017
-        </LoreLink>
+        {t.rich("history.research", {
+          ghost: (chunks) => (
+            <LoreLink href="https://ethereum.org/en/whitepaper/#modified-ghost-implementation">
+              {chunks}
+            </LoreLink>
+          ),
+          scaling: (chunks) => (
+            <LoreLink href="https://youtu.be/8IlZ80mPWfE?si=metsyYxZ8pnBgRMf&t=1583">
+              {chunks}
+            </LoreLink>
+          ),
+          coindesk: (chunks) => (
+            <LoreLink href="https://www.coindesk.com/markets/2017/10/25/spectre-creators-seek-vc-backing-for-blockchain-free-cryptocurrency">
+              {chunks}
+            </LoreLink>
+          ),
+        })}
       </p>
       <p className="text-secondary mt-3 text-[15px] leading-[1.72]">
-        Mainnet launched in November 2021 as a fair-launched proof-of-work
-        network. No premine, insider allocation, or pre-sales. Every coin in
-        circulation has been mined in the open from genesis onward. That fair
-        launch gave Kaspa a broad and loyal community. That remains one of its
-        strongest achievements and one of its core strengths.{" "}
-        <LoreLink href="https://hashdag.medium.com/kaspa-launch-plan-responding-to-reality-6b4bec449037">
-          Launch plan
-        </LoreLink>{" "}
-        ·{" "}
-        <LoreLink href="https://github.com/kaspagang/kaspad-py-explorer/blob/main/src/genesis_proof.ipynb">
-          Genesis proof
-        </LoreLink>
+        {t.rich("history.launch", {
+          launchPlan: (chunks) => (
+            <LoreLink href="https://hashdag.medium.com/kaspa-launch-plan-responding-to-reality-6b4bec449037">
+              {chunks}
+            </LoreLink>
+          ),
+          genesisProof: (chunks) => (
+            <LoreLink href="https://github.com/kaspagang/kaspad-py-explorer/blob/main/src/genesis_proof.ipynb">
+              {chunks}
+            </LoreLink>
+          ),
+        })}
       </p>
 
       <h2 className="text-primary mt-10 text-center text-[17px] font-bold">
-        North star
+        {t("northStar.heading")}
       </h2>
       <p className="text-secondary mt-3 text-[15px] leading-[1.72]">
-        Real-time decentralization is Kaspa&apos;s north star.
+        {t("northStar.intro")}
       </p>
       <p className="text-secondary mt-3 text-[15px] leading-[1.72]">
-        Real-time is a non-compromise. Impatience is Kaspa&apos;s primitive
-        instinct - a tantrum against wait times, rejecting limits the adults
-        just accept. And we demand this not only for speed but for the hardcore
-        Satoshi properties as well - censorship resistance, permissionless
-        settlement, competitive mining - all achieved in real time, not
-        eventually. This is not achievable in real time without proof of work.{" "}
-        <LoreLink href="https://x.com/michaelsuttonil/status/1973887808776675365">
-          PoW uniqueness
-        </LoreLink>
+        {t.rich("northStar.urgency", {
+          uniqueness: (chunks) => (
+            <LoreLink href="https://x.com/michaelsuttonil/status/1973887808776675365">
+              {chunks}
+            </LoreLink>
+          ),
+        })}
       </p>
       <p className="text-secondary mt-3 text-[15px] leading-[1.72]">
-        Kaspa achieving RTD means the protocol samples the honest majority of
-        the mining network in every consensus round. This allows transactions
-        that confirm safely after an hour in Bitcoin to confirm in seconds on
-        Kaspa; or it guarantees that Kaspa achieves censorship resistance within
-        seconds - what takes an hour in Bitcoin. This matters not only for
-        settlement speed but for every context where real-time sequencing is
-        critical - market resolutions, liquidation cascades, anywhere a single
-        consensus leader ordering transactions at its own discretion grants them
-        too much power.
+        {t("northStar.consensus")}
       </p>
       <p className="text-secondary mt-3 text-[15px] leading-[1.72]">
-        Real-time sampling of the honest majority can also be utilized to
-        achieve a trustless real-time data and event feed governed by the mining
-        network.{" "}
-        <LoreLink href="https://hashdag.medium.com/in-which-it-was-never-my-choice-to-hold-the-fire-we-found-937314149402">
-          RTD post
-        </LoreLink>
+        {t.rich("northStar.eventFeed", {
+          post: (chunks) => (
+            <LoreLink href="https://hashdag.medium.com/in-which-it-was-never-my-choice-to-hold-the-fire-we-found-937314149402">
+              {chunks}
+            </LoreLink>
+          ),
+        })}
       </p>
       <p className="text-secondary mt-3 text-[15px] leading-[1.72]">
-        RTD has also a defensive side. Partial synchrony (with the upcoming
-        DAGKnight) protocols uniquely implement the dual property of being fast
-        when the network is healthy and slow-yet-secure when it is not. Kaspa
-        sells speed to normies and wargrade money to cypherpunks.
+        {t("northStar.resilience")}
       </p>
 
       <hr className="border-subtle my-10 border-t" />
 
       <h2 className="text-primary text-center text-[17px] font-bold">
-        Shipped and next
+        {t("shipped.heading")}
       </h2>
       <p className="text-secondary mt-3 text-[15px] leading-[1.72]">
-        The original Golang node was rewritten from scratch in Rust. The rewrite
-        was backed by a 100M KAS community grant and turned into a real
-        open-source effort around <em>rusty-kaspa</em>, with a broad contributor
-        base.{" "}
-        <LoreLink href="https://github.com/kaspanet/rusty-kaspa">
-          Rusty Kaspa GitHub
-        </LoreLink>{" "}
+        {t.rich("shipped.rewrite", {
+          code: (chunks) => <em>{chunks}</em>,
+          github: (chunks) => (
+            <LoreLink href="https://github.com/kaspanet/rusty-kaspa">
+              {chunks}
+            </LoreLink>
+          ),
+        })}
       </p>
       <p className="text-secondary mt-3 text-[15px] leading-[1.72]">
-        That rewrite is what made Crescendo possible. Kaspa could not move to 10
-        blocks per second on mainnet without it. Crescendo is where the thesis
-        became live.{" "}
-        <LoreLink href="https://medium.com/@michaelsuttonil/unveiling-the-crescendo-hard-fork-roadmap-10bps-and-more-6072329e177f">
-          Crescendo reference
-        </LoreLink>{" "}
-        ·{" "}
-        <LoreLink href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v1.0.0">
-          Release notes
-        </LoreLink>
+        {t.rich("shipped.crescendo", {
+          reference: (chunks) => (
+            <LoreLink href="https://medium.com/@michaelsuttonil/unveiling-the-crescendo-hard-fork-roadmap-10bps-and-more-6072329e177f">
+              {chunks}
+            </LoreLink>
+          ),
+          release: (chunks) => (
+            <LoreLink href="https://github.com/kaspanet/rusty-kaspa/releases/tag/v1.0.0">
+              {chunks}
+            </LoreLink>
+          ),
+        })}
       </p>
 
       <ContributorStrip
         contributors={contributors}
+        locale={locale}
         totalContributors={totalContributors}
       />
     </>

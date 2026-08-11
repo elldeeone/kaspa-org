@@ -1,71 +1,94 @@
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
+
 import type { PageSectionLink } from "../components/page-sections/types";
+import { BUILD_TERMS } from "./constants";
 import type { SectionId, StartRoute } from "./types";
 
-export const startRoutes: StartRoute[] = [
-  { title: "Read chain data", href: "#try-live" },
-  { title: "Pick your stack", href: "#paths" },
-  { title: "Run a node", href: "#run-a-node" },
-];
+export function useBuildNavigation(): {
+  startRoutes: StartRoute[];
+  sectionLinks: PageSectionLink<SectionId>[];
+  mobileSectionLinks: PageSectionLink<SectionId>[];
+} {
+  const t = useTranslations("build");
 
-export const sectionLinks: PageSectionLink<SectionId>[] = [
-  {
-    id: "try-live",
-    label: "Try live",
-    compactLabel: "Live",
-    href: "#try-live",
-    description: "Upstream browser examples and live demos.",
-  },
-  {
-    id: "paths",
-    label: "Choose path",
-    compactLabel: "Paths",
-    href: "#paths",
-    description: "WASM SDK, native Rust, or full-node setup.",
-  },
-  {
-    id: "run-a-node",
-    label: "Run node",
-    compactLabel: "Node",
-    href: "#run-a-node",
-    description: "Docker one-liner to run Rusty Kaspa locally.",
-  },
-  {
-    id: "tooling",
-    label: "Tooling",
-    compactLabel: "Tools",
-    href: "#tooling",
-    description: "Upstream libraries, infrastructure, and ecosystem projects.",
-  },
-  {
-    id: "access",
-    label: "Access",
-    compactLabel: "Access",
-    href: "#access",
-    description: "Docs, query surfaces, node references, and test flows.",
-  },
-  {
-    id: "developments",
-    label: "Developments",
-    compactLabel: "Dev",
-    href: "#developments",
-    description: "Follow active work and public R&D discussions.",
-  },
-  {
-    id: "help",
-    label: "Help",
-    compactLabel: "Help",
-    href: "#help",
-    description: "Docs and community channels when you get stuck.",
-  },
-];
+  return useMemo(() => {
+    const startRoutes: StartRoute[] = [
+      {
+        title: t("start.quickstart.routes.chainData"),
+        href: "#try-live",
+      },
+      { title: t("start.quickstart.routes.stack"), href: "#paths" },
+      { title: t("start.quickstart.routes.node"), href: "#run-a-node" },
+    ];
+    const sectionLinks: PageSectionLink<SectionId>[] = [
+      {
+        id: "try-live",
+        label: t("navigation.sections.tryLive.label"),
+        compactLabel: t("navigation.sections.tryLive.compactLabel"),
+        href: "#try-live",
+        description: t("navigation.sections.tryLive.description"),
+      },
+      {
+        id: "paths",
+        label: t("navigation.sections.paths.label"),
+        compactLabel: t("navigation.sections.paths.compactLabel"),
+        href: "#paths",
+        description: t("navigation.sections.paths.description", {
+          rust: BUILD_TERMS.rust,
+          wasmSdk: BUILD_TERMS.wasmSdk,
+        }),
+      },
+      {
+        id: "run-a-node",
+        label: t("navigation.sections.runNode.label"),
+        compactLabel: t("navigation.sections.runNode.compactLabel"),
+        href: "#run-a-node",
+        description: t("navigation.sections.runNode.description", {
+          docker: BUILD_TERMS.docker,
+          rustyKaspa: BUILD_TERMS.rustyKaspa,
+        }),
+      },
+      {
+        id: "tooling",
+        label: t("navigation.sections.tooling.label"),
+        compactLabel: t("navigation.sections.tooling.compactLabel"),
+        href: "#tooling",
+        description: t("navigation.sections.tooling.description"),
+      },
+      {
+        id: "access",
+        label: t("navigation.sections.access.label"),
+        compactLabel: t("navigation.sections.access.compactLabel"),
+        href: "#access",
+        description: t("navigation.sections.access.description"),
+      },
+      {
+        id: "developments",
+        label: t("navigation.sections.developments.label"),
+        compactLabel: t("navigation.sections.developments.compactLabel"),
+        href: "#developments",
+        description: t("navigation.sections.developments.description"),
+      },
+      {
+        id: "help",
+        label: t("navigation.sections.help.label"),
+        compactLabel: t("navigation.sections.help.compactLabel"),
+        href: "#help",
+        description: t("navigation.sections.help.description"),
+      },
+    ];
+    const mobileSectionLinks: PageSectionLink<SectionId>[] = [
+      {
+        id: "start",
+        label: t("navigation.sections.start.label"),
+        compactLabel: t("navigation.sections.start.compactLabel"),
+        href: "#start",
+        description: t("navigation.sections.start.description"),
+      },
+      ...sectionLinks,
+    ];
 
-export const mobileSectionLinks: PageSectionLink<SectionId>[] = [
-  {
-    id: "start",
-    label: "Start",
-    compactLabel: "Start",
-    href: "#start",
-    description: "Overview and the fastest way into the stack.",
-  },
-  ...sectionLinks,
-];
+    return { mobileSectionLinks, sectionLinks, startRoutes };
+  }, [t]);
+}

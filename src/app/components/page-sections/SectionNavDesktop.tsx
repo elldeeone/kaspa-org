@@ -1,6 +1,7 @@
 "use client";
 
 import type { MouseEventHandler } from "react";
+import { useTranslations } from "next-intl";
 
 import type { PageSectionLink } from "./types";
 
@@ -21,6 +22,8 @@ export default function SectionNavDesktop<T extends string>({
   onNavInteract,
   onHashClick,
 }: SectionNavDesktopProps<T>): React.JSX.Element {
+  const t = useTranslations("shared.pageSections");
+
   return (
     <div
       className={`fixed inset-x-0 top-20 z-40 hidden transition-all duration-300 lg:block ${
@@ -40,7 +43,7 @@ export default function SectionNavDesktop<T extends string>({
         <div className="px-20">
           <div className="mx-auto flex h-9 max-w-6xl items-center gap-4">
             <span className="text-muted shrink-0 text-[10px] font-medium tracking-[0.12em] uppercase">
-              On this page
+              {t("onThisPage")}
             </span>
             <span className="h-3.5 w-px shrink-0 bg-[var(--border-subtle)]" />
             <div className="flex min-w-0 items-center gap-4">

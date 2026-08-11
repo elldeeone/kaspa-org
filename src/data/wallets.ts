@@ -1,7 +1,7 @@
 import type { KaspaWallet } from "@/app/hodl/wallet-finder/types";
 
 /*
-Add a wallet by adding one object to walletRecords.
+Add a wallet by adding one complete English object to walletRecords.
 See docs/wallet-submissions.md for the full submission template.
 
 Required:
@@ -16,8 +16,16 @@ Required:
 
 Maintainers validate rating accuracy before merge.
 */
-const walletRecords: KaspaWallet[] = [
-  {
+type WalletWithId<Id extends string> = Omit<KaspaWallet, "id"> & { id: Id };
+
+function defineWallet<const Id extends string>(
+  wallet: WalletWithId<Id>,
+): WalletWithId<Id> {
+  return wallet;
+}
+
+const walletRecords = [
+  defineWallet({
     id: "kaspa-cli-wallet",
     title: "CLI Wallet",
     icon: "/hodl/wallets/kaspa-cli-wallet/icon.png",
@@ -38,8 +46,8 @@ const walletRecords: KaspaWallet[] = [
         link: "https://github.com/kaspanet/rusty-kaspa/tree/master/wallet",
       },
     ],
-  },
-  {
+  }),
+  defineWallet({
     id: "kaspacom-wallet",
     title: "KaspaCom Wallet",
     icon: "/hodl/wallets/kaspacom-wallet/icon.png",
@@ -64,8 +72,8 @@ const walletRecords: KaspaWallet[] = [
         link: "https://github.com/KASPACOM/kaspacom-web-wallet",
       },
     ],
-  },
-  {
+  }),
+  defineWallet({
     id: "kaspium",
     title: "Kaspium",
     icon: "/hodl/wallets/kaspium/icon.jpg",
@@ -96,8 +104,8 @@ const walletRecords: KaspaWallet[] = [
         link: "https://github.com/azbuky/kaspium_wallet",
       },
     ],
-  },
-  {
+  }),
+  defineWallet({
     id: "kng-desktop",
     title: "Kaspa NG",
     icon: "/hodl/wallets/kng-desktop/icon.png",
@@ -122,8 +130,8 @@ const walletRecords: KaspaWallet[] = [
         link: "https://github.com/aspectron/kaspa-ng/",
       },
     ],
-  },
-  {
+  }),
+  defineWallet({
     id: "kng-web",
     title: "Kaspa NG Web",
     icon: "/hodl/wallets/kng-web/icon.png",
@@ -148,9 +156,11 @@ const walletRecords: KaspaWallet[] = [
         link: "https://github.com/aspectron/kaspa-ng/",
       },
     ],
-  },
+  }),
 ];
 
-export const kaspaWallets = [...walletRecords].sort((walletA, walletB) =>
-  walletA.title.localeCompare(walletB.title),
-);
+export type WalletId = (typeof walletRecords)[number]["id"];
+
+export const kaspaWallets: Array<KaspaWallet & { id: WalletId }> = [
+  ...walletRecords,
+].sort((walletA, walletB) => walletA.title.localeCompare(walletB.title));

@@ -1,0 +1,294 @@
+{
+  "metadata": {
+    "title": "Comprar KAS, configurar una billetera y usar la autocustodia | Kaspa",
+    "description": "Obtén una billetera, compra KAS y transfiérelos a una billetera de autocustodia."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Descentralización en tiempo real"
+  },
+  "navigation": {
+    "current": "HODL",
+    "sections": {
+      "wallet": {
+        "label": "1. Obtener una billetera",
+        "compactLabel": "Billetera",
+        "description": "Configura una billetera para guardar tus KAS."
+      },
+      "buy": {
+        "label": "2. Comprar KAS",
+        "compactLabel": "Comprar",
+        "description": "Encuentra KAS en las principales plataformas de intercambio."
+      },
+      "transfer": {
+        "label": "3. Transferir a la billetera",
+        "compactLabel": "Transferir",
+        "description": "Envía KAS desde la plataforma de intercambio a tu billetera."
+      },
+      "help": {
+        "label": "Ayuda",
+        "compactLabel": "Ayuda",
+        "description": "Ayuda de la comunidad y herramientas del explorador."
+      }
+    }
+  },
+  "start": {
+    "heading": "<flicker><source>H</source><replacement>K</replacement></flicker>ODL Kaspa",
+    "tagline": "Compra KAS y transfiérelos a una billetera bajo tu control."
+  },
+  "wallet": {
+    "heading": "Obtener una billetera",
+    "description": "Elige una billetera que se ajuste a cómo quieres guardar y usar KAS.",
+    "safety": {
+      "label": "Importante:",
+      "body": "Guarda una copia de seguridad de tu frase de recuperación o de las instrucciones de la billetera antes de transferir una cantidad importante. Envía primero una pequeña transacción de prueba y transfiere el resto solo cuando haya llegado."
+    }
+  },
+  "buy": {
+    "heading": "Compra KAS",
+    "description": "KAS cotiza en muchas plataformas de intercambio. Adquiérelo en una plataforma disponible en tu región y luego transfiérelo a tu billetera privada.",
+    "moreExchanges": "Y más de {count, number}"
+  },
+  "transfer": {
+    "heading": "Asume la custodia de tus KAS",
+    "description": "Protege tus activos transfiriéndolos desde la plataforma de intercambio a tu billetera privada.",
+    "receive": "Recibir",
+    "screenReaderDiagram": "Transferencia de KAS desde una cuenta de una plataforma de intercambio a una billetera privada",
+    "stepLabel": "Paso {step}",
+    "steps": {
+      "receiveAddress": {
+        "title": "Obtén tu dirección de recepción",
+        "description": "Abre la aplicación Kaspium, toca «Recibir» y copia tu dirección única."
+      },
+      "testTransaction": {
+        "title": "Envía una transacción de prueba",
+        "description": "Retira una pequeña fracción de KAS desde la plataforma de intercambio para comprobar que la ruta sea correcta."
+      },
+      "balance": {
+        "title": "Transfiere el saldo",
+        "description": "Cuando la transacción de prueba llegue de forma segura a tu billetera, retira el saldo restante."
+      }
+    },
+    "waitTimes": {
+      "label": "Tiempos de espera de las plataformas de intercambio:",
+      "body": "Las transferencias nativas de Kaspa son prácticamente instantáneas, pero las plataformas de intercambio aplican sus propias demoras internas. Es completamente normal esperar entre 30 y 60 minutos hasta que una plataforma libere tus fondos a la red."
+    },
+    "security": {
+      "label": "Comprobación de seguridad:",
+      "body": "Comprueba siempre los primeros y los últimos caracteres de tu dirección antes de confirmar."
+    }
+  },
+  "help": {
+    "eyebrow": "Ayuda",
+    "heading": "Sigue avanzando",
+    "descriptionWithAi": "Pregunta a la IA de Kaspa para obtener respuestas inmediatas sobre billeteras, compras y seguridad. Para recibir ayuda de la comunidad, únete a Discord; para consultar una transacción, usa el explorador.",
+    "descriptionWithoutAi": "Para recibir ayuda de la comunidad, únete a Discord; para consultar una transacción, usa el explorador.",
+    "openAi": "Abrir la IA",
+    "community": "Comunidad",
+    "discord": "Discord",
+    "trackTransaction": "Consultar una transacción",
+    "explorer": "Explorador",
+    "prompts": {
+      "backupWallet": "¿Cómo hago una copia de seguridad de mi billetera?",
+      "buyKas": "¿Dónde puedo comprar KAS?",
+      "firstPurchase": "¿Cómo compro KAS por primera vez?",
+      "leaveOnExchange": "¿Debería dejar mis KAS en la plataforma de intercambio?",
+      "moveFromExchange": "¿Cómo envío KAS desde una plataforma de intercambio a mi billetera?",
+      "fees": "¿Qué comisiones debo esperar al comprar o transferir KAS?",
+      "recoveryPhrase": "¿Qué es una frase de recuperación?",
+      "walletVsExchange": "¿Cuál es la diferencia entre una billetera y una plataforma de intercambio?",
+      "receiveKas": "¿Cómo recibo KAS de otra persona?",
+      "multipleWallets": "¿Puedo tener más de una billetera Kaspa?",
+      "maxSupply": "¿Cuál es el suministro máximo de Kaspa?"
+    }
+  },
+  "media": {
+    "kaspiumScreenshotAlt": "Captura de pantalla de la aplicación de billetera Kaspium"
+  },
+  "walletFinder": {
+    "common": {
+      "optional": "Opcional",
+      "notAvailable": "No disponible",
+      "notAvailableSentence": "No disponible.",
+      "moreInformation": "Más información",
+      "pros": "Ventajas",
+      "cons": "Desventajas",
+      "newUser": "Principiante",
+      "experiencedUser": "Con experiencia"
+    },
+    "operatingSystems": {
+      "android": "Android",
+      "ios": "iOS",
+      "windows": "Windows",
+      "mac": "macOS",
+      "linux": "Linux",
+      "hardware": "Hardware"
+    },
+    "guidance": {
+      "mobile": {
+        "title": "Billeteras móviles",
+        "shortTitle": "Móvil",
+        "pros": {
+          "portable": "Portátiles y prácticas; ideales para hacer transacciones en persona",
+          "qr": "Diseñadas para usar códigos QR y realizar transacciones rápidas y sencillas"
+        },
+        "cons": {
+          "marketplaces": "Las tiendas de aplicaciones pueden retirar billeteras y dificultar la recepción de futuras actualizaciones",
+          "deviceLoss": "Los daños o la pérdida del dispositivo pueden provocar la pérdida de fondos"
+        }
+      },
+      "desktop": {
+        "title": "Billeteras de escritorio",
+        "shortTitle": "Escritorio",
+        "pros": {
+          "control": "Los entornos de escritorio pueden ofrecer a los usuarios un control total sobre sus fondos",
+          "advanced": "Algunas billeteras de escritorio admiten billeteras de hardware o el funcionamiento como nodo completo"
+        },
+        "cons": {
+          "qr": "Son menos prácticas para pagar con códigos QR al realizar transacciones en persona",
+          "malware": "Los equipos comprometidos pueden exponer a los usuarios a malware, spyware o virus"
+        }
+      },
+      "hardware": {
+        "title": "Billeteras de hardware",
+        "shortTitle": "Hardware",
+        "pros": {
+          "secure": "Uno de los métodos más seguros para guardar fondos",
+          "longTerm": "Ideales para guardar grandes cantidades de KAS a largo plazo"
+        },
+        "cons": {
+          "mobile": "Son menos prácticas al desplazarse y no están diseñadas para transacciones rápidas",
+          "deviceLoss": "Perder el dispositivo sin una copia de seguridad adecuada puede hacer que los fondos sean irrecuperables"
+        }
+      }
+    },
+    "wizard": {
+      "progress": "Paso {step, number} de {total, number}",
+      "skip": "Omitir →",
+      "skipAll": "Ver todas las billeteras →",
+      "prosAndCons": "Ventajas y desventajas",
+      "back": "Atrás",
+      "next": "Siguiente",
+      "showWallets": "Mostrar billeteras",
+      "showMatchingWallets": "Mostrar billeteras compatibles",
+      "steps": {
+        "os": {
+          "title": "¿Qué sistema operativo utilizas?",
+          "subtitle": "Esto filtra la lista y muestra las billeteras compatibles con tu sistema operativo."
+        },
+        "experience": {
+          "title": "¿Cuánto sabes sobre Kaspa?",
+          "subtitle": "Nos ayuda a mostrar billeteras adecuadas para tu nivel de experiencia."
+        },
+        "criteria": {
+          "title": "¿Qué criterios son importantes para ti?",
+          "subtitle": "Opcional"
+        },
+        "features": {
+          "title": "¿Qué funciones buscas?",
+          "subtitle": "Opcional"
+        }
+      },
+      "experience": {
+        "newDescription": "Muestra las billeteras ideales para usuarios principiantes.",
+        "experiencedDescription": "Muestra todas las billeteras."
+      }
+    },
+    "filters": {
+      "heading": "Filtrar billeteras",
+      "clearAll": "Borrar todo",
+      "operatingSystem": "Sistema operativo",
+      "userType": "Tipo de usuario",
+      "criteria": "Criterios",
+      "features": "Funciones",
+      "showNewUsers": "Muestra las billeteras ideales para usuarios principiantes.",
+      "showExperiencedUsers": "Muestra todas las billeteras.",
+      "show": "Filtros",
+      "hide": "Ocultar filtros",
+      "remove": "Quitar el filtro {filter}"
+    },
+    "criteria": {
+      "control": {
+        "label": "Control",
+        "description": "Algunas billeteras te dan un control total sobre tus KAS. Esto significa que ningún tercero puede congelar ni confiscar tus fondos. Sin embargo, tú sigues siendo responsable de proteger tu billetera y de hacer una copia de seguridad."
+      },
+      "validation": {
+        "label": "Validación",
+        "description": "Algunas billeteras te permiten controlar qué nodo de Kaspa procesa tus transacciones, ya sea ejecutando su propio nodo o permitiéndote conectarlas a cualquier nodo de confianza."
+      },
+      "transparency": {
+        "label": "Transparencia",
+        "description": "Algunas billeteras son de código abierto y se pueden compilar de forma determinista. Este proceso permite reproducir el código resultante y ayuda a comprobar que no haya sido manipulado."
+      },
+      "fees": {
+        "label": "Comisiones",
+        "description": "Algunas billeteras te permiten controlar por completo la comisión que pagas a la red Kaspa antes de realizar una transacción, para que esta se confirme a tiempo sin pagar más de lo necesario."
+      }
+    },
+    "features": {
+      "two_fa": {
+        "label": "2FA",
+        "description": "La autenticación de dos factores (2FA) añade una segunda capa de seguridad a tu billetera. Además de tu contraseña, se requiere un código de verificación enviado por una aplicación o por mensaje de texto para acceder a tus fondos. Ten en cuenta que 2FA suele depender de un servicio externo para proporcionar la verificación."
+      },
+      "hardware_wallet": {
+        "label": "Compatibilidad con billeteras de hardware",
+        "description": "Algunas billeteras de software se pueden vincular con un dispositivo de billetera de hardware, como Ledger o Tangem. Así puedes mantener tus claves privadas aisladas en el dispositivo mientras utilizas una interfaz de software conocida."
+      },
+      "multisig": {
+        "label": "Multisig",
+        "description": "Algunas billeteras admiten transacciones Multisig, que requieren más de una clave para autorizar una transferencia. Esto permite repartir la responsabilidad entre varias partes o añadir una capa de protección adicional para fondos de gran valor."
+      }
+    },
+    "ratings": {
+      "good": "Bien",
+      "acceptable": "Aceptable",
+      "caution": "Precaución",
+      "not_applicable": "No aplicable",
+      "notApplicableCompact": "N/A",
+      "aria": "{criterion}: {rating}",
+      "tooltipHeading": "{criterion}: {rating}",
+      "explanations": {
+        "control": {
+          "good": "Autocustodia. Tú conservas tus claves privadas, por lo que ningún tercero puede congelar o confiscar tus fondos.",
+          "caution": "Custodia de terceros. Un tercero conserva tus claves y puede congelar o confiscar tus fondos."
+        },
+        "validation": {
+          "good": "Ejecuta de forma predeterminada su propio nodo completo de Kaspa, por lo que valida las transacciones de manera independiente.",
+          "acceptable": "Permite conectarla a cualquier nodo de Kaspa de confianza, pero no puede funcionar como nodo por sí misma.",
+          "caution": "Solo se conecta a una infraestructura centralizada fija, por lo que debes confiar en el nodo elegido por la billetera.",
+          "not_applicable": "Es solo un dispositivo de hardware y no gestiona las transacciones por sí mismo."
+        },
+        "transparency": {
+          "good": "Es de código abierto y ofrece compilaciones reproducibles, por lo que el binario publicado se puede verificar comparándolo con el código fuente.",
+          "acceptable": "Es de código abierto, pero las compilaciones no son reproducibles, por lo que debes confiar en que el binario publicado coincida con el código fuente.",
+          "caution": "Es de código cerrado. El código no se puede auditar de forma independiente."
+        },
+        "fees": {
+          "good": "Permite establecer libremente una comisión totalmente personalizada en cada transacción.",
+          "acceptable": "Ofrece niveles de comisión predefinidos, pero no permite establecer una comisión totalmente personalizada.",
+          "caution": "Las comisiones son obligatorias u ocultas y el usuario no puede controlarlas."
+        }
+      }
+    },
+    "results": {
+      "summary": "<strong>{matches, number}</strong> de {total, plural, one {# billetera} other {# billeteras}}",
+      "compactSummary": "<strong>{matches, number}</strong> / {total, plural, one {# billetera} other {# billeteras}}",
+      "helpChoose": "Ayúdame a elegir",
+      "walletColumn": "Billetera",
+      "noMatches": "No hay billeteras que coincidan",
+      "removeFilters": "Intenta quitar algunos filtros.",
+      "noLinks": "No hay enlaces disponibles para este filtro.",
+      "aboutCriterion": "Acerca de {criterion}"
+    },
+    "actions": {
+      "app_store": "App Store",
+      "google_play": "Google Play",
+      "download": "Descargar",
+      "open": "Abrir billetera",
+      "view_source": "Ver código fuente"
+    },
+    "submission": {
+      "question": "¿Falta alguna billetera?",
+      "action": "Consulta cómo proponerla en GitHub"
+    }
+  }
+}

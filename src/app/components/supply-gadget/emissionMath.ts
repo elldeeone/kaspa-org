@@ -24,11 +24,9 @@ import { SUBSIDY_BY_MONTH_TABLE } from "./emissionSubsidyTable";
 
 export {
   CHECKPOINT_DAA,
-  CHECKPOINT_DATE,
   CHECKPOINT_TOTAL_SOMPI,
   CRESCENDO_DAA,
   DEFLATIONARY_PHASE_DAA,
-  LAUNCH_WINDOW_DATE,
   SOMPI_PER_KAS,
 } from "./emissionConstants";
 
@@ -205,9 +203,4 @@ export function computeUltimateSupply(): bigint {
     CHECKPOINT_TOTAL_SOMPI -
     computeExpectedSupply(CHECKPOINT_DAA)
   );
-}
-
-export function formatKas(sompi: bigint): string {
-  const kas = Number(sompi / SOMPI_PER_KAS);
-  return kas.toLocaleString("en-US", { maximumFractionDigits: 0 });
 }

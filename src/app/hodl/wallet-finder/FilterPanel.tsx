@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { ACCENT, accentAlpha } from "../content";
 import { OS_GUIDANCE_GROUPS } from "./constants";
 import { getVisibleFeatures } from "./filterState";
@@ -58,34 +60,36 @@ function GroupTooltip({
 }: {
   group: (typeof OS_GUIDANCE_GROUPS)[number];
 }) {
+  const t = useTranslations("hodl");
+
   return (
     <div>
       <p className="text-primary mb-2 text-[11px] font-semibold">
-        {group.title}
+        {t(`walletFinder.guidance.${group.id}.title`)}
       </p>
       <div className="space-y-2">
         <div>
           <p className="mb-1 text-[10px] font-semibold tracking-[0.08em] text-[var(--text-muted)] uppercase">
-            Pros
+            {t("walletFinder.common.pros")}
           </p>
           <ul className="space-y-1">
             {group.pros.map((pro) => (
               <li key={pro} className="flex gap-1.5">
                 <span style={{ color: ACCENT }}>+</span>
-                <span>{pro}</span>
+                <span>{t(pro)}</span>
               </li>
             ))}
           </ul>
         </div>
         <div>
           <p className="mb-1 text-[10px] font-semibold tracking-[0.08em] text-[var(--text-muted)] uppercase">
-            Cons
+            {t("walletFinder.common.cons")}
           </p>
           <ul className="space-y-1">
             {group.cons.map((con) => (
               <li key={con} className="flex gap-1.5">
                 <span className="text-muted">-</span>
-                <span>{con}</span>
+                <span>{t(con)}</span>
               </li>
             ))}
           </ul>
@@ -105,6 +109,7 @@ export default function FilterPanel({
   isCriterionDisabled,
   isFeatureDisabled,
 }: FilterPanelProps) {
+  const t = useTranslations("hodl");
   const sectionHeader =
     "text-[11px] font-semibold tracking-[0.1em] uppercase text-[var(--text-muted)] mb-3";
   const divider = "border-subtle my-5 border-t";
@@ -112,27 +117,31 @@ export default function FilterPanel({
   return (
     <div className="border-subtle rounded-[24px] border bg-[var(--bg)] p-5 dark:bg-[rgba(255,255,255,0.02)]">
       <div className="mb-5 flex items-center justify-between">
-        <p className="text-[14px] font-semibold">Filter wallets</p>
+        <p className="text-[14px] font-semibold">
+          {t("walletFinder.filters.heading")}
+        </p>
         <button
           type="button"
           className="text-tertiary hover:text-primary text-[12px] font-medium underline-offset-2 transition-colors hover:underline"
           onClick={onReset}
         >
-          Clear all
+          {t("walletFinder.filters.clearAll")}
         </button>
       </div>
 
       <div>
-        <p className={sectionHeader}>Operating system</p>
+        <p className={sectionHeader}>
+          {t("walletFinder.filters.operatingSystem")}
+        </p>
         <div className="grid grid-cols-2 gap-x-4 gap-y-5">
           {OS_GUIDANCE_GROUPS.map((group) => (
             <div
-              key={group.title}
+              key={group.id}
               className={group.os.length === 1 ? "col-span-2" : undefined}
             >
               <div className="mb-2 flex items-center gap-1.5">
                 <p className="text-muted text-[10px] font-semibold tracking-[0.1em] uppercase">
-                  {group.title.replace(" wallets", "")}
+                  {t(`walletFinder.guidance.${group.id}.shortTitle`)}
                 </p>
                 <InfoTooltip>
                   <GroupTooltip group={group} />
@@ -140,13 +149,17 @@ export default function FilterPanel({
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {group.os.map((osOption) => {
-                  const active = filters.os === osOption.id;
+                  const active = filters.os === osOption;
+                  const osLabel = t(
+                    `walletFinder.operatingSystems.${osOption}`,
+                  );
                   return (
                     <button
-                      key={osOption.id}
+                      key={osOption}
                       type="button"
-                      title={osOption.label}
-                      onClick={() => onSetOs(active ? undefined : osOption.id)}
+                      title={osLabel}
+                      aria-label={osLabel}
+                      onClick={() => onSetOs(active ? undefined : osOption)}
                       className="flex h-11 w-11 items-center justify-center rounded-[10px] border transition-all hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
                       style={
                         active
@@ -163,7 +176,7 @@ export default function FilterPanel({
                           color: active ? ACCENT : "var(--text-secondary)",
                         }}
                       >
-                        {getOsIcon(osOption.id, "h-5 w-5")}
+                        {getOsIcon(osOption, "h-5 w-5")}
                       </span>
                     </button>
                   );
@@ -177,7 +190,7 @@ export default function FilterPanel({
       <div className={divider} />
 
       <div>
-        <p className={sectionHeader}>User type</p>
+        <p className={sectionHeader}>{t("walletFinder.filters.userType")}</p>
         <div className="flex flex-col gap-1">
           {(["beginner", "experienced"] as const).map((user) => {
             const active = filters.user === user;
@@ -210,14 +223,16 @@ export default function FilterPanel({
                     )}
                   </span>
                   <span className="text-[13.5px] font-medium">
-                    {user === "beginner" ? "New" : "Experienced"}
+                    {user === "beginner"
+                      ? t("walletFinder.common.newUser")
+                      : t("walletFinder.common.experiencedUser")}
                   </span>
                 </span>
                 <InfoTooltip
                   text={
                     user === "beginner"
-                      ? "Show wallets ideal for new users."
-                      : "Show all of the wallets."
+                      ? t("walletFinder.filters.showNewUsers")
+                      : t("walletFinder.filters.showExperiencedUsers")
                   }
                 />
               </button>
@@ -229,7 +244,7 @@ export default function FilterPanel({
       <div className={divider} />
 
       <div>
-        <p className={sectionHeader}>Criteria</p>
+        <p className={sectionHeader}>{t("walletFinder.filters.criteria")}</p>
         <div className="flex flex-col gap-0.5">
           {walletCriteria.map((criterion) => {
             const active = filters.important.includes(criterion.id);
@@ -251,15 +266,19 @@ export default function FilterPanel({
                 <span className="flex items-center gap-2.5">
                   <CheckGlyph active={active} />
                   <span className="text-[13.5px] font-medium">
-                    {criterion.label}
+                    {t(`walletFinder.criteria.${criterion.id}.label`)}
                   </span>
                 </span>
                 {disabled ? (
                   <span className="text-[11px] text-[var(--text-muted)]">
-                    Not available
+                    {t("walletFinder.common.notAvailable")}
                   </span>
                 ) : (
-                  <InfoTooltip text={criterion.description} />
+                  <InfoTooltip
+                    text={t(
+                      `walletFinder.criteria.${criterion.id}.description`,
+                    )}
+                  />
                 )}
               </button>
             );
@@ -270,7 +289,7 @@ export default function FilterPanel({
       <div className={divider} />
 
       <div>
-        <p className={sectionHeader}>Features</p>
+        <p className={sectionHeader}>{t("walletFinder.filters.features")}</p>
         <div className="flex flex-col gap-0.5">
           {getVisibleFeatures(filters.user).map((feature) => {
             const active = filters.features.includes(feature.id);
@@ -292,15 +311,17 @@ export default function FilterPanel({
                 <span className="flex items-center gap-2.5">
                   <CheckGlyph active={active} />
                   <span className="text-[13.5px] font-medium">
-                    {feature.label}
+                    {t(`walletFinder.features.${feature.id}.label`)}
                   </span>
                 </span>
                 {disabled ? (
                   <span className="text-[11px] text-[var(--text-muted)]">
-                    Not available
+                    {t("walletFinder.common.notAvailable")}
                   </span>
                 ) : (
-                  <InfoTooltip text={feature.description} />
+                  <InfoTooltip
+                    text={t(`walletFinder.features.${feature.id}.description`)}
+                  />
                 )}
               </button>
             );

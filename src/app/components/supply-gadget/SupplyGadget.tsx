@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import SupplyTimeline from "./SupplyTimeline";
 import { SupplyComparisonGrid } from "./gadget/SupplyComparisonGrid";
 import { SupplyConnectionStatus } from "./gadget/SupplyConnectionStatus";
@@ -16,6 +18,7 @@ type SupplyGadgetProps = {
 export default function SupplyGadget({
   showIntro = true,
 }: SupplyGadgetProps): React.JSX.Element {
+  const t = useTranslations("home.proof.supply");
   const node = useKaspaNode();
   const { blockReward, expectedSompi, pctEmitted } = getSupplyMetrics(node);
 
@@ -39,7 +42,7 @@ export default function SupplyGadget({
 
       <div className="mt-8">
         <div className="text-muted mb-4 text-xs tracking-wider uppercase">
-          Emission history
+          {t("emissionHistory")}
         </div>
         <SupplyTimeline
           circulatingSompi={node.circulatingSompi}

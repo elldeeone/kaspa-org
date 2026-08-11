@@ -1,32 +1,66 @@
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
+
+import { buildExampleContract } from "@/i18n/build-example-contract";
+
 import { RUSTY_KASPA_URL, RUSTY_RELEASE_URL } from "../constants";
 import type { PathCard } from "../types";
+import { useBuildTerms } from "../useBuildTerms";
 
-export const choosePathCards: PathCard[] = [
-  {
-    tier: "App SDK",
-    title: "Build with the WASM SDK",
-    desc: "Use the upstream browser and Node.js bindings for wallet flows, transactions, and RPC access.",
-    links: [
-      { label: "WASM SDK docs", href: "https://kaspa.aspectron.org/docs/" },
+export function useChoosePathCards(): PathCard[] {
+  const t = useTranslations("build.paths.cards");
+  const terms = useBuildTerms();
+
+  return useMemo(
+    () => [
       {
-        label: "Upstream examples",
-        href: "https://github.com/kaspanet/rusty-kaspa/tree/v2.0.0/wasm/examples",
+        tier: t("wasm.tier", { sdk: terms.sdk }),
+        title: t("wasm.title", { wasmSdk: terms.wasmSdk }),
+        desc: t("wasm.description", {
+          nodeJs: terms.nodeJs,
+          rpc: terms.rpc,
+        }),
+        links: [
+          {
+            label: t("wasm.docs", { wasmSdk: terms.wasmSdk }),
+            href: "https://kaspa.aspectron.org/docs/",
+          },
+          {
+            label: t("wasm.examples"),
+            href: buildExampleContract.sourceTreeUrl,
+          },
+        ],
+      },
+      {
+        tier: t("rust.tier", { rust: terms.rust }),
+        title: t("rust.title", { rust: terms.rust }),
+        desc: t("rust.description", {
+          rust: terms.rust,
+          rustyKaspa: terms.rustyKaspa,
+        }),
+        links: [
+          {
+            label: t("rust.repo", { rustyKaspa: terms.rustyKaspa }),
+            href: RUSTY_KASPA_URL,
+          },
+        ],
+      },
+      {
+        tier: t("node.tier"),
+        title: t("node.title"),
+        desc: t("node.description", {
+          rustyKaspa: terms.rustyKaspa,
+          utxo: terms.utxo,
+        }),
+        links: [
+          { label: t("node.release"), href: RUSTY_RELEASE_URL },
+          {
+            label: t("node.repo", { rustyKaspa: terms.rustyKaspa }),
+            href: RUSTY_KASPA_URL,
+          },
+        ],
       },
     ],
-  },
-  {
-    tier: "Native Rust",
-    title: "Build with native Rust",
-    desc: "Use the Rust crates inside Rusty Kaspa for backend services, systems integrations, wallet internals, and node-adjacent workloads.",
-    links: [{ label: "Rusty Kaspa repo", href: RUSTY_KASPA_URL }],
-  },
-  {
-    tier: "Node",
-    title: "Run a node",
-    desc: "Use Rusty Kaspa for full access, UTXO indexing, and production infrastructure.",
-    links: [
-      { label: "Latest release", href: RUSTY_RELEASE_URL },
-      { label: "Rusty Kaspa repo", href: RUSTY_KASPA_URL },
-    ],
-  },
-];
+    [t, terms],
+  );
+}
