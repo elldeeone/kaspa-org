@@ -406,6 +406,7 @@ test.describe("production i18n foundation contract", () => {
         `https://kaspa.org${path === "/" ? "" : path}`,
         `https://kaspa.org${localizePublicPath("es", path)}`,
         `https://kaspa.org${localizePublicPath("de", path)}`,
+        `https://kaspa.org${localizePublicPath("fr", path)}`,
       ]),
     );
     expect(sitemap).not.toContain("hreflang");
