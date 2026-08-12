@@ -1,0 +1,112 @@
+{
+  "navigation": {
+    "homeAria": "Главная Kaspa",
+    "toggleMenu": "Переключить меню",
+    "menu": "Меню",
+    "language": {
+      "label": "Язык"
+    },
+    "links": {
+      "lore": "LORE",
+      "hodl": "HODL",
+      "build": "BUIDL",
+      "think": "THINK",
+      "dagviz": "DAGVIZ"
+    }
+  },
+  "theme": {
+    "switchMode": "Включить {mode} режим",
+    "light": "светлый",
+    "dark": "тёмный"
+  },
+  "logoMenu": {
+    "aria": "логотип Kaspa",
+    "viewAssets": "Посмотреть логотипы"
+  },
+  "pageSections": {
+    "onThisPage": "На этой странице",
+    "openAria": "Открыть разделы страницы; текущий раздел — {section}",
+    "dialogAria": "Разделы страницы",
+    "close": "Закрыть",
+    "current": "Текущий"
+  },
+  "footer": {
+    "glyphAria": "Знак Kaspa",
+    "operatedBy": "Управляется <operator>KasMedia.com</operator>",
+    "links": {
+      "explorer": "Обозреватель",
+      "github": "GitHub",
+      "x": "X"
+    }
+  },
+  "structuredData": {
+    "organizationDescription": "Kaspa — это честно запущенная криптовалюта blockDAG с доказательством работы, работающая со скоростью 10 блоков в секунду и созданная для децентрализации в реальном времени."
+  },
+  "ai": {
+    "externalPrompt": "Прочтите {url}, хочу задать вопросы по этому поводу.",
+    "genericError": "Извините, что-то пошло не так. Пожалуйста, попробуйте ещё раз.",
+    "launcher": {
+      "askAnything": "Задать вопрос",
+      "beta": "Бета",
+      "betaTitle": "Эта функция находится в активной разработке — время от времени могут возникать проблемы.",
+      "betaAria": "Бета-версия — иногда могут возникать проблемы.",
+      "poweredBy": "Работает на базе <provider>kaspa.news/ask</provider>",
+      "collapsePanel": "Свернуть панель",
+      "expandPanel": "Развернуть панель",
+      "closePanel": "Закрыть панель",
+      "placeholder": "Задайте любой вопрос...",
+      "sendMessage": "Отправить сообщение",
+      "welcomeHeading": "Спросите что-нибудь о Kaspa",
+      "welcomeBody": "Получите быстрые ответы ниже или начните полный разговор с предпочитаемым вами ИИ.",
+      "ownAiDivider": "или используйте свой собственный ИИ",
+      "ownAiLabel": "Используйте свой собственный ИИ:",
+      "sources": "{count, plural, =0 {Источники} one {Источник (#)} few {Источника (#)} many {Источников (#)} other {Источника (#)}}",
+      "copy": "копировать",
+      "copied": "скопировано"
+    },
+    "suggestions": {
+      "kaspaPurpose": "Что решает Kaspa?",
+      "blockTimes": "Каково время блока?",
+      "decentralization": "Почему важна децентрализация в реальном времени?",
+      "premine": "Был ли премайн?"
+    },
+    "providers": {
+      "chatgpt": "ChatGPT",
+      "claude": "Claude",
+      "perplexity": "Perplexity"
+    },
+    "loading": {
+      "atomicArc": "безопасный запуск AtomicArc...",
+      "ibd": "IBD-синхронизация нового узла...",
+      "ftr": "FTR-ретрансляция блока...",
+      "kip": "активация KIP...",
+      "template": "привязка шаблона...",
+      "commitment": "загрузка из коммитмента...",
+      "blueSet": "формирование синего множества...",
+      "mergeDepth": "вычисление глубины слияния...",
+      "silverscript": "убедить silverscript скомпилировать...",
+      "covenantId": "получение covenant_id...",
+      "covenantState": "кодирование состояния ковенанта...",
+      "orphans": "удаление блоков-сирот...",
+      "mempool": "заполняем мемпул...",
+      "fees": "распределение комиссий по уровням...",
+      "covenants": "переговоры с ковенантами...",
+      "blocks": "параллельная обработка блоков...",
+      "pruning": "обрезка истории...",
+      "dagLayer": "публикация на уровне DAG...",
+      "stack": "отправка в стек...",
+      "bps": "ребалансировка 10 BPS...",
+      "blueWork": "пересчёт синей работы...",
+      "l2": "реорганизация-фильтрация событий L2...",
+      "vprogBatch": "планирование пакета vProg...",
+      "schnorr": "создание подписи Schnorr...",
+      "virtualState": "сериализация виртуального состояния...",
+      "utxoSet": "снимок набора UTXO...",
+      "anticone": "пересекая антиконус...",
+      "transactions": "восстановление транзакций-сирот...",
+      "utxo": "разблокировка UTXO...",
+      "vprogs": "виртуализация vProgs...",
+      "crescendo": "ожидание Crescendo..."
+    }
+  }
+}

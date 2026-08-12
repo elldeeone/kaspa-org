@@ -13,6 +13,7 @@ import {
   germanLocale,
   getLocaleDefinition,
   pseudoLocale,
+  russianLocale,
   spanishLocale,
 } from "../../src/i18n/locale-registry.ts";
 import { listSelectableLocales } from "../../src/i18n/config.ts";
@@ -37,6 +38,7 @@ test("selector options use registry endonyms and exclude the pseudo locale", () 
   assert.equal(isLanguageSelectorLocale(germanLocale), true);
   assert.equal(isLanguageSelectorLocale(frenchLocale), true);
   assert.equal(isLanguageSelectorLocale(chineseLocale), true);
+  assert.equal(isLanguageSelectorLocale(russianLocale), true);
   assert.equal(
     LANGUAGE_SELECTOR_OPTIONS.some(({ code }) => code === chineseLocale),
     listSelectableLocales().includes(chineseLocale),
@@ -58,6 +60,9 @@ test("locale path fallback preserves slugs and encoded path segments", () => {
   assert.equal(localizePathname("/lore", frenchLocale), "/fr/lore");
   if (isLanguageSelectorLocale(chineseLocale)) {
     assert.equal(localizePathname("/lore", chineseLocale), "/zh-CN/lore");
+  }
+  if (isLanguageSelectorLocale(russianLocale)) {
+    assert.equal(localizePathname("/lore", russianLocale), "/ru/lore");
   }
   assert.equal(localizePathname("/lore", "en"), "/lore");
   assert.equal(localizePathname("/", spanishLocale), "/es");

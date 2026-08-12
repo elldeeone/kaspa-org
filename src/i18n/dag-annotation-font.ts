@@ -1,7 +1,11 @@
-import { chineseLocale, type Locale } from "./locale-registry.ts";
+import {
+  chineseLocale,
+  russianLocale,
+  type Locale,
+} from "./locale-registry.ts";
 
 export type DagAnnotationFontContract = {
-  readonly family: "Ma Shan Zheng" | "Rock Salt";
+  readonly family: "Caveat" | "Ma Shan Zheng" | "Rock Salt";
   readonly filename: string | null;
   readonly fontSize: string;
 };
@@ -18,10 +22,16 @@ const simplifiedChineseFontContract = Object.freeze({
   fontSize: "clamp(13px, 1.4vw, 25px)",
 }) satisfies DagAnnotationFontContract;
 
+const russianFontContract = Object.freeze({
+  family: "Caveat",
+  filename: null,
+  fontSize: "clamp(15px, 1.45vw, 26px)",
+}) satisfies DagAnnotationFontContract;
+
 export function getDagAnnotationFontContract(
   locale: Locale,
 ): DagAnnotationFontContract {
-  return locale === chineseLocale
-    ? simplifiedChineseFontContract
-    : rockSaltFontContract;
+  if (locale === chineseLocale) return simplifiedChineseFontContract;
+  if (locale === russianLocale) return russianFontContract;
+  return rockSaltFontContract;
 }

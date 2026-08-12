@@ -33,6 +33,13 @@ import chineseHodl from "../../messages/zh-CN/hodl.json" with { type: "json" };
 import chineseHome from "../../messages/zh-CN/home.json" with { type: "json" };
 import chineseLore from "../../messages/zh-CN/lore.json" with { type: "json" };
 import chineseShared from "../../messages/zh-CN/shared.json" with { type: "json" };
+import russianAssets from "../../messages/ru/assets.json" with { type: "json" };
+import russianBuild from "../../messages/ru/build.json" with { type: "json" };
+import russianErrors from "../../messages/ru/errors.json" with { type: "json" };
+import russianHodl from "../../messages/ru/hodl.json" with { type: "json" };
+import russianHome from "../../messages/ru/home.json" with { type: "json" };
+import russianLore from "../../messages/ru/lore.json" with { type: "json" };
+import russianShared from "../../messages/ru/shared.json" with { type: "json" };
 
 import {
   isLocaleEnabled,
@@ -44,6 +51,7 @@ import {
   frenchLocale,
   germanLocale,
   pseudoLocale,
+  russianLocale,
   spanishLocale,
   type Locale,
 } from "./locale-registry.ts";
@@ -104,6 +112,16 @@ export const chineseMessages = {
   shared: chineseShared,
 } satisfies AppMessages;
 
+export const russianMessages = {
+  assets: russianAssets,
+  build: russianBuild,
+  errors: russianErrors,
+  hodl: russianHodl,
+  home: russianHome,
+  lore: russianLore,
+  shared: russianShared,
+} satisfies AppMessages;
+
 let generatedPseudoMessages: AppMessages | null = null;
 
 function assertNever(value: never): never {
@@ -150,6 +168,13 @@ export function getMessages(locale: Locale): LocaleMessages {
         );
       }
       return chineseMessages;
+    case russianLocale:
+      if (!isLocaleEnabled(russianLocale)) {
+        throw new Error(
+          `${russianLocale} messages are unavailable in this build target`,
+        );
+      }
+      return russianMessages;
     default:
       return assertNever(locale);
   }

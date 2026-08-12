@@ -5,8 +5,11 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import { getDagAnnotationFontContract } from "../../src/i18n/dag-annotation-font.ts";
-import { chineseLocale } from "../../src/i18n/locale-registry.ts";
-import { chineseMessages } from "../../src/i18n/messages.ts";
+import {
+  chineseLocale,
+  russianLocale,
+} from "../../src/i18n/locale-registry.ts";
+import { chineseMessages, russianMessages } from "../../src/i18n/messages.ts";
 import { getOpenGraphFontContract } from "../../src/i18n/opengraph-font.ts";
 
 const repositoryRoot = resolve(
@@ -83,6 +86,27 @@ test("Simplified Chinese Open Graph fonts cover the offline render copy", async 
   }
 });
 
+test("Russian Open Graph fonts cover the offline render copy", async () => {
+  const copy = russianMessages.home.openGraph;
+  const visibleCharacters = new Set(
+    [...`${copy.heading.replace("\n", " ")} ${copy.tagline}`].filter(
+      (character) => !/\s/u.test(character),
+    ),
+  );
+  const fontContract = getOpenGraphFontContract(russianLocale);
+  assert.equal(fontContract.family, "Geist");
+
+  for (const asset of fontContract.assets) {
+    const font = await readFile(
+      join(repositoryRoot, "src/app/fonts", asset.filename),
+    );
+    const missing = [...visibleCharacters].filter(
+      (character) => !fontHasGlyph(font, character.codePointAt(0)!),
+    );
+    assert.deepEqual(missing, [], `${asset.filename} glyph coverage`);
+  }
+});
+
 test("Simplified Chinese DAG annotation font covers the reviewed copy", async () => {
   const copy = chineseMessages.home.hero.dagAnnotation;
   const visibleCharacters = new Set(
@@ -101,4 +125,14 @@ test("Simplified Chinese DAG annotation font covers the reviewed copy", async ()
     (character) => !fontHasGlyph(font, character.codePointAt(0)!),
   );
   assert.deepEqual(missing, [], `${fontContract.filename} glyph coverage`);
+});
+
+test("Russian DAG annotation keeps its reviewed lowercase styling and Cyrillic font", () => {
+  assert.equal(
+    russianMessages.home.hero.dagAnnotation,
+    "pow в реальном времени",
+  );
+  const fontContract = getDagAnnotationFontContract(russianLocale);
+  assert.equal(fontContract.family, "Caveat");
+  assert.equal(fontContract.filename, null);
 });

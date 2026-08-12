@@ -37,9 +37,9 @@
                 const eventPluralRules = new Intl.PluralRules(document.documentElement.lang);
                 const eventNumberFormat = new Intl.NumberFormat(document.documentElement.lang);
                 monitor.processor.addEventListener((event) => {
-                    document.getElementById("actions").innerHTML = eventPluralRules.select(events) === "one" ? ["| Received ", eventNumberFormat.format(events), " event"].join("") : ["| Received ", eventNumberFormat.format(events), " events"].join("");
-                    log("event:", event);
                     events += 1;
+                    document.getElementById("actions").innerHTML = ({"one": ["| Received ", eventNumberFormat.format(events), " event"].join(""), "other": ["| Received ", eventNumberFormat.format(events), " events"].join("")}[eventPluralRules.select(events)] ?? ["| Received ", eventNumberFormat.format(events), " events"].join(""));
+                    log("event:", event);
                 });
 
                 // kaspa:qpamkvhgh0kzx50gwvvp5xs8ktmqutcy3dfs9dc3w7lm9rq0zs76vf959mmrp

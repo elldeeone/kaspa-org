@@ -25,3 +25,8 @@ The source family is Ma Shan Zheng from
 `https://github.com/google/fonts/tree/main/ofl/mashanzheng`. Its license is in
 `MaShanZheng-OFL.txt`. The same coverage gate protects this reviewed annotation
 from silently falling back to a mismatched system font.
+
+The Russian desktop DAG annotation uses the Cyrillic subset of Caveat through
+`next/font`. Its source family is Caveat from
+`https://github.com/google/fonts/tree/main/ofl/caveat` and remains subject to the
+SIL Open Font License published with that family.

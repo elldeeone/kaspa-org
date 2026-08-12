@@ -5,6 +5,7 @@ import spanishWalletSummaries from "../../messages/es/wallets.json" with { type:
 import germanWalletSummaries from "../../messages/de/wallets.json" with { type: "json" };
 import frenchWalletSummaries from "../../messages/fr/wallets.json" with { type: "json" };
 import chineseWalletSummaries from "../../messages/zh-CN/wallets.json" with { type: "json" };
+import russianWalletSummaries from "../../messages/ru/wallets.json" with { type: "json" };
 import { validateTranslationCatalogContract } from "../../scripts/i18n/translation-contract.mts";
 import {
   getRatingExplanationKey,
@@ -22,6 +23,7 @@ import {
   englishMessages,
   frenchMessages,
   germanMessages,
+  russianMessages,
   spanishMessages,
 } from "../../src/i18n/messages.ts";
 import { getLocalizedWallets } from "../../src/i18n/wallets.ts";
@@ -59,6 +61,7 @@ test("route catalogs do not own wallet records", () => {
   assert.equal("wallets" in germanMessages.hodl.walletFinder, false);
   assert.equal("wallets" in frenchMessages.hodl.walletFinder, false);
   assert.equal("wallets" in chineseMessages.hodl.walletFinder, false);
+  assert.equal("wallets" in russianMessages.hodl.walletFinder, false);
 });
 
 test("translated wallet summaries satisfy the shared translation contract", () => {
@@ -71,6 +74,7 @@ test("translated wallet summaries satisfy the shared translation contract", () =
     de: germanWalletSummaries,
     fr: frenchWalletSummaries,
     "zh-CN": chineseWalletSummaries,
+    ru: russianWalletSummaries,
   })) {
     assert.deepEqual(
       Object.keys(summaries).sort(),

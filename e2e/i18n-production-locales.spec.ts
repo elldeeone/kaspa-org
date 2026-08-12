@@ -266,6 +266,52 @@ const productionLocaleDescriptors = [
     },
     openGraphInkBandCount: 2,
   },
+  {
+    locale: "ru",
+    hrefLang: "ru",
+    dir: "ltr",
+    endonym: "Русский",
+    acceptLanguage: "ru-RU,ru;q=0.9",
+    aiAvailability: {
+      home: false,
+      lore: false,
+      build: false,
+      assets: false,
+      hodl: false,
+      "not-found": false,
+    },
+    reviewedCopy: {
+      languageLabel: "Язык",
+      aiLauncherAskAnything: "Задать вопрос",
+      aiLauncherPlaceholder: "Задайте любой вопрос...",
+      notFoundTitle: "Страница не найдена | Kaspa",
+      proofTrigger: "Проверить доказательство",
+      homeVerifyHeading: "не доверяй, проверяй.",
+      homeDagAnnotation: "pow в реальном времени",
+      standaloneBackLabel: "Назад",
+      standaloneNetworkLabel: "Сеть",
+      standaloneConnectingLabel: "| Подключение...",
+      standaloneRuntimeOutput: {
+        "get-server-info": "Ответ GetServerInfo:",
+        "get-block-dag-info": "Ответ GetBlockDagInfo:",
+        "subscribe-block-added": "Подписка на добавление блоков...",
+        "subscribe-daa-changed": "Регистрация для получения уведомлений DAA...",
+        "utxo-context":
+          "Эта демонстрация предназначена для ручной проверки событий",
+      },
+    },
+    preserveWhitespaceDelimitedWords: true,
+    forbiddenTranslatedSlugPaths: [
+      "/ru/история",
+      "/ru/разработка",
+      "/ru/ресурсы",
+    ],
+    dagAnnotationFont: {
+      family: "Caveat",
+      minimumInkHeight: 14,
+    },
+    openGraphInkBandCount: 4,
+  },
 ] as const satisfies readonly ProductionLocaleDescriptor[];
 
 type ProductionLocaleCase = ProductionLocaleDescriptor & {

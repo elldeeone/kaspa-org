@@ -11,6 +11,7 @@ import {
   englishMessages,
   frenchMessages,
   germanMessages,
+  russianMessages,
   spanishMessages,
 } from "../../src/i18n/messages.ts";
 
@@ -19,6 +20,7 @@ const translatedCatalogs = {
   de: germanMessages,
   fr: frenchMessages,
   "zh-CN": chineseMessages,
+  ru: russianMessages,
 } as const;
 
 test("complete translated catalogs satisfy the shared translation contract", () => {
@@ -63,6 +65,18 @@ test("the shared contract protects future locales without a custom policy", () =
   );
 });
 
+test("the shared contract rejects invisible zero-width characters generically", () => {
+  assert.deepEqual(
+    validateTranslationCatalogContract(
+      "ru",
+      "example",
+      { hidden: "Visible source" },
+      { hidden: "Видимый\u200B перевод" },
+    ),
+    ["example.hidden contains prohibited zero-width character U+200B"],
+  );
+});
+
 test("protected terms require exact visible tokens and casing", () => {
   assert.deepEqual(
     validateTranslationCatalogContract(
@@ -87,6 +101,16 @@ test("protected terms require exact visible tokens and casing", () => {
       "example.brandCase removes protected term Kaspa from translated copy",
       "example.brandBoundary removes protected term Kaspa from translated copy",
     ],
+  );
+
+  assert.deepEqual(
+    validateTranslationCatalogContract(
+      "ru",
+      "example",
+      { release: "waiting for crescendo..." },
+      { release: "ожидание крещендо..." },
+    ),
+    ["example.release removes protected term Crescendo from translated copy"],
   );
 
   assert.deepEqual(

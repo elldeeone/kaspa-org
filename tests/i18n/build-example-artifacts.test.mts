@@ -128,14 +128,15 @@ test("artifact manifest follows the central Build-example contract", () => {
     "de",
     "fr",
     "zh-CN",
+    "ru",
   ]);
   assert.ok(
     manifest.locales.every(
       (locale) => manifest.pathsByLocale[locale].length === 6,
     ),
   );
-  assert.equal(manifest.localizedPaths.length, 30);
-  assert.equal(manifest.localizedUrls.length, 30);
+  assert.equal(manifest.localizedPaths.length, 36);
+  assert.equal(manifest.localizedUrls.length, 36);
   assert.ok(
     manifest.localizedUrls.every((path) =>
       path.startsWith(`${buildExampleContract.examplesPublicBasePath}/`),
@@ -255,7 +256,7 @@ test("Build pseudo artifacts preserve technical and runtime interfaces", async (
   assert.match(compiled["utxo-context.en-XA.html"], /UtxoProcessor/u);
   assert.match(
     compiled["utxo-context.en-XA.html"],
-    /eventPluralRules\.select\(events\) === "one"/u,
+    /eventPluralRules\.select\(events\)/u,
   );
   assert.match(compiled["utxo-context.en-XA.html"], /ëëṽëëńţš/u);
   assert.doesNotMatch(compiled["utxo-context.en-XA.html"], /event\(s\)/u);
@@ -291,6 +292,58 @@ test("English UTXO artifact copy preserves its plural and notice contracts", asy
   );
   assert.equal(messages.noticeManyUtxos.split(".").length - 1, 2);
   assert.equal(messages.noticeManualTesting.split(".").length - 1, 1);
+});
+
+test("Build artifact plurals dispatch every supplied Russian category", async () => {
+  const compiled = await artifacts.compile("test");
+  const assignment = compiled["utxo-context.ru.html"]
+    .split("\n")
+    .find((candidate) => candidate.includes("eventPluralRules.select(events)"));
+  assert.ok(assignment);
+
+  for (const [events, expected] of [
+    [1, "| Получено 1 событие"],
+    [2, "| Получено 2 события"],
+    [5, "| Получено 5 событий"],
+    [21, "| Получено 21 событие"],
+  ] as const) {
+    const actions = { innerHTML: "" };
+    runInNewContext(assignment.trim(), {
+      document: { getElementById: () => actions },
+      eventNumberFormat: new Intl.NumberFormat("ru"),
+      eventPluralRules: new Intl.PluralRules("ru"),
+      events,
+    });
+    assert.equal(actions.innerHTML, expected);
+  }
+});
+
+test("UTXO event callbacks increment the count before rendering it", async () => {
+  const compiled = await artifacts.compile("test");
+  const registration = compiled["utxo-context.ru.html"].match(
+    /monitor\.processor\.addEventListener\(\(event\) => \{[\s\S]*?\n\s*\}\);/u,
+  )?.[0];
+  assert.ok(registration);
+
+  const actions = { innerHTML: "" };
+  const listeners: Array<(event: unknown) => void> = [];
+  runInNewContext(registration, {
+    document: { getElementById: () => actions },
+    eventNumberFormat: new Intl.NumberFormat("ru"),
+    eventPluralRules: new Intl.PluralRules("ru"),
+    events: 0,
+    log: () => undefined,
+    monitor: {
+      processor: {
+        addEventListener: (listener: (event: unknown) => void) =>
+          listeners.push(listener),
+      },
+    },
+  });
+
+  assert.equal(listeners.length, 1);
+  listeners[0]({});
+  assert.equal(actions.innerHTML, "| Получено 1 событие");
 });
 
 test("catalog-backed Build artifacts are deterministic and complete", async () => {
@@ -371,6 +424,32 @@ test("catalog-backed Build artifacts are deterministic and complete", async () =
   assert.match(chineseControls, /<- 返回<\/a> \| 网络:/u);
   assert.match(chineseControls, />断开连接<\/a>/u);
   assert.match(chineseControls, />重新连接<\/a>/u);
+
+  for (const name of exampleNames) {
+    const russian = first[`${name}.ru.html`];
+    assert.match(russian, /<html lang="ru" dir="ltr">/u);
+    assert.match(russian, /from '\.\/resources\/utils\.ru\.js'/u);
+    assert.match(russian, /Подключение к сети Kaspa/u);
+    assert.match(russian, /<meta name="robots" content="noindex, nofollow">/u);
+    assert.doesNotMatch(russian, /\[!! /u);
+  }
+  assert.match(first["get-server-info.ru.html"], /Запрос GetServerInfo/u);
+  assert.match(first["get-block-dag-info.ru.html"], /Ответ GetBlockDagInfo/u);
+  assert.match(first["subscribe-block-added.ru.html"], /Отключено от/u);
+  assert.match(first["utxo-context.ru.html"], /"one":/u);
+  assert.match(first["utxo-context.ru.html"], /"few":/u);
+  assert.match(first["utxo-context.ru.html"], /"many":/u);
+  assert.match(first["utxo-context.ru.html"], /" событие"/u);
+  assert.match(first["utxo-context.ru.html"], /" события"/u);
+  assert.match(first["utxo-context.ru.html"], /" событий"/u);
+  assert.match(first["utxo-context.ru.html"], /тысячи UTXO/u);
+  assert.doesNotMatch(first["utxo-context.ru.html"], /UTXOs/u);
+
+  const russianControls = first["resources/utils.ru.js"];
+  assert.match(russianControls, /href="\/ru\/build#try-live"/u);
+  assert.match(russianControls, /<- Назад<\/a> \| Сеть:/u);
+  assert.match(russianControls, />Отключить<\/a>/u);
+  assert.match(russianControls, />Восстановить соединение<\/a>/u);
 });
 
 test("Build artifacts use an RTL locale direction without generator changes", async () => {
@@ -559,6 +638,11 @@ test("English catalog text stays inert when preparing vendored innerHTML", async
     .find((candidate) => candidate.includes("catalogEnglishPluralExecuted"));
   assert.ok(logCall);
   assert.ok(pluralAssignment);
+  assert.ok(
+    html.indexOf("events += 1;") <
+      html.indexOf('document.getElementById("actions").innerHTML'),
+    "vendor preparation must increment the event count before rendering it",
+  );
 
   const logOutput = { innerHTML: "" };
   runInNewContext(logCall.trim(), {
@@ -579,6 +663,24 @@ test("English catalog text stays inert when preparing vendored innerHTML", async
   });
   assert.doesNotMatch(actions.innerHTML, /<img/u);
   assert.match(actions.innerHTML, /&lt;img/u);
+});
+
+test("vendor preparation reproduces the pinned no-newline UTXO source", async (t) => {
+  const root = await createWorkflowFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  await restoreUpstreamVendorInputs(root);
+  const utxoPath = join(root, examplesRelativeDirectory, "utxo-context.html");
+  assert.equal((await readFile(utxoPath, "utf8")).endsWith("\n"), false);
+
+  await createBuildExampleArtifactWorkflow(root).prepareVendor("production");
+
+  const prepared = await readFile(utxoPath, "utf8");
+  assert.equal(prepared.endsWith("\n"), false);
+  assert.ok(
+    prepared.indexOf("events += 1;") <
+      prepared.indexOf('document.getElementById("actions").innerHTML'),
+    "vendor preparation must increment the event count before rendering it",
+  );
 });
 
 test("workflow check rejects artifacts generated from a stale Spanish catalog", async (t) => {
@@ -614,7 +716,7 @@ test("workflow compilation rejects a non-plural event message", async (t) => {
 
   await assert.rejects(
     createBuildExampleArtifactWorkflow(root).compile("test"),
-    /must be a one\/other cardinal count plural/u,
+    /must be a cardinal count plural with an other branch/u,
   );
 });
 
@@ -628,7 +730,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   await fixture.check("test");
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.(?:de|en-XA|es|fr|zh-CN)\.html$/u.test(path))
+      .filter((path) => /\.(?:de|en-XA|es|fr|ru|zh-CN)\.html$/u.test(path))
       .sort(),
     manifest.localizedPaths.filter((path) => path.endsWith(".html")).sort(),
   );
@@ -637,13 +739,14 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   await fixture.check("preview");
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.(?:de|en-XA|es|fr|zh-CN)\.html$/u.test(path))
+      .filter((path) => /\.(?:de|en-XA|es|fr|ru|zh-CN)\.html$/u.test(path))
       .sort(),
     [
       ...manifest.pathsByLocale.es,
       ...manifest.pathsByLocale.de,
       ...manifest.pathsByLocale.fr,
       ...manifest.pathsByLocale["zh-CN"],
+      ...manifest.pathsByLocale.ru,
     ]
       .filter((path) => path.endsWith(".html"))
       .sort(),
@@ -653,13 +756,14 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   await fixture.check("production");
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.(?:de|en-XA|es|fr|zh-CN)\.html$/u.test(path))
+      .filter((path) => /\.(?:de|en-XA|es|fr|ru|zh-CN)\.html$/u.test(path))
       .sort(),
     [
       ...manifest.pathsByLocale.es,
       ...manifest.pathsByLocale.de,
       ...manifest.pathsByLocale.fr,
       ...manifest.pathsByLocale["zh-CN"],
+      ...manifest.pathsByLocale.ru,
     ]
       .filter((path) => path.endsWith(".html"))
       .sort(),

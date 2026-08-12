@@ -43,6 +43,10 @@ type ProtectedTermMatchers = {
   readonly target: RegExp;
 };
 
+const caseInsensitiveProtectedSourceTerms = new Set<ProtectedTerm>([
+  "Crescendo",
+]);
+
 const sharedUnchangedValues = new Set([
   "2FA",
   "404",
@@ -138,6 +142,7 @@ const translationPolicies = {
 } as const satisfies Readonly<Record<string, TranslationPolicy>>;
 
 const emptyPolicy = {} satisfies TranslationPolicy;
+const prohibitedZeroWidthCharacter = /[\u200B-\u200D\u2060\uFEFF]/u;
 
 function getTranslationPolicy(locale: string): TranslationPolicy {
   return (
@@ -160,10 +165,13 @@ function protectedTermExpression(term: ProtectedTerm): string {
 const protectedTermMatchers = new Map<ProtectedTerm, ProtectedTermMatchers>(
   SHARED_PROTECTED_TERMS.map((term) => {
     const expression = protectedTermExpression(term);
+    const sourceFlags = caseInsensitiveProtectedSourceTerms.has(term)
+      ? "giu"
+      : "gu";
     return [
       term,
       {
-        source: new RegExp(expression, "gu"),
+        source: new RegExp(expression, sourceFlags),
         target: new RegExp(expression, term === "cypherpunk" ? "giu" : "gu"),
       },
     ];
@@ -213,6 +221,17 @@ export function validateTranslationCatalogContract(
     const fullKey = `${namespace}.${key}`;
     const targetValue = target.get(key);
     if (targetValue === undefined) continue;
+
+    const zeroWidthMatch = targetValue.match(prohibitedZeroWidthCharacter);
+    if (zeroWidthMatch) {
+      errors.push(
+        `${fullKey} contains prohibited zero-width character U+${zeroWidthMatch[0]
+          .codePointAt(0)!
+          .toString(16)
+          .toUpperCase()
+          .padStart(4, "0")}`,
+      );
+    }
 
     if (
       sourceValue === targetValue &&

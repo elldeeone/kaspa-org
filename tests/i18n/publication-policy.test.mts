@@ -13,6 +13,7 @@ import {
   frenchLocale,
   germanLocale,
   pseudoLocale,
+  russianLocale,
   spanishLocale,
   supportedLocaleCodes,
 } from "../../src/i18n/locale-registry.ts";
@@ -162,12 +163,17 @@ test("fixture policy resolves once into the generic publication profile", () => 
       "public",
     );
     assert.equal(production.routePublications[routeId][pseudoLocale], null);
+    assert.equal(
+      production.routePublications[routeId][russianLocale],
+      "public",
+    );
     assert.equal(preview.routePublications[routeId].en, "public");
     assert.equal(preview.routePublications[routeId][spanishLocale], "public");
     assert.equal(preview.routePublications[routeId][germanLocale], "public");
     assert.equal(preview.routePublications[routeId][frenchLocale], "public");
     assert.equal(preview.routePublications[routeId][chineseLocale], "public");
     assert.equal(preview.routePublications[routeId][pseudoLocale], null);
+    assert.equal(preview.routePublications[routeId][russianLocale], "public");
     assert.equal(
       testProfile.routePublications[routeId][frenchLocale],
       "public",
@@ -179,6 +185,10 @@ test("fixture policy resolves once into the generic publication profile", () => 
     assert.equal(
       testProfile.routePublications[routeId][pseudoLocale],
       "preview",
+    );
+    assert.equal(
+      testProfile.routePublications[routeId][russianLocale],
+      "public",
     );
     assert.equal(rollback.routePublications[routeId].en, "public");
     assert.equal(rollback.routePublications[routeId][spanishLocale], null);

@@ -138,9 +138,9 @@ NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=test npm run build
 NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=test npm start
 ```
 
-Production and Preview generate ignored `es`, `de`, `fr`, and `zh-CN`
-Build-example siblings under `public/vendor/kaspa-wasm`. Test additionally
-generates `en-XA`. After stopping the server, remove those derived files with:
+Production generates ignored `es`, `de`, `fr`, `zh-CN`, and `ru` Build-example
+siblings under `public/vendor/kaspa-wasm`. Test additionally generates `en-XA`.
+After stopping the server, remove those derived files with:
 
 ```bash
 npm run -s i18n:artifacts -- --clean
@@ -178,6 +178,7 @@ GitHub Actions lives at `.github/workflows/ci.yml` and runs:
 - `npm run build`
 - `npm run test:e2e`
 - `npm run test:e2e:i18n:pseudo`
+- `npm run test:e2e:i18n:preview`
 - `npm run test:e2e:i18n:production-locales`
 - `npm run test:e2e:ai`
 

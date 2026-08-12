@@ -77,7 +77,7 @@ const ENGLISH_SOURCE_SHA256: Readonly<Record<string, string>> = {
   "subscribe-daa-changed.html":
     "c9407ddff8a26dba218377b17f15129701c51879d513103cf3b79faac737595a",
   "utxo-context.html":
-    "42cedf09a849c69fdacb4ef6d9cf02d90515c49bbd50410c6b67a0f4ac4f6def",
+    "82423e2f3cb413fd89689eb7a4dd99fcb9acba4e7dd672337c1f9f4f4440c6cc",
   [SOURCE_UTILS_PATH]:
     "2b22d8b026f2f829ce327768a7541eff3a65635197bcdabed7aba5d67d61ef2c",
 };
@@ -481,6 +481,14 @@ function compileCardinalPlural(
   const ast = parse(message);
   const pluralIndex = ast.findIndex(isPluralElement);
   const plural = ast[pluralIndex];
+  const cardinalCategories = new Set([
+    "zero",
+    "one",
+    "two",
+    "few",
+    "many",
+    "other",
+  ]);
   if (
     pluralIndex === -1 ||
     !isPluralElement(plural) ||
@@ -488,24 +496,28 @@ function compileCardinalPlural(
     plural.pluralType !== "cardinal" ||
     plural.offset !== 0 ||
     plural.value !== "count" ||
-    !plural.options.one ||
     !plural.options.other ||
-    Object.keys(plural.options).length !== 2 ||
+    !Object.keys(plural.options).every((category) =>
+      cardinalCategories.has(category),
+    ) ||
     !ast.slice(0, pluralIndex).every(isLiteralElement) ||
     !ast.slice(pluralIndex + 1).every(isLiteralElement)
   ) {
     throw new Error(
-      "artifacts.utxo.receivedEvents must be a one/other cardinal count plural",
+      "artifacts.utxo.receivedEvents must be a cardinal count plural with an other branch and Intl.PluralRules categories",
     );
   }
 
   const prefix = ast.slice(0, pluralIndex);
   const suffix = ast.slice(pluralIndex + 1);
-  const one = compilePluralBranch(
-    [...prefix, ...plural.options.one.value, ...suffix],
-    numberFormatExpression,
-    countExpression,
-    encodeLiteral,
+  const compiledBranches = Object.entries(plural.options).map(
+    ([category, option]) =>
+      `${JSON.stringify(category)}: ${compilePluralBranch(
+        [...prefix, ...option.value, ...suffix],
+        numberFormatExpression,
+        countExpression,
+        encodeLiteral,
+      )}`,
   );
   const other = compilePluralBranch(
     [...prefix, ...plural.options.other.value, ...suffix],
@@ -513,7 +525,7 @@ function compileCardinalPlural(
     countExpression,
     encodeLiteral,
   );
-  return `${pluralRulesExpression}.select(${countExpression}) === "one" ? ${one} : ${other}`;
+  return `({${compiledBranches.join(", ")}}[${pluralRulesExpression}.select(${countExpression})] ?? ${other})`;
 }
 
 function buildHtmlReplacements(
@@ -526,7 +538,8 @@ function buildHtmlReplacements(
 > {
   const { runtime: sourceRuntime, utxo: sourceUtxo } = sourceMessages;
   const { runtime: targetRuntime, utxo: targetUtxo } = targetMessages;
-  const localizedUtxoTerm = locale === "zh-CN" ? "UTXO" : "UTXOs";
+  const localizedUtxoTerm =
+    locale === "zh-CN" || locale === "ru" ? "UTXO" : "UTXOs";
   const common: readonly Replacement[] = [
     [
       sourceTemplate(sourceRuntime.connectingKaspaNetwork),
@@ -1175,9 +1188,9 @@ async function prepareVendoredBuildExamples(repositoryRoot: string) {
                 const eventPluralRules = new Intl.PluralRules(document.documentElement.lang);
                 const eventNumberFormat = new Intl.NumberFormat(document.documentElement.lang);
                 monitor.processor.addEventListener((event) => {
+                    events += 1;
                     document.getElementById("actions").innerHTML = ${receivedEvents};
                     log(${sourceHtmlLiteral(messages.runtime.event)}, event);
-                    events += 1;
                 });`,
     "utxo-context.html",
   );
