@@ -1,15 +1,29 @@
 import assert from "node:assert/strict";
 
 import { buildExampleContract } from "../../src/i18n/build-example-contract.ts";
+import { supportedLocaleCodes } from "../../src/i18n/locale-registry.ts";
 import { I18N_PUBLICATION_PROFILE_ENV } from "../../src/i18n/publication-profile-contract.ts";
 import { installI18nPublicationProfile } from "../../src/i18n/publication-profile-node.ts";
 import { NEXT_INTL_LOCALE_HEADER } from "../../src/i18n/route-request.ts";
 import { startProductionServer } from "./production-server.mts";
 
 installI18nPublicationProfile();
-const manifest = await import("../../src/i18n/manifest.ts");
+const [config, manifest] = await Promise.all([
+  import("../../src/i18n/config.ts"),
+  import("../../src/i18n/manifest.ts"),
+]);
 delete process.env[I18N_PUBLICATION_PROFILE_ENV];
-const { RESERVED_NOT_FOUND_PATHNAME, ROUTE_MISS_HEADER } = manifest;
+const { isLocaleProductionReady } = config;
+const { RESERVED_NOT_FOUND_PATHNAME, ROUTE_MISS_HEADER, stablePathnames } =
+  manifest;
+const unavailableLocales = supportedLocaleCodes.filter(
+  (locale) => !isLocaleProductionReady(locale),
+);
+const unavailableArtifactLocales = (
+  Object.keys(buildExampleContract.artifactManifest.urlsByLocale) as Array<
+    keyof typeof buildExampleContract.artifactManifest.urlsByLocale
+  >
+).filter((locale) => unavailableLocales.includes(locale));
 
 function delay(milliseconds: number) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -55,10 +69,12 @@ async function main() {
     const prefixed = await request("/en/lore", 307);
     assert.equal(prefixed.headers.get("location"), "/lore");
 
-    for (const pathname of buildExampleContract.artifactManifest.urlsByLocale[
-      "en-XA"
-    ]) {
-      await request(pathname, 404);
+    for (const locale of unavailableArtifactLocales) {
+      for (const pathname of buildExampleContract.artifactManifest.urlsByLocale[
+        locale
+      ]) {
+        await request(pathname, 404);
+      }
     }
 
     for (const pathname of buildExampleContract.artifactManifest.urlsByLocale
@@ -77,13 +93,13 @@ async function main() {
       "/_vercel/missing",
       RESERVED_NOT_FOUND_PATHNAME,
       "/en/opengraph-image",
-      "/en-XA",
-      "/en-XA/lore",
-      "/en-XA/build",
-      "/en-XA/assets",
-      "/en-XA/hodl",
-      "/en-XA/missing",
-      "/en-XA/opengraph-image",
+      ...unavailableLocales.flatMap((locale) => [
+        ...stablePathnames.map(
+          (pathname) => `/${locale}${pathname === "/" ? "" : pathname}`,
+        ),
+        `/${locale}/missing`,
+        `/${locale}/opengraph-image`,
+      ]),
     ]) {
       const response = await request(pathname, 404, {
         [ROUTE_MISS_HEADER]: "1",
@@ -105,7 +121,9 @@ async function main() {
     await request("/api/ask", 405);
     const proofCatalog = await request("/api/i18n/home-proof/en", 200);
     assert.match(await proofCatalog.text(), /"trigger":"Verify the proof"/u);
-    await request("/api/i18n/home-proof/en-XA", 404);
+    for (const locale of unavailableLocales) {
+      await request(`/api/i18n/home-proof/${locale}`, 404);
+    }
     const spanishProofCatalog = await request("/api/i18n/home-proof/es", 200);
     assert.match(
       await spanishProofCatalog.text(),

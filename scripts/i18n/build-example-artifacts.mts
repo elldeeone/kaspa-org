@@ -32,10 +32,12 @@ delete process.env[I18N_PUBLICATION_PROFILE_ENV];
 const BUILD_EXAMPLE_NAMES: readonly BuildExampleName[] =
   buildExampleContract.examples.map(({ name }) => name);
 const BUILD_ARTIFACT_LOCALES = buildExampleContract.artifactManifest.locales;
-const SPANISH_BUILD_EXAMPLE_PATHS =
-  buildExampleContract.artifactManifest.pathsByLocale.es;
 const LOCALIZED_BUILD_EXAMPLE_PATHS =
   buildExampleContract.artifactManifest.localizedPaths;
+type CatalogBuildArtifactLocale = Exclude<BuildArtifactLocale, "en-XA">;
+const CATALOG_BUILD_ARTIFACT_LOCALES = BUILD_ARTIFACT_LOCALES.filter(
+  (locale): locale is CatalogBuildArtifactLocale => locale !== "en-XA",
+);
 
 function listBuildArtifactLocalesForTarget(
   buildTarget: I18nBuildTarget,
@@ -211,7 +213,7 @@ function readMessageGroup(
 
 async function loadBuildArtifactMessages(
   repositoryRoot: string,
-  locale: "en" | "es",
+  locale: "en" | CatalogBuildArtifactLocale,
 ): Promise<BuildArtifactMessages> {
   const catalogPath = `messages/${locale}/build.json`;
   const source = await readFile(join(repositoryRoot, catalogPath), "utf8");
@@ -898,16 +900,17 @@ function generatePseudoBuildArtifacts(
   return generateLocalizedBuildArtifacts(sources, messages, messages, "en-XA");
 }
 
-function generateSpanishBuildArtifacts(
+function generateCatalogBuildArtifacts(
   sources: BuildExampleSources,
   englishMessages: BuildArtifactMessages,
-  spanishMessages: BuildArtifactMessages,
+  localizedMessages: BuildArtifactMessages,
+  locale: CatalogBuildArtifactLocale,
 ): GeneratedBuildExampleArtifacts {
   return generateLocalizedBuildArtifacts(
     sources,
     englishMessages,
-    spanishMessages,
-    "es",
+    localizedMessages,
+    locale,
   );
 }
 
@@ -994,8 +997,8 @@ function validateLocalizedBuildArtifacts(
     if (locale === "en-XA" && !artifact.includes("[!! ")) {
       errors.push(`${path} contains no visible pseudo-localized output`);
     }
-    if (locale === "es" && artifact.includes("[!! ")) {
-      errors.push(`${path} must contain Spanish rather than pseudo output`);
+    if (locale !== "en-XA" && artifact.includes("[!! ")) {
+      errors.push(`${path} must contain translated rather than pseudo output`);
     }
   }
 
@@ -1011,8 +1014,10 @@ function validateLocalizedBuildArtifacts(
       errors.push(`${utilsPath} is missing ${JSON.stringify(contract)}`);
     }
   }
-  if (locale === "es" && utils.includes("[!! ")) {
-    errors.push(`${utilsPath} must contain Spanish rather than pseudo output`);
+  if (locale !== "en-XA" && utils.includes("[!! ")) {
+    errors.push(
+      `${utilsPath} must contain translated rather than pseudo output`,
+    );
   }
 
   for (const [path, artifact] of Object.entries(artifacts)) {
@@ -1046,21 +1051,23 @@ function validatePseudoBuildArtifacts(
   return validateLocalizedBuildArtifacts(sources, artifacts, "en-XA");
 }
 
-function validateSpanishBuildArtifacts(
+function validateCatalogBuildArtifacts(
   sources: BuildExampleSources,
   artifacts: GeneratedBuildExampleArtifacts,
   englishMessages: BuildArtifactMessages,
-  spanishMessages: BuildArtifactMessages,
+  localizedMessages: BuildArtifactMessages,
+  locale: CatalogBuildArtifactLocale,
 ): string[] {
-  const errors = validateLocalizedBuildArtifacts(sources, artifacts, "es");
-  const expected = generateSpanishBuildArtifacts(
+  const errors = validateLocalizedBuildArtifacts(sources, artifacts, locale);
+  const expected = generateCatalogBuildArtifacts(
     sources,
     englishMessages,
-    spanishMessages,
+    localizedMessages,
+    locale,
   );
-  for (const path of SPANISH_BUILD_EXAMPLE_PATHS) {
+  for (const path of localizedArtifactPaths(locale)) {
     if (artifacts[path] !== expected[path]) {
-      errors.push(`${path} does not match catalog-backed Spanish output`);
+      errors.push(`${path} does not match catalog-backed ${locale} output`);
     }
   }
   return errors;
@@ -1263,16 +1270,23 @@ async function assertReturnPathRuntimeMatches(repositoryRoot: string) {
 function generateBuildArtifactsByLocale(
   sources: BuildExampleSources,
   englishMessages: BuildArtifactMessages,
-  spanishMessages: BuildArtifactMessages,
+  localizedMessages: Readonly<
+    Record<CatalogBuildArtifactLocale, BuildArtifactMessages>
+  >,
 ): Readonly<Record<BuildArtifactLocale, GeneratedBuildExampleArtifacts>> {
-  return {
-    "en-XA": generatePseudoBuildArtifacts(sources, englishMessages),
-    es: generateSpanishBuildArtifacts(
-      sources,
-      englishMessages,
-      spanishMessages,
-    ),
-  };
+  return Object.fromEntries(
+    BUILD_ARTIFACT_LOCALES.map((locale) => [
+      locale,
+      locale === "en-XA"
+        ? generatePseudoBuildArtifacts(sources, englishMessages)
+        : generateCatalogBuildArtifacts(
+            sources,
+            englishMessages,
+            localizedMessages[locale],
+            locale,
+          ),
+    ]),
+  ) as Record<BuildArtifactLocale, GeneratedBuildExampleArtifacts>;
 }
 
 function selectBuildArtifactsForTarget(
@@ -1305,15 +1319,28 @@ async function compileBuildArtifacts(
   expectedPaths: readonly string[];
 }> {
   await assertReturnPathRuntimeMatches(repositoryRoot);
-  const [sources, englishMessages, spanishMessages] = await Promise.all([
-    loadEnglishSources(repositoryRoot),
-    loadEnglishBuildArtifactMessages(repositoryRoot),
-    loadBuildArtifactMessages(repositoryRoot, "es"),
-  ]);
+  const [sources, englishMessages, localizedMessageEntries] = await Promise.all(
+    [
+      loadEnglishSources(repositoryRoot),
+      loadEnglishBuildArtifactMessages(repositoryRoot),
+      Promise.all(
+        CATALOG_BUILD_ARTIFACT_LOCALES.map(
+          async (locale) =>
+            [
+              locale,
+              await loadBuildArtifactMessages(repositoryRoot, locale),
+            ] as const,
+        ),
+      ),
+    ],
+  );
+  const localizedMessages = Object.fromEntries(
+    localizedMessageEntries,
+  ) as Record<CatalogBuildArtifactLocale, BuildArtifactMessages>;
   const generatedByLocale = generateBuildArtifactsByLocale(
     sources,
     englishMessages,
-    spanishMessages,
+    localizedMessages,
   );
   const compiled = selectBuildArtifactsForTarget(
     generatedByLocale,
@@ -1321,16 +1348,23 @@ async function compileBuildArtifacts(
   );
   const errors = [
     ...validatePseudoBuildArtifacts(sources, generatedByLocale["en-XA"]),
-    ...validateSpanishBuildArtifacts(
-      sources,
-      generatedByLocale.es,
-      englishMessages,
-      spanishMessages,
+    ...CATALOG_BUILD_ARTIFACT_LOCALES.flatMap((locale) =>
+      validateCatalogBuildArtifacts(
+        sources,
+        generatedByLocale[locale],
+        englishMessages,
+        localizedMessages[locale],
+        locale,
+      ),
     ),
   ];
   if (verifyDeterminism) {
     const regenerated = selectBuildArtifactsForTarget(
-      generateBuildArtifactsByLocale(sources, englishMessages, spanishMessages),
+      generateBuildArtifactsByLocale(
+        sources,
+        englishMessages,
+        localizedMessages,
+      ),
       buildTarget,
     ).generated;
     if (JSON.stringify(compiled.generated) !== JSON.stringify(regenerated)) {

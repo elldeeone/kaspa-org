@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "title": "LORE | Kaspa",
+    "description": "Kaspa ist eine fair gestartete Proof-of-Work-blockDAG-Kryptowährung mit Fokus auf Echtzeit-Dezentralisierung – ohne Premine, ohne Zuteilung an Insider und mit 10 BPS im Mainnet."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa – Echtzeit-Dezentralisierung"
+  },
+  "article": {
+    "heading": "Kaspa ist ein aktiver Proof-of-Work-blockDAG mit 10 Blöcken pro Sekunde.",
+    "shift": {
+      "heading": "Der Wandel",
+      "body": "Kaspa geht einen anderen Weg als ältere Proof-of-Work-Chains. Parallele Blöcke werden nicht verworfen, sondern geordnet. Viele der mit Proof-of-Work verbundenen Grenzen gingen auf ältere Chain-Architekturen zurück, nicht auf Proof-of-Work selbst. <paper>PHANTOM-/GHOSTDAG-Paper</paper>"
+    },
+    "history": {
+      "heading": "Kurze Geschichte",
+      "research": "Kaspa entstand aus der blockDAG-Forschung an der Hebräischen Universität Jerusalem und später an der Harvard University. Diese Forschungslinie reicht bis zum <ghost>Abschnitt über das GHOST-Protokoll im Ethereum-Whitepaper</ghost> zurück, trat früh im Umfeld der Bitcoin-Forschung hervor und führte über SPECTRE und PHANTOM zu den Protokollen, auf denen Kaspa heute läuft. <scaling>Scaling Bitcoin 2015</scaling> · <coindesk>CoinDesk, 2017</coindesk>",
+      "launch": "Das Mainnet startete im November 2021 als fair gestartetes Proof-of-Work-Netzwerk. Kein Premine, keine Zuteilung an Insider und keine Vorverkäufe. Jeder im Umlauf befindliche Coin wurde seit der Genesis offen gemint. Dieser faire Start gab Kaspa eine breite und loyale Community. Er bleibt eine der größten Leistungen und eine der zentralen Stärken von Kaspa. <launchPlan>Startplan</launchPlan> · <genesisProof>Genesis-Nachweis</genesisProof>"
+    },
+    "northStar": {
+      "heading": "Leitstern",
+      "intro": "Echtzeit-Dezentralisierung ist Kaspas Leitstern.",
+      "urgency": "Echtzeit ist nicht verhandelbar. Ungeduld ist Kaspas Urinstinkt – ein Aufbegehren gegen Wartezeiten und gegen Grenzen, die andere einfach hinnehmen. Und wir verlangen das nicht nur für Geschwindigkeit, sondern ebenso für die kompromisslosen Eigenschaften nach Satoshi: Zensurresistenz, erlaubnisfreie Abwicklung und wettbewerbliches Mining – alles in Echtzeit, nicht irgendwann. Ohne Proof-of-Work ist das in Echtzeit nicht erreichbar. <uniqueness>Einzigartigkeit von PoW</uniqueness>",
+      "consensus": "Wenn Kaspa RTD erreicht, tastet das Protokoll in jeder Konsensrunde die ehrliche Mehrheit des Mining-Netzwerks ab. Dadurch können Transaktionen, die in Bitcoin erst nach einer Stunde sicher bestätigt sind, bei Kaspa binnen Sekunden bestätigt werden; ebenso erreicht Kaspa Zensurresistenz binnen Sekunden – wofür Bitcoin eine Stunde benötigt. Das ist nicht nur für die Abwicklungsgeschwindigkeit wichtig, sondern überall dort, wo eine Sequenzierung in Echtzeit entscheidend ist: bei Marktauflösungen, Liquidationskaskaden und in jedem Umfeld, in dem ein einzelner Konsensführer durch die Reihenfolge von Transaktionen zu viel Macht erhält.",
+      "eventFeed": "Die Echtzeit-Abtastung der ehrlichen Mehrheit kann außerdem für einen vertrauenslosen, vom Mining-Netzwerk gesteuerten Daten- und Ereignis-Feed in Echtzeit genutzt werden. <post>RTD-Beitrag</post>",
+      "resilience": "RTD hat auch eine defensive Seite. Protokolle mit partieller Synchronität (mit dem kommenden DAGKnight) vereinen auf einzigartige Weise zwei Eigenschaften: Sie sind schnell, wenn das Netzwerk gesund ist, und langsam, aber sicher, wenn es das nicht ist. Kaspa verkauft Geschwindigkeit an Normalnutzer und krisenfestes Geld an Cypherpunks."
+    },
+    "shipped": {
+      "heading": "Bereits umgesetzt – und was als Nächstes kommt",
+      "rewrite": "Der ursprüngliche Golang-Node wurde von Grund auf in Rust neu geschrieben. Die Neuentwicklung wurde durch einen Community-Zuschuss von 100 Mio. KAS finanziert und entwickelte sich rund um <code>rusty-kaspa</code> zu einem echten Open-Source-Projekt mit einer breiten Basis an Mitwirkenden. <github>Rusty Kaspa auf GitHub</github>",
+      "crescendo": "Erst diese Neuentwicklung machte Crescendo möglich. Ohne sie hätte Kaspa im Mainnet nicht auf 10 Blöcke pro Sekunde wechseln können. Mit Crescendo wurde die These Realität. <reference>Crescendo-Referenz</reference> · <release>Versionshinweise</release>"
+    },
+    "roadmap": {
+      "toccata": {
+        "heading": "Toccata-Hardfork",
+        "overview": "Der nächste Hardfork ist Toccata und führt Covenant-basierte Programmierbarkeit auf der Basisschicht ein. Covenants sind rekursive Ausgaberegeln, die einschränken, wer Coins wie ausgeben kann. Damit ebnen sie den Weg für Tresore, Smart Wallets, native Assets und ZK-gestützte Konstruktionen.",
+        "implementation": "Bei Bitcoin ist OP_CAT der alte Opcode, den Satoshi deaktivierte – erneut vorgeschlagen, weiter umstritten und noch immer nicht enthalten. Toccata ähnelt eher OP_CAT++, bietet eine breitere Covenant-Oberfläche und mit <silverscript>Silverscript</silverscript> einen eigenen Compiler zum Schreiben von Covenants für Kaspa. Eine ausgereifte Implementierung läuft bereits auf <tn12>TN12</tn12>."
+      },
+      "dagKnight": {
+        "heading": "DAGKnight-Hardfork",
+        "overview": "DAGKnight ist das Upgrade des Konsensprotokolls, das auf Toccata folgt. Es ist ein großer Sprung für Proof-of-Work und erlaubnisfreien Konsens: das einzige partiell synchrone 49-%-BFT-Protokoll (im Oblivious Setup). Es ist ein Schritt hin zu einem Proof-of-Work, der Netzaufteilungen standhält. Angestrebt werden Blockzeiten von 40 bis 25 Millisekunden. <paper>DAGKnight-Paper</paper>"
+      },
+      "hardfork2027": {
+        "heading": "Hardfork 2027",
+        "performance": "Eine Blockzeit von 10 Millisekunden – 100 Blöcke pro Sekunde – würde wahrscheinlich algorithmische Anpassungen daran erfordern, wie Miner DAG-Spitzen referenzieren, sowie weitere Leistungsoptimierungen am Node. Das Ziel ist ein Hardfork im Jahr 2027.",
+        "resilience": "Auf Konsensebene bietet DAGKnight bereits Sicherheit bei Netzaufteilungen: Vor einer Aufteilung bestätigte Transaktionen bleiben endgültig. Fortschritt während einer Aufteilung ist jedoch nicht möglich – Transaktionen können erst nach ihrem Ende bestätigt werden. Die Arbeiten für 2027 sollen durch eine Kombination aus On-Chain-Zahlungskanälen und Hashrate-adaptiven Finalitätsfenstern praktischen Fortschritt ermöglichen. Damit würde Kaspa zu krisenfestem, hartem Geld, dessen lokale Zahlungsströme auch bei unterbrochenen Internetverbindungen weiterlaufen."
+      }
+    },
+    "closing": {
+      "origin": "Kaspa entstand nicht aus dem üblichen Hype-Zyklus. Es entstand aus langjähriger Forschung, einem fairen Start, konsequenter Open-Source-Entwicklung und jahrelanger Arbeit an den Grenzen, die der Großteil der Kryptobranche nicht weiter verschoben hat.",
+      "summary": "Ein aktiver blockDAG. 10 BPS im Mainnet. Echtzeit-Dezentralisierung als Leitstern. Als Nächstes Toccata, danach DAGKnight.",
+      "early": "Wenn sich das nach einer frühen Phase anhört, dann deshalb, weil es eine ist."
+    }
+  },
+  "contributors": {
+    "viewOnGitHub": "Mitwirkende an Rusty Kaspa auf GitHub ansehen",
+    "more": "+{count, plural, one {# Mitwirkender} other {# Mitwirkende}}"
+  }
+}

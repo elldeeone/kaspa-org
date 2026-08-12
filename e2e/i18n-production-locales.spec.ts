@@ -4,7 +4,7 @@ import { join } from "node:path";
 
 import { expect, test, type Page } from "@playwright/test";
 
-import { SPANISH_UNCHANGED_MESSAGE_KEYS } from "../scripts/i18n/spanish-contract.mts";
+import { isUnchangedMessageAllowed } from "../scripts/i18n/translation-contract.mts";
 import {
   defaultLocale,
   localeRegistry,
@@ -71,7 +71,6 @@ type ProductionLocaleDescriptor = {
   aiAvailability: Readonly<Record<AiSurfaceId, boolean>>;
   reviewedCopy: ReviewedLocaleCopy;
   preserveWhitespaceDelimitedWords: boolean;
-  approvedUnchangedCatalogKeys: ReadonlySet<string>;
   forbiddenTranslatedSlugPaths: readonly string[];
 };
 
@@ -129,7 +128,6 @@ const productionLocaleDescriptors = [
       },
     },
     preserveWhitespaceDelimitedWords: true,
-    approvedUnchangedCatalogKeys: new Set(SPANISH_UNCHANGED_MESSAGE_KEYS),
     forbiddenTranslatedSlugPaths: [
       "/es/historia",
       "/es/construir",
@@ -338,7 +336,7 @@ async function auditRenderedLocaleText(
       if (englishMessage === localizedMessage) {
         if (!containsWholeVisibleMessage(bodyText, visibleEnglish)) continue;
         expect(
-          descriptor.approvedUnchangedCatalogKeys.has(catalogKey),
+          isUnchangedMessageAllowed(descriptor.locale, englishMessage),
           `${descriptor.locale}:${routeId} renders unapproved unchanged English at ${catalogKey}: ${visibleEnglish}`,
         ).toBe(true);
         continue;

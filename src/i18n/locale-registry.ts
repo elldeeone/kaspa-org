@@ -26,10 +26,12 @@ export type LocaleLifecycle =
 
 export const pseudoLocale = "en-XA" as const;
 export const spanishLocale = "es" as const;
+export const germanLocale = "de" as const;
 export const supportedLocaleCodes = [
   "en",
   pseudoLocale,
   spanishLocale,
+  germanLocale,
 ] as const;
 export type Locale = (typeof supportedLocaleCodes)[number];
 export type TextDirection = "ltr" | "rtl";
@@ -63,6 +65,13 @@ export const localeRegistry: Readonly<Record<Locale, LocaleDefinition>> = {
     hrefLang: "es",
     dir: "ltr",
     lifecycle: "production",
+  },
+  de: {
+    code: "de",
+    label: "Deutsch",
+    hrefLang: "de",
+    dir: "ltr",
+    lifecycle: "preview",
   },
 };
 

@@ -122,11 +122,12 @@ test("artifact manifest follows the central Build-example contract", () => {
       `resources/utils.${locale}.js`,
     ]);
   }
-  assert.deepEqual(Object.keys(manifest.urlsByLocale), ["en-XA", "es"]);
+  assert.deepEqual(Object.keys(manifest.urlsByLocale), ["en-XA", "es", "de"]);
   assert.equal(manifest.pathsByLocale["en-XA"].length, 6);
   assert.equal(manifest.pathsByLocale.es.length, 6);
-  assert.equal(manifest.localizedPaths.length, 12);
-  assert.equal(manifest.localizedUrls.length, 12);
+  assert.equal(manifest.pathsByLocale.de.length, 6);
+  assert.equal(manifest.localizedPaths.length, 18);
+  assert.equal(manifest.localizedUrls.length, 18);
   assert.ok(
     manifest.localizedUrls.every((path) =>
       path.startsWith(`${buildExampleContract.examplesPublicBasePath}/`),
@@ -159,10 +160,12 @@ test("artifact manifest is deeply immutable and cannot change cleanup policy", (
     manifest.pathsByLocale,
     manifest.pathsByLocale["en-XA"],
     manifest.pathsByLocale.es,
+    manifest.pathsByLocale.de,
     manifest.localizedPaths,
     manifest.urlsByLocale,
     manifest.urlsByLocale["en-XA"],
     manifest.urlsByLocale.es,
+    manifest.urlsByLocale.de,
     manifest.localizedUrls,
   ]) {
     assert.equal(Object.isFrozen(collection), true);
@@ -282,7 +285,7 @@ test("English UTXO artifact copy preserves its plural and notice contracts", asy
   assert.equal(messages.noticeManualTesting.split(".").length - 1, 1);
 });
 
-test("Spanish Build artifacts are deterministic, complete, and catalog-backed", async () => {
+test("catalog-backed Build artifacts are deterministic and complete", async () => {
   const first = await artifacts.compile("test");
   const second = await artifacts.compile("test");
 
@@ -320,6 +323,27 @@ test("Spanish Build artifacts are deterministic, complete, and catalog-backed", 
   assert.match(controls, /mainnet/u);
   assert.match(controls, /testnet-10/u);
   assert.match(controls, /testnet-11/u);
+
+  for (const name of exampleNames) {
+    const german = first[`${name}.de.html`];
+    assert.match(german, /<html lang="de" dir="ltr">/u);
+    assert.match(german, /from '\.\/resources\/utils\.de\.js'/u);
+    assert.match(german, /Verbindung zum Kaspa-Netzwerk/u);
+    assert.match(german, /<meta name="robots" content="noindex, nofollow">/u);
+    assert.doesNotMatch(german, /\[!! /u);
+  }
+  assert.match(first["get-server-info.de.html"], /GetServerInfo-Anfrage/u);
+  assert.match(first["get-block-dag-info.de.html"], /GetBlockDagInfo-Antwort/u);
+  assert.match(first["subscribe-block-added.de.html"], /Block-Added-Ereignis/u);
+  assert.match(first["utxo-context.de.html"], /Ereignis empfangen/u);
+  assert.match(first["utxo-context.de.html"], /Ereignisse empfangen/u);
+  assert.match(first["utxo-context.de.html"], /UtxoProcessor/u);
+
+  const germanControls = first["resources/utils.de.js"];
+  assert.match(germanControls, /href="\/de\/build#try-live"/u);
+  assert.match(germanControls, /<- Zurück<\/a> \| Netzwerk:/u);
+  assert.match(germanControls, />Trennen<\/a>/u);
+  assert.match(germanControls, />Neu verbinden<\/a>/u);
 });
 
 test("catalog interpolation text cannot execute in generated JavaScript", async (t) => {
@@ -562,7 +586,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   await fixture.check("preview");
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.(?:en-XA|es)\.html$/u.test(path))
+      .filter((path) => /\.(?:de|en-XA|es)\.html$/u.test(path))
       .sort(),
     manifest.localizedPaths.filter((path) => path.endsWith(".html")).sort(),
   );
@@ -571,7 +595,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   await fixture.check("production");
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.(?:en-XA|es)\.html$/u.test(path))
+      .filter((path) => /\.(?:de|en-XA|es)\.html$/u.test(path))
       .sort(),
     manifest.pathsByLocale.es.filter((path) => path.endsWith(".html")).sort(),
   );
@@ -653,7 +677,7 @@ test("cleanup rejects nested localized artifacts without deleting files", async 
 
 test("Build example return paths are restricted to each exact same-origin locale anchor", () => {
   const origin = "https://preview.example";
-  for (const locale of ["en-XA", "es"] as const) {
+  for (const locale of ["en-XA", "es", "de"] as const) {
     const expectedPath = `/${locale}/build`;
     const fallback = `/${locale}/build#try-live`;
 

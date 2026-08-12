@@ -1,0 +1,112 @@
+{
+  "navigation": {
+    "homeAria": "Kaspa-Startseite",
+    "toggleMenu": "Menü ein-/ausblenden",
+    "menu": "Menü",
+    "language": {
+      "label": "Sprache"
+    },
+    "links": {
+      "lore": "LORE",
+      "hodl": "HODL",
+      "build": "BUIDL",
+      "think": "THINK",
+      "dagviz": "DAGVIZ"
+    }
+  },
+  "theme": {
+    "switchMode": "Zum {mode} Modus wechseln",
+    "light": "hellen",
+    "dark": "dunklen"
+  },
+  "logoMenu": {
+    "aria": "Kaspa-Logo",
+    "viewAssets": "Logo-Medien ansehen"
+  },
+  "pageSections": {
+    "onThisPage": "Auf dieser Seite",
+    "openAria": "Seitenabschnitte öffnen, aktueller Abschnitt: {section}",
+    "dialogAria": "Seitenabschnitte",
+    "close": "Schließen",
+    "current": "Aktuell"
+  },
+  "footer": {
+    "glyphAria": "Kaspa-Symbol",
+    "operatedBy": "Betrieben von <operator>KasMedia.com</operator>",
+    "links": {
+      "explorer": "Explorer",
+      "github": "GitHub",
+      "x": "X"
+    }
+  },
+  "structuredData": {
+    "organizationDescription": "Kaspa ist eine fair gestartete Proof-of-Work-blockDAG-Kryptowährung mit 10 Blöcken pro Sekunde, entwickelt für Echtzeit-Dezentralisierung."
+  },
+  "ai": {
+    "externalPrompt": "Lies {url}. Ich möchte Fragen dazu stellen.",
+    "genericError": "Entschuldigung, etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    "launcher": {
+      "askAnything": "Frag einfach",
+      "beta": "Beta",
+      "betaTitle": "Diese Funktion wird aktiv entwickelt – gelegentlich können Probleme auftreten",
+      "betaAria": "Beta – gelegentlich können Probleme auftreten",
+      "poweredBy": "Unterstützt von <provider>kaspa.news/ask</provider>",
+      "collapsePanel": "Panel einklappen",
+      "expandPanel": "Panel ausklappen",
+      "closePanel": "Panel schließen",
+      "placeholder": "Frag einfach ...",
+      "sendMessage": "Nachricht senden",
+      "welcomeHeading": "Frag, was du über Kaspa wissen möchtest",
+      "welcomeBody": "Erhalte unten schnelle Antworten oder öffne eine vollständige Unterhaltung mit deiner bevorzugten KI.",
+      "ownAiDivider": "oder verwende deine eigene KI",
+      "ownAiLabel": "Eigene KI verwenden:",
+      "sources": "{count, plural, =0 {Quellen} other {Quellen (#)}}",
+      "copy": "kopieren",
+      "copied": "kopiert"
+    },
+    "suggestions": {
+      "kaspaPurpose": "Welches Problem löst Kaspa?",
+      "blockTimes": "Wie lang sind die Blockzeiten?",
+      "decentralization": "Warum ist Echtzeit-Dezentralisierung wichtig?",
+      "premine": "Gab es ein Premine?"
+    },
+    "providers": {
+      "chatgpt": "ChatGPT",
+      "claude": "Claude",
+      "perplexity": "Perplexity"
+    },
+    "loading": {
+      "atomicArc": "AtomicArc wird sicher ausgeführt ...",
+      "ibd": "der neue Node durchläuft IBD ...",
+      "ftr": "der Block wird per FTR weitergeleitet ...",
+      "kip": "das KIP wird aktiviert ...",
+      "template": "das Template wird gebunden ...",
+      "commitment": "Bootstrapping aus dem Commitment ...",
+      "blueSet": "das Blue Set wird verflochten ...",
+      "mergeDepth": "die Merge-Tiefe wird berechnet ...",
+      "silverscript": "Silverscript wird zum Kompilieren überredet ...",
+      "covenantId": "die covenant_id wird abgeleitet ...",
+      "covenantState": "der Covenant-Zustand wird codiert ...",
+      "orphans": "Orphans werden entfernt ...",
+      "mempool": "der Mempool wird gefüllt ...",
+      "fees": "Gebühren werden auf Lanes verteilt ...",
+      "covenants": "mit Covenants wird verhandelt ...",
+      "blocks": "Blöcke werden parallel verteilt ...",
+      "pruning": "die Vergangenheit wird bereinigt ...",
+      "dagLayer": "auf der DAG-Schicht wird veröffentlicht ...",
+      "stack": "auf den Stack wird gelegt ...",
+      "bps": "die 10 BPS werden neu ausbalanciert ...",
+      "blueWork": "Blue Work wird neu berechnet ...",
+      "l2": "L2-Ereignisse werden nach Reorgs gefiltert ...",
+      "vprogBatch": "der vProg-Batch wird eingeplant ...",
+      "schnorr": "die Signatur wird geschnorrt ...",
+      "virtualState": "der virtuelle Zustand wird serialisiert ...",
+      "utxoSet": "ein Snapshot des UTXO-Sets wird erstellt ...",
+      "anticone": "der Anticone wird durchlaufen ...",
+      "transactions": "Transaktionen werden aus dem Orphan-Status geholt ...",
+      "utxo": "der UTXO wird entsperrt ...",
+      "vprogs": "die vProgs werden virtualisiert ...",
+      "crescendo": "auf Crescendo wird gewartet ..."
+    }
+  }
+}

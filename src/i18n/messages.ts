@@ -12,13 +12,25 @@ import spanishHodl from "../../messages/es/hodl.json" with { type: "json" };
 import spanishHome from "../../messages/es/home.json" with { type: "json" };
 import spanishLore from "../../messages/es/lore.json" with { type: "json" };
 import spanishShared from "../../messages/es/shared.json" with { type: "json" };
+import germanAssets from "../../messages/de/assets.json" with { type: "json" };
+import germanBuild from "../../messages/de/build.json" with { type: "json" };
+import germanErrors from "../../messages/de/errors.json" with { type: "json" };
+import germanHodl from "../../messages/de/hodl.json" with { type: "json" };
+import germanHome from "../../messages/de/home.json" with { type: "json" };
+import germanLore from "../../messages/de/lore.json" with { type: "json" };
+import germanShared from "../../messages/de/shared.json" with { type: "json" };
 
 import {
   isLocaleEnabled,
   isPseudoLocaleEnabled,
   listSelectableLocales,
 } from "./config.ts";
-import { pseudoLocale, spanishLocale, type Locale } from "./locale-registry.ts";
+import {
+  germanLocale,
+  pseudoLocale,
+  spanishLocale,
+  type Locale,
+} from "./locale-registry.ts";
 import type { RouteId } from "./manifest.ts";
 import { pseudoLocalizeCatalog } from "./pseudo.ts";
 
@@ -46,6 +58,16 @@ export const spanishMessages = {
   shared: spanishShared,
 } satisfies AppMessages;
 
+export const germanMessages = {
+  assets: germanAssets,
+  build: germanBuild,
+  errors: germanErrors,
+  hodl: germanHodl,
+  home: germanHome,
+  lore: germanLore,
+  shared: germanShared,
+} satisfies AppMessages;
+
 let generatedPseudoMessages: AppMessages | null = null;
 
 function assertNever(value: never): never {
@@ -71,6 +93,13 @@ export function getMessages(locale: Locale): LocaleMessages {
         );
       }
       return spanishMessages;
+    case germanLocale:
+      if (!isLocaleEnabled(germanLocale)) {
+        throw new Error(
+          `${germanLocale} messages are unavailable in this build target`,
+        );
+      }
+      return germanMessages;
     default:
       return assertNever(locale);
   }

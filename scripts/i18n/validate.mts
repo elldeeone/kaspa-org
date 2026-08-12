@@ -1,11 +1,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 
-import {
-  defaultLocale,
-  pseudoLocale,
-  spanishLocale,
-} from "../../src/i18n/locale-registry.ts";
+import { defaultLocale, pseudoLocale } from "../../src/i18n/locale-registry.ts";
 import { installI18nPublicationProfile } from "../../src/i18n/publication-profile-node.ts";
 import { analyzeAppRouteFile, isAppRouteFile } from "./app-route-policy.mts";
 import {
@@ -14,7 +10,7 @@ import {
   validateCatalogSource,
   type MessageCatalog,
 } from "./catalog-contract.mts";
-import { validateSpanishCatalogContract } from "./spanish-contract.mts";
+import { validateTranslationCatalogContract } from "./translation-contract.mts";
 
 installI18nPublicationProfile();
 const [
@@ -177,14 +173,13 @@ for (const locale of catalogLocales) {
       for (const issue of compareCatalogs(sourceCatalog, result.catalog)) {
         fail(location, issue);
       }
-      if (locale === spanishLocale) {
-        for (const issue of validateSpanishCatalogContract(
-          namespace,
-          sourceCatalog,
-          result.catalog,
-        )) {
-          fail(location, issue);
-        }
+      for (const issue of validateTranslationCatalogContract(
+        locale,
+        namespace,
+        sourceCatalog,
+        result.catalog,
+      )) {
+        fail(location, issue);
       }
     }
   }

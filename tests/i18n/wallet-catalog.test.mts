@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import spanishWalletSummaries from "../../messages/es/wallets.json" with { type: "json" };
-import { validateSpanishCatalogContract } from "../../scripts/i18n/spanish-contract.mts";
+import germanWalletSummaries from "../../messages/de/wallets.json" with { type: "json" };
+import { validateTranslationCatalogContract } from "../../scripts/i18n/translation-contract.mts";
 import {
   getRatingExplanationKey,
   ratingExplanations,
@@ -14,7 +15,11 @@ import {
 import type { WalletCheckRating } from "../../src/app/hodl/wallet-finder/types.ts";
 import { kaspaWallets } from "../../src/data/wallets.ts";
 import { supportedLocaleCodes } from "../../src/i18n/locale-registry.ts";
-import { englishMessages, spanishMessages } from "../../src/i18n/messages.ts";
+import {
+  englishMessages,
+  germanMessages,
+  spanishMessages,
+} from "../../src/i18n/messages.ts";
 import { getLocalizedWallets } from "../../src/i18n/wallets.ts";
 
 test("every supported locale returns the complete canonical wallet set", () => {
@@ -47,21 +52,33 @@ test("English records are canonical and pseudo summaries derive from them", () =
 test("route catalogs do not own wallet records", () => {
   assert.equal("wallets" in englishMessages.hodl.walletFinder, false);
   assert.equal("wallets" in spanishMessages.hodl.walletFinder, false);
+  assert.equal("wallets" in germanMessages.hodl.walletFinder, false);
 });
 
-test("Spanish wallet summaries satisfy the site translation contract", () => {
+test("translated wallet summaries satisfy the shared translation contract", () => {
   const englishWalletSummaries = Object.fromEntries(
     kaspaWallets.map((wallet) => [wallet.id, wallet.summary]),
   );
 
-  assert.deepEqual(
-    validateSpanishCatalogContract(
-      "wallets",
-      englishWalletSummaries,
-      spanishWalletSummaries,
-    ),
-    [],
-  );
+  for (const [locale, summaries] of Object.entries({
+    es: spanishWalletSummaries,
+    de: germanWalletSummaries,
+  })) {
+    assert.deepEqual(
+      Object.keys(summaries).sort(),
+      Object.keys(englishWalletSummaries).sort(),
+    );
+    assert.deepEqual(
+      validateTranslationCatalogContract(
+        locale,
+        "wallets",
+        englishWalletSummaries,
+        summaries,
+      ),
+      [],
+      locale,
+    );
+  }
 });
 
 test("every validator-approved rating resolves through the explanation map", () => {

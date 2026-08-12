@@ -1,0 +1,7 @@
+{
+  "kaspa-cli-wallet": "Kommandozeilen-Wallet-Werkzeuge für Nutzer, die mit der Verwaltung von Schlüsseln und Transaktionen über ein Terminal vertraut sind.",
+  "kaspacom-wallet": "Eine browserbasierte KaspaCom-Wallet zum Erstellen, Importieren und Verwenden selbstverwahrter Kaspa-Wallets.",
+  "kaspium": "Eine selbstverwahrte mobile Wallet zum Senden, Empfangen und Aufbewahren von KAS auf einem Smartphone.",
+  "kng-desktop": "Eine moderne Kaspa-Desktop-Wallet mit benutzerfreundlicher Standardoberfläche, optionalem Full-Node-Betrieb und umfangreicher Konfiguration für fortgeschrittene Nutzer.",
+  "kng-web": "Die browserbasierte Version von Kaspa NG. Standardmäßig benutzerfreundlich, ohne Installation und mit optionaler erweiterter Konfiguration."
+}

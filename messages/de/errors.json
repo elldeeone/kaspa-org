@@ -1,0 +1,12 @@
+{
+  "metadata": {
+    "title": "Seite nicht gefunden | Kaspa",
+    "description": "Die angeforderte Seite konnte nicht gefunden werden."
+  },
+  "page": {
+    "code": "404",
+    "heading": "Falsche Route.",
+    "body": "Richtiges Netzwerk.",
+    "home": "Zur Startseite"
+  }
+}
