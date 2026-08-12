@@ -112,8 +112,9 @@ npm run test:e2e:headed
 npm run test:e2e:ui
 ```
 
-Production publishes the complete Spanish, German, and French sites atomically.
-The `en-XA` pseudo-locale is test-only. Run all three full browser gates with:
+Production publishes the complete Spanish, German, French, and Simplified
+Chinese sites atomically. The `en-XA` pseudo-locale is test-only. Run all three
+full browser gates with:
 
 ```bash
 npm run i18n:pseudo:generate
@@ -137,9 +138,9 @@ NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=test npm run build
 NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=test npm start
 ```
 
-Production and Preview generate ignored `es`, `de`, and `fr` Build-example
-siblings under `public/vendor/kaspa-wasm`. Test also generates `en-XA`. After
-stopping the server, remove those derived files with:
+Production and Preview generate ignored `es`, `de`, `fr`, and `zh-CN`
+Build-example siblings under `public/vendor/kaspa-wasm`. Test additionally
+generates `en-XA`. After stopping the server, remove those derived files with:
 
 ```bash
 npm run -s i18n:artifacts -- --clean

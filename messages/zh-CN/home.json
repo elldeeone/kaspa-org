@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "title": "Kaspa | 实时去中心化的工作量证明 blockDAG",
+    "description": "Kaspa 是一种公平启动的工作量证明 blockDAG 加密货币，每秒处理 10 个区块，专为实时去中心化而构建。"
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — 实时去中心化",
+    "heading": "实时\n去中心化",
+    "tagline": "无需等待的 bitcoin 工作量证明。"
+  },
+  "hero": {
+    "heading": "实时\n去中心化",
+    "tagline": "无需等待的 bitcoin 工作量证明。",
+    "getStarted": "开始了解",
+    "getWallet": "获取钱包",
+    "buyKaspa": "购买 Kaspa",
+    "dagAnnotation": "实时 pow"
+  },
+  "verify": {
+    "heading": "别信，去验证。",
+    "history": "Kaspa 历史上的每一枚币，都能通过密码学追溯到 UTXO 集为空的创世区块。",
+    "fairLaunch": "无预挖。无隐藏分配。公平启动。",
+    "explanation": "创世证明沿修剪点区块哈希链反向追溯至最初的创世区块，并验证其 UTXO 承诺与空集一致。嵌入创世币基交易中的 Bitcoin 区块哈希充当时间戳，从而排除隐藏预挖的可能。",
+    "runProof": "运行证明"
+  },
+  "proof": {
+    "trigger": "验证证明",
+    "loader": {
+      "loading": "正在加载证明…",
+      "error": "无法加载证明。",
+      "retry": "重试"
+    },
+    "chrome": {
+      "back": "返回",
+      "title": "验证证明",
+      "sectionsAria": "证明章节",
+      "jumpToSection": "跳转至{section}"
+    },
+    "sections": {
+      "live": "实时",
+      "origin": "起源",
+      "runIt": "亲自运行"
+    },
+    "live": {
+      "eyebrow": "历史 · 当前 · 持续",
+      "title": "实时供应量与发行计划对比",
+      "body": "Kaspa 的流通供应量可以从第一性原理重新计算。在线节点会报告当前总量。硬编码创世区块的 UTXO 集对 2021 年 11 月 22 日检查点的历史总量作出了密码学承诺，此后发行的每一枚币都遵循确定性的发行计划。"
+    },
+    "origin": {
+      "eyebrow": "起源",
+      "title": "供应量从何开始",
+      "supplyBody": "每一枚币都可追溯到同一个区块，当时供应量为 <strong>零</strong>。其 UTXO 承诺是空集的数学指纹，在任何计算它的机器上都对应相同常量。供应量由此开始，此后的每一枚币都来自计划发行，而非预先分配。",
+      "verseBody": "该区块的币基交易中还写有一段阿拉姆语的 <reference>《以斯拉记》7:18</reference> 经文，颂扬古代波斯君王所倡导的自由价值。",
+      "translatedQuotation": "“剩下的金银，你和你的弟兄看着怎样好，就怎样照你们上帝的旨意去做。”",
+      "quotationAttribution": "创世币基交易中的《以斯拉记》7:18",
+      "timestampBody": "币基交易中还包含 <bitcoinBlock>Bitcoin 区块 #708,639</bitcoinBlock> 的哈希，证明该区块是在这一时间点之后产生的，且不存在预挖。"
+    },
+    "run": {
+      "eyebrow": "别信，去验证",
+      "title": "亲自运行",
+      "intro": "从创世区块到当前链尖重现这项证明。该笔记本沿修剪点区块哈希链反向追溯至创世区块，将 UTXO 承诺与空集指纹进行验证，并核验作为锚点的 Bitcoin 区块哈希。若要以数值形式读取 2021 年 11 月 22 日检查点的历史供应量，还需额外一步：对证明所承诺的 UTXO 集求和。",
+      "notebookTitle": "证明笔记本",
+      "notebookBody": "克隆、运行、检查。该笔记本会验证创世区块与检查点之间的关联，但不会直接输出历史供应量数值。",
+      "notebookAction": "在 GitHub 上打开",
+      "checkpointTitle": "验证检查点总量",
+      "checkpointStep1": "运行笔记本，验证硬编码创世区块、检查点关联、空集起源和 Bitcoin 锚点。",
+      "checkpointStep2": "打开历史版本 <kaspad>kaspad v0.11.5-2</kaspad>，注意 <processor>区块处理器</processor> 会加载嵌入的检查点 <code>utxos.gz</code>，并根据硬编码创世区块的 UTXO 承诺对其进行验证。",
+      "checkpointStep3": "按照 <serialization>serialization.go</serialization> 中的格式解析 <utxos>utxos.gz</utxos>，并对每个 UTXO 金额求和。",
+      "checkpointStep4": "所得总和就是 DAA 检查点 <daa>1,312,860</daa>（2021 年 11 月 22 日）的历史供应量：<supply>984,222,544.04487171 KAS</supply>",
+      "checkpointNote": "从这一点起，发行量便是确定的。将检查点之后的计划发行量相加，就能得到任意 DAA 的预期供应量；该数值应与在线节点报告的结果一致。"
+    },
+    "supply": {
+      "intro": {
+        "eyebrow": "持续验证",
+        "title": "实时供应量与发行计划对比",
+        "body": "将在线节点的流通供应量与以检查点为锚点的预期供应量进行比较：从硬编码创世区块所承诺的 2021 年 11 月 22 日检查点总量出发，再按 Kaspa 的确定性发行计划延伸至今。"
+      },
+      "emissionHistory": "发行历史",
+      "connection": {
+        "connectedTo": "已连接至 {nodeUrl}",
+        "error": "连接错误",
+        "connecting": "正在连接 Kaspa 网络…"
+      },
+      "comparison": {
+        "nodeReported": "节点报告的供应量",
+        "unit": "KAS",
+        "rpcSource": "通过 getCoinSupply RPC",
+        "expected": "预期供应量",
+        "expectedBasis": "检查点总量 + 2021 年 11 月 22 日以来的计划发行量"
+      },
+      "anchor": {
+        "label": "锚点",
+        "title": "2021 年 11 月 22 日检查点",
+        "body": "硬编码创世区块的 UTXO 集对 2021 年 11 月 22 日检查点的历史供应量作出了密码学承诺。此后发行的每一枚币都遵循确定性的共识计划，因此节点报告的供应量应与以检查点为锚点的预期供应量一致。数百 KAS 量级的微小差异来自 DAA 与区块数量的偏移，以及共识补贴表中的整数舍入，这与 Bitcoin 和其他工作量证明铸币机制类似。"
+      },
+      "timeline": {
+        "genesis": {
+          "label": "创世",
+          "date": "{date, date, medium}",
+          "description": "UTXO 集为空，因此不存在任何币。最初的创世区块以 Bitcoin 区块 #708,639 为锚点。"
+        },
+        "checkpoint": {
+          "label": "检查点",
+          "date": "{date, date, medium}",
+          "description": "主网最初约两周内，每个区块的奖励在 1–1000 KAS 之间随机变化，在一次硬分叉将每区块奖励固定下来之前共发行了 327,792,544 KAS。该历史供应量由硬编码创世区块承诺。"
+        },
+        "preDeflationary": {
+          "label": "通缩前阶段",
+          "date": "{startDate, date, medium} – {endDate, date, medium}",
+          "description": "检查点后的约 6 个月内，每区块奖励固定，随后通缩计划开始生效。"
+        },
+        "chromatic": {
+          "label": "半音阶阶段开始",
+          "date": "约 {date, date, medium}",
+          "description": "通缩前阶段结束。奖励从每区块 500 KAS 降至 440 KAS，此后每月按几何比例递减。"
+        },
+        "crescendo": {
+          "label": "Crescendo",
+          "date": "约 {date, date, medium}",
+          "description": "每秒 10 个区块，每区块奖励相应除以 10。"
+        },
+        "now": "现在",
+        "live": "实时",
+        "circulating": "KAS 流通中",
+        "expected": "KAS 预期量",
+        "loading": "正在加载…",
+        "connecting": "正在连接节点…"
+      },
+      "stats": {
+        "mined": "已开采",
+        "blockReward": "区块奖励",
+        "nodeDagBlocks": "节点 DAG 区块",
+        "daaScore": "DAA 分数",
+        "blockCountAccessible": "节点 DAG 区块：{count}"
+      }
+    }
+  }
+}

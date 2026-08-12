@@ -26,6 +26,13 @@ import frenchHodl from "../../messages/fr/hodl.json" with { type: "json" };
 import frenchHome from "../../messages/fr/home.json" with { type: "json" };
 import frenchLore from "../../messages/fr/lore.json" with { type: "json" };
 import frenchShared from "../../messages/fr/shared.json" with { type: "json" };
+import chineseAssets from "../../messages/zh-CN/assets.json" with { type: "json" };
+import chineseBuild from "../../messages/zh-CN/build.json" with { type: "json" };
+import chineseErrors from "../../messages/zh-CN/errors.json" with { type: "json" };
+import chineseHodl from "../../messages/zh-CN/hodl.json" with { type: "json" };
+import chineseHome from "../../messages/zh-CN/home.json" with { type: "json" };
+import chineseLore from "../../messages/zh-CN/lore.json" with { type: "json" };
+import chineseShared from "../../messages/zh-CN/shared.json" with { type: "json" };
 
 import {
   isLocaleEnabled,
@@ -33,6 +40,7 @@ import {
   listSelectableLocales,
 } from "./config.ts";
 import {
+  chineseLocale,
   frenchLocale,
   germanLocale,
   pseudoLocale,
@@ -86,6 +94,16 @@ export const frenchMessages = {
   shared: frenchShared,
 } satisfies AppMessages;
 
+export const chineseMessages = {
+  assets: chineseAssets,
+  build: chineseBuild,
+  errors: chineseErrors,
+  hodl: chineseHodl,
+  home: chineseHome,
+  lore: chineseLore,
+  shared: chineseShared,
+} satisfies AppMessages;
+
 let generatedPseudoMessages: AppMessages | null = null;
 
 function assertNever(value: never): never {
@@ -125,6 +143,13 @@ export function getMessages(locale: Locale): LocaleMessages {
         );
       }
       return frenchMessages;
+    case chineseLocale:
+      if (!isLocaleEnabled(chineseLocale)) {
+        throw new Error(
+          `${chineseLocale} messages are unavailable in this build target`,
+        );
+      }
+      return chineseMessages;
     default:
       return assertNever(locale);
   }

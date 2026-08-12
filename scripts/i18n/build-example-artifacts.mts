@@ -519,12 +519,14 @@ function compileCardinalPlural(
 function buildHtmlReplacements(
   sourceMessages: BuildArtifactMessages,
   targetMessages: BuildArtifactMessages,
+  locale: BuildArtifactLocale,
   transform: MessageTransform,
 ): Readonly<
   Record<(typeof BUILD_EXAMPLE_NAMES)[number], readonly Replacement[]>
 > {
   const { runtime: sourceRuntime, utxo: sourceUtxo } = sourceMessages;
   const { runtime: targetRuntime, utxo: targetUtxo } = targetMessages;
+  const localizedUtxoTerm = locale === "zh-CN" ? "UTXO" : "UTXOs";
   const common: readonly Replacement[] = [
     [
       sourceTemplate(sourceRuntime.connectingKaspaNetwork),
@@ -695,7 +697,7 @@ function buildHtmlReplacements(
       [
         sourceHtmlLiteral(sourceUtxo.noticeManyUtxos, { term: "UTXOs" }),
         localizedHtmlLiteral(targetUtxo.noticeManyUtxos, transform, {
-          term: "UTXOs",
+          term: localizedUtxoTerm,
         }),
       ],
       [
@@ -705,7 +707,7 @@ function buildHtmlReplacements(
         }),
         localizedHtmlLiteral(targetUtxo.noticeManualTesting, transform, {
           api: "UtxoProcessor",
-          term: "UTXOs",
+          term: localizedUtxoTerm,
         }),
       ],
       [
@@ -845,6 +847,7 @@ function generateLocalizedHtml(
   for (const replacement of buildHtmlReplacements(
     sourceMessages,
     targetMessages,
+    locale,
     transform,
   )[name]) {
     generated = replaceExactlyOnce(generated, replacement, `${name}.html`);

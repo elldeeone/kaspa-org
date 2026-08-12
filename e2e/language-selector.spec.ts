@@ -24,5 +24,6 @@ test("Production offers English, Spanish, German, and French", async ({
   await expect(
     menu.getByRole("menuitemradio", { name: "Français" }),
   ).toBeVisible();
+  await expect(menu).not.toContainText("简体中文");
   await expect(menu).not.toContainText("Pseudo");
 });

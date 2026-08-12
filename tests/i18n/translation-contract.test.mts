@@ -7,6 +7,7 @@ import {
   validateTranslationCatalogContract,
 } from "../../scripts/i18n/translation-contract.mts";
 import {
+  chineseMessages,
   englishMessages,
   frenchMessages,
   germanMessages,
@@ -17,6 +18,7 @@ const translatedCatalogs = {
   es: spanishMessages,
   de: germanMessages,
   fr: frenchMessages,
+  "zh-CN": chineseMessages,
 } as const;
 
 test("complete translated catalogs satisfy the shared translation contract", () => {

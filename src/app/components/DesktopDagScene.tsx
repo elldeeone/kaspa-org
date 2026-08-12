@@ -1,16 +1,19 @@
 "use client";
 
 import DagHero from "@/dag-viz/DagHero";
+import type { Locale } from "@/i18n/locale-registry";
 
 import DagAnnotation from "./DagAnnotation";
 
 interface DesktopDagSceneProps {
   annotation: string;
+  locale: Locale;
   maskColor: string;
 }
 
 export default function DesktopDagScene({
   annotation,
+  locale,
   maskColor,
 }: DesktopDagSceneProps) {
   return (
@@ -42,7 +45,7 @@ export default function DesktopDagScene({
       />
 
       {/* Hand-scribbled annotation */}
-      <DagAnnotation>{annotation}</DagAnnotation>
+      <DagAnnotation locale={locale}>{annotation}</DagAnnotation>
     </>
   );
 }

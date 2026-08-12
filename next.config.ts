@@ -57,12 +57,20 @@ const withNextIntl = createNextIntlPlugin({
 export default async function createNextConfig(): Promise<NextConfig> {
   const { marker, profile } = installI18nPublicationProfile();
   const serializedProfile = serializeI18nPublicationProfile(profile);
-  const [manifest, config, siteValidation] = await Promise.all([
+  const [buildExamples, manifest, config, siteValidation] = await Promise.all([
+    import("./src/i18n/build-example-contract.ts"),
     import("./src/i18n/manifest.ts"),
     import("./src/i18n/config.ts"),
     import("./src/i18n/site-validation.ts"),
   ]);
   delete process.env[I18N_PUBLICATION_PROFILE_ENV];
+  const localizedArtifactUrls = profile.enabledLocales.flatMap((locale) =>
+    locale === defaultLocale
+      ? []
+      : buildExamples.buildExampleContract.artifactManifest.urlsByLocale[
+          locale
+        ],
+  );
 
   const isProductionDeployment =
     process.env.VERCEL_ENV === "production" ||
@@ -112,6 +120,12 @@ export default async function createNextConfig(): Promise<NextConfig> {
         source,
         destination,
         permanent: true,
+      }));
+    },
+    async headers() {
+      return localizedArtifactUrls.map((source) => ({
+        source,
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
       }));
     },
     async rewrites() {

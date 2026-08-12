@@ -1,5 +1,6 @@
 import { isLocale } from "@/i18n/config";
 import { getHomeProofClientMessages } from "@/i18n/messages";
+import { getNonHtmlRobotsHeader } from "@/i18n/publication";
 import { listPublishedLocales } from "@/i18n/site";
 
 export const dynamic = "force-static";
@@ -18,7 +19,10 @@ export async function GET(
     return new Response(null, { status: 404 });
   }
 
-  return Response.json(getHomeProofClientMessages(locale), {
-    headers: { "Cache-Control": "public, max-age=0, must-revalidate" },
+  const headers = new Headers({
+    "Cache-Control": "public, max-age=0, must-revalidate",
   });
+  const robots = getNonHtmlRobotsHeader("home", locale, "data");
+  if (robots) headers.set("X-Robots-Tag", robots);
+  return Response.json(getHomeProofClientMessages(locale), { headers });
 }

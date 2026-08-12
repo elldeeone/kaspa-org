@@ -1,0 +1,417 @@
+{
+  "metadata": {
+    "title": "Kaspa 开发者文档、SDK、API 与节点访问 | Kaspa",
+    "description": "在 Kaspa 上开始构建所需的一切：WASM SDK、Rust 库、在线 API 体验区、节点访问及开发者工具。"
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — 实时去中心化"
+  },
+  "terms": {
+    "daa": "DAA",
+    "dag": "DAG",
+    "node": "节点",
+    "publicNodeNetwork": "公共节点网络",
+    "utxo": "UTXO"
+  },
+  "artifacts": {
+    "controls": {
+      "back": "返回",
+      "network": "网络",
+      "disconnect": "断开连接",
+      "reconnect": "重新连接",
+      "connecting": "| 正在连接…"
+    },
+    "runtime": {
+      "connectingKaspaNetwork": "正在连接 Kaspa 网络…",
+      "selectedNetwork": "已选择网络 {network}…",
+      "connectedTo": "已连接至",
+      "disconnected": "连接已断开…",
+      "disconnectedFrom": "连接已断开：",
+      "connectingPublicNode": "正在连接公共节点…",
+      "disconnect": "断开连接",
+      "apiRequest": "{api} 请求…",
+      "apiResponse": "{api} 响应：",
+      "subscribingBlockAdded": "正在订阅新增区块事件…",
+      "registeringProtocolNotifications": "正在注册 {protocol} 通知…",
+      "subscribingProtocolScore": "正在订阅 {protocol} 分数…",
+      "event": "事件：",
+      "networkConsole": "网络"
+    },
+    "utxo": {
+      "receivedEvents": "| 已收到 {count, plural, one {# 个事件} other {# 个事件}}",
+      "noticeManyUtxos": "请注意，某些地址可能有数千个 {term}，在浏览器中以列表形式展示并不切实际。此类数据输出应进行分页。",
+      "noticeManualTesting": "此演示用于手动测试，以展示 {api} 发出的事件；渲染大量 {term} 时，您的浏览器可能会遇到困难。",
+      "addressPlaceholder": "输入 {network} 地址…",
+      "monitorAddress": "点击监控地址",
+      "restart": "重新启动",
+      "trackingAddress": "正在跟踪地址：",
+      "error": "错误：",
+      "restarting": "正在重新启动…",
+      "stoppingProcessor": "正在停止处理器…",
+      "startingProcessor": "正在启动处理器…",
+      "processorStarted": "处理器已启动…"
+    }
+  },
+  "navigation": {
+    "current": "构建",
+    "sections": {
+      "start": {
+        "label": "开始",
+        "compactLabel": "开始",
+        "description": "概览及进入技术栈的最快方式。"
+      },
+      "tryLive": {
+        "label": "在线体验",
+        "compactLabel": "体验",
+        "description": "上游浏览器示例和在线演示。"
+      },
+      "paths": {
+        "label": "选择路径",
+        "compactLabel": "路径",
+        "description": "选择 {wasmSdk}、原生 {rust} 或完整节点设置。"
+      },
+      "runNode": {
+        "label": "运行节点",
+        "compactLabel": "节点",
+        "description": "使用一行 {docker} 命令在本地运行 {rustyKaspa}。"
+      },
+      "tooling": {
+        "label": "工具",
+        "compactLabel": "工具",
+        "description": "上游库、基础设施和生态项目。"
+      },
+      "access": {
+        "label": "访问",
+        "compactLabel": "访问",
+        "description": "文档、查询入口、节点参考和测试流程。"
+      },
+      "developments": {
+        "label": "开发动态",
+        "compactLabel": "动态",
+        "description": "关注正在进行的工作和公开研发讨论。"
+      },
+      "help": {
+        "label": "帮助",
+        "compactLabel": "帮助",
+        "description": "遇到问题时可查阅文档或求助社区。"
+      }
+    }
+  },
+  "start": {
+    "release": {
+      "version": "{version}",
+      "action": "查看版本"
+    },
+    "heading": "在 {kaspa} 上构建",
+    "description": "使用 {wasmSdk}、原生 {rust} 库和节点基础设施，在 {kaspa} 上进行构建。",
+    "actions": {
+      "openDocs": "打开文档",
+      "viewGitHub": "在 {github} 上查看"
+    },
+    "quickstart": {
+      "eyebrow": "最快入门方式",
+      "title": "开始构建",
+      "descriptionWithAi": "先向 {kaspaAi} 获取方向，再进入符合您需求的路径。",
+      "descriptionWithoutAi": "从文档、在线示例或符合您需求的节点路径开始。",
+      "aiTitle": "询问 {kaspaAi}",
+      "aiDescription": "找到合适的 {sdk}、{api} 或节点路径。",
+      "jumpLabel": "直接跳转至",
+      "routes": {
+        "chainData": "读取链上数据",
+        "stack": "选择技术栈",
+        "node": "运行节点"
+      }
+    }
+  },
+  "tryLive": {
+    "heading": {
+      "label": "在线体验",
+      "title": "运行 {rustyKaspa} 浏览器示例",
+      "description": "以下示例由 {rustyKaspaVersion} 浏览器 {sdk} 版本提供，无需离开页面即可查看 {sdk} 的实际运行效果。"
+    },
+    "upstream": "上游",
+    "actions": {
+      "openStandalone": "独立打开",
+      "viewSource": "查看源代码"
+    },
+    "networkNotice": "示例运行在 <network>{publicNodeNetwork}</network> 上。它是由社区运营节点组成的去中心化节点池，通过 {kaspaResolver} 提供前端接入。初始化可能需要几秒钟，不建议用于大规模生产环境。",
+    "examples": {
+      "serverInfo": {
+        "title": "获取服务器信息",
+        "shortLabel": "服务器信息",
+        "mobileTabLabel": "服务器",
+        "description": "通过公共解析器建立连接，直接从浏览器获取基础节点信息。",
+        "runtime": "{rpc}"
+      },
+      "dagInfo": {
+        "title": "获取区块 {dag} 信息",
+        "shortLabel": "{dag} 信息",
+        "mobileTabLabel": "{dag}",
+        "description": "使用上游浏览器 {rpc} 绑定，从在线 {kaspa} 节点读取 {dag} 的整体状态。",
+        "runtime": "{rpc}"
+      },
+      "blockAdded": {
+        "title": "监视新区块",
+        "shortLabel": "新区块",
+        "mobileTabLabel": "区块",
+        "description": "订阅新增区块事件，在浏览器中实时观察区块到达。",
+        "runtime": "{rpc}"
+      },
+      "daaChanged": {
+        "title": "监视 {daa} 变化",
+        "shortLabel": "{daa} 变化",
+        "mobileTabLabel": "{daa}",
+        "description": "订阅 {daa} 分数更新，实时观察数据流的变化。",
+        "runtime": "{rpc}"
+      },
+      "utxoContext": {
+        "title": "跟踪 {utxo} 上下文",
+        "shortLabel": "{utxo} 上下文",
+        "mobileTabLabel": "{utxo}",
+        "description": "使用核心浏览器绑定监控地址并接收实时 {utxo} 事件。",
+        "runtime": "{core}"
+      }
+    }
+  },
+  "paths": {
+    "heading": {
+      "label": "路径",
+      "title": "选择您的路径",
+      "description": "从符合您所构建系统的 {sdk} 或基础设施路径开始。"
+    },
+    "cards": {
+      "wasm": {
+        "tier": "应用 {sdk}",
+        "title": "使用 {wasmSdk} 构建",
+        "description": "使用上游浏览器和 {nodeJs} 绑定处理钱包流程、交易和 {rpc} 访问。",
+        "docs": "{wasmSdk} 文档",
+        "examples": "上游示例"
+      },
+      "rust": {
+        "tier": "原生 {rust}",
+        "title": "使用原生 {rust} 构建",
+        "description": "使用 {rustyKaspa} 中的 {rust} crate 构建后端服务、系统集成、钱包内部功能及节点周边工作负载。",
+        "repo": "{rustyKaspa} 代码仓库"
+      },
+      "node": {
+        "tier": "节点",
+        "title": "运行节点",
+        "description": "使用 {rustyKaspa} 获得完整访问能力、{utxo} 索引和生产级基础设施。",
+        "release": "最新版本",
+        "repo": "{rustyKaspa} 代码仓库"
+      }
+    },
+    "communityApi": {
+      "label": "社区 {api}",
+      "description": "若需快速读取数据或运行环境受限，可使用社区托管的 {api}。该服务尽力而为，不提供 SLA。",
+      "action": "{restApi} 文档"
+    }
+  },
+  "runNode": {
+    "heading": {
+      "label": "节点",
+      "title": "运行节点",
+      "description": "使用 {docker} 在本地启动 {rustyKaspa}。如需持久化设置，请查看 {dockerHub} 或从源代码构建。"
+    },
+    "quickstart": "{docker} 快速入门",
+    "title": "运行最新的 {rustyKaspa} 镜像",
+    "description": "在 16110 端口公开 {grpc}，让您可以从开发机器与节点通信。此容器为临时容器，不提供持久化存储或入站 {p2p}。",
+    "copyCommand": "复制 {docker} 命令",
+    "commandCopied": "已复制 {docker} 命令",
+    "dockerHub": "{dockerHub}",
+    "compile": "从源代码编译"
+  },
+  "tooling": {
+    "heading": {
+      "label": "工具",
+      "title": "当前工具链",
+      "description": "开发者目前可以依赖的稳定接口；新兴工作会另行标注。"
+    },
+    "stable": {
+      "rustyKaspa": {
+        "eyebrow": "原生技术栈",
+        "title": "{rustyKaspa}",
+        "description": "{rust} crate、钱包内部功能、完整节点、{rpc}、索引及直接网络访问。",
+        "tags": {
+          "rust": "原生 {rust}",
+          "infra": "节点与基础设施"
+        },
+        "action": "打开代码仓库"
+      },
+      "wasm": {
+        "eyebrow": "库与 {sdks}",
+        "title": "{wasmSdk}",
+        "description": "面向应用、钱包和交易流程的上游浏览器与 {node} 绑定。",
+        "tag": "浏览器 + {node}",
+        "action": "打开文档"
+      }
+    },
+    "emerging": {
+      "python": {
+        "status": "测试版",
+        "title": "{pythonSdk}",
+        "description": "已接近完成。如果您的技术栈包含 {python}，现在即可使用。",
+        "action": "打开代码仓库"
+      }
+    },
+    "community": {
+      "eyebrow": "社区项目",
+      "title": "生态工具与基础设施",
+      "description": "来自更广泛 {kaspa} 生态的开源项目，可补充上游 {sdk} 和节点技术栈。",
+      "open": "打开",
+      "cards": {
+        "indexer": {
+          "type": "索引器",
+          "title": "{simplyKaspaIndexer}",
+          "description": "独立索引 {kaspa} 区块和交易数据。"
+        },
+        "dnsSeeder": {
+          "type": "基础设施",
+          "title": "{dnsSeeder}",
+          "description": "用于引导 {kaspa} 点对点网络的基础设施。"
+        },
+        "khost": {
+          "type": "托管",
+          "title": "{khost}",
+          "description": "用于运行节点并为更广泛生态贡献节点容量的工具。"
+        },
+        "kaspaJs": {
+          "type": "库",
+          "title": "{kaspaJs}",
+          "description": "由社区维护、围绕 {kaspa} 技术栈构建的 {javascript} 工具。"
+        }
+      }
+    }
+  },
+  "access": {
+    "heading": {
+      "label": "访问",
+      "title": "网络访问",
+      "description": "按照开发者的实际需求，对文档、查询入口、节点参考和测试流程进行分组。"
+    },
+    "groups": {
+      "docs": {
+        "title": "文档",
+        "description": "从指南、技术参考和公开提案开始。",
+        "links": {
+          "docs": "打开文档",
+          "wasm": "{wasmSdk} 文档",
+          "deepWiki": "{rustyKaspa} {deepWiki}",
+          "kips": "{kips}",
+          "research": "研究论坛",
+          "qa": "{kaspaQAndA}"
+        }
+      },
+      "query": {
+        "title": "查询与访问",
+        "description": "通过公共工具和轻量级的社区托管 {api} 查询网络。社区 {api} 仅尽力提供服务，不提供 SLA。",
+        "links": {
+          "api": "社区 {api} 文档",
+          "explorer": "区块浏览器",
+          "dag": "{dag} 可视化工具",
+          "dumps": "区块浏览器 / {api} 数据库转储"
+        }
+      },
+      "node": {
+        "title": "节点与 {rpc}",
+        "description": "运行完整基础设施，或深入探索节点技术栈。",
+        "links": {
+          "rustyKaspa": "{rustyKaspa}",
+          "release": "最新版本"
+        }
+      },
+      "testnet": {
+        "title": "测试网",
+        "description": "发布到主网前，请先使用公共测试资源。",
+        "faucet": "测试网水龙头"
+      }
+    }
+  },
+  "developments": {
+    "heading": {
+      "label": "开发动态",
+      "title": "公开关注研发进展",
+      "description": "跟踪主要讨论频道，并持续关注 {sdk}、协议和实验性可编程技术的开发进展。"
+    },
+    "liveDiscussion": "实时讨论",
+    "cards": {
+      "channel": {
+        "label": "频道",
+        "title": "核心研发 {telegram}",
+        "description": "当前 {kaspa} 研究和开发讨论的主要公开信息流。{discord} 仍在使用，但大多数核心讨论现已转移到这里。"
+      },
+      "research": {
+        "label": "论坛",
+        "title": "{kaspaResearch}",
+        "description": "围绕协议、共识、经济学和挖矿进行长篇讨论的论坛，也包括 {kip} 草案和提案。"
+      },
+      "toccata": {
+        "label": "硬分叉",
+        "title": "{toccata}：契约与 {zk}",
+        "description": "一次硬分叉，将扩展脚本操作码（{kip17}）、契约 ID（{kip20}）、带验证器预编译子系统的 {zk} 操作码（{kip16}）以及排序承诺（{kip21}）整合在一起。目前已在 {tn12} 上运行，先于主网激活。"
+      },
+      "silverscript": {
+        "label": "可编程性",
+        "title": "{silverscript}",
+        "description": "一种可编译为原生 {kaspaScript} 的高级脚本语言。目前正在 {tn12} 上测试，为 {toccata} 硬分叉做准备；该分叉将在主网上引入契约和 {zk} 操作码。"
+      },
+      "vprogs": {
+        "label": "可编程性",
+        "title": "{vprogs}",
+        "description": "关于可验证程序的早期研究：链上排序，链下执行，再通过 {zk} 证明完成结算。它建立在 {toccata} 即将引入的脚本原语之上。"
+      },
+      "python": {
+        "label": "{sdk}",
+        "title": "{pythonSdk}",
+        "description": "目前处于测试版并已接近完成。{python} 工具正在公开推进，不断扩展开发者能力。"
+      },
+      "kips": {
+        "label": "协议",
+        "title": "{kips}",
+        "description": "跟踪可能改变应用和基础设施与网络集成方式的提案。"
+      }
+    }
+  },
+  "help": {
+    "eyebrow": "帮助",
+    "title": "继续前进",
+    "descriptionWithAi": "先从文档或 {kaspaAi} 开始。如需更深入的帮助，请前往 {qa}、{github}、{discord} 或研发 {telegram}。",
+    "descriptionWithoutAi": "先从文档开始。如需更深入的帮助，请前往 {qa}、{github}、{discord} 或研发 {telegram}。",
+    "actions": {
+      "openDocs": "打开文档",
+      "openAi": "打开 AI"
+    },
+    "links": {
+      "github": {
+        "eyebrow": "代码",
+        "title": "{github}"
+      },
+      "discord": {
+        "eyebrow": "聊天",
+        "title": "{discord}"
+      },
+      "qa": {
+        "eyebrow": "问题",
+        "title": "{kaspaQAndA}"
+      },
+      "telegram": {
+        "eyebrow": "最新开发动态",
+        "title": "{telegram} 研发"
+      }
+    },
+    "prompts": {
+      "gettingStarted": "如何开始在 {kaspa} 上构建？",
+      "choosePath": "我应该选择哪条路径——{wasmSdk}、原生 {rust}，还是运行节点？",
+      "nodeOrApi": "我需要运行自己的节点，还是可以使用社区 {api}？",
+      "smartContracts": "{kaspa} 有智能合约吗？",
+      "wallet": "如何使用 {wasmSdk} 构建钱包？",
+      "transaction": "如何构建并签署交易？",
+      "runNode": "如何运行 {kaspa} 节点？",
+      "hardware": "运行节点需要什么硬件？",
+      "toccata": "什么是 {toccata}，它会带来哪些变化？",
+      "covenants": "{kaspa} 中的契约是什么？",
+      "silverscript": "什么是 {silverscript}？",
+      "networks": "主网与 {tn12} 有什么区别？"
+    }
+  }
+}

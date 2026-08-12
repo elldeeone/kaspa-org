@@ -23,9 +23,9 @@ export default function Footer({
       }`}
       style={{ background: "var(--bg)" }}
     >
-      <div className="relative grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-6 pt-3 pb-3 md:flex md:flex-row md:items-center md:justify-between md:gap-4 md:px-12 lg:px-20">
+      <div className="relative grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 px-6 pt-3 pb-3 sm:grid-cols-[auto_minmax(0,1fr)_auto] md:flex md:flex-row md:items-center md:justify-between md:gap-4 md:px-12 lg:px-20">
         <FooterGlyph />
-        <span className="text-tertiary min-w-0 px-1 text-center text-[11px] leading-tight md:pointer-events-none md:absolute md:inset-x-0 md:px-0 md:text-[12px] md:leading-normal">
+        <span className="text-tertiary col-span-2 row-start-2 min-w-0 px-1 text-center text-[11px] leading-tight sm:col-span-1 sm:row-auto md:pointer-events-none md:absolute md:inset-x-0 md:px-0 md:text-[12px] md:leading-normal">
           <span className="md:pointer-events-auto">
             {t.rich("operatedBy", {
               operator: (children) => (
@@ -41,7 +41,7 @@ export default function Footer({
             })}
           </span>
         </span>
-        <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 sm:gap-x-6">
+        <div className="col-start-2 row-start-1 flex flex-wrap items-center justify-end gap-x-4 gap-y-1 sm:col-auto sm:row-auto sm:gap-x-6">
           {footerLinks.map((link) => (
             <a
               key={link.id}

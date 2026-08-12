@@ -127,14 +127,15 @@ test("artifact manifest follows the central Build-example contract", () => {
     "es",
     "de",
     "fr",
+    "zh-CN",
   ]);
   assert.ok(
     manifest.locales.every(
       (locale) => manifest.pathsByLocale[locale].length === 6,
     ),
   );
-  assert.equal(manifest.localizedPaths.length, 24);
-  assert.equal(manifest.localizedUrls.length, 24);
+  assert.equal(manifest.localizedPaths.length, 30);
+  assert.equal(manifest.localizedUrls.length, 30);
   assert.ok(
     manifest.localizedUrls.every((path) =>
       path.startsWith(`${buildExampleContract.examplesPublicBasePath}/`),
@@ -351,6 +352,25 @@ test("catalog-backed Build artifacts are deterministic and complete", async () =
   assert.match(germanControls, /<- Zurück<\/a> \| Netzwerk:/u);
   assert.match(germanControls, />Trennen<\/a>/u);
   assert.match(germanControls, />Neu verbinden<\/a>/u);
+
+  for (const name of exampleNames) {
+    const chinese = first[`${name}.zh-CN.html`];
+    assert.match(chinese, /<html lang="zh-CN" dir="ltr">/u);
+    assert.match(chinese, /from '\.\/resources\/utils\.zh-CN\.js'/u);
+    assert.match(chinese, /正在连接 Kaspa 网络/u);
+    assert.match(chinese, /<meta name="robots" content="noindex, nofollow">/u);
+    assert.doesNotMatch(chinese, /\[!! /u);
+  }
+  assert.match(first["subscribe-block-added.zh-CN.html"], /连接已断开：/u);
+  assert.match(first["utxo-context.zh-CN.html"], /数千个 UTXO/u);
+  assert.match(first["utxo-context.zh-CN.html"], /并不切实际/u);
+  assert.doesNotMatch(first["utxo-context.zh-CN.html"], /UTXOs/u);
+
+  const chineseControls = first["resources/utils.zh-CN.js"];
+  assert.match(chineseControls, /href="\/zh-CN\/build#try-live"/u);
+  assert.match(chineseControls, /<- 返回<\/a> \| 网络:/u);
+  assert.match(chineseControls, />断开连接<\/a>/u);
+  assert.match(chineseControls, />重新连接<\/a>/u);
 });
 
 test("Build artifacts use an RTL locale direction without generator changes", async () => {
@@ -608,7 +628,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   await fixture.check("test");
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.(?:de|en-XA|es|fr)\.html$/u.test(path))
+      .filter((path) => /\.(?:de|en-XA|es|fr|zh-CN)\.html$/u.test(path))
       .sort(),
     manifest.localizedPaths.filter((path) => path.endsWith(".html")).sort(),
   );
@@ -617,12 +637,13 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   await fixture.check("preview");
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.(?:de|en-XA|es|fr)\.html$/u.test(path))
+      .filter((path) => /\.(?:de|en-XA|es|fr|zh-CN)\.html$/u.test(path))
       .sort(),
     [
       ...manifest.pathsByLocale.es,
       ...manifest.pathsByLocale.de,
       ...manifest.pathsByLocale.fr,
+      ...manifest.pathsByLocale["zh-CN"],
     ]
       .filter((path) => path.endsWith(".html"))
       .sort(),
@@ -632,12 +653,13 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   await fixture.check("production");
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.(?:de|en-XA|es|fr)\.html$/u.test(path))
+      .filter((path) => /\.(?:de|en-XA|es|fr|zh-CN)\.html$/u.test(path))
       .sort(),
     [
       ...manifest.pathsByLocale.es,
       ...manifest.pathsByLocale.de,
       ...manifest.pathsByLocale.fr,
+      ...manifest.pathsByLocale["zh-CN"],
     ]
       .filter((path) => path.endsWith(".html"))
       .sort(),
@@ -720,7 +742,7 @@ test("cleanup rejects nested localized artifacts without deleting files", async 
 
 test("Build example return paths are restricted to each exact same-origin locale anchor", () => {
   const origin = "https://preview.example";
-  for (const locale of ["en-XA", "es", "de"] as const) {
+  for (const locale of manifest.locales) {
     const expectedPath = `/${locale}/build`;
     const fallback = `/${locale}/build#try-live`;
 

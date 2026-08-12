@@ -35,8 +35,8 @@ export function useToolingCards(): {
         {
           eyebrow: t("stable.wasm.eyebrow", { sdks: terms.sdks }),
           title: t("stable.wasm.title", { wasmSdk: terms.wasmSdk }),
-          desc: t("stable.wasm.description", { node: terms.node }),
-          tags: [t("stable.wasm.tag", { node: terms.node })],
+          desc: t("stable.wasm.description", { node: terms.nodeJs }),
+          tags: [t("stable.wasm.tag", { node: terms.nodeJs })],
           actionLabel: t("stable.wasm.action"),
           href: "https://kaspa.aspectron.org/docs/",
         },

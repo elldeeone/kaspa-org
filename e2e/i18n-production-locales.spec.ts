@@ -16,6 +16,7 @@ import {
 import {
   assertEqualControlRow,
   assertHeadingUsesResponsiveWrapping,
+  assertLocatorsDoNotOverlap,
   assertNoHorizontalOverflow,
   assertWordsStayOnSingleLine,
   installStandaloneExampleMocks,
@@ -74,6 +75,11 @@ type ProductionLocaleDescriptor = {
   reviewedCopy: ReviewedLocaleCopy;
   preserveWhitespaceDelimitedWords: boolean;
   forbiddenTranslatedSlugPaths: readonly string[];
+  dagAnnotationFont?: Readonly<{
+    family: string;
+    minimumInkHeight: number;
+  }>;
+  openGraphInkBandCount?: number;
 };
 
 const reviewedDefaultLocaleCopy = {
@@ -218,6 +224,47 @@ const productionLocaleDescriptors = [
       "/fr/construire",
       "/fr/ressources",
     ],
+  },
+  {
+    locale: "zh-CN",
+    hrefLang: "zh-CN",
+    dir: "ltr",
+    endonym: "简体中文",
+    acceptLanguage: "zh-CN,zh;q=0.9",
+    aiAvailability: {
+      home: false,
+      lore: false,
+      build: false,
+      assets: false,
+      hodl: false,
+      "not-found": false,
+    },
+    reviewedCopy: {
+      languageLabel: "语言",
+      aiLauncherAskAnything: "有问必答",
+      aiLauncherPlaceholder: "请输入问题…",
+      notFoundTitle: "页面未找到 | Kaspa",
+      proofTrigger: "验证证明",
+      homeVerifyHeading: "别信，去验证。",
+      homeDagAnnotation: "实时 pow",
+      standaloneBackLabel: "返回",
+      standaloneNetworkLabel: "网络",
+      standaloneConnectingLabel: "| 正在连接…",
+      standaloneRuntimeOutput: {
+        "get-server-info": "GetServerInfo 响应：",
+        "get-block-dag-info": "GetBlockDagInfo 响应：",
+        "subscribe-block-added": "正在订阅新增区块事件…",
+        "subscribe-daa-changed": "正在注册 DAA 通知…",
+        "utxo-context": "此演示用于手动测试",
+      },
+    },
+    preserveWhitespaceDelimitedWords: false,
+    forbiddenTranslatedSlugPaths: ["/zh-CN/故事", "/zh-CN/构建", "/zh-CN/素材"],
+    dagAnnotationFont: {
+      family: "maShanZheng",
+      minimumInkHeight: 19,
+    },
+    openGraphInkBandCount: 2,
   },
 ] as const satisfies readonly ProductionLocaleDescriptor[];
 
@@ -565,6 +612,36 @@ test.describe("complete public production locale contract", () => {
     }
   });
 
+  test("keeps the DAG annotation arrow anchored across scripts", async ({
+    page,
+  }) => {
+    const { baseUrl } = scenario.require();
+    await page.setViewportSize({ width: 1440, height: 900 });
+
+    const measureArrowCenter = async (pathname: string, text: string) => {
+      await page.goto(`${baseUrl}${pathname}`, {
+        waitUntil: "domcontentloaded",
+      });
+      await waitForStableLayout(page);
+      return page.getByText(text, { exact: true }).evaluate((element) => {
+        const arrow = element.parentElement?.querySelector("svg");
+        if (!arrow) throw new Error("DAG annotation arrow is missing");
+        const bounds = arrow.getBoundingClientRect();
+        return (bounds.left + bounds.right) / 2;
+      });
+    };
+
+    const englishArrowCenter = await measureArrowCenter(
+      "/",
+      "pow in real-time",
+    );
+    const chineseArrowCenter = await measureArrowCenter("/zh-CN", "实时 pow");
+
+    expect(
+      Math.abs(chineseArrowCenter - englishArrowCenter),
+    ).toBeLessThanOrEqual(12);
+  });
+
   test("honours route-specific AI availability in the default locale", async ({
     browser,
   }) => {
@@ -833,7 +910,7 @@ test.describe("complete public production locale contract", () => {
       );
       expect(metrics).toMatchObject({ width: 1200, height: 630 });
       expect(metrics.inkPixels).toBeGreaterThan(1_000);
-      expect(metrics.inkBandCount).toBe(3);
+      expect(metrics.inkBandCount).toBe(localeCase.openGraphInkBandCount ?? 3);
       expect(metrics.minX).toBeGreaterThanOrEqual(48);
       expect(metrics.maxX).toBeLessThanOrEqual(1152);
       expect(metrics.minY).toBeGreaterThanOrEqual(48);
@@ -1215,6 +1292,9 @@ test.describe("complete public production locale contract", () => {
           `${pathname}?${localeCase.localizedReturnQuery}`,
         );
         expect(response.status(), pathname).toBe(200);
+        expect(response.headers()["x-robots-tag"], pathname).toBe(
+          "noindex, nofollow",
+        );
         expect(response.headers()["content-type"], pathname).toContain(
           "text/html",
         );
@@ -1240,6 +1320,7 @@ test.describe("complete public production locale contract", () => {
       const utilsPath = `${standaloneBasePath}/resources/utils.${localeCase.locale}.js`;
       const utilsResponse = await api.get(utilsPath);
       expect(utilsResponse.status()).toBe(200);
+      expect(utilsResponse.headers()["x-robots-tag"]).toBe("noindex, nofollow");
       const utils = await utilsResponse.text();
       expect(utils).toContain(backLabel);
       expect(utils).toContain(`${networkLabel}:`);
@@ -1316,6 +1397,43 @@ test.describe("complete public production locale contract", () => {
             `${route.path} initial`,
           );
 
+          if (
+            route.path === localeCase.homePath &&
+            viewport.width >= 1280 &&
+            localeCase.dagAnnotationFont
+          ) {
+            const annotation = page.getByText(
+              localeCase.reviewedCopy.homeDagAnnotation,
+              { exact: true },
+            );
+            await expect(annotation).toBeVisible();
+            const fontState = await annotation.evaluate(async (element) => {
+              await document.fonts.ready;
+              const styles = getComputedStyle(element);
+              const fontFamily = styles.fontFamily;
+              const primaryFamily = fontFamily.split(",", 1)[0];
+              const canvas = document.createElement("canvas");
+              const context = canvas.getContext("2d");
+              if (!context) throw new Error("2D canvas is unavailable");
+              context.font = `${styles.fontWeight} ${styles.fontSize} ${fontFamily}`;
+              const metrics = context.measureText(element.textContent ?? "");
+              return {
+                fontFamily,
+                loaded: document.fonts.check(`16px ${primaryFamily}`),
+                inkHeight:
+                  metrics.actualBoundingBoxAscent +
+                  metrics.actualBoundingBoxDescent,
+              };
+            });
+            expect(fontState.fontFamily).toContain(
+              localeCase.dagAnnotationFont.family,
+            );
+            expect(fontState.loaded).toBe(true);
+            expect(fontState.inkHeight).toBeGreaterThanOrEqual(
+              localeCase.dagAnnotationFont.minimumInkHeight,
+            );
+          }
+
           if (route.path === localeCase.homePath && viewport.width < 768) {
             await assertHeadingUsesResponsiveWrapping(
               page.locator("main h1").first(),
@@ -1357,6 +1475,10 @@ test.describe("complete public production locale contract", () => {
             page,
             viewport.width,
             `${route.path} after full-page scroll`,
+          );
+          await assertLocatorsDoNotOverlap(
+            page.locator("footer a"),
+            `${viewport.width}px ${route.path} footer links`,
           );
 
           if (viewport.width < 768) {

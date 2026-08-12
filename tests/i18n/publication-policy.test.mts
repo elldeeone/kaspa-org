@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import {
+  chineseLocale,
   defaultLocale,
   frenchLocale,
   germanLocale,
@@ -156,14 +157,23 @@ test("fixture policy resolves once into the generic publication profile", () => 
     );
     assert.equal(production.routePublications[routeId][germanLocale], "public");
     assert.equal(production.routePublications[routeId][frenchLocale], "public");
+    assert.equal(
+      production.routePublications[routeId][chineseLocale],
+      "public",
+    );
     assert.equal(production.routePublications[routeId][pseudoLocale], null);
     assert.equal(preview.routePublications[routeId].en, "public");
     assert.equal(preview.routePublications[routeId][spanishLocale], "public");
     assert.equal(preview.routePublications[routeId][germanLocale], "public");
     assert.equal(preview.routePublications[routeId][frenchLocale], "public");
+    assert.equal(preview.routePublications[routeId][chineseLocale], "public");
     assert.equal(preview.routePublications[routeId][pseudoLocale], null);
     assert.equal(
       testProfile.routePublications[routeId][frenchLocale],
+      "public",
+    );
+    assert.equal(
+      testProfile.routePublications[routeId][chineseLocale],
       "public",
     );
     assert.equal(

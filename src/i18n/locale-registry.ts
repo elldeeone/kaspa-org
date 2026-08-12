@@ -28,12 +28,14 @@ export const pseudoLocale = "en-XA" as const;
 export const spanishLocale = "es" as const;
 export const germanLocale = "de" as const;
 export const frenchLocale = "fr" as const;
+export const chineseLocale = "zh-CN" as const;
 export const supportedLocaleCodes = [
   "en",
   pseudoLocale,
   spanishLocale,
   germanLocale,
   frenchLocale,
+  chineseLocale,
 ] as const;
 export type Locale = (typeof supportedLocaleCodes)[number];
 export type TextDirection = "ltr" | "rtl";
@@ -79,6 +81,13 @@ export const localeRegistry: Readonly<Record<Locale, LocaleDefinition>> = {
     code: "fr",
     label: "Français",
     hrefLang: "fr",
+    dir: "ltr",
+    lifecycle: "production",
+  },
+  "zh-CN": {
+    code: "zh-CN",
+    label: "简体中文",
+    hrefLang: "zh-CN",
     dir: "ltr",
     lifecycle: "production",
   },

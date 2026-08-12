@@ -4,14 +4,18 @@ import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
+import type { Locale } from "@/i18n/locale-registry";
+
 const DesktopDagScene = dynamic(() => import("./DesktopDagScene"), {
   ssr: false,
 });
 
 export default function LiveDagBackground({
   annotation,
+  locale,
 }: {
   annotation: string;
+  locale: Locale;
 }) {
   const { resolvedTheme } = useTheme();
   const [showDag, setShowDag] = useState(false);
@@ -55,7 +59,11 @@ export default function LiveDagBackground({
 
   return (
     <div className="pointer-events-none fixed top-0 right-0 z-0 h-screen w-[56vw] overflow-hidden 2xl:-right-[5vw] 2xl:w-[70vw]">
-      <DesktopDagScene annotation={annotation} maskColor={maskColor} />
+      <DesktopDagScene
+        annotation={annotation}
+        locale={locale}
+        maskColor={maskColor}
+      />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import {
   LANGUAGE_SELECTOR_OPTIONS,
 } from "../../src/app/components/language-selector-model.ts";
 import {
+  chineseLocale,
   defaultLocale,
   frenchLocale,
   germanLocale,
@@ -35,6 +36,11 @@ test("selector options use registry endonyms and exclude the pseudo locale", () 
   assert.equal(isLanguageSelectorLocale(spanishLocale), true);
   assert.equal(isLanguageSelectorLocale(germanLocale), true);
   assert.equal(isLanguageSelectorLocale(frenchLocale), true);
+  assert.equal(isLanguageSelectorLocale(chineseLocale), true);
+  assert.equal(
+    LANGUAGE_SELECTOR_OPTIONS.some(({ code }) => code === chineseLocale),
+    listSelectableLocales().includes(chineseLocale),
+  );
   assert.equal(isLanguageSelectorLocale("en-XA"), false);
 });
 
@@ -50,6 +56,9 @@ test("locale path fallback preserves slugs and encoded path segments", () => {
   assert.equal(localizePathname("/lore", spanishLocale), "/es/lore");
   assert.equal(localizePathname("/lore", germanLocale), "/de/lore");
   assert.equal(localizePathname("/lore", frenchLocale), "/fr/lore");
+  if (isLanguageSelectorLocale(chineseLocale)) {
+    assert.equal(localizePathname("/lore", chineseLocale), "/zh-CN/lore");
+  }
   assert.equal(localizePathname("/lore", "en"), "/lore");
   assert.equal(localizePathname("/", spanishLocale), "/es");
   assert.equal(

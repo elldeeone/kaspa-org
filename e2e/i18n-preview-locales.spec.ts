@@ -6,6 +6,7 @@ import {
 } from "../src/i18n/locale-registry.ts";
 import {
   assertHeadingUsesResponsiveWrapping,
+  assertLocatorsDoNotOverlap,
   assertNoHorizontalOverflow,
   standaloneBasePath,
   standaloneExampleNames,
@@ -35,6 +36,9 @@ type PreviewLocaleCase = {
   proofFingerprint: string;
   backFingerprint: string;
   notFoundTitle: string;
+  dagAnnotation: string;
+  dagAnnotationFont: string;
+  dagAnnotationMinimumInkHeight: number;
 };
 
 // Add each complete private-review locale here. The lifecycle coverage test
@@ -103,8 +107,17 @@ test.describe("real preview locale contract", () => {
         `/api/i18n/home-proof/${localeCase.locale}`,
       );
       expect(proofCatalog.status()).toBe(200);
+      expect(proofCatalog.headers()["x-robots-tag"]).toBe("noindex, nofollow");
       expect(JSON.stringify(await proofCatalog.json())).toContain(
         localeCase.proofFingerprint,
+      );
+
+      const openGraphImage = await api.get(
+        `/${localeCase.locale}/opengraph-image`,
+      );
+      expect(openGraphImage.status()).toBe(200);
+      expect(openGraphImage.headers()["x-robots-tag"]).toBe(
+        "noindex, nofollow, noimageindex",
       );
 
       const sitemap = await api.get("/sitemap.xml");
@@ -131,6 +144,9 @@ test.describe("real preview locale contract", () => {
         const pathname = `${standaloneBasePath}/${name}.${localeCase.locale}.html`;
         const response = await api.get(`${pathname}?${returnQuery}`);
         expect(response.status(), pathname).toBe(200);
+        expect(response.headers()["x-robots-tag"], pathname).toBe(
+          "noindex, nofollow",
+        );
         const html = await response.text();
         expect(html, pathname).toContain(
           `<html lang="${localeCase.locale}" dir="${localeCase.dir}">`,
@@ -148,6 +164,7 @@ test.describe("real preview locale contract", () => {
         `${standaloneBasePath}/resources/utils.${localeCase.locale}.js`,
       );
       expect(utilsResponse.status()).toBe(200);
+      expect(utilsResponse.headers()["x-robots-tag"]).toBe("noindex, nofollow");
       const utils = await utilsResponse.text();
       expect(utils).toContain(`'/${localeCase.locale}/build'`);
       expect(utils).toContain(`'/${localeCase.locale}/build#try-live'`);
@@ -195,6 +212,38 @@ test.describe("real preview locale contract", () => {
               `${viewport.width}px ${localeCase.locale} home hero`,
             );
 
+            if (viewport.width >= 1280) {
+              const annotation = page.getByText(localeCase.dagAnnotation, {
+                exact: true,
+              });
+              await expect(annotation).toBeVisible();
+              const fontState = await annotation.evaluate(async (element) => {
+                await document.fonts.ready;
+                const fontFamily = getComputedStyle(element).fontFamily;
+                const styles = getComputedStyle(element);
+                const primaryFamily = fontFamily.split(",", 1)[0];
+                const canvas = document.createElement("canvas");
+                const context = canvas.getContext("2d");
+                if (!context) throw new Error("2D canvas is unavailable");
+                context.font = `${styles.fontWeight} ${styles.fontSize} ${fontFamily}`;
+                const metrics = context.measureText(element.textContent ?? "");
+                return {
+                  fontFamily,
+                  loaded: document.fonts.check(`16px ${primaryFamily}`),
+                  inkHeight:
+                    metrics.actualBoundingBoxAscent +
+                    metrics.actualBoundingBoxDescent,
+                };
+              });
+              expect(fontState.fontFamily).toContain(
+                localeCase.dagAnnotationFont,
+              );
+              expect(fontState.loaded).toBe(true);
+              expect(fontState.inkHeight).toBeGreaterThanOrEqual(
+                localeCase.dagAnnotationMinimumInkHeight,
+              );
+            }
+
             const selector = page.locator("[data-language-selector]:visible");
             await selector
               .getByRole("button", {
@@ -218,6 +267,10 @@ test.describe("real preview locale contract", () => {
             page,
             viewport.width,
             `${route.path} after full-page scroll`,
+          );
+          await assertLocatorsDoNotOverlap(
+            page.locator("footer a"),
+            `${viewport.width}px ${route.path} footer links`,
           );
         }
 

@@ -246,6 +246,9 @@ test.describe("test-only full-site pseudo-locale contract", () => {
       const pathname = `${standaloneBasePath}/${name}.en-XA.html`;
       const response = await api.get(`${pathname}?${localizedReturnQuery}`);
       expect(response.status(), pathname).toBe(200);
+      expect(response.headers()["x-robots-tag"], pathname).toBe(
+        "noindex, nofollow",
+      );
       expect(response.headers()["content-type"], pathname).toContain(
         "text/html",
       );
@@ -266,6 +269,7 @@ test.describe("test-only full-site pseudo-locale contract", () => {
     const utilsResponse = await api.get(utilsPath);
     expect(utilsResponse.status()).toBe(200);
     expect(utilsResponse.headers()["content-type"]).toContain("javascript");
+    expect(utilsResponse.headers()["x-robots-tag"]).toBe("noindex, nofollow");
     const utils = await utilsResponse.text();
     expect(utils).toContain("[!! ");
     expect(utils).toContain("'/en-XA/build'");

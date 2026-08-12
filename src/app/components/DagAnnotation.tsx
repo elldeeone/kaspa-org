@@ -1,7 +1,11 @@
 "use client";
 
 import { Rock_Salt } from "next/font/google";
+import localFont from "next/font/local";
 import type { ReactNode } from "react";
+
+import { getDagAnnotationFontContract } from "@/i18n/dag-annotation-font";
+import type { Locale } from "@/i18n/locale-registry";
 
 const rockSalt = Rock_Salt({
   subsets: ["latin"],
@@ -9,23 +13,43 @@ const rockSalt = Rock_Salt({
   preload: false,
 });
 
-export default function DagAnnotation({ children }: { children: ReactNode }) {
+const maShanZheng = localFont({
+  src: "../fonts/MaShanZheng-Regular.ttf",
+  weight: "400",
+  preload: false,
+});
+
+const fontClassNames = {
+  "Ma Shan Zheng": maShanZheng.className,
+  "Rock Salt": rockSalt.className,
+} as const;
+
+export default function DagAnnotation({
+  children,
+  locale,
+}: {
+  children: ReactNode;
+  locale: Locale;
+}) {
+  const font = getDagAnnotationFontContract(locale);
+
   return (
     <div
       className="pointer-events-none absolute select-none"
       style={{
         top: "12%",
         right: "18%",
+        minWidth: "clamp(140px, 12.1vw, 220px)",
         zIndex: 5,
         transform: "rotate(-3deg)",
       }}
     >
       {/* Handwritten text */}
       <p
-        className={rockSalt.className}
+        className={fontClassNames[font.family]}
         style={{
           color: "#d63031",
-          fontSize: "clamp(10px, 1.05vw, 19px)",
+          fontSize: font.fontSize,
           fontWeight: 400,
           lineHeight: 1.05,
           letterSpacing: "0.01em",

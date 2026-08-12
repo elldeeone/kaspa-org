@@ -1,0 +1,12 @@
+{
+  "metadata": {
+    "title": "页面未找到 | Kaspa",
+    "description": "找不到您请求的页面。"
+  },
+  "page": {
+    "code": "404",
+    "heading": "路径不对。",
+    "body": "网络没错。",
+    "home": "返回首页"
+  }
+}

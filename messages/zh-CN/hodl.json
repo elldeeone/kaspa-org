@@ -1,0 +1,294 @@
+{
+  "metadata": {
+    "title": "购买 KAS、设置钱包并自托管 | Kaspa",
+    "description": "获取钱包、购买 KAS，并将其转入自托管钱包。"
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — 实时去中心化"
+  },
+  "navigation": {
+    "current": "HODL",
+    "sections": {
+      "wallet": {
+        "label": "1. 获取钱包",
+        "compactLabel": "钱包",
+        "description": "设置一个用于持有 KAS 的钱包。"
+      },
+      "buy": {
+        "label": "2. 购买 KAS",
+        "compactLabel": "购买",
+        "description": "在主流交易所查找 KAS。"
+      },
+      "transfer": {
+        "label": "3. 转入钱包",
+        "compactLabel": "转账",
+        "description": "将 KAS 从交易所发送到您的钱包。"
+      },
+      "help": {
+        "label": "帮助",
+        "compactLabel": "帮助",
+        "description": "社区帮助和区块浏览器工具。"
+      }
+    }
+  },
+  "start": {
+    "heading": "<flicker><source>H</source><replacement>K</replacement></flicker>ODL Kaspa",
+    "tagline": "购买 KAS，并将其转入由您掌控的钱包。"
+  },
+  "wallet": {
+    "heading": "获取钱包",
+    "description": "根据您持有和使用 KAS 的方式选择合适的钱包。",
+    "safety": {
+      "label": "重要提示：",
+      "body": "转移大额资金前，请备份恢复短语或钱包恢复说明。先发送一笔小额测试交易，确认到账后再转移剩余资金。"
+    }
+  },
+  "buy": {
+    "heading": "购买 KAS",
+    "description": "KAS 已在多家交易所上线。请在您所在地区可用的平台购买，然后将其转入您的自托管钱包。",
+    "moreExchanges": "以及另外 {count, number}+ 家"
+  },
+  "transfer": {
+    "heading": "自行保管您的 KAS",
+    "description": "将资产从交易所转入您的自托管钱包，以保障资产安全。",
+    "receive": "接收",
+    "screenReaderDiagram": "KAS 正从交易所账户转入自托管钱包",
+    "stepLabel": "第 {step} 步",
+    "steps": {
+      "receiveAddress": {
+        "title": "获取收款地址",
+        "description": "打开 Kaspium 应用，点按“接收”，然后复制您的专属地址。"
+      },
+      "testTransaction": {
+        "title": "发送测试交易",
+        "description": "从交易所提取极少量 KAS，以确认转账路径正确。"
+      },
+      "balance": {
+        "title": "转移剩余余额",
+        "description": "测试交易安全到达钱包后，再提取剩余余额。"
+      }
+    },
+    "waitTimes": {
+      "label": "交易所等待时间：",
+      "body": "Kaspa 原生转账几乎是即时的，但交易所会有自己的内部延迟。等待 30 至 60 分钟让交易所将您的资金释放到网络上，完全属于正常情况。"
+    },
+    "security": {
+      "label": "安全检查：",
+      "body": "确认前，务必核对地址开头和末尾的几个字符。"
+    }
+  },
+  "help": {
+    "eyebrow": "帮助",
+    "heading": "继续前进",
+    "descriptionWithAi": "向 Kaspa AI 询问钱包、购买和安全方面的问题，即时获得答案。如需社区帮助，请加入 Discord；也可在区块浏览器上查询交易。",
+    "descriptionWithoutAi": "如需社区帮助，请加入 Discord；也可在区块浏览器上查询交易。",
+    "openAi": "打开 AI",
+    "community": "社区",
+    "discord": "Discord",
+    "trackTransaction": "查询交易",
+    "explorer": "区块浏览器",
+    "prompts": {
+      "backupWallet": "如何备份钱包？",
+      "buyKas": "在哪里可以购买 KAS？",
+      "firstPurchase": "第一次如何购买 KAS？",
+      "leaveOnExchange": "我应该把 KAS 留在交易所吗？",
+      "moveFromExchange": "如何将 KAS 从交易所发送到我的钱包？",
+      "fees": "购买或转移 KAS 时会产生哪些费用？",
+      "recoveryPhrase": "什么是恢复短语？",
+      "walletVsExchange": "钱包和交易所有什么区别？",
+      "receiveKas": "如何接收别人发送的 KAS？",
+      "multipleWallets": "我可以拥有多个 Kaspa 钱包吗？",
+      "maxSupply": "Kaspa 的最大供应量是多少？"
+    }
+  },
+  "media": {
+    "kaspiumScreenshotAlt": "Kaspium 钱包应用截图"
+  },
+  "walletFinder": {
+    "common": {
+      "optional": "可选",
+      "notAvailable": "不可用",
+      "notAvailableSentence": "不可用。",
+      "moreInformation": "更多信息",
+      "pros": "优点",
+      "cons": "缺点",
+      "newUser": "新手",
+      "experiencedUser": "有经验的用户"
+    },
+    "operatingSystems": {
+      "android": "Android",
+      "ios": "iOS",
+      "windows": "Windows",
+      "mac": "macOS",
+      "linux": "Linux",
+      "hardware": "硬件"
+    },
+    "guidance": {
+      "mobile": {
+        "title": "移动钱包",
+        "shortTitle": "移动端",
+        "pros": {
+          "portable": "便携又方便，适合面对面交易",
+          "qr": "专为使用二维码快速、顺畅地完成交易而设计"
+        },
+        "cons": {
+          "marketplaces": "应用商店可能下架或移除钱包，导致后续更新更难获取",
+          "deviceLoss": "设备损坏或丢失可能导致资金损失"
+        }
+      },
+      "desktop": {
+        "title": "桌面钱包",
+        "shortTitle": "桌面端",
+        "pros": {
+          "control": "桌面环境可让用户完全掌控资金",
+          "advanced": "部分桌面钱包支持硬件钱包或完整节点运行"
+        },
+        "cons": {
+          "qr": "面对面交易时，使用二维码付款不够方便",
+          "malware": "受到入侵的电脑可能使用户暴露于恶意软件、间谍软件或病毒"
+        }
+      },
+      "hardware": {
+        "title": "硬件钱包",
+        "shortTitle": "硬件",
+        "pros": {
+          "secure": "存储资金最安全的方法之一",
+          "longTerm": "适合长期存储大量 KAS"
+        },
+        "cons": {
+          "mobile": "移动使用时不够方便，也不适合快速交易",
+          "deviceLoss": "若没有妥善备份，设备丢失可能导致资金无法找回"
+        }
+      }
+    },
+    "wizard": {
+      "progress": "第 {step, number} 步，共 {total, number} 步",
+      "skip": "跳过 →",
+      "skipAll": "跳过并查看所有钱包 →",
+      "prosAndCons": "优点与缺点",
+      "back": "返回",
+      "next": "下一步",
+      "showWallets": "显示钱包",
+      "showMatchingWallets": "显示匹配的钱包",
+      "steps": {
+        "os": {
+          "title": "您使用什么操作系统？",
+          "subtitle": "这会将列表筛选为可在您的操作系统上运行的钱包。"
+        },
+        "experience": {
+          "title": "您对 Kaspa 了解多少？",
+          "subtitle": "帮助我们显示适合您经验水平的钱包。"
+        },
+        "criteria": {
+          "title": "哪些评估标准对您很重要？",
+          "subtitle": "可选"
+        },
+        "features": {
+          "title": "您需要哪些功能？",
+          "subtitle": "可选"
+        }
+      },
+      "experience": {
+        "newDescription": "显示适合新手的钱包。",
+        "experiencedDescription": "显示所有钱包。"
+      }
+    },
+    "filters": {
+      "heading": "筛选钱包",
+      "clearAll": "全部清除",
+      "operatingSystem": "操作系统",
+      "userType": "用户类型",
+      "criteria": "评估标准",
+      "features": "功能",
+      "showNewUsers": "显示适合新手的钱包。",
+      "showExperiencedUsers": "显示所有钱包。",
+      "show": "筛选条件",
+      "hide": "隐藏筛选条件",
+      "remove": "移除筛选条件：{filter}"
+    },
+    "criteria": {
+      "control": {
+        "label": "控制权",
+        "description": "有些钱包让您完全掌控自己的 KAS，这意味着没有第三方能够冻结或拿走您的资金。不过，保护并备份钱包仍然是您自己的责任。"
+      },
+      "validation": {
+        "label": "验证能力",
+        "description": "有些钱包允许您控制由哪个 Kaspa 节点处理交易：它们可能自行运行节点，也可能让您指定任意可信节点。"
+      },
+      "transparency": {
+        "label": "透明度",
+        "description": "有些钱包采用开源代码，并支持确定性构建。这一编译过程可重现相同的构建产物，从而帮助确认发布的软件未被篡改。"
+      },
+      "fees": {
+        "label": "手续费",
+        "description": "有些钱包允许您在交易前完全自主设置向 Kaspa 网络支付的手续费，从而让交易及时得到确认，同时避免不必要的高额费用。"
+      }
+    },
+    "features": {
+      "two_fa": {
+        "label": "2FA",
+        "description": "双重身份验证（2FA）为钱包增加第二层安全保护。除密码外，访问资金还需要应用或短信提供的验证码。请注意，2FA 通常依赖第三方服务提供验证。"
+      },
+      "hardware_wallet": {
+        "label": "支持硬件钱包",
+        "description": "部分软件钱包可与硬件钱包设备（如 Ledger 或 Tangem）配对，让私钥与设备之外的环境隔离，同时仍可使用熟悉的软件界面。"
+      },
+      "multisig": {
+        "label": "多重签名",
+        "description": "部分钱包支持多重签名交易，需要多个密钥才能授权转账。这可用于让多个参与方分担责任，或为高价值资产增加一层保护。"
+      }
+    },
+    "ratings": {
+      "good": "良好",
+      "acceptable": "尚可",
+      "caution": "需谨慎",
+      "not_applicable": "不适用",
+      "notApplicableCompact": "不适用",
+      "aria": "{criterion}：{rating}",
+      "tooltipHeading": "{criterion}：{rating}",
+      "explanations": {
+        "control": {
+          "good": "自托管。私钥由您持有，因此没有第三方能够冻结或扣押您的资金。",
+          "caution": "托管式。私钥由第三方持有，对方可以冻结或扣押您的资金。"
+        },
+        "validation": {
+          "good": "默认运行自己的完整 Kaspa 节点，因此能够独立验证交易。",
+          "acceptable": "允许您指定任意可信的 Kaspa 节点，但钱包本身无法作为节点运行。",
+          "caution": "只能连接固定的中心化基础设施，因此您必须信任钱包所选择的节点。",
+          "not_applicable": "仅限硬件设备，本身不处理交易。"
+        },
+        "transparency": {
+          "good": "代码开源且支持可复现构建，因此可以对照源代码验证已发布的二进制文件。",
+          "acceptable": "代码开源，但构建不可复现，因此您必须相信已发布的二进制文件与源代码一致。",
+          "caution": "代码闭源，无法进行独立审计。"
+        },
+        "fees": {
+          "good": "允许您为每笔交易任意设置自定义手续费。",
+          "acceptable": "提供预设的手续费档位，但不允许完全自定义手续费。",
+          "caution": "手续费被强制设定或隐藏，用户无法控制。"
+        }
+      }
+    },
+    "results": {
+      "summary": "共 {total, plural, one {# 个钱包} other {# 个钱包}}，匹配 <strong>{matches, number}</strong> 个",
+      "compactSummary": "<strong>{matches, number}</strong> / {total, plural, one {# 个钱包} other {# 个钱包}}",
+      "helpChoose": "帮我选择",
+      "walletColumn": "钱包",
+      "noMatches": "没有匹配的钱包",
+      "removeFilters": "请尝试移除部分筛选条件。",
+      "noLinks": "此筛选条件下没有可用链接。",
+      "aboutCriterion": "关于{criterion}"
+    },
+    "actions": {
+      "app_store": "App Store",
+      "google_play": "Google Play",
+      "download": "下载",
+      "open": "打开钱包",
+      "view_source": "查看源代码"
+    },
+    "submission": {
+      "question": "没有找到某款钱包？",
+      "action": "了解如何在 GitHub 上提交"
+    }
+  }
+}

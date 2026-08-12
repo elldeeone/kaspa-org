@@ -16,12 +16,14 @@ import {
 } from "../../scripts/i18n/validate-client-payload.mts";
 import { isLocaleEnabled } from "../../src/i18n/config.ts";
 import {
+  chineseMessages,
   getBuildClientMessages,
   getHodlClientMessages,
   getHomeProofClientMessages,
   getSharedClientMessages,
 } from "../../src/i18n/messages.ts";
 import {
+  chineseLocale,
   frenchLocale,
   germanLocale,
   spanishLocale,
@@ -436,6 +438,7 @@ test("translated client payloads contain only route-owned messages", async () =>
     { locale: spanishLocale, languageLabel: "Idioma" },
     { locale: germanLocale, languageLabel: "Sprache" },
     { locale: frenchLocale, languageLabel: "Langue" },
+    { locale: chineseLocale, languageLabel: "语言" },
   ].filter(({ locale }) => isLocaleEnabled(locale))) {
     const shared = getSharedClientMessages(locale);
     assert.ok("language" in shared.shared.navigation);
@@ -509,6 +512,13 @@ test("server-only fingerprints cover metadata and Open Graph catalogs", async ()
           "Documentation, SDK, API et accès aux nœuds pour les développeurs Kaspa | Kaspa",
           "Acheter des KAS, configurer un portefeuille et passer à l’autocustodie | Kaspa",
           "Kaspa — La décentralisation en temps réel",
+        ]
+      : []),
+    ...(isLocaleEnabled(chineseLocale)
+      ? [
+          chineseMessages.build.metadata.title,
+          chineseMessages.hodl.metadata.title,
+          chineseMessages.home.openGraph.imageAlt,
         ]
       : []),
   ];

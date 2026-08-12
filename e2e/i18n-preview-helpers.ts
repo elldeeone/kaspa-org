@@ -231,6 +231,42 @@ export async function assertNoHorizontalOverflow(
   ).toBeLessThanOrEqual(dimensions.client + 1);
 }
 
+export async function assertLocatorsDoNotOverlap(
+  locator: Locator,
+  state: string,
+) {
+  const collisions = await locator.evaluateAll((elements) => {
+    const visible = elements
+      .map((element) => ({
+        label: element.textContent?.replace(/\s+/gu, " ").trim() ?? "",
+        rect: element.getBoundingClientRect(),
+      }))
+      .filter(({ rect }) => rect.width > 0 && rect.height > 0);
+
+    return visible.flatMap((left, leftIndex) =>
+      visible.slice(leftIndex + 1).flatMap((right) => {
+        const overlapWidth =
+          Math.min(left.rect.right, right.rect.right) -
+          Math.max(left.rect.left, right.rect.left);
+        const overlapHeight =
+          Math.min(left.rect.bottom, right.rect.bottom) -
+          Math.max(left.rect.top, right.rect.top);
+        if (overlapWidth <= 0 || overlapHeight <= 0) return [];
+
+        return [
+          {
+            left: left.label,
+            right: right.label,
+            overlapArea: Math.round(overlapWidth * overlapHeight),
+          },
+        ];
+      }),
+    );
+  });
+
+  expect(collisions, `${state}; overlapping elements`).toEqual([]);
+}
+
 export async function assertWordsStayOnSingleLine(
   heading: Locator,
   state: string,
