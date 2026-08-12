@@ -80,7 +80,7 @@ export const localeRegistry: Readonly<Record<Locale, LocaleDefinition>> = {
     label: "Français",
     hrefLang: "fr",
     dir: "ltr",
-    lifecycle: "preview",
+    lifecycle: "production",
   },
 };
 

@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-test("Production offers English, Spanish, and German", async ({ page }) => {
+test("Production offers English, Spanish, German, and French", async ({
+  page,
+}) => {
   await page.goto("/");
   const selector = page.locator("[data-language-selector]:visible");
   const trigger = selector.getByRole("button", {
@@ -19,6 +21,8 @@ test("Production offers English, Spanish, and German", async ({ page }) => {
   await expect(
     menu.getByRole("menuitemradio", { name: "Deutsch" }),
   ).toBeVisible();
-  await expect(menu).not.toContainText("Français");
+  await expect(
+    menu.getByRole("menuitemradio", { name: "Français" }),
+  ).toBeVisible();
   await expect(menu).not.toContainText("Pseudo");
 });

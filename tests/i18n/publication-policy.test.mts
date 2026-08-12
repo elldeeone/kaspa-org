@@ -155,16 +155,16 @@ test("fixture policy resolves once into the generic publication profile", () => 
       "public",
     );
     assert.equal(production.routePublications[routeId][germanLocale], "public");
-    assert.equal(production.routePublications[routeId][frenchLocale], null);
+    assert.equal(production.routePublications[routeId][frenchLocale], "public");
     assert.equal(production.routePublications[routeId][pseudoLocale], null);
     assert.equal(preview.routePublications[routeId].en, "public");
     assert.equal(preview.routePublications[routeId][spanishLocale], "public");
     assert.equal(preview.routePublications[routeId][germanLocale], "public");
-    assert.equal(preview.routePublications[routeId][frenchLocale], "preview");
+    assert.equal(preview.routePublications[routeId][frenchLocale], "public");
     assert.equal(preview.routePublications[routeId][pseudoLocale], null);
     assert.equal(
       testProfile.routePublications[routeId][frenchLocale],
-      "preview",
+      "public",
     );
     assert.equal(
       testProfile.routePublications[routeId][pseudoLocale],

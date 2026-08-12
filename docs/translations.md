@@ -1,10 +1,9 @@
 # Translation Contributions
 
 Kaspa.org accepts corrections to published translations, translator or reviewer
-volunteers, and requests for new site languages. English, Spanish, and German
-are published. `en-XA` is a test-only, no-index pseudo-locale used for quality
-assurance. French is complete as a private, no-index preview while it awaits
-human review.
+volunteers, and requests for new site languages. English, Spanish, German, and
+French are published. `en-XA` is a test-only, no-index pseudo-locale used for
+quality assurance.
 
 ## Make a Request
 

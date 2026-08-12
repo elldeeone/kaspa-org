@@ -634,7 +634,11 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
     (await readdir(directory))
       .filter((path) => /\.(?:de|en-XA|es|fr)\.html$/u.test(path))
       .sort(),
-    [...manifest.pathsByLocale.es, ...manifest.pathsByLocale.de]
+    [
+      ...manifest.pathsByLocale.es,
+      ...manifest.pathsByLocale.de,
+      ...manifest.pathsByLocale.fr,
+    ]
       .filter((path) => path.endsWith(".html"))
       .sort(),
   );

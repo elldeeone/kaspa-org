@@ -179,6 +179,46 @@ const productionLocaleDescriptors = [
       "/de/ressourcen",
     ],
   },
+  {
+    locale: "fr",
+    hrefLang: "fr",
+    dir: "ltr",
+    endonym: "Français",
+    acceptLanguage: "fr-FR,fr;q=0.9",
+    aiAvailability: {
+      home: false,
+      lore: false,
+      build: false,
+      assets: false,
+      hodl: false,
+      "not-found": false,
+    },
+    reviewedCopy: {
+      languageLabel: "Langue",
+      aiLauncherAskAnything: "Posez votre question",
+      aiLauncherPlaceholder: "Posez votre question…",
+      notFoundTitle: "Page introuvable | Kaspa",
+      proofTrigger: "Vérifier la preuve",
+      homeVerifyHeading: "ne faites pas confiance, vérifiez.",
+      homeDagAnnotation: "pow en temps réel",
+      standaloneBackLabel: "Retour",
+      standaloneNetworkLabel: "Réseau",
+      standaloneConnectingLabel: "| Connexion…",
+      standaloneRuntimeOutput: {
+        "get-server-info": "Réponse GetServerInfo :",
+        "get-block-dag-info": "Réponse GetBlockDagInfo :",
+        "subscribe-block-added": "Abonnement aux nouveaux blocs…",
+        "subscribe-daa-changed": "Inscription aux notifications DAA…",
+        "utxo-context": "Cette démonstration est destinée aux essais manuels",
+      },
+    },
+    preserveWhitespaceDelimitedWords: true,
+    forbiddenTranslatedSlugPaths: [
+      "/fr/histoire",
+      "/fr/construire",
+      "/fr/ressources",
+    ],
+  },
 ] as const satisfies readonly ProductionLocaleDescriptor[];
 
 type ProductionLocaleCase = ProductionLocaleDescriptor & {
@@ -239,6 +279,9 @@ async function openLanguageMenu(page: Page, label: string) {
   await trigger.click();
   const menu = selector.getByRole("menu", { name: label });
   await expect(menu).toBeVisible();
+  await expect(
+    menu.getByRole("menuitemradio", { checked: true }),
+  ).toBeFocused();
   return { menu, selector, trigger };
 }
 
@@ -943,13 +986,14 @@ test.describe("complete public production locale contract", () => {
       const switchToEnglish = localizedSelector.getByRole("menuitemradio", {
         name: "English",
       });
-      await switchToEnglish.press("Enter");
+      await expect(currentLocale).toBeFocused();
+      await page.keyboard.press("Home");
+      await expect(switchToEnglish).toBeFocused();
+      await page.keyboard.press("Enter");
       await expect(page).toHaveURL(
-        new RegExp(
-          `/lore\\?source=${escapeRegExp(desktopSource)}&step=4#roadmap$`,
-          "u",
-        ),
+        `${baseUrl}/lore?source=${desktopSource}&step=4#roadmap`,
       );
+      await expect(page.locator("html")).toHaveAttribute("lang", defaultLocale);
       const englishSelector = getVisibleLanguageSelector(page);
       const englishTrigger = englishSelector.getByRole("button", {
         name: "Language",
@@ -968,7 +1012,9 @@ test.describe("complete public production locale contract", () => {
       const switchToLocalized = englishMenu.getByRole("menuitemradio", {
         name: localeCase.endonym,
       });
-      await switchToLocalized.press("Enter");
+      await switchToLocalized.focus();
+      await expect(switchToLocalized).toBeFocused();
+      await page.keyboard.press("Enter");
       await expect(page).toHaveURL(
         new RegExp(
           `${escapeRegExp(localeCase.lorePath)}\\?source=${escapeRegExp(desktopSource)}&step=4#roadmap$`,
@@ -986,9 +1032,12 @@ test.describe("complete public production locale contract", () => {
           page,
           localeCase.reviewedCopy.languageLabel,
         );
-        await directLocaleMenu
-          .getByRole("menuitemradio", { name: targetLocaleCase.endonym })
-          .press("Enter");
+        const directTarget = directLocaleMenu.getByRole("menuitemradio", {
+          name: targetLocaleCase.endonym,
+        });
+        await directTarget.focus();
+        await expect(directTarget).toBeFocused();
+        await page.keyboard.press("Enter");
         await expect(page).toHaveURL(
           new RegExp(
             `${escapeRegExp(targetLocaleCase.lorePath)}\\?source=${escapeRegExp(directSource)}&step=4#roadmap$`,
@@ -1104,19 +1153,21 @@ test.describe("complete public production locale contract", () => {
         name: languageLabel,
       });
       await expect(localizedMenu).not.toContainText("EN-XA");
-      await expect(
-        localizedMenu.getByRole("menuitemradio", { name: localeCase.endonym }),
-      ).toHaveAttribute("aria-checked", "true");
+      const currentLocale = localizedMenu.getByRole("menuitemradio", {
+        name: localeCase.endonym,
+      });
+      await expect(currentLocale).toHaveAttribute("aria-checked", "true");
+      await expect(currentLocale).toBeFocused();
       const switchToEnglish = localizedMenu.getByRole("menuitemradio", {
         name: "English",
       });
-      await switchToEnglish.press("Enter");
+      await page.keyboard.press("Home");
+      await expect(switchToEnglish).toBeFocused();
+      await page.keyboard.press("Enter");
       await expect(page).toHaveURL(
-        new RegExp(
-          `/lore\\?source=${escapeRegExp(mobileSource)}&step=4#roadmap$`,
-          "u",
-        ),
+        `${baseUrl}/lore?source=${mobileSource}&step=4#roadmap`,
       );
+      await expect(page.locator("html")).toHaveAttribute("lang", defaultLocale);
 
       const englishSelector = getVisibleLanguageSelector(page);
       const englishTrigger = englishSelector.getByRole("button", {
@@ -1136,7 +1187,9 @@ test.describe("complete public production locale contract", () => {
       const switchToLocalized = englishMenu.getByRole("menuitemradio", {
         name: localeCase.endonym,
       });
-      await switchToLocalized.press("Enter");
+      await switchToLocalized.focus();
+      await expect(switchToLocalized).toBeFocused();
+      await page.keyboard.press("Enter");
       await expect(page).toHaveURL(
         new RegExp(
           `${escapeRegExp(localeCase.lorePath)}\\?source=${escapeRegExp(mobileSource)}&step=4#roadmap$`,

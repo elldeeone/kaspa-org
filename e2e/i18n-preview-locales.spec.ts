@@ -23,25 +23,23 @@ const previewEnvironment = {
   VERCEL_ENV: "production",
 } as const;
 
-const previewLocaleCases = [
-  {
-    locale: "fr",
-    endonym: "Français",
-    languageLabel: "Langue",
-    dir: "ltr",
-    routes: localizePublicRouteGolden("fr"),
-    fingerprints: {
-      home: "Décentralisation",
-      lore: "Kaspa est un blockDAG à preuve de travail actif",
-      build: "Développer sur",
-      assets: "Ressources graphiques de Kaspa",
-      hodl: "Achetez des KAS et transférez-les",
-    },
-    proofFingerprint: "Vérifier la preuve",
-    backFingerprint: "Retour",
-    notFoundTitle: "Page introuvable | Kaspa",
-  },
-] as const;
+type PreviewLocaleCase = {
+  locale: string;
+  endonym: string;
+  languageLabel: string;
+  dir: "ltr" | "rtl";
+  routes: ReturnType<typeof localizePublicRouteGolden>;
+  fingerprints: Readonly<
+    Record<"home" | "lore" | "build" | "assets" | "hodl", string>
+  >;
+  proofFingerprint: string;
+  backFingerprint: string;
+  notFoundTitle: string;
+};
+
+// Add each complete private-review locale here. The lifecycle coverage test
+// keeps this descriptor list in lockstep with the central registry.
+const previewLocaleCases: readonly PreviewLocaleCase[] = [];
 
 test.describe("real preview locale contract", () => {
   const scenario = useBuiltLocaleScenario({

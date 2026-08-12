@@ -112,9 +112,8 @@ npm run test:e2e:headed
 npm run test:e2e:ui
 ```
 
-Production publishes the complete Spanish and German sites atomically. French
-is a private, no-index review locale. The `en-XA` pseudo-locale is test-only.
-Run all three full browser gates with:
+Production publishes the complete Spanish, German, and French sites atomically.
+The `en-XA` pseudo-locale is test-only. Run all three full browser gates with:
 
 ```bash
 npm run i18n:pseudo:generate
@@ -123,9 +122,8 @@ npm run test:e2e:i18n:preview
 npm run test:e2e:i18n:production-locales
 ```
 
-For a manual reviewer build, use the preview target to include French without
-the synthetic pseudo-locale, then inspect all five routes beginning at
-`http://localhost:3000/fr`:
+For a manual reviewer build, use the preview target to include any complete
+preview locales without the synthetic pseudo-locale:
 
 ```bash
 NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview npm run build
@@ -139,10 +137,9 @@ NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=test npm run build
 NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=test npm start
 ```
 
-The Preview build generates ignored `es`, `de`, and `fr` Build-example siblings
-under `public/vendor/kaspa-wasm`. Test also generates `en-XA`; Production
-generates only the approved `es` and `de` siblings. After stopping the server,
-remove those derived files with:
+Production and Preview generate ignored `es`, `de`, and `fr` Build-example
+siblings under `public/vendor/kaspa-wasm`. Test also generates `en-XA`. After
+stopping the server, remove those derived files with:
 
 ```bash
 npm run -s i18n:artifacts -- --clean
