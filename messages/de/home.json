@@ -14,10 +14,10 @@
     "getStarted": "Loslegen",
     "getWallet": "Wallet holen",
     "buyKaspa": "Kaspa kaufen",
-    "dagAnnotation": "PoW in Echtzeit"
+    "dagAnnotation": "pow in echtzeit"
   },
   "verify": {
-    "heading": "Vertrau nicht, verifiziere.",
+    "heading": "vertrau nicht, verifiziere.",
     "history": "Jeder Coin in Kaspas Geschichte lässt sich kryptografisch bis zu einer leeren Genesis zurückverfolgen.",
     "fairLaunch": "Kein Premine. Keine versteckte Zuteilung. Fairer Start.",
     "explanation": "Der Genesis-Nachweis verfolgt die Kette der Block-Hashes von Pruning Points rückwärts bis zur ursprünglichen Genesis und verifiziert, dass ihr UTXO-Commitment einer leeren Menge entspricht. In der Genesis-Coinbase eingebettete Bitcoin-Block-Hashes dienen als Zeitstempel und schließen ein verstecktes Premine aus.",

@@ -142,6 +142,93 @@ test("catalog comparison enforces exact keys and ICU interfaces", async (t) => {
   }
 });
 
+test("locale-aware catalog comparison accepts locale plural categories", () => {
+  const source = {
+    count:
+      "{count, plural, =0 {No pages} one {<strong>#</strong> page} other {<strong>#</strong> pages}}",
+  };
+  const russian = {
+    count:
+      "{count, plural, =0 {Нет страниц} one {<strong>#</strong> страница} few {<strong>#</strong> страницы} many {<strong>#</strong> страниц} other {<strong>#</strong> страницы}}",
+  };
+
+  assert.deepEqual(
+    compareCatalogs(source, russian, { targetLocale: "ru" }),
+    [],
+  );
+  assert.match(
+    compareCatalogs(source, russian)[0] ?? "",
+    /count has a different ICU interface/u,
+  );
+});
+
+test("locale-aware plural comparison preserves the message interface", async (t) => {
+  const source = {
+    count:
+      "{count, plural, =0 {No pages} one {<strong>#</strong> page} other {<strong>#</strong> pages}}",
+  };
+  const fixtures = [
+    {
+      name: "missing shared locale category",
+      message:
+        "{count, plural, =0 {Нет страниц} few {<strong>#</strong> страницы} many {<strong>#</strong> страниц} other {<strong>#</strong> страницы}}",
+    },
+    {
+      name: "unsupported locale category",
+      message:
+        "{count, plural, =0 {Нет страниц} one {<strong>#</strong> страница} two {<strong>#</strong> страницы} other {<strong>#</strong> страниц}}",
+    },
+    {
+      name: "missing exact-number branch",
+      message:
+        "{count, plural, one {<strong>#</strong> страница} few {<strong>#</strong> страницы} many {<strong>#</strong> страниц} other {<strong>#</strong> страницы}}",
+    },
+    {
+      name: "changed nested tag topology",
+      message:
+        "{count, plural, =0 {Нет страниц} one {<strong>#</strong> страница} few {# страницы} many {<strong>#</strong> страниц} other {<strong>#</strong> страницы}}",
+    },
+  ] as const;
+
+  for (const fixture of fixtures) {
+    await t.test(fixture.name, () => {
+      assert.match(
+        compareCatalogs(
+          source,
+          { count: fixture.message },
+          {
+            targetLocale: "ru",
+          },
+        )[0] ?? "",
+        /count has a different ICU interface/u,
+      );
+    });
+  }
+});
+
+test("catalog validation rejects a plural without an other branch", () => {
+  const result = validateCatalogSource(
+    JSON.stringify({ count: "{count, plural, one {# page}}" }),
+    "messages/ru/example.json",
+  );
+
+  assert.ok(
+    result.errors.some((error) => error.includes("has invalid ICU syntax")),
+    result.errors.join("\n"),
+  );
+});
+
+test("locale-aware plural comparison permits locales without a one category", () => {
+  assert.deepEqual(
+    compareCatalogs(
+      { count: "{count, plural, one {# page} other {# pages}}" },
+      { count: "{count, plural, other {#ページ}}" },
+      { targetLocale: "ja" },
+    ),
+    [],
+  );
+});
+
 test("ICU signatures distinguish format styles, plural kinds, offsets, and pound usage", () => {
   const pairs = [
     ["{value, number}", "{value, number, percent}"],

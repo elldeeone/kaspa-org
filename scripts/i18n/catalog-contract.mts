@@ -21,6 +21,10 @@ export type CatalogValidationResult = {
   errors: string[];
 };
 
+export type CatalogComparisonOptions = {
+  targetLocale?: string;
+};
+
 type ReportError = (message: string) => void;
 
 class JsonKeyScanner {
@@ -322,9 +326,199 @@ export function getIcuInterfaceSignature(message: string): string {
   return JSON.stringify(signatureForElements(parseIcuMessage(message)));
 }
 
+function hasSameStableValue(left: unknown, right: unknown): boolean {
+  return (
+    JSON.stringify(stableValue(left)) === JSON.stringify(stableValue(right))
+  );
+}
+
+function interfaceElements(
+  elements: readonly MessageFormatElement[],
+): readonly MessageFormatElement[] {
+  return elements.filter((element) => !isLiteralElement(element));
+}
+
+function pluralCategoriesForLocale(
+  locale: string,
+  type: Intl.PluralRulesOptions["type"],
+): ReadonlySet<string> {
+  return new Set(
+    new Intl.PluralRules(locale, { type }).resolvedOptions().pluralCategories,
+  );
+}
+
+function optionKeys(
+  options: Readonly<Record<string, unknown>>,
+  exact: boolean,
+): string[] {
+  return Object.keys(options)
+    .filter((key) => key.startsWith("=") === exact)
+    .sort();
+}
+
+function hasSameElementInterface(
+  source: MessageFormatElement,
+  target: MessageFormatElement,
+  targetLocale: string,
+): boolean {
+  if (isArgumentElement(source) && isArgumentElement(target)) {
+    return source.value === target.value;
+  }
+  if (isNumberElement(source) && isNumberElement(target)) {
+    return (
+      source.value === target.value &&
+      hasSameStableValue(source.style ?? null, target.style ?? null)
+    );
+  }
+  if (isDateElement(source) && isDateElement(target)) {
+    return (
+      source.value === target.value &&
+      hasSameStableValue(source.style ?? null, target.style ?? null)
+    );
+  }
+  if (isTimeElement(source) && isTimeElement(target)) {
+    return (
+      source.value === target.value &&
+      hasSameStableValue(source.style ?? null, target.style ?? null)
+    );
+  }
+  if (isPoundElement(source) && isPoundElement(target)) return true;
+  if (isTagElement(source) && isTagElement(target)) {
+    return (
+      source.value === target.value &&
+      hasSameElementsInterface(source.children, target.children, targetLocale)
+    );
+  }
+  if (isSelectElement(source) && isSelectElement(target)) {
+    const sourceKeys = Object.keys(source.options).sort();
+    const targetKeys = Object.keys(target.options).sort();
+    return (
+      source.value === target.value &&
+      hasSameStableValue(sourceKeys, targetKeys) &&
+      sourceKeys.every((key) =>
+        hasSameElementsInterface(
+          source.options[key].value,
+          target.options[key].value,
+          targetLocale,
+        ),
+      )
+    );
+  }
+  if (isPluralElement(source) && isPluralElement(target)) {
+    if (
+      source.value !== target.value ||
+      source.pluralType !== target.pluralType ||
+      source.offset !== target.offset
+    ) {
+      return false;
+    }
+
+    const sourceExactKeys = optionKeys(source.options, true);
+    const targetExactKeys = optionKeys(target.options, true);
+    if (!hasSameStableValue(sourceExactKeys, targetExactKeys)) return false;
+    if (
+      !sourceExactKeys.every((key) =>
+        hasSameElementsInterface(
+          source.options[key].value,
+          target.options[key].value,
+          targetLocale,
+        ),
+      )
+    ) {
+      return false;
+    }
+
+    const allowedTargetCategories = pluralCategoriesForLocale(
+      targetLocale,
+      target.pluralType,
+    );
+    const sourceCategoryKeys = optionKeys(source.options, false);
+    const targetCategoryKeys = optionKeys(target.options, false);
+    if (!targetCategoryKeys.includes("other")) return false;
+    if (
+      targetCategoryKeys.some(
+        (category) => !allowedTargetCategories.has(category),
+      )
+    ) {
+      return false;
+    }
+    if (
+      sourceCategoryKeys.some(
+        (category) =>
+          allowedTargetCategories.has(category) &&
+          !targetCategoryKeys.includes(category),
+      )
+    ) {
+      return false;
+    }
+
+    const sourceOther = source.options.other;
+    if (!sourceOther) return false;
+    return targetCategoryKeys.every((category) => {
+      const sourceOption = source.options[category] ?? sourceOther;
+      return hasSameElementsInterface(
+        sourceOption.value,
+        target.options[category].value,
+        targetLocale,
+      );
+    });
+  }
+  return false;
+}
+
+function hasSameElementsInterface(
+  sourceElements: readonly MessageFormatElement[],
+  targetElements: readonly MessageFormatElement[],
+  targetLocale: string,
+): boolean {
+  const source = interfaceElements(sourceElements);
+  const target = interfaceElements(targetElements);
+  if (source.length !== target.length) return false;
+
+  const match = (
+    sourceIndex: number,
+    remaining: readonly number[],
+  ): boolean => {
+    if (sourceIndex === source.length) return true;
+    return remaining.some((targetIndex, remainingIndex) => {
+      if (
+        !hasSameElementInterface(
+          source[sourceIndex],
+          target[targetIndex],
+          targetLocale,
+        )
+      ) {
+        return false;
+      }
+      return match(sourceIndex + 1, [
+        ...remaining.slice(0, remainingIndex),
+        ...remaining.slice(remainingIndex + 1),
+      ]);
+    });
+  };
+
+  return match(
+    0,
+    target.map((_, index) => index),
+  );
+}
+
+function hasLocaleAwareIcuInterface(
+  sourceMessage: string,
+  targetMessage: string,
+  targetLocale: string,
+): boolean {
+  return hasSameElementsInterface(
+    parseIcuMessage(sourceMessage),
+    parseIcuMessage(targetMessage),
+    targetLocale,
+  );
+}
+
 export function compareCatalogs(
   sourceCatalog: MessageCatalog,
   targetCatalog: MessageCatalog,
+  options: CatalogComparisonOptions = {},
 ): string[] {
   const errors: string[] = [];
   const source = flattenCatalog(sourceCatalog);
@@ -342,10 +536,17 @@ export function compareCatalogs(
     const sourceMessage = source.get(key);
     const targetMessage = target.get(key);
     if (sourceMessage === undefined || targetMessage === undefined) continue;
-    if (
-      getIcuInterfaceSignature(sourceMessage) !==
-      getIcuInterfaceSignature(targetMessage)
-    ) {
+    const exactInterfaceMatches =
+      getIcuInterfaceSignature(sourceMessage) ===
+      getIcuInterfaceSignature(targetMessage);
+    const localeAwareInterfaceMatches =
+      options.targetLocale !== undefined &&
+      hasLocaleAwareIcuInterface(
+        sourceMessage,
+        targetMessage,
+        options.targetLocale,
+      );
+    if (!exactInterfaceMatches && !localeAwareInterfaceMatches) {
       errors.push(`${key} has a different ICU interface`);
     }
   }

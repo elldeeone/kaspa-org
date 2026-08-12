@@ -164,6 +164,12 @@ test.describe("test-only full-site pseudo-locale contract", () => {
       expect(html, route.path).not.toContain('<link rel="canonical"');
       expect(html, route.path).not.toContain('hreflang="de"');
       expect(html, route.path).not.toContain('property="og:');
+      if (route.id === "home") {
+        expect(html).toContain("vertrau nicht, verifiziere.");
+        expect(html).toContain("pow in echtzeit");
+        expect(html).not.toContain("Vertrau nicht, verifiziere.");
+        expect(html).not.toContain("PoW in Echtzeit");
+      }
       expect(prerenderRoutes.has(route.internalPath), route.internalPath).toBe(
         true,
       );

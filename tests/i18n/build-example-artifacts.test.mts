@@ -346,6 +346,21 @@ test("catalog-backed Build artifacts are deterministic and complete", async () =
   assert.match(germanControls, />Neu verbinden<\/a>/u);
 });
 
+test("Build artifacts use an RTL locale direction without generator changes", async () => {
+  const rtlArtifacts = await createBuildExampleArtifactWorkflow(
+    repositoryRoot,
+    {
+      resolveTextDirection: (locale) => (locale === "de" ? "rtl" : "ltr"),
+    },
+  ).compile("preview");
+
+  for (const name of exampleNames) {
+    const german = rtlArtifacts[`${name}.de.html`];
+    assert.match(german, /<html lang="de" dir="rtl">/u);
+    assert.doesNotMatch(german, /<html lang="de" dir="ltr">/u);
+  }
+});
+
 test("catalog interpolation text cannot execute in generated JavaScript", async (t) => {
   const root = await createWorkflowFixture();
   t.after(() => rm(root, { recursive: true, force: true }));

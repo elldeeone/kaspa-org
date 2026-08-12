@@ -170,7 +170,9 @@ for (const locale of catalogLocales) {
     );
     errors.push(...result.errors);
     if (result.catalog) {
-      for (const issue of compareCatalogs(sourceCatalog, result.catalog)) {
+      for (const issue of compareCatalogs(sourceCatalog, result.catalog, {
+        targetLocale: locale,
+      })) {
         fail(location, issue);
       }
       for (const issue of validateTranslationCatalogContract(
