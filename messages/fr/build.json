@@ -1,0 +1,417 @@
+{
+  "metadata": {
+    "title": "Documentation, SDK, API et accès aux nœuds pour les développeurs Kaspa | Kaspa",
+    "description": "Tout ce dont vous avez besoin pour commencer à développer sur Kaspa : SDK WASM, bibliothèques Rust, espace d’essai d’API en direct, accès aux nœuds et outils de développement."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — La décentralisation en temps réel"
+  },
+  "terms": {
+    "daa": "DAA",
+    "dag": "DAG",
+    "node": "Nœud",
+    "publicNodeNetwork": "Réseau public de nœuds",
+    "utxo": "UTXO"
+  },
+  "artifacts": {
+    "controls": {
+      "back": "Retour",
+      "network": "Réseau",
+      "disconnect": "Déconnecter",
+      "reconnect": "Reconnecter",
+      "connecting": "| Connexion…"
+    },
+    "runtime": {
+      "connectingKaspaNetwork": "Connexion au réseau Kaspa…",
+      "selectedNetwork": "Le réseau sélectionné est {network}…",
+      "connectedTo": "Connecté à",
+      "disconnected": "Déconnecté…",
+      "disconnectedFrom": "Déconnecté de",
+      "connectingPublicNode": "Connexion à un nœud public…",
+      "disconnect": "Déconnecter",
+      "apiRequest": "Requête {api}…",
+      "apiResponse": "Réponse {api} :",
+      "subscribingBlockAdded": "Abonnement aux nouveaux blocs…",
+      "registeringProtocolNotifications": "Inscription aux notifications {protocol}…",
+      "subscribingProtocolScore": "Abonnement au score {protocol}…",
+      "event": "événement :",
+      "networkConsole": "réseau"
+    },
+    "utxo": {
+      "receivedEvents": "| {count, plural, one {# événement reçu} other {# événements reçus}}",
+      "noticeManyUtxos": "Veuillez noter que certaines adresses peuvent comporter des milliers d’{term}, ce qui rend leur affichage sous forme de liste peu pratique dans le navigateur. Ce type de données doit être paginé.",
+      "noticeManualTesting": "Cette démonstration est destinée aux essais manuels des événements émis par {api}. Votre navigateur peut avoir du mal à afficher de grands ensembles d’{term}.",
+      "addressPlaceholder": "Saisissez une adresse {network}…",
+      "monitorAddress": "Cliquer pour surveiller l’adresse",
+      "restart": "Redémarrer",
+      "trackingAddress": "Adresse surveillée :",
+      "error": "Erreur :",
+      "restarting": "Redémarrage…",
+      "stoppingProcessor": "Arrêt du processeur…",
+      "startingProcessor": "Démarrage du processeur…",
+      "processorStarted": "Processeur démarré…"
+    }
+  },
+  "navigation": {
+    "current": "Développer",
+    "sections": {
+      "start": {
+        "label": "Commencer",
+        "compactLabel": "Début",
+        "description": "Vue d’ensemble et accès le plus rapide à la pile technologique."
+      },
+      "tryLive": {
+        "label": "Essayer en direct",
+        "compactLabel": "Direct",
+        "description": "Exemples officiels pour navigateur et démonstrations en direct."
+      },
+      "paths": {
+        "label": "Choisir une voie",
+        "compactLabel": "Voies",
+        "description": "{wasmSdk}, {rust} natif ou configuration d’un nœud complet."
+      },
+      "runNode": {
+        "label": "Exécuter un nœud",
+        "compactLabel": "Nœud",
+        "description": "Une commande {docker} pour exécuter {rustyKaspa} localement."
+      },
+      "tooling": {
+        "label": "Outils",
+        "compactLabel": "Outils",
+        "description": "Bibliothèques officielles, infrastructure et projets de l’écosystème."
+      },
+      "access": {
+        "label": "Accès",
+        "compactLabel": "Accès",
+        "description": "Documentation, interfaces de requête, références des nœuds et parcours d’essai."
+      },
+      "developments": {
+        "label": "Développements",
+        "compactLabel": "Actu",
+        "description": "Suivez les travaux en cours et les échanges publics de R&D."
+      },
+      "help": {
+        "label": "Aide",
+        "compactLabel": "Aide",
+        "description": "Documentation et canaux communautaires lorsque vous êtes bloqué."
+      }
+    }
+  },
+  "start": {
+    "release": {
+      "version": "{version}",
+      "action": "Voir la version"
+    },
+    "heading": "Développer sur {kaspa}",
+    "description": "{wasmSdk}, bibliothèques {rust} natives et infrastructure de nœuds pour développer sur {kaspa}.",
+    "actions": {
+      "openDocs": "Ouvrir la documentation",
+      "viewGitHub": "Voir sur {github}"
+    },
+    "quickstart": {
+      "eyebrow": "Le moyen le plus rapide",
+      "title": "Commencer à développer",
+      "descriptionWithAi": "Demandez conseil à {kaspaAi}, puis accédez à la voie qui correspond à votre besoin.",
+      "descriptionWithoutAi": "Commencez par la documentation, les exemples en direct ou la voie des nœuds qui correspond à votre besoin.",
+      "aiTitle": "Interroger {kaspaAi}",
+      "aiDescription": "Trouvez le bon {sdk}, la bonne {api} ou la bonne voie de nœud.",
+      "jumpLabel": "Accéder directement à",
+      "routes": {
+        "chainData": "Lire les données de la chaîne",
+        "stack": "Choisir votre pile",
+        "node": "Exécuter un nœud"
+      }
+    }
+  },
+  "tryLive": {
+    "heading": {
+      "label": "Essayer en direct",
+      "title": "Exécuter les exemples pour navigateur de {rustyKaspa}",
+      "description": "Les exemples ci-dessous proviennent de la version {rustyKaspaVersion} du {sdk} officiel pour navigateur. Vous pouvez ainsi observer le comportement du {sdk} sans quitter la page."
+    },
+    "upstream": "officiel",
+    "actions": {
+      "openStandalone": "Ouvrir séparément",
+      "viewSource": "Voir le code source"
+    },
+    "networkNotice": "Fonctionne sur le <network>{publicNodeNetwork}</network>, un ensemble décentralisé de nœuds gérés par la communauté et accessible via {kaspaResolver}. L’initialisation peut prendre quelques secondes et cette solution n’est pas recommandée pour une utilisation en production à grande échelle.",
+    "examples": {
+      "serverInfo": {
+        "title": "Obtenir les informations du serveur",
+        "shortLabel": "Infos serveur",
+        "mobileTabLabel": "Serveur",
+        "description": "Connectez-vous par l’intermédiaire du résolveur public et récupérez les informations élémentaires du nœud directement dans le navigateur.",
+        "runtime": "{rpc}"
+      },
+      "dagInfo": {
+        "title": "Obtenir les informations sur le {dag} de blocs",
+        "shortLabel": "Infos {dag}",
+        "mobileTabLabel": "{dag}",
+        "description": "Consultez l’état général du {dag} d’un nœud {kaspa} actif au moyen des liaisons {rpc} officielles pour navigateur.",
+        "runtime": "{rpc}"
+      },
+      "blockAdded": {
+        "title": "Observer les nouveaux blocs",
+        "shortLabel": "Nouveaux blocs",
+        "mobileTabLabel": "Blocs",
+        "description": "Abonnez-vous aux événements d’ajout de blocs et observez leur arrivée en temps réel depuis le navigateur.",
+        "runtime": "{rpc}"
+      },
+      "daaChanged": {
+        "title": "Observer les changements de {daa}",
+        "shortLabel": "Changements de {daa}",
+        "mobileTabLabel": "{daa}",
+        "description": "Abonnez-vous aux mises à jour du score {daa} et observez le flux évoluer en temps réel.",
+        "runtime": "{rpc}"
+      },
+      "utxoContext": {
+        "title": "Suivre un contexte {utxo}",
+        "shortLabel": "Contexte {utxo}",
+        "mobileTabLabel": "{utxo}",
+        "description": "Utilisez les liaisons principales pour navigateur afin de surveiller une adresse et de recevoir les événements {utxo} en direct.",
+        "runtime": "{core}"
+      }
+    }
+  },
+  "paths": {
+    "heading": {
+      "label": "Voies",
+      "title": "Choisissez votre voie",
+      "description": "Commencez par le {sdk} ou la voie d’infrastructure qui correspond au système que vous développez."
+    },
+    "cards": {
+      "wasm": {
+        "tier": "{sdk} d’application",
+        "title": "Développer avec le {wasmSdk}",
+        "description": "Utilisez les liaisons officielles pour navigateur et {nodeJs} afin de gérer les parcours de portefeuille, les transactions et l’accès {rpc}.",
+        "docs": "Documentation du {wasmSdk}",
+        "examples": "Exemples officiels"
+      },
+      "rust": {
+        "tier": "{rust} natif",
+        "title": "Développer en {rust} natif",
+        "description": "Utilisez les crates {rust} de {rustyKaspa} pour les services backend, les intégrations système, les mécanismes internes des portefeuilles et les charges de travail proches des nœuds.",
+        "repo": "Dépôt {rustyKaspa}"
+      },
+      "node": {
+        "tier": "Nœud",
+        "title": "Exécuter un nœud",
+        "description": "Utilisez {rustyKaspa} pour disposer d’un accès complet, de l’indexation {utxo} et d’une infrastructure de production.",
+        "release": "Dernière version",
+        "repo": "Dépôt {rustyKaspa}"
+      }
+    },
+    "communityApi": {
+      "label": "{api} communautaire",
+      "description": "Une {api} hébergée par la communauté est disponible pour les lectures rapides ou les environnements contraints. Service fourni au mieux, sans SLA.",
+      "action": "Documentation de la {restApi}"
+    }
+  },
+  "runNode": {
+    "heading": {
+      "label": "Nœud",
+      "title": "Exécuter un nœud",
+      "description": "Lancez {rustyKaspa} localement avec {docker}. Pour une installation persistante, consultez {dockerHub} ou compilez depuis le code source."
+    },
+    "quickstart": "Démarrage rapide avec {docker}",
+    "title": "Exécuter la dernière image de {rustyKaspa}",
+    "description": "Expose {grpc} sur le port 16110 afin de communiquer avec le nœud depuis votre environnement de développement. Conteneur éphémère : aucun stockage persistant ni trafic {p2p} entrant.",
+    "copyCommand": "Copier la commande {docker}",
+    "commandCopied": "Commande {docker} copiée",
+    "dockerHub": "{dockerHub}",
+    "compile": "Compiler depuis le code source"
+  },
+  "tooling": {
+    "heading": {
+      "label": "Outils",
+      "title": "Chaîne d’outils actuelle",
+      "description": "Les interfaces stables sur lesquelles les développeurs peuvent compter aujourd’hui, avec les travaux émergents présentés séparément."
+    },
+    "stable": {
+      "rustyKaspa": {
+        "eyebrow": "Pile native",
+        "title": "{rustyKaspa}",
+        "description": "Crates {rust}, mécanismes internes des portefeuilles, nœud complet, {rpc}, indexation et accès direct au réseau.",
+        "tags": {
+          "rust": "{rust} natif",
+          "infra": "Nœud et infrastructure"
+        },
+        "action": "Ouvrir le dépôt"
+      },
+      "wasm": {
+        "eyebrow": "Bibliothèques et {sdks}",
+        "title": "{wasmSdk}",
+        "description": "Liaisons officielles pour navigateur et {node}, destinées aux applications, portefeuilles et parcours de transaction.",
+        "tag": "Navigateur + {node}",
+        "action": "Ouvrir la documentation"
+      }
+    },
+    "emerging": {
+      "python": {
+        "status": "Bêta",
+        "title": "{pythonSdk}",
+        "description": "Presque terminé. Utilisable dès aujourd’hui si {python} fait partie de votre pile.",
+        "action": "Ouvrir le dépôt"
+      }
+    },
+    "community": {
+      "eyebrow": "Projets communautaires",
+      "title": "Outils et infrastructure de l’écosystème",
+      "description": "Projets open source du vaste écosystème {kaspa} qui complètent le {sdk} officiel et la pile des nœuds.",
+      "open": "Ouvrir",
+      "cards": {
+        "indexer": {
+          "type": "Indexeur",
+          "title": "{simplyKaspaIndexer}",
+          "description": "Indexation autonome des blocs et des transactions de {kaspa}."
+        },
+        "dnsSeeder": {
+          "type": "Infrastructure",
+          "title": "{dnsSeeder}",
+          "description": "Infrastructure d’amorçage du réseau pair-à-pair de {kaspa}."
+        },
+        "khost": {
+          "type": "Hébergement",
+          "title": "{khost}",
+          "description": "Outils permettant d’exécuter des nœuds et de fournir de la capacité au reste de l’écosystème."
+        },
+        "kaspaJs": {
+          "type": "Bibliothèque",
+          "title": "{kaspaJs}",
+          "description": "Outils {javascript} gérés par la communauté autour de la pile {kaspa}."
+        }
+      }
+    }
+  },
+  "access": {
+    "heading": {
+      "label": "Accès",
+      "title": "Accès au réseau",
+      "description": "Documentation, interfaces de requête, références des nœuds et parcours d’essai, regroupés selon les besoins réels des développeurs."
+    },
+    "groups": {
+      "docs": {
+        "title": "Documentation",
+        "description": "Commencez par les guides, les références techniques et les propositions ouvertes.",
+        "links": {
+          "docs": "Ouvrir la documentation",
+          "wasm": "Documentation du {wasmSdk}",
+          "deepWiki": "{deepWiki} de {rustyKaspa}",
+          "kips": "{kips}",
+          "research": "Forum de recherche",
+          "qa": "{kaspaQAndA}"
+        }
+      },
+      "query": {
+        "title": "Requêtes et accès",
+        "description": "Interrogez le réseau au moyen d’outils publics et de l’{api} légère hébergée par la communauté. Cette {api} communautaire est fournie au mieux, sans SLA.",
+        "links": {
+          "api": "Documentation de l’{api} communautaire",
+          "explorer": "Explorateur",
+          "dag": "Visualiseur du {dag}",
+          "dumps": "Vidages de base de données de l’explorateur et de l’{api}"
+        }
+      },
+      "node": {
+        "title": "Nœud et {rpc}",
+        "description": "Exécutez une infrastructure complète ou explorez plus en profondeur la pile des nœuds.",
+        "links": {
+          "rustyKaspa": "{rustyKaspa}",
+          "release": "Dernière version"
+        }
+      },
+      "testnet": {
+        "title": "Réseau de test",
+        "description": "Utilisez les ressources publiques de test avant un déploiement sur le réseau principal.",
+        "faucet": "Robinet du réseau de test"
+      }
+    }
+  },
+  "developments": {
+    "heading": {
+      "label": "Développements",
+      "title": "Suivre les travaux en public",
+      "description": "Suivez le principal canal de discussion, puis l’évolution du {sdk}, du protocole et des travaux expérimentaux sur la programmabilité."
+    },
+    "liveDiscussion": "Discussion en direct",
+    "cards": {
+      "channel": {
+        "label": "Canal",
+        "title": "R&D principale sur {telegram}",
+        "description": "Le principal flux public consacré aux discussions actuelles sur la recherche et le développement de {kaspa}. {discord} reste utilisé, mais la plupart des échanges de fond ont désormais lieu ici."
+      },
+      "research": {
+        "label": "Espace d’échange",
+        "title": "{kaspaResearch}",
+        "description": "Forum de discussions approfondies sur le protocole, le consensus, l’économie et le minage, ainsi que sur les ébauches et propositions de {kip}."
+      },
+      "toccata": {
+        "label": "Hard fork",
+        "title": "{toccata} : covenants et {zk}",
+        "description": "Hard fork regroupant des codes opération de script étendus ({kip17}), des identifiants de covenant ({kip20}), des codes opération {zk} avec un sous-système de précompilation du vérificateur ({kip16}) et des engagements d’ordonnancement ({kip21}). Actuellement actif sur {tn12} avant son activation sur le réseau principal."
+      },
+      "silverscript": {
+        "label": "Programmabilité",
+        "title": "{silverscript}",
+        "description": "Langage de script de haut niveau compilé en {kaspaScript} natif. En cours de test sur {tn12} avant le hard fork {toccata}, qui ajoutera les covenants et les codes opération {zk} au réseau principal."
+      },
+      "vprogs": {
+        "label": "Programmabilité",
+        "title": "{vprogs}",
+        "description": "Premières recherches sur les programmes vérifiables : ordonnancement en chaîne, exécution hors chaîne et règlement au moyen de preuves {zk}. Ces travaux s’appuient sur les primitives de script introduites par {toccata}."
+      },
+      "python": {
+        "label": "{sdk}",
+        "title": "{pythonSdk}",
+        "description": "En version bêta et presque terminé. Les outils {python} progressent ouvertement et élargissent les possibilités offertes aux développeurs."
+      },
+      "kips": {
+        "label": "Protocole",
+        "title": "{kips}",
+        "description": "Suivez les propositions susceptibles de modifier la manière dont les applications et l’infrastructure s’intègrent au réseau."
+      }
+    }
+  },
+  "help": {
+    "eyebrow": "Aide",
+    "title": "Continuez",
+    "descriptionWithAi": "Commencez par la documentation ou {kaspaAi}. Pour une aide plus approfondie, essayez {qa}, {github}, {discord} ou le canal R&D sur {telegram}.",
+    "descriptionWithoutAi": "Commencez par la documentation. Pour une aide plus approfondie, essayez {qa}, {github}, {discord} ou le canal R&D sur {telegram}.",
+    "actions": {
+      "openDocs": "Ouvrir la documentation",
+      "openAi": "Ouvrir l’IA"
+    },
+    "links": {
+      "github": {
+        "eyebrow": "Code source",
+        "title": "{github}"
+      },
+      "discord": {
+        "eyebrow": "Discussion",
+        "title": "{discord}"
+      },
+      "qa": {
+        "eyebrow": "Questions-réponses",
+        "title": "{kaspaQAndA}"
+      },
+      "telegram": {
+        "eyebrow": "Derniers développements",
+        "title": "R&D sur {telegram}"
+      }
+    },
+    "prompts": {
+      "gettingStarted": "Comment commencer à développer sur {kaspa} ?",
+      "choosePath": "Quelle voie choisir : {wasmSdk}, {rust} natif ou exécution d’un nœud ?",
+      "nodeOrApi": "Dois-je exécuter mon propre nœud ou puis-je utiliser l’{api} communautaire ?",
+      "smartContracts": "{kaspa} dispose-t-il de contrats intelligents ?",
+      "wallet": "Comment créer un portefeuille avec le {wasmSdk} ?",
+      "transaction": "Comment créer et signer une transaction ?",
+      "runNode": "Comment exécuter un nœud {kaspa} ?",
+      "hardware": "De quel matériel ai-je besoin pour un nœud ?",
+      "toccata": "Qu’est-ce que {toccata} et quels changements apporte-t-il ?",
+      "covenants": "Que sont les covenants dans {kaspa} ?",
+      "silverscript": "Qu’est-ce que {silverscript} ?",
+      "networks": "Quelle est la différence entre le réseau principal et {tn12} ?"
+    }
+  }
+}

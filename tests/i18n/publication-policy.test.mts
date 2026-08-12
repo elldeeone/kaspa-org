@@ -9,6 +9,7 @@ import test from "node:test";
 
 import {
   defaultLocale,
+  frenchLocale,
   germanLocale,
   pseudoLocale,
   spanishLocale,
@@ -136,6 +137,7 @@ test("fixture policy resolves once into the generic publication profile", () => 
 
   const production = createI18nPublicationProfile("production");
   const preview = createI18nPublicationProfile("preview");
+  const testProfile = createI18nPublicationProfile("test");
   const rollback = createI18nPublicationProfile("production", {
     localeLifecycles: { es: "preview" },
   });
@@ -153,11 +155,21 @@ test("fixture policy resolves once into the generic publication profile", () => 
       "public",
     );
     assert.equal(production.routePublications[routeId][germanLocale], "public");
+    assert.equal(production.routePublications[routeId][frenchLocale], null);
     assert.equal(production.routePublications[routeId][pseudoLocale], null);
     assert.equal(preview.routePublications[routeId].en, "public");
     assert.equal(preview.routePublications[routeId][spanishLocale], "public");
     assert.equal(preview.routePublications[routeId][germanLocale], "public");
-    assert.equal(preview.routePublications[routeId][pseudoLocale], "preview");
+    assert.equal(preview.routePublications[routeId][frenchLocale], "preview");
+    assert.equal(preview.routePublications[routeId][pseudoLocale], null);
+    assert.equal(
+      testProfile.routePublications[routeId][frenchLocale],
+      "preview",
+    );
+    assert.equal(
+      testProfile.routePublications[routeId][pseudoLocale],
+      "preview",
+    );
     assert.equal(rollback.routePublications[routeId].en, "public");
     assert.equal(rollback.routePublications[routeId][spanishLocale], null);
   }
@@ -278,6 +290,39 @@ test("next.config authorizes fixture markers before exposing fixture roots", asy
       await rm(cwd, { recursive: true, force: true });
     }
   });
+
+  await t.test(
+    "Vercel Production accepts real review locales without the pseudo locale",
+    async () => {
+      const cwd = await createConfigProbeDirectory("vercel-review");
+      try {
+        const result = runNextConfigProbe(cwd, {
+          NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET: "preview",
+          VERCEL_ENV: "production",
+        });
+        assert.equal(result.status, 0, result.stderr);
+      } finally {
+        await rm(cwd, { recursive: true, force: true });
+      }
+    },
+  );
+
+  await t.test(
+    "Vercel Production rejects the test-only pseudo locale",
+    async () => {
+      const cwd = await createConfigProbeDirectory("vercel-test");
+      try {
+        const result = runNextConfigProbe(cwd, {
+          NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET: "test",
+          VERCEL_ENV: "production",
+        });
+        assert.notEqual(result.status, 0);
+        assert.match(result.stderr, /private en-XA pseudo-locale/u);
+      } finally {
+        await rm(cwd, { recursive: true, force: true });
+      }
+    },
+  );
 
   await t.test("matching marker exposes the authorized root", async () => {
     const cwd = await createConfigProbeDirectory("match");

@@ -19,6 +19,13 @@ import germanHodl from "../../messages/de/hodl.json" with { type: "json" };
 import germanHome from "../../messages/de/home.json" with { type: "json" };
 import germanLore from "../../messages/de/lore.json" with { type: "json" };
 import germanShared from "../../messages/de/shared.json" with { type: "json" };
+import frenchAssets from "../../messages/fr/assets.json" with { type: "json" };
+import frenchBuild from "../../messages/fr/build.json" with { type: "json" };
+import frenchErrors from "../../messages/fr/errors.json" with { type: "json" };
+import frenchHodl from "../../messages/fr/hodl.json" with { type: "json" };
+import frenchHome from "../../messages/fr/home.json" with { type: "json" };
+import frenchLore from "../../messages/fr/lore.json" with { type: "json" };
+import frenchShared from "../../messages/fr/shared.json" with { type: "json" };
 
 import {
   isLocaleEnabled,
@@ -26,6 +33,7 @@ import {
   listSelectableLocales,
 } from "./config.ts";
 import {
+  frenchLocale,
   germanLocale,
   pseudoLocale,
   spanishLocale,
@@ -68,6 +76,16 @@ export const germanMessages = {
   shared: germanShared,
 } satisfies AppMessages;
 
+export const frenchMessages = {
+  assets: frenchAssets,
+  build: frenchBuild,
+  errors: frenchErrors,
+  hodl: frenchHodl,
+  home: frenchHome,
+  lore: frenchLore,
+  shared: frenchShared,
+} satisfies AppMessages;
+
 let generatedPseudoMessages: AppMessages | null = null;
 
 function assertNever(value: never): never {
@@ -100,6 +118,13 @@ export function getMessages(locale: Locale): LocaleMessages {
         );
       }
       return germanMessages;
+    case frenchLocale:
+      if (!isLocaleEnabled(frenchLocale)) {
+        throw new Error(
+          `${frenchLocale} messages are unavailable in this build target`,
+        );
+      }
+      return frenchMessages;
     default:
       return assertNever(locale);
   }

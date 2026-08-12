@@ -74,6 +74,9 @@ jobs:
       - name: Run test-only pseudo-locale suite
         run: npm run test:e2e:i18n:pseudo
 
+      - name: Run real preview-locale suite
+        run: npm run test:e2e:i18n:preview
+
       - name: Run production locale suite
         run: npm run test:e2e:i18n:production-locales
 

@@ -8,6 +8,7 @@ import {
 } from "../../scripts/i18n/translation-contract.mts";
 import {
   englishMessages,
+  frenchMessages,
   germanMessages,
   spanishMessages,
 } from "../../src/i18n/messages.ts";
@@ -15,6 +16,7 @@ import {
 const translatedCatalogs = {
   es: spanishMessages,
   de: germanMessages,
+  fr: frenchMessages,
 } as const;
 
 test("complete translated catalogs satisfy the shared translation contract", () => {
@@ -100,6 +102,8 @@ test("locale policy adds only language-specific terminology and loanwords", () =
   assert.equal(isUnchangedMessageAllowed("de", "Wallet"), true);
   assert.equal(isUnchangedMessageAllowed("fr", "Wallet"), false);
   assert.equal(isUnchangedMessageAllowed("fr", "GitHub"), true);
+  assert.equal(isUnchangedMessageAllowed("fr", "Menu"), true);
+  assert.equal(isUnchangedMessageAllowed("fr", "Acceptable"), true);
   assert.equal(isUnchangedMessageAllowed("fr", "{date, date, medium}"), true);
 
   assert.deepEqual(
@@ -112,5 +116,23 @@ test("locale policy adds only language-specific terminology and loanwords", () =
     [
       "example.terminology retains prohibited English terminology; use red principal",
     ],
+  );
+  assert.deepEqual(
+    validateTranslationCatalogContract(
+      "fr",
+      "example",
+      { terminology: "Read block data" },
+      { terminology: "Lire les données du block" },
+    ),
+    ["example.terminology retains prohibited English terminology; use bloc"],
+  );
+  assert.deepEqual(
+    validateTranslationCatalogContract(
+      "fr",
+      "example",
+      { terminology: "Read blocks" },
+      { terminology: "Lire les blocks" },
+    ),
+    ["example.terminology retains prohibited English terminology; use bloc"],
   );
 });

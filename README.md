@@ -112,30 +112,37 @@ npm run test:e2e:headed
 npm run test:e2e:ui
 ```
 
-Production publishes the complete Spanish and German sites atomically. The
-`en-XA` pseudo-locale is test-only and no-index. Run both full browser gates
-with:
+Production publishes the complete Spanish and German sites atomically. French
+is a private, no-index review locale. The `en-XA` pseudo-locale is test-only.
+Run all three full browser gates with:
 
 ```bash
 npm run i18n:pseudo:generate
 npm run test:e2e:i18n:pseudo
+npm run test:e2e:i18n:preview
 npm run test:e2e:i18n:production-locales
 ```
 
-For a manual test build, use the preview target to include `en-XA`, then inspect
-all five routes beginning at `http://localhost:3000/en-XA` and the public
-Spanish and German routes beginning at `http://localhost:3000/es` and
-`http://localhost:3000/de`:
+For a manual reviewer build, use the preview target to include French without
+the synthetic pseudo-locale, then inspect all five routes beginning at
+`http://localhost:3000/fr`:
 
 ```bash
 NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview npm run build
 NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview npm start
 ```
 
-The Preview build generates ignored `en-XA`, `es`, and `de` Build-example
-siblings under `public/vendor/kaspa-wasm`. Production generates the approved
-`es` and `de` siblings. After stopping the server, remove those derived files
-with:
+Use the test target when full-site pseudo-locale QA is required:
+
+```bash
+NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=test npm run build
+NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=test npm start
+```
+
+The Preview build generates ignored `es`, `de`, and `fr` Build-example siblings
+under `public/vendor/kaspa-wasm`. Test also generates `en-XA`; Production
+generates only the approved `es` and `de` siblings. After stopping the server,
+remove those derived files with:
 
 ```bash
 npm run -s i18n:artifacts -- --clean
@@ -145,11 +152,12 @@ Browser-test fixtures generate the same files only inside their isolated
 disposable copies.
 
 `NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET` selects which locales exist in a build; it
-cannot change an already-built site. Set it to `preview` only in Vercel Preview.
-Leave it unset or set it to `production` in Vercel Production; the production
-build fails closed if the test-only pseudo-locale is enabled there. Locale
-launch state lives in `src/i18n/locale-registry.ts`: a real locale becomes
-public across every route only when its lifecycle changes to `production`.
+cannot change an already-built site. Use `preview` for a dedicated reviewer
+deployment, including its Vercel Production environment when that project is
+not the public site. Never use `test` in Vercel Production: the build fails
+closed if the test-only pseudo-locale is enabled there. Locale launch state
+lives in `src/i18n/locale-registry.ts`: a real locale becomes public across
+every route only when its lifecycle changes to `production`.
 
 ## Language Contributions
 

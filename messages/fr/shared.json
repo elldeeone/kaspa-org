@@ -1,0 +1,112 @@
+{
+  "navigation": {
+    "homeAria": "Accueil de Kaspa",
+    "toggleMenu": "Ouvrir ou fermer le menu",
+    "menu": "Menu",
+    "language": {
+      "label": "Langue"
+    },
+    "links": {
+      "lore": "LORE",
+      "hodl": "HODL",
+      "build": "BUIDL",
+      "think": "THINK",
+      "dagviz": "DAGVIZ"
+    }
+  },
+  "theme": {
+    "switchMode": "Passer au mode {mode}",
+    "light": "clair",
+    "dark": "sombre"
+  },
+  "logoMenu": {
+    "aria": "Logo Kaspa",
+    "viewAssets": "Voir les ressources graphiques"
+  },
+  "pageSections": {
+    "onThisPage": "Sur cette page",
+    "openAria": "Ouvrir les sections de la page, section actuelle : {section}",
+    "dialogAria": "Sections de la page",
+    "close": "Fermer",
+    "current": "Section actuelle"
+  },
+  "footer": {
+    "glyphAria": "Symbole Kaspa",
+    "operatedBy": "Exploité par <operator>KasMedia.com</operator>",
+    "links": {
+      "explorer": "Explorateur",
+      "github": "GitHub",
+      "x": "X"
+    }
+  },
+  "structuredData": {
+    "organizationDescription": "Kaspa est une cryptomonnaie blockDAG à preuve de travail lancée équitablement, qui fonctionne à 10 blocs par seconde et vise la décentralisation en temps réel."
+  },
+  "ai": {
+    "externalPrompt": "Lisez {url}, je souhaite poser des questions à son sujet.",
+    "genericError": "Désolé, une erreur s’est produite. Veuillez réessayer.",
+    "launcher": {
+      "askAnything": "Posez votre question",
+      "beta": "Bêta",
+      "betaTitle": "Cette fonctionnalité est en cours de développement — des problèmes occasionnels peuvent survenir",
+      "betaAria": "Bêta — des problèmes occasionnels peuvent survenir",
+      "poweredBy": "Propulsé par <provider>kaspa.news/ask</provider>",
+      "collapsePanel": "Réduire le panneau",
+      "expandPanel": "Agrandir le panneau",
+      "closePanel": "Fermer le panneau",
+      "placeholder": "Posez votre question…",
+      "sendMessage": "Envoyer le message",
+      "welcomeHeading": "Posez vos questions sur Kaspa",
+      "welcomeBody": "Obtenez des réponses rapides ci-dessous ou ouvrez une conversation complète avec l’IA de votre choix.",
+      "ownAiDivider": "ou utilisez votre propre IA",
+      "ownAiLabel": "Utilisez votre propre IA :",
+      "sources": "{count, plural, =0 {Sources} one {Source (#)} other {Sources (#)}}",
+      "copy": "copier",
+      "copied": "copié"
+    },
+    "suggestions": {
+      "kaspaPurpose": "Quel problème Kaspa résout-il ?",
+      "blockTimes": "Quels sont les temps de bloc ?",
+      "decentralization": "Pourquoi la décentralisation en temps réel est-elle importante ?",
+      "premine": "Y a-t-il eu un préminage ?"
+    },
+    "providers": {
+      "chatgpt": "ChatGPT",
+      "claude": "Claude",
+      "perplexity": "Perplexity"
+    },
+    "loading": {
+      "atomicArc": "sécurisation par AtomicArc…",
+      "ibd": "IBD du nouveau nœud…",
+      "ftr": "relais FTR du bloc…",
+      "kip": "activation du KIP…",
+      "template": "liaison du modèle…",
+      "commitment": "amorçage depuis l’engagement…",
+      "blueSet": "tressage du blue set…",
+      "mergeDepth": "calcul de la merge depth…",
+      "silverscript": "négociation avec Silverscript pour compiler…",
+      "covenantId": "dérivation du covenant_id…",
+      "covenantState": "encodage de l’état du covenant…",
+      "orphans": "éviction des orphelins…",
+      "mempool": "remplissage de la mempool…",
+      "fees": "répartition des frais par voie…",
+      "covenants": "négociation avec les covenants…",
+      "blocks": "distribution parallèle des blocs…",
+      "pruning": "élagage du passé…",
+      "dagLayer": "publication sur la couche DAG…",
+      "stack": "ajout à la pile…",
+      "bps": "rééquilibrage des 10 BPS…",
+      "blueWork": "recalcul du blue work…",
+      "l2": "filtrage des réorganisations d’événements L2…",
+      "vprogBatch": "planification du lot vProg…",
+      "schnorr": "signature façon Schnorr…",
+      "virtualState": "sérialisation de l’état virtuel…",
+      "utxoSet": "instantané de l’ensemble UTXO…",
+      "anticone": "parcours de l’anticône…",
+      "transactions": "rattachement des transactions orphelines…",
+      "utxo": "déverrouillage de l’UTXO…",
+      "vprogs": "virtualisation des vProgs…",
+      "crescendo": "attente de Crescendo…"
+    }
+  }
+}

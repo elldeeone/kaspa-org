@@ -131,6 +131,10 @@ const translationPolicies = {
       "Wallet",
     ],
   },
+  fr: {
+    allowedUnchangedValues: ["Acceptable", "Hard fork", "Menu"],
+    preferredTerms: [[/(?:^|\W)blocks?(?:$|\W)/iu, "bloc"]],
+  },
 } as const satisfies Readonly<Record<string, TranslationPolicy>>;
 
 const emptyPolicy = {} satisfies TranslationPolicy;

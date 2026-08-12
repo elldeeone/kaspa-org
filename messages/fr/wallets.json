@@ -1,0 +1,7 @@
+{
+  "kaspa-cli-wallet": "Outils de portefeuille en ligne de commande destinés aux utilisateurs à l’aise avec la gestion des clés et des transactions depuis un terminal.",
+  "kaspacom-wallet": "Un portefeuille KaspaCom accessible par navigateur pour créer, importer et utiliser des portefeuilles Kaspa en autocustodie.",
+  "kaspium": "Un portefeuille mobile en autocustodie pour envoyer, recevoir et conserver des KAS depuis un téléphone.",
+  "kng-desktop": "Un portefeuille Kaspa moderne pour ordinateur, avec une interface conviviale par défaut, l’utilisation facultative d’un nœud complet et des réglages avancés.",
+  "kng-web": "La version navigateur de Kaspa NG. Conviviale par défaut, sans installation, avec des réglages avancés facultatifs."
+}

@@ -14,13 +14,18 @@ import {
   readServerOnlyCatalogFingerprints,
   validatePrerenderedPageRouteSet,
 } from "../../scripts/i18n/validate-client-payload.mts";
+import { isLocaleEnabled } from "../../src/i18n/config.ts";
 import {
   getBuildClientMessages,
   getHodlClientMessages,
   getHomeProofClientMessages,
   getSharedClientMessages,
 } from "../../src/i18n/messages.ts";
-import { germanLocale, spanishLocale } from "../../src/i18n/locale-registry.ts";
+import {
+  frenchLocale,
+  germanLocale,
+  spanishLocale,
+} from "../../src/i18n/locale-registry.ts";
 import { routeIds } from "../../src/i18n/manifest.ts";
 
 const emptyPolicy = {
@@ -430,7 +435,8 @@ test("translated client payloads contain only route-owned messages", async () =>
   for (const { locale, languageLabel } of [
     { locale: spanishLocale, languageLabel: "Idioma" },
     { locale: germanLocale, languageLabel: "Sprache" },
-  ] as const) {
+    { locale: frenchLocale, languageLabel: "Langue" },
+  ].filter(({ locale }) => isLocaleEnabled(locale))) {
     const shared = getSharedClientMessages(locale);
     assert.ok("language" in shared.shared.navigation);
     assert.deepEqual(shared.shared.navigation.language, {
@@ -486,7 +492,7 @@ test("prerender validation requires the exact localized page set", () => {
 
 test("server-only fingerprints cover metadata and Open Graph catalogs", async () => {
   const fingerprints = await readServerOnlyCatalogFingerprints();
-  for (const expected of [
+  const expectedFingerprints = [
     "LORE | Kaspa",
     "Kaspa Logos & Assets | Kaspa",
     "Kaspa Developer Docs, SDKs, APIs, and Node Access | Kaspa",
@@ -498,7 +504,15 @@ test("server-only fingerprints cover metadata and Open Graph catalogs", async ()
     "Kaspa-Entwicklerdokumentation, SDKs, APIs und Node-Zugriff | Kaspa",
     "KAS kaufen, Wallet einrichten und selbst verwahren | Kaspa",
     "Kaspa – Echtzeit-Dezentralisierung",
-  ]) {
+    ...(isLocaleEnabled(frenchLocale)
+      ? [
+          "Documentation, SDK, API et accès aux nœuds pour les développeurs Kaspa | Kaspa",
+          "Acheter des KAS, configurer un portefeuille et passer à l’autocustodie | Kaspa",
+          "Kaspa — La décentralisation en temps réel",
+        ]
+      : []),
+  ];
+  for (const expected of expectedFingerprints) {
     assert.ok(fingerprints.includes(expected), expected);
   }
 });
@@ -509,10 +523,10 @@ test("server-only fingerprints ignore unconfigured partial locale work", async (
     await cp(join(process.cwd(), "messages"), join(fixture, "messages"), {
       recursive: true,
     });
-    await mkdir(join(fixture, "messages/fr"), { recursive: true });
+    await mkdir(join(fixture, "messages/it"), { recursive: true });
     await writeFile(
-      join(fixture, "messages/fr/shared.json"),
-      JSON.stringify({ navigation: { language: { label: "Langue" } } }),
+      join(fixture, "messages/it/shared.json"),
+      JSON.stringify({ navigation: { language: { label: "Lingua" } } }),
     );
 
     const fingerprints = await readServerOnlyCatalogFingerprints(fixture);

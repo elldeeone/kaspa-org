@@ -19,7 +19,7 @@ import {
 
 const previewEnvironment = {
   NEXT_PUBLIC_KASPA_AI_ENABLED: "true",
-  NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET: "preview",
+  NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET: "test",
   VERCEL_ENV: "preview",
 } as const;
 
@@ -41,7 +41,7 @@ function assertPrivatePseudoHtml(html: string, pathname: string) {
     '<meta name="robots" content="noindex, nofollow"/>',
   );
   expect(html, pathname).not.toContain('<link rel="canonical"');
-  expect(html, pathname).not.toContain('hreflang="');
+  expect(html, pathname).not.toContain('<link rel="alternate"');
   expect(html, pathname).not.toContain('property="og:');
   expect(html, pathname).not.toContain('name="twitter:');
   expect(html, pathname).not.toContain(
@@ -257,7 +257,7 @@ test.describe("test-only full-site pseudo-locale contract", () => {
       expect(html, pathname).toContain("from './resources/utils.en-XA.js'");
       expect(html, pathname).toContain("[!! ");
       expect(html, pathname).not.toContain('<link rel="canonical"');
-      expect(html, pathname).not.toContain('hreflang="');
+      expect(html, pathname).not.toContain('<link rel="alternate"');
       expect(html, pathname).not.toContain('property="og:');
       expect(html, pathname).not.toContain('name="twitter:');
     }

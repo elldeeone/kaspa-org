@@ -27,11 +27,13 @@ export type LocaleLifecycle =
 export const pseudoLocale = "en-XA" as const;
 export const spanishLocale = "es" as const;
 export const germanLocale = "de" as const;
+export const frenchLocale = "fr" as const;
 export const supportedLocaleCodes = [
   "en",
   pseudoLocale,
   spanishLocale,
   germanLocale,
+  frenchLocale,
 ] as const;
 export type Locale = (typeof supportedLocaleCodes)[number];
 export type TextDirection = "ltr" | "rtl";
@@ -73,6 +75,13 @@ export const localeRegistry: Readonly<Record<Locale, LocaleDefinition>> = {
     dir: "ltr",
     lifecycle: "production",
   },
+  fr: {
+    code: "fr",
+    label: "Français",
+    hrefLang: "fr",
+    dir: "ltr",
+    lifecycle: "preview",
+  },
 };
 
 export const defaultLocale = "en" as const satisfies Locale;
@@ -83,6 +92,9 @@ export function isLifecycleEnabledForTarget(
 ): boolean {
   if (lifecycle === "disabled") return false;
   if (target === "production") return lifecycle === "production";
+  if (target === "preview") {
+    return lifecycle === "production" || lifecycle === "preview";
+  }
   return true;
 }
 

@@ -122,12 +122,19 @@ test("artifact manifest follows the central Build-example contract", () => {
       `resources/utils.${locale}.js`,
     ]);
   }
-  assert.deepEqual(Object.keys(manifest.urlsByLocale), ["en-XA", "es", "de"]);
-  assert.equal(manifest.pathsByLocale["en-XA"].length, 6);
-  assert.equal(manifest.pathsByLocale.es.length, 6);
-  assert.equal(manifest.pathsByLocale.de.length, 6);
-  assert.equal(manifest.localizedPaths.length, 18);
-  assert.equal(manifest.localizedUrls.length, 18);
+  assert.deepEqual(Object.keys(manifest.urlsByLocale), [
+    "en-XA",
+    "es",
+    "de",
+    "fr",
+  ]);
+  assert.ok(
+    manifest.locales.every(
+      (locale) => manifest.pathsByLocale[locale].length === 6,
+    ),
+  );
+  assert.equal(manifest.localizedPaths.length, 24);
+  assert.equal(manifest.localizedUrls.length, 24);
   assert.ok(
     manifest.localizedUrls.every((path) =>
       path.startsWith(`${buildExampleContract.examplesPublicBasePath}/`),
@@ -597,20 +604,35 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   const fixture = createBuildExampleArtifactWorkflow(root);
   const directory = join(root, examplesRelativeDirectory);
 
+  await fixture.sync("test");
+  await fixture.check("test");
+  assert.deepEqual(
+    (await readdir(directory))
+      .filter((path) => /\.(?:de|en-XA|es|fr)\.html$/u.test(path))
+      .sort(),
+    manifest.localizedPaths.filter((path) => path.endsWith(".html")).sort(),
+  );
+
   await fixture.sync("preview");
   await fixture.check("preview");
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.(?:de|en-XA|es)\.html$/u.test(path))
+      .filter((path) => /\.(?:de|en-XA|es|fr)\.html$/u.test(path))
       .sort(),
-    manifest.localizedPaths.filter((path) => path.endsWith(".html")).sort(),
+    [
+      ...manifest.pathsByLocale.es,
+      ...manifest.pathsByLocale.de,
+      ...manifest.pathsByLocale.fr,
+    ]
+      .filter((path) => path.endsWith(".html"))
+      .sort(),
   );
 
   await fixture.sync("production");
   await fixture.check("production");
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.(?:de|en-XA|es)\.html$/u.test(path))
+      .filter((path) => /\.(?:de|en-XA|es|fr)\.html$/u.test(path))
       .sort(),
     [...manifest.pathsByLocale.es, ...manifest.pathsByLocale.de]
       .filter((path) => path.endsWith(".html"))
