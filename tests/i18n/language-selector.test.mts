@@ -12,22 +12,16 @@ import {
   pseudoLocale,
   spanishLocale,
 } from "../../src/i18n/locale-registry.ts";
-import { i18nBuildTarget } from "../../src/i18n/config.ts";
 import { localizePathname } from "../../src/i18n/pathname.ts";
 
 test("selector options use registry endonyms and exclude the pseudo locale", () => {
   assert.deepEqual(
     LANGUAGE_SELECTOR_OPTIONS.map(({ code, label }) => ({ code, label })),
-    i18nBuildTarget === "production"
-      ? [
-          { code: defaultLocale, label: "English" },
-          { code: spanishLocale, label: "Español" },
-        ]
-      : [
-          { code: defaultLocale, label: "English" },
-          { code: spanishLocale, label: "Español" },
-          { code: germanLocale, label: "Deutsch" },
-        ],
+    [
+      { code: defaultLocale, label: "English" },
+      { code: spanishLocale, label: "Español" },
+      { code: germanLocale, label: "Deutsch" },
+    ],
   );
   assert.equal(
     LANGUAGE_SELECTOR_OPTIONS.map(({ code }) => String(code)).includes(

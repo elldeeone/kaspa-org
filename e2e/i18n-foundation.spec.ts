@@ -405,6 +405,7 @@ test.describe("production i18n foundation contract", () => {
       publicRouteGolden.flatMap(({ path }) => [
         `https://kaspa.org${path === "/" ? "" : path}`,
         `https://kaspa.org${localizePublicPath("es", path)}`,
+        `https://kaspa.org${localizePublicPath("de", path)}`,
       ]),
     );
     expect(sitemap).not.toContain("hreflang");
@@ -431,6 +432,9 @@ test.describe("production i18n foundation contract", () => {
     const spanishImage = await request.get("/es/opengraph-image");
     expect(spanishImage.status()).toBe(200);
     expect(spanishImage.headers()["content-type"]).toBe("image/png");
+    const germanImage = await request.get("/de/opengraph-image");
+    expect(germanImage.status()).toBe(200);
+    expect(germanImage.headers()["content-type"]).toBe("image/png");
   });
 
   test("routes an enabled but unpublished page through the production miss stack", async ({

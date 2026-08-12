@@ -9,6 +9,7 @@ import test from "node:test";
 
 import {
   defaultLocale,
+  germanLocale,
   pseudoLocale,
   spanishLocale,
   supportedLocaleCodes,
@@ -151,9 +152,11 @@ test("fixture policy resolves once into the generic publication profile", () => 
       production.routePublications[routeId][spanishLocale],
       "public",
     );
+    assert.equal(production.routePublications[routeId][germanLocale], "public");
     assert.equal(production.routePublications[routeId][pseudoLocale], null);
     assert.equal(preview.routePublications[routeId].en, "public");
     assert.equal(preview.routePublications[routeId][spanishLocale], "public");
+    assert.equal(preview.routePublications[routeId][germanLocale], "public");
     assert.equal(preview.routePublications[routeId][pseudoLocale], "preview");
     assert.equal(rollback.routePublications[routeId].en, "public");
     assert.equal(rollback.routePublications[routeId][spanishLocale], null);

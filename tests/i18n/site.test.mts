@@ -141,7 +141,7 @@ test("JSON-LD serialization cannot terminate its script element", () => {
   );
 });
 
-test("the active build profile keeps German in atomic preview", () => {
+test("the active build profile publishes German atomically", () => {
   const nonProductionLocalesEnabled = i18nBuildTarget !== "production";
   assert.equal(defaultLocale, "en");
   assert.deepEqual(supportedLocaleCodes, [
@@ -153,27 +153,27 @@ test("the active build profile keeps German in atomic preview", () => {
   assert.equal(localeRegistry.en.lifecycle, "production");
   assert.equal(localeRegistry[spanishLocale].lifecycle, "production");
   assert.equal(localeRegistry[pseudoLocale].lifecycle, "test-only");
-  assert.equal(localeRegistry[germanLocale].lifecycle, "preview");
+  assert.equal(localeRegistry[germanLocale].lifecycle, "production");
   assert.equal(resolveSupportedLocale("ES"), spanishLocale);
   assert.equal(resolveSupportedLocale("DE"), germanLocale);
   assert.equal(resolveLocale("es"), spanishLocale);
-  assert.equal(
-    resolveLocale("de"),
-    nonProductionLocalesEnabled ? germanLocale : null,
-  );
+  assert.equal(resolveLocale("de"), germanLocale);
   assert.deepEqual(
     listEnabledLocales(),
     nonProductionLocalesEnabled
       ? ["en", pseudoLocale, spanishLocale, germanLocale]
-      : ["en", spanishLocale],
+      : ["en", spanishLocale, germanLocale],
   );
-  assert.deepEqual(
-    listSelectableLocales(),
-    nonProductionLocalesEnabled
-      ? ["en", spanishLocale, germanLocale]
-      : ["en", spanishLocale],
-  );
-  assert.deepEqual(listProductionLocales(), ["en", spanishLocale]);
+  assert.deepEqual(listSelectableLocales(), [
+    "en",
+    spanishLocale,
+    germanLocale,
+  ]);
+  assert.deepEqual(listProductionLocales(), [
+    "en",
+    spanishLocale,
+    germanLocale,
+  ]);
   assert.deepEqual(routeIds, ["home", "lore", "build", "assets", "hodl"]);
   assert.deepEqual(stablePathnames, [
     "/",
@@ -199,7 +199,7 @@ test("the active build profile keeps German in atomic preview", () => {
       listPublishedLocales(routeId),
       nonProductionLocalesEnabled
         ? ["en", pseudoLocale, spanishLocale, germanLocale]
-        : ["en", spanishLocale],
+        : ["en", spanishLocale, germanLocale],
     );
   }
   assert.equal(isLocaleRouteSetComplete("en"), true);
@@ -208,10 +208,7 @@ test("the active build profile keeps German in atomic preview", () => {
     nonProductionLocalesEnabled,
   );
   assert.equal(isLocaleRouteSetComplete(spanishLocale), true);
-  assert.equal(
-    isLocaleRouteSetComplete(germanLocale),
-    nonProductionLocalesEnabled,
-  );
+  assert.equal(isLocaleRouteSetComplete(germanLocale), true);
   for (const pathname of stablePathnames) {
     assert.equal(isPathnamePublished(pathname, "en"), true, pathname);
     assert.equal(
@@ -223,20 +220,25 @@ test("the active build profile keeps German in atomic preview", () => {
   assert.equal(isPathnamePublished("/es/historia", "en"), false);
 
   const publishedRoutes = listPublishedRoutes();
-  assert.equal(publishedRoutes.length, nonProductionLocalesEnabled ? 20 : 10);
+  assert.equal(publishedRoutes.length, nonProductionLocalesEnabled ? 20 : 15);
   assert.deepEqual(
     listDiscoverableRoutes().map((route) => route.canonicalUrl),
     [
       siteUrl,
       `${siteUrl}/es`,
+      `${siteUrl}/de`,
       `${siteUrl}/lore`,
       `${siteUrl}/es/lore`,
+      `${siteUrl}/de/lore`,
       `${siteUrl}/build`,
       `${siteUrl}/es/build`,
+      `${siteUrl}/de/build`,
       `${siteUrl}/assets`,
       `${siteUrl}/es/assets`,
+      `${siteUrl}/de/assets`,
       `${siteUrl}/hodl`,
       `${siteUrl}/es/hodl`,
+      `${siteUrl}/de/hodl`,
     ],
   );
   for (const routeId of routeIds) {
@@ -247,7 +249,7 @@ test("the active build profile keeps German in atomic preview", () => {
     );
     assert.equal(
       resolvePublishedRoute(routeId, germanLocale)?.publication ?? null,
-      nonProductionLocalesEnabled ? "preview" : null,
+      "public",
       routeId,
     );
     assert.equal(
@@ -256,8 +258,10 @@ test("the active build profile keeps German in atomic preview", () => {
       routeId,
     );
     assert.equal(isAiAvailable(routeId, spanishLocale), false, routeId);
+    assert.equal(isAiAvailable(routeId, germanLocale), false, routeId);
   }
   assert.doesNotThrow(() => assertProductionLocaleComplete(spanishLocale));
+  assert.doesNotThrow(() => assertProductionLocaleComplete(germanLocale));
   assert.throws(
     () =>
       assertProductionLocaleComplete(spanishLocale, (routeId, locale) =>
@@ -333,17 +337,12 @@ test("route resolution accepts only enabled locale prefixes and fixed English sl
     stablePathname: "/lore",
     hadLocalePrefix: true,
   });
-  assert.deepEqual(
-    resolveRouteRequest("/DE/lore"),
-    nonProductionLocalesEnabled
-      ? {
-          routeId: "lore",
-          locale: germanLocale,
-          stablePathname: "/lore",
-          hadLocalePrefix: true,
-        }
-      : null,
-  );
+  assert.deepEqual(resolveRouteRequest("/DE/lore"), {
+    routeId: "lore",
+    locale: germanLocale,
+    stablePathname: "/lore",
+    hadLocalePrefix: true,
+  });
 
   for (const pathname of [
     "/es/historia",
@@ -357,12 +356,12 @@ test("route resolution accepts only enabled locale prefixes and fixed English sl
 });
 
 test(
-  "non-production builds add complete private pseudo and German locales",
+  "non-production builds add the complete private pseudo locale",
   { skip: i18nBuildTarget === "production" },
   () => {
     assert.doesNotThrow(() => assertPreviewLocaleComplete(pseudoLocale));
-    assert.doesNotThrow(() => assertPreviewLocaleComplete(germanLocale));
     assert.doesNotThrow(() => assertProductionLocaleComplete(spanishLocale));
+    assert.doesNotThrow(() => assertProductionLocaleComplete(germanLocale));
     assert.deepEqual(
       listPublishedRoutes().map(({ routeId, locale, canonicalPathname }) => ({
         routeId,
@@ -372,7 +371,7 @@ test(
       completeRouteMatrix,
     );
 
-    for (const privateLocale of [pseudoLocale, germanLocale] as const) {
+    for (const privateLocale of [pseudoLocale] as const) {
       for (const routeId of routeIds) {
         const stablePathname = stablePathnames[routeIds.indexOf(routeId)];
         const localizedPathname =
@@ -404,52 +403,59 @@ test(
       assert.equal(resolveRouteRequest(`/${privateLocale}/historia`), null);
     }
 
+    const publicLocaleFixtures = [
+      { locale: spanishLocale, messages: spanishMessages },
+      { locale: germanLocale, messages: germanMessages },
+    ] as const;
     for (const routeId of routeIds) {
-      const route = resolvePublishedRoute(routeId, spanishLocale);
-      assert.ok(route);
-      const englishUrl = `${siteUrl}${route.pathname}`;
-      const spanishUrl = `${siteUrl}${route.canonicalPathname}`;
+      const spanishRoute = resolvePublishedRoute(routeId, spanishLocale);
+      const germanRoute = resolvePublishedRoute(routeId, germanLocale);
+      assert.ok(spanishRoute);
+      assert.ok(germanRoute);
+      const englishUrl = `${siteUrl}${spanishRoute.pathname}`;
       const xDefault =
-        route.pathname === "/" ? siteUrl : `${siteUrl}${route.pathname}`;
-      const metadata = createRouteMetadata(routeId, spanishLocale);
-      assert.ok(metadata);
-      assert.deepEqual(metadata.alternates, {
-        canonical: route.canonicalPathname,
-        languages: {
-          en: englishUrl,
-          es: spanishUrl,
-          "x-default": xDefault,
-        },
-      });
-      assert.equal(metadata.robots, undefined);
-      assert.ok(metadata.openGraph);
-      assert.ok(metadata.twitter);
+        spanishRoute.pathname === "/"
+          ? siteUrl
+          : `${siteUrl}${spanishRoute.pathname}`;
+      const languages = {
+        en: englishUrl,
+        es: `${siteUrl}${spanishRoute.canonicalPathname}`,
+        de: `${siteUrl}${germanRoute.canonicalPathname}`,
+        "x-default": xDefault,
+      };
+
+      for (const { locale } of publicLocaleFixtures) {
+        const route = resolvePublishedRoute(routeId, locale);
+        assert.ok(route);
+        const metadata = createRouteMetadata(routeId, locale);
+        assert.ok(metadata);
+        assert.deepEqual(metadata.alternates, {
+          canonical: route.canonicalPathname,
+          languages,
+        });
+        assert.equal(metadata.robots, undefined);
+        assert.ok(metadata.openGraph);
+        assert.ok(metadata.twitter);
+      }
     }
 
-    const spanishHeadingLines =
-      spanishMessages.home.openGraph.heading.split("\n");
-    assert.deepEqual(createOpenGraphRenderContract(spanishLocale), {
-      headingLines: spanishHeadingLines,
-      headingStyle: createOpenGraphHeadingStyle(spanishHeadingLines),
-      tagline: spanishMessages.home.openGraph.tagline,
-    });
-    for (const routeId of routeIds) {
-      assert.deepEqual(createOpenGraphImageDescriptor(routeId, spanishLocale), {
-        url: "/es/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: spanishMessages[routeId].openGraph.imageAlt,
-        ...(routeId === "home" ? { type: "image/png" } : {}),
+    for (const { locale, messages } of publicLocaleFixtures) {
+      const headingLines = messages.home.openGraph.heading.split("\n");
+      assert.deepEqual(createOpenGraphRenderContract(locale), {
+        headingLines,
+        headingStyle: createOpenGraphHeadingStyle(headingLines),
+        tagline: messages.home.openGraph.tagline,
       });
+      for (const routeId of routeIds) {
+        assert.deepEqual(createOpenGraphImageDescriptor(routeId, locale), {
+          url: `/${locale}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: messages[routeId].openGraph.imageAlt,
+          ...(routeId === "home" ? { type: "image/png" } : {}),
+        });
+      }
     }
-
-    const germanHeadingLines =
-      germanMessages.home.openGraph.heading.split("\n");
-    assert.deepEqual(createOpenGraphRenderContract(germanLocale), {
-      headingLines: germanHeadingLines,
-      headingStyle: createOpenGraphHeadingStyle(germanHeadingLines),
-      tagline: germanMessages.home.openGraph.tagline,
-    });
   },
 );
 
@@ -549,6 +555,11 @@ test("published route contexts and English metadata share one authority", () => 
           expected[routeId].pathname === "/"
             ? "/es"
             : `/es${expected[routeId].pathname}`
+        }`,
+        de: `${siteUrl}${
+          expected[routeId].pathname === "/"
+            ? "/de"
+            : `/de${expected[routeId].pathname}`
         }`,
         "x-default":
           expected[routeId].pathname === "/"

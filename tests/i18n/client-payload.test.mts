@@ -20,7 +20,7 @@ import {
   getHomeProofClientMessages,
   getSharedClientMessages,
 } from "../../src/i18n/messages.ts";
-import { spanishLocale } from "../../src/i18n/locale-registry.ts";
+import { germanLocale, spanishLocale } from "../../src/i18n/locale-registry.ts";
 import { routeIds } from "../../src/i18n/manifest.ts";
 
 const emptyPolicy = {
@@ -376,7 +376,7 @@ test("canonical route policies keep server routes lean and client routes exact",
   );
 });
 
-test("Production includes selector messages for public Spanish", () => {
+test("Production includes selector messages for public locales", () => {
   const navigation = getSharedClientMessages("en").shared.navigation;
   assert.ok("language" in navigation);
   assert.deepEqual(navigation.language, { label: "Language" });
@@ -425,43 +425,42 @@ test("route policies reject metadata, Open Graph copy, and unrelated catalogs", 
   );
 });
 
-test("Spanish client payloads contain only route-owned messages", async () => {
+test("translated client payloads contain only route-owned messages", async () => {
   const policies = createRoutePolicies();
-  const shared = getSharedClientMessages(spanishLocale);
-  assert.ok("language" in shared.shared.navigation);
-  assert.deepEqual(shared.shared.navigation.language, {
-    label: "Idioma",
-  });
-  assert.deepEqual(
-    await auditPayloadFixture(
-      [
-        { locale: spanishLocale, messages: null },
-        { locale: spanishLocale, messages: shared },
-        {
-          locale: spanishLocale,
-          messages: getBuildClientMessages(spanishLocale),
-        },
-      ],
-      policies.build,
-      spanishLocale,
-    ),
-    [],
-  );
-  assert.deepEqual(
-    await auditPayloadFixture(
-      [
-        { locale: spanishLocale, messages: null },
-        { locale: spanishLocale, messages: shared },
-        {
-          locale: spanishLocale,
-          messages: getHodlClientMessages(spanishLocale),
-        },
-      ],
-      policies.hodl,
-      spanishLocale,
-    ),
-    [],
-  );
+  for (const { locale, languageLabel } of [
+    { locale: spanishLocale, languageLabel: "Idioma" },
+    { locale: germanLocale, languageLabel: "Sprache" },
+  ] as const) {
+    const shared = getSharedClientMessages(locale);
+    assert.ok("language" in shared.shared.navigation);
+    assert.deepEqual(shared.shared.navigation.language, {
+      label: languageLabel,
+    });
+    assert.deepEqual(
+      await auditPayloadFixture(
+        [
+          { locale, messages: null },
+          { locale, messages: shared },
+          { locale, messages: getBuildClientMessages(locale) },
+        ],
+        policies.build,
+        locale,
+      ),
+      [],
+    );
+    assert.deepEqual(
+      await auditPayloadFixture(
+        [
+          { locale, messages: null },
+          { locale, messages: shared },
+          { locale, messages: getHodlClientMessages(locale) },
+        ],
+        policies.hodl,
+        locale,
+      ),
+      [],
+    );
+  }
 });
 
 test("prerender validation requires the exact localized page set", () => {
@@ -496,6 +495,9 @@ test("server-only fingerprints cover metadata and Open Graph catalogs", async ()
     "Documentación, SDKs, APIs y acceso a nodos para desarrolladores | Kaspa",
     "Comprar KAS, configurar una billetera y usar la autocustodia | Kaspa",
     "Kaspa — Descentralización en tiempo real",
+    "Kaspa-Entwicklerdokumentation, SDKs, APIs und Node-Zugriff | Kaspa",
+    "KAS kaufen, Wallet einrichten und selbst verwahren | Kaspa",
+    "Kaspa – Echtzeit-Dezentralisierung",
   ]) {
     assert.ok(fingerprints.includes(expected), expected);
   }

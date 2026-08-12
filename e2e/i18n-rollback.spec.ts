@@ -21,12 +21,14 @@ const productionEnvironment = {
 
 const englishRoutes = publicRouteGolden.map(({ path }) => path);
 const spanishRoutes = localizePublicRouteGolden("es").map(({ path }) => path);
+const germanRoutes = localizePublicRouteGolden("de").map(({ path }) => path);
 const internalEnglishRoutes = localizePublicRouteGolden("en").map(
   ({ path }) => path,
 );
 const localizedRouteGolden = new Set([
   ...internalEnglishRoutes,
   ...spanishRoutes,
+  ...germanRoutes,
 ]);
 
 test.describe("atomic locale publication profiles", () => {
@@ -61,7 +63,9 @@ test.describe("atomic locale publication profiles", () => {
         .sort();
       expect(localizedPageRoutes).toEqual([...internalEnglishRoutes].sort());
       expect(prerenderRoutes.has("/es/opengraph-image")).toBe(false);
+      expect(prerenderRoutes.has("/de/opengraph-image")).toBe(false);
       expect(prerenderRoutes.has("/api/i18n/home-proof/es")).toBe(false);
+      expect(prerenderRoutes.has("/api/i18n/home-proof/de")).toBe(false);
 
       for (const pathname of englishRoutes) {
         const response = await scenario.request.get(pathname);
@@ -75,7 +79,7 @@ test.describe("atomic locale publication profiles", () => {
         expect(html, pathname).not.toContain("data-language-selector");
       }
 
-      for (const pathname of spanishRoutes) {
+      for (const pathname of [...spanishRoutes, ...germanRoutes]) {
         const response = await scenario.request.get(pathname, {
           maxRedirects: 0,
         });
@@ -110,8 +114,11 @@ test.describe("atomic locale publication profiles", () => {
 
       for (const pathname of [
         "/es/opengraph-image",
+        "/de/opengraph-image",
         "/api/i18n/home-proof/es",
+        "/api/i18n/home-proof/de",
         ...buildExampleContract.artifactManifest.urlsByLocale.es,
+        ...buildExampleContract.artifactManifest.urlsByLocale.de,
         ...buildExampleContract.artifactManifest.urlsByLocale["en-XA"],
       ]) {
         const response = await scenario.request.get(pathname, {
@@ -131,6 +138,7 @@ test.describe("atomic locale publication profiles", () => {
         ),
       );
       expect(sitemap).not.toContain("/es");
+      expect(sitemap).not.toContain("/de");
       expect(sitemap).not.toContain("hreflang");
 
       await page.goto(`${scenario.baseUrl}/`);

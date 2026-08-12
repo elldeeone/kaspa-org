@@ -24,14 +24,6 @@ const previewEnvironment = {
 } as const;
 
 const pseudoRoutes = localizePublicRouteGolden("en-XA");
-const germanRoutes = localizePublicRouteGolden("de");
-const germanFingerprints = {
-  home: "Echtzeit-Dezentralisierung",
-  lore: "Kaspa ist ein aktiver Proof-of-Work-blockDAG",
-  build: "Auf Kaspa entwickeln",
-  assets: "Kaspa-Logos",
-  hodl: "Kaufe KAS und übertrage sie in eine Wallet",
-} as const;
 
 const localizedReturnPath = "/en-XA/build#try-live";
 const localizedReturnQuery = new URLSearchParams({
@@ -144,85 +136,6 @@ test.describe("test-only full-site pseudo-locale contract", () => {
     expect(readLogs()).not.toMatch(
       /NoFallbackError|ERR_INVALID_URL|Internal Server Error|TypeError: Invalid URL/u,
     );
-  });
-
-  test("renders the complete German first pass as a private preview locale", async () => {
-    const { fixtureRoot, request: api } = scenario.require();
-    const prerenderRoutes = await readPrerenderRoutePathnames(fixtureRoot);
-
-    for (const route of germanRoutes) {
-      const response = await api.get(route.path);
-      expect(response.status(), route.path).toBe(200);
-      expect(response.headers()["x-nextjs-cache"], route.path).toBe("HIT");
-      const html = await response.text();
-      expect(html, route.path).toContain('<html lang="de" dir="ltr"');
-      expect(html, route.path).toContain(germanFingerprints[route.id]);
-      expect(html, route.path).not.toContain(route.englishFingerprint);
-      expect(html, route.path).toContain(
-        '<meta name="robots" content="noindex, nofollow"/>',
-      );
-      expect(html, route.path).not.toContain('<link rel="canonical"');
-      expect(html, route.path).not.toContain('hreflang="de"');
-      expect(html, route.path).not.toContain('property="og:');
-      if (route.id === "home") {
-        expect(html).toContain("vertrau nicht, verifiziere.");
-        expect(html).toContain("pow in echtzeit");
-        expect(html).not.toContain("Vertrau nicht, verifiziere.");
-        expect(html).not.toContain("PoW in Echtzeit");
-      }
-      expect(prerenderRoutes.has(route.internalPath), route.internalPath).toBe(
-        true,
-      );
-    }
-
-    const missing = await api.get("/de/missing", {
-      headers: {
-        "x-kaspa-i18n-route-miss": "1",
-        "x-next-intl-locale": "en",
-      },
-    });
-    expect(missing.status()).toBe(404);
-    expect(await missing.text()).toContain('<html lang="de" dir="ltr"');
-
-    const proofCatalog = await api.get("/api/i18n/home-proof/de");
-    expect(proofCatalog.status()).toBe(200);
-    expect(JSON.stringify(await proofCatalog.json())).toContain(
-      "Nachweis verifizieren",
-    );
-
-    const sitemap = await api.get("/sitemap.xml");
-    expect(sitemap.status()).toBe(200);
-    expect(await sitemap.text()).not.toContain("/de");
-  });
-
-  test("serves catalog-backed German standalone examples in Preview", async () => {
-    const { request: api } = scenario.require();
-    const returnPath = "/de/build#try-live";
-    const returnQuery = new URLSearchParams({
-      returnTo: returnPath,
-    }).toString();
-
-    for (const name of standaloneExampleNames) {
-      const pathname = `${standaloneBasePath}/${name}.de.html`;
-      const response = await api.get(`${pathname}?${returnQuery}`);
-      expect(response.status(), pathname).toBe(200);
-      const html = await response.text();
-      expect(html, pathname).toContain('<html lang="de" dir="ltr">');
-      expect(html, pathname).toContain("from './resources/utils.de.js'");
-      expect(html, pathname).toContain(
-        '<meta name="robots" content="noindex, nofollow">',
-      );
-      expect(html, pathname).not.toContain("[!! ");
-    }
-
-    const utilsResponse = await api.get(
-      `${standaloneBasePath}/resources/utils.de.js`,
-    );
-    expect(utilsResponse.status()).toBe(200);
-    const utils = await utilsResponse.text();
-    expect(utils).toContain("'/de/build'");
-    expect(utils).toContain("'/de/build#try-live'");
-    expect(utils).toContain("Zurück");
   });
 
   test("restores every ordinary localized destination and key interaction", async ({
@@ -544,55 +457,6 @@ test.describe("test-only full-site pseudo-locale contract", () => {
           await page.keyboard.press("Escape");
           await expect(proofDialog).toBeHidden();
           await expect(proofTrigger).toBeFocused();
-        }
-      }
-
-      await context.close();
-    }
-  });
-
-  test("German copy has no horizontal overflow at target widths", async ({
-    browser,
-  }) => {
-    const { baseUrl } = scenario.require();
-
-    for (const viewport of [
-      { width: 1440, height: 900 },
-      { width: 390, height: 844 },
-      { width: 320, height: 640 },
-    ]) {
-      const context = await browser.newContext({
-        baseURL: baseUrl,
-        viewport,
-        hasTouch: viewport.width < 768,
-        isMobile: viewport.width < 768,
-      });
-      const page = await context.newPage();
-
-      for (const route of germanRoutes) {
-        await page.goto(route.path, { waitUntil: "domcontentloaded" });
-        await waitForStableLayout(page);
-        await assertNoHorizontalOverflow(
-          page,
-          viewport.width,
-          `${route.path} initial`,
-        );
-
-        await page.evaluate(() =>
-          window.scrollTo(0, document.body.scrollHeight),
-        );
-        await waitForStableLayout(page);
-        await assertNoHorizontalOverflow(
-          page,
-          viewport.width,
-          `${route.path} after full-page scroll`,
-        );
-
-        if (route.id === "home") {
-          await assertHeadingUsesResponsiveWrapping(
-            page.locator("main h1").first(),
-            `${viewport.width}px German home hero`,
-          );
         }
       }
 

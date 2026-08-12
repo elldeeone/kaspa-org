@@ -204,7 +204,7 @@ export function createEnglishOnlyProductionFixture(
   repositoryRoot: string,
 ): Promise<ProductionFixture> {
   return createProductionFixtureInternal(repositoryRoot, "i18n-english-only-", {
-    localeLifecycleOverrides: { es: "preview" },
+    localeLifecycleOverrides: { es: "preview", de: "preview" },
   });
 }
 

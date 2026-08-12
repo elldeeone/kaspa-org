@@ -56,6 +56,8 @@ type ReviewedLocaleCopy = {
   aiLauncherPlaceholder: string;
   notFoundTitle: string;
   proofTrigger: string;
+  homeVerifyHeading: string;
+  homeDagAnnotation: string;
   standaloneBackLabel: string;
   standaloneNetworkLabel: string;
   standaloneConnectingLabel: string;
@@ -115,6 +117,8 @@ const productionLocaleDescriptors = [
       aiLauncherPlaceholder: "Pregunta lo que quieras...",
       notFoundTitle: "Página no encontrada | Kaspa",
       proofTrigger: "Verificar la prueba",
+      homeVerifyHeading: "no confíes, verifica.",
+      homeDagAnnotation: "pow en tiempo real",
       standaloneBackLabel: "Volver",
       standaloneNetworkLabel: "Red",
       standaloneConnectingLabel: "| Conectando...",
@@ -132,6 +136,47 @@ const productionLocaleDescriptors = [
       "/es/historia",
       "/es/construir",
       "/es/recursos",
+    ],
+  },
+  {
+    locale: "de",
+    hrefLang: "de",
+    dir: "ltr",
+    endonym: "Deutsch",
+    acceptLanguage: "de-DE,de;q=0.9",
+    aiAvailability: {
+      home: false,
+      lore: false,
+      build: false,
+      assets: false,
+      hodl: false,
+      "not-found": false,
+    },
+    reviewedCopy: {
+      languageLabel: "Sprache",
+      aiLauncherAskAnything: "Frag einfach",
+      aiLauncherPlaceholder: "Frag einfach ...",
+      notFoundTitle: "Seite nicht gefunden | Kaspa",
+      proofTrigger: "Nachweis verifizieren",
+      homeVerifyHeading: "vertrau nicht, verifiziere.",
+      homeDagAnnotation: "pow in echtzeit",
+      standaloneBackLabel: "Zurück",
+      standaloneNetworkLabel: "Netzwerk",
+      standaloneConnectingLabel: "| Verbindung wird hergestellt ...",
+      standaloneRuntimeOutput: {
+        "get-server-info": "GetServerInfo-Antwort:",
+        "get-block-dag-info": "GetBlockDagInfo-Antwort:",
+        "subscribe-block-added": "Block-Added-Ereignis wird abonniert ...",
+        "subscribe-daa-changed":
+          "DAA-Benachrichtigungen werden registriert ...",
+        "utxo-context": "Diese Demo ist für manuelle Tests",
+      },
+    },
+    preserveWhitespaceDelimitedWords: true,
+    forbiddenTranslatedSlugPaths: [
+      "/de/geschichte",
+      "/de/entwickeln",
+      "/de/ressourcen",
     ],
   },
 ] as const satisfies readonly ProductionLocaleDescriptor[];
@@ -528,6 +573,12 @@ test.describe("complete public production locale contract", () => {
       );
       expect(readCatalogMessage(homeCatalog, "proof.trigger")).toBe(
         localeCase.reviewedCopy.proofTrigger,
+      );
+      expect(readCatalogMessage(homeCatalog, "verify.heading")).toBe(
+        localeCase.reviewedCopy.homeVerifyHeading,
+      );
+      expect(readCatalogMessage(homeCatalog, "hero.dagAnnotation")).toBe(
+        localeCase.reviewedCopy.homeDagAnnotation,
       );
       expect(readCatalogMessage(buildCatalog, "artifacts.controls.back")).toBe(
         localeCase.reviewedCopy.standaloneBackLabel,

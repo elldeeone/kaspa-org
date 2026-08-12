@@ -71,7 +71,7 @@ export const localeRegistry: Readonly<Record<Locale, LocaleDefinition>> = {
     label: "Deutsch",
     hrefLang: "de",
     dir: "ltr",
-    lifecycle: "preview",
+    lifecycle: "production",
   },
 };
 
