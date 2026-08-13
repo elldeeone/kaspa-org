@@ -1,0 +1,294 @@
+{
+  "metadata": {
+    "title": "Compre KAS, configure uma carteira e use a autocustódia | Kaspa",
+    "description": "Obtenha uma carteira, compre KAS e mantenha seus fundos em autocustódia."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Descentralização em tempo real"
+  },
+  "navigation": {
+    "current": "HODL",
+    "sections": {
+      "wallet": {
+        "label": "1. Obtenha uma carteira",
+        "compactLabel": "Carteira",
+        "description": "Configure uma carteira para guardar seus KAS."
+      },
+      "buy": {
+        "label": "2. Compre KAS",
+        "compactLabel": "Comprar",
+        "description": "Encontre KAS nas principais corretoras."
+      },
+      "transfer": {
+        "label": "3. Transfira para a carteira",
+        "compactLabel": "Transferir",
+        "description": "Envie KAS da corretora para sua carteira."
+      },
+      "help": {
+        "label": "Ajuda",
+        "compactLabel": "Ajuda",
+        "description": "Ajuda da comunidade e ferramentas do explorador."
+      }
+    }
+  },
+  "start": {
+    "heading": "<flicker><source>H</source><replacement>K</replacement></flicker>ODL Kaspa",
+    "tagline": "Compre KAS e envie para uma carteira que você controla."
+  },
+  "wallet": {
+    "heading": "Obtenha uma carteira",
+    "description": "Escolha uma carteira adequada à forma como você pretende guardar e usar KAS.",
+    "safety": {
+      "label": "Importante:",
+      "body": "Faça backup da sua frase de recuperação ou das instruções da carteira antes de transferir valores significativos. Envie primeiro uma pequena transação de teste e só transfira o restante depois que ela chegar."
+    }
+  },
+  "buy": {
+    "heading": "Compre KAS",
+    "description": "KAS está disponível em muitas corretoras. Adquira em uma plataforma que opere na sua região e depois transfira para sua carteira privada.",
+    "moreExchanges": "E mais de {count, number}"
+  },
+  "transfer": {
+    "heading": "Assuma a custódia dos seus KAS",
+    "description": "Proteja seus ativos transferindo-os da corretora para sua carteira privada.",
+    "receive": "Receber",
+    "screenReaderDiagram": "KAS sendo transferido de uma conta em corretora para uma carteira privada",
+    "stepLabel": "Etapa {step}",
+    "steps": {
+      "receiveAddress": {
+        "title": "Obtenha seu endereço de recebimento",
+        "description": "Abra o aplicativo Kaspium, toque em \"Receber\" e copie seu endereço exclusivo."
+      },
+      "testTransaction": {
+        "title": "Envie uma transação de teste",
+        "description": "Retire uma pequena fração de KAS da corretora para confirmar que o envio está correto."
+      },
+      "balance": {
+        "title": "Transfira o saldo",
+        "description": "Depois que a transação de teste chegar com segurança à sua carteira, retire o saldo restante."
+      }
+    },
+    "waitTimes": {
+      "label": "Tempo de espera das corretoras:",
+      "body": "As transferências nativas da Kaspa são praticamente instantâneas, mas as corretoras aplicam seus próprios atrasos internos. É perfeitamente normal esperar de 30 a 60 minutos para que uma corretora libere seus fundos para a rede."
+    },
+    "security": {
+      "label": "Verificação de segurança:",
+      "body": "Sempre confira os primeiros e os últimos caracteres do seu endereço antes de confirmar."
+    }
+  },
+  "help": {
+    "eyebrow": "Ajuda",
+    "heading": "Continue avançando",
+    "descriptionWithAi": "Pergunte à IA da Kaspa para obter respostas imediatas sobre carteiras, compras e segurança. Para receber ajuda da comunidade, entre no Discord ou consulte uma transação no explorador.",
+    "descriptionWithoutAi": "Para receber ajuda da comunidade, entre no Discord ou consulte uma transação no explorador.",
+    "openAi": "Abrir IA",
+    "community": "Comunidade",
+    "discord": "Discord",
+    "trackTransaction": "Consultar uma transação",
+    "explorer": "Explorador",
+    "prompts": {
+      "backupWallet": "Como faço backup da minha carteira?",
+      "buyKas": "Onde posso comprar KAS?",
+      "firstPurchase": "Como compro KAS pela primeira vez?",
+      "leaveOnExchange": "Devo deixar meus KAS na corretora?",
+      "moveFromExchange": "Como envio KAS de uma corretora para minha carteira?",
+      "fees": "Quais taxas devo esperar ao comprar ou transferir KAS?",
+      "recoveryPhrase": "O que é uma frase de recuperação?",
+      "walletVsExchange": "Qual é a diferença entre uma carteira e uma corretora?",
+      "receiveKas": "Como recebo KAS de outra pessoa?",
+      "multipleWallets": "Posso ter mais de uma carteira Kaspa?",
+      "maxSupply": "Qual é a oferta máxima da Kaspa?"
+    }
+  },
+  "media": {
+    "kaspiumScreenshotAlt": "Captura de tela do aplicativo de carteira Kaspium"
+  },
+  "walletFinder": {
+    "common": {
+      "optional": "Opcional",
+      "notAvailable": "Indisponível",
+      "notAvailableSentence": "Indisponível.",
+      "moreInformation": "Mais informações",
+      "pros": "Vantagens",
+      "cons": "Desvantagens",
+      "newUser": "Iniciante",
+      "experiencedUser": "Experiente"
+    },
+    "operatingSystems": {
+      "android": "Android",
+      "ios": "iOS",
+      "windows": "Windows",
+      "mac": "macOS",
+      "linux": "Linux",
+      "hardware": "Hardware"
+    },
+    "guidance": {
+      "mobile": {
+        "title": "Carteiras para dispositivos móveis",
+        "shortTitle": "Celular",
+        "pros": {
+          "portable": "Portáteis e práticas; ideais para fazer transações pessoalmente",
+          "qr": "Projetadas para usar códigos QR e realizar transações rápidas e simples"
+        },
+        "cons": {
+          "marketplaces": "As lojas de aplicativos podem remover carteiras, dificultando o recebimento de atualizações futuras",
+          "deviceLoss": "Danos ou perda do dispositivo podem levar à perda de fundos"
+        }
+      },
+      "desktop": {
+        "title": "Carteiras para computador",
+        "shortTitle": "Computador",
+        "pros": {
+          "control": "Ambientes de desktop podem dar aos usuários controle total sobre os fundos",
+          "advanced": "Algumas carteiras para computador oferecem suporte a carteiras de hardware ou à operação de um nó completo"
+        },
+        "cons": {
+          "qr": "Menos práticas para pagamentos com código QR em transações presenciais",
+          "malware": "Computadores comprometidos podem expor os usuários a malware, spyware ou vírus"
+        }
+      },
+      "hardware": {
+        "title": "Carteiras de hardware",
+        "shortTitle": "Hardware",
+        "pros": {
+          "secure": "Um dos métodos mais seguros para guardar fundos",
+          "longTerm": "Ideais para guardar grandes quantidades de KAS a longo prazo"
+        },
+        "cons": {
+          "mobile": "Menos práticas em deslocamentos e não projetadas para transações rápidas",
+          "deviceLoss": "A perda do dispositivo sem um backup adequado pode tornar os fundos irrecuperáveis"
+        }
+      }
+    },
+    "wizard": {
+      "progress": "Etapa {step, number} de {total, number}",
+      "skip": "Pular →",
+      "skipAll": "Ir para todas as carteiras →",
+      "prosAndCons": "Vantagens e desvantagens",
+      "back": "Voltar",
+      "next": "Avançar",
+      "showWallets": "Mostrar carteiras",
+      "showMatchingWallets": "Mostrar carteiras compatíveis",
+      "steps": {
+        "os": {
+          "title": "Qual é o seu sistema operacional?",
+          "subtitle": "Isso filtra a lista para mostrar carteiras que funcionam no seu sistema operacional."
+        },
+        "experience": {
+          "title": "Quanto você sabe sobre a Kaspa?",
+          "subtitle": "Isso nos ajuda a mostrar carteiras adequadas ao seu nível de experiência."
+        },
+        "criteria": {
+          "title": "Quais critérios são importantes para você?",
+          "subtitle": "Opcional"
+        },
+        "features": {
+          "title": "Quais recursos você procura?",
+          "subtitle": "Opcional"
+        }
+      },
+      "experience": {
+        "newDescription": "Mostrar carteiras ideais para usuários iniciantes.",
+        "experiencedDescription": "Mostrar todas as carteiras."
+      }
+    },
+    "filters": {
+      "heading": "Filtrar carteiras",
+      "clearAll": "Limpar tudo",
+      "operatingSystem": "Sistema operacional",
+      "userType": "Tipo de usuário",
+      "criteria": "Critérios",
+      "features": "Recursos",
+      "showNewUsers": "Mostrar carteiras ideais para usuários iniciantes.",
+      "showExperiencedUsers": "Mostrar todas as carteiras.",
+      "show": "Filtros",
+      "hide": "Ocultar filtros",
+      "remove": "Remover filtro {filter}"
+    },
+    "criteria": {
+      "control": {
+        "label": "Controle",
+        "description": "Algumas carteiras dão a você controle total sobre seus KAS. Isso significa que nenhum terceiro pode bloquear ou confiscar seus fundos. Ainda assim, você é responsável por proteger sua carteira e fazer backup dela."
+      },
+      "validation": {
+        "label": "Validação",
+        "description": "Algumas carteiras permitem que você controle qual nó da Kaspa processa suas transações, seja executando o próprio nó, seja permitindo que você configure a carteira para usar qualquer nó de sua confiança."
+      },
+      "transparency": {
+        "label": "Transparência",
+        "description": "Algumas carteiras têm código aberto e podem ser compiladas de forma determinística. Esse processo garante que o código resultante possa ser reproduzido, ajudando a confirmar que ele não foi adulterado."
+      },
+      "fees": {
+        "label": "Taxas",
+        "description": "Algumas carteiras dão a você controle total sobre a definição da taxa paga à rede Kaspa antes de uma transação, para que suas transações sejam confirmadas no tempo adequado sem que você pague mais do que o necessário."
+      }
+    },
+    "features": {
+      "two_fa": {
+        "label": "2FA",
+        "description": "A autenticação de dois fatores (2FA) adiciona uma segunda camada de segurança à sua carteira. Além da senha, é necessário um código de verificação de um aplicativo ou uma mensagem de texto para acessar seus fundos. Observe que a 2FA normalmente depende de um serviço de terceiros para fornecer a verificação."
+      },
+      "hardware_wallet": {
+        "label": "Compatibilidade com carteira de hardware",
+        "description": "Algumas carteiras de software podem ser pareadas com um dispositivo de carteira de hardware (por exemplo, Ledger ou Tangem), permitindo manter suas chaves privadas isoladas no dispositivo sem abrir mão de uma interface de software familiar."
+      },
+      "multisig": {
+        "label": "Múltiplas assinaturas",
+        "description": "Algumas carteiras oferecem transações com múltiplas assinaturas, que exigem mais de uma chave para autorizar uma transferência. Isso pode ser usado para dividir a responsabilidade entre várias partes ou adicionar uma camada extra de proteção a ativos de alto valor."
+      }
+    },
+    "ratings": {
+      "good": "Bom",
+      "acceptable": "Aceitável",
+      "caution": "Atenção",
+      "not_applicable": "Não se aplica",
+      "notApplicableCompact": "Não aplic.",
+      "aria": "{criterion}: {rating}",
+      "tooltipHeading": "{criterion}: {rating}",
+      "explanations": {
+        "control": {
+          "good": "Autocustódia. Você mantém suas chaves privadas, portanto nenhuma empresa ou pessoa pode bloquear ou confiscar seus fundos.",
+          "caution": "Custódia por terceiros. Um terceiro mantém suas chaves e pode bloquear ou confiscar seus fundos."
+        },
+        "validation": {
+          "good": "Executa por padrão seu próprio nó completo da Kaspa, portanto valida transações de forma independente.",
+          "acceptable": "Permite apontar para qualquer nó da Kaspa em que você confie, mas não pode funcionar como nó por conta própria.",
+          "caution": "Conecta-se somente a uma infraestrutura centralizada e predefinida, por isso você precisa confiar no nó escolhido pela carteira.",
+          "not_applicable": "Apenas dispositivo de hardware. Ele não processa transações por conta própria."
+        },
+        "transparency": {
+          "good": "Código aberto com compilações reproduzíveis, permitindo verificar o binário publicado em relação ao código-fonte.",
+          "acceptable": "Código aberto, mas as compilações não são reproduzíveis; portanto, você precisa confiar que o binário publicado corresponde ao código-fonte.",
+          "caution": "Código fechado. O código não pode ser auditado de forma independente."
+        },
+        "fees": {
+          "good": "Permite definir uma taxa personalizada de qualquer valor em cada transação.",
+          "acceptable": "Oferece níveis predefinidos de taxas, mas não permite definir uma taxa totalmente personalizada.",
+          "caution": "As taxas são impostas ou ocultas, sem controle do usuário."
+        }
+      }
+    },
+    "results": {
+      "summary": "<strong>{matches, number}</strong> de {total, plural, one {# carteira} other {# carteiras}}",
+      "compactSummary": "<strong>{matches, number}</strong> / {total, plural, one {# carteira} other {# carteiras}}",
+      "helpChoose": "Ajude-me a escolher",
+      "walletColumn": "Carteira",
+      "noMatches": "Nenhuma carteira correspondente",
+      "removeFilters": "Tente remover alguns filtros.",
+      "noLinks": "Nenhum link disponível para este filtro.",
+      "aboutCriterion": "Sobre {criterion}"
+    },
+    "actions": {
+      "app_store": "App Store",
+      "google_play": "Google Play",
+      "download": "Baixar",
+      "open": "Abrir carteira",
+      "view_source": "Ver código-fonte"
+    },
+    "submission": {
+      "question": "Está faltando uma carteira?",
+      "action": "Saiba como enviá-la pelo GitHub"
+    }
+  }
+}

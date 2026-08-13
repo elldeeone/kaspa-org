@@ -1,0 +1,7 @@
+{
+  "kaspa-cli-wallet": "Ferramentas de carteira por linha de comando para usuários habituados a gerenciar chaves e transações em um terminal.",
+  "kaspacom-wallet": "Uma carteira KaspaCom para navegador que permite criar, importar e usar carteiras Kaspa de autocustódia.",
+  "kaspium": "Uma carteira móvel de autocustódia para enviar, receber e guardar KAS pelo celular.",
+  "kng-desktop": "Uma carteira Kaspa moderna para desktop, com interface amigável por padrão, operação opcional como nó completo e configuração avançada.",
+  "kng-web": "A versão para navegador da Kaspa NG. Amigável por padrão, sem instalação e com configuração avançada opcional."
+}

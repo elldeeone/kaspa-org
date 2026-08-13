@@ -357,6 +357,51 @@ const productionLocaleDescriptors = [
     },
     openGraphInkBandCount: 3,
   },
+  {
+    locale: "pt-BR",
+    hrefLang: "pt-BR",
+    dir: "ltr",
+    endonym: "Português (Brasil)",
+    acceptLanguage: "pt-BR,pt;q=0.9",
+    aiAvailability: {
+      home: false,
+      lore: false,
+      build: false,
+      assets: false,
+      hodl: false,
+      "not-found": false,
+    },
+    reviewedCopy: {
+      languageLabel: "Idioma",
+      aiLauncherAskAnything: "Pergunte o que quiser",
+      aiLauncherPlaceholder: "Pergunte o que quiser...",
+      notFoundTitle: "Página não encontrada | Kaspa",
+      proofTrigger: "Verificar a prova",
+      homeVerifyHeading: "não confie, verifique.",
+      homeDagAnnotation: "pow em tempo real",
+      standaloneBackLabel: "Voltar",
+      standaloneNetworkLabel: "Rede",
+      standaloneConnectingLabel: "| Conectando...",
+      standaloneRuntimeOutput: {
+        "get-server-info": "Resposta de GetServerInfo:",
+        "get-block-dag-info": "Resposta de GetBlockDagInfo:",
+        "subscribe-block-added": "Assinando eventos de adição de bloco...",
+        "subscribe-daa-changed": "Registrando notificações de DAA...",
+        "utxo-context": "Esta demonstração foi criada para testes manuais",
+      },
+    },
+    preserveWhitespaceDelimitedWords: true,
+    forbiddenTranslatedSlugPaths: [
+      "/pt-BR/historia",
+      "/pt-BR/construir",
+      "/pt-BR/recursos",
+    ],
+    dagAnnotationFont: {
+      family: "Rock Salt",
+      minimumInkHeight: 8,
+    },
+    openGraphInkBandCount: 4,
+  },
 ] as const satisfies readonly ProductionLocaleDescriptor[];
 
 type ProductionLocaleCase = ProductionLocaleDescriptor & {

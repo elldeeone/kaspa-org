@@ -157,6 +157,22 @@ const translationPolicies = {
       "upstream",
     ],
   },
+  "pt-BR": {
+    allowedUnchangedValues: [
+      "Beta",
+      "Chat",
+      "Desktop",
+      "Hard fork",
+      "Hardware",
+      "Menu",
+      "upstream",
+    ],
+    preferredTerms: [
+      [/(?:^|\W)proof[- ]of[- ]work(?:$|\W)/iu, "prova de trabalho"],
+      [/(?:^|\W)fair[- ]launch(?:ed)?(?:$|\W)/iu, "lançamento justo"],
+      [/(?:^|\W)self-custody(?:$|\W)/iu, "autocustódia"],
+    ],
+  },
 } as const satisfies Readonly<Record<string, TranslationPolicy>>;
 
 const emptyPolicy = {} satisfies TranslationPolicy;

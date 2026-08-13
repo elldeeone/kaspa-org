@@ -7,6 +7,7 @@ import {
   LANGUAGE_SELECTOR_OPTIONS,
 } from "../../src/app/components/language-selector-model.ts";
 import {
+  brazilianPortugueseLocale,
   chineseLocale,
   defaultLocale,
   frenchLocale,
@@ -41,6 +42,13 @@ test("selector options use registry endonyms and exclude the pseudo locale", () 
   assert.equal(isLanguageSelectorLocale(chineseLocale), true);
   assert.equal(isLanguageSelectorLocale(russianLocale), true);
   assert.equal(isLanguageSelectorLocale(indonesianLocale), true);
+  assert.equal(isLanguageSelectorLocale(brazilianPortugueseLocale), true);
+  assert.equal(
+    LANGUAGE_SELECTOR_OPTIONS.some(
+      ({ code }) => code === brazilianPortugueseLocale,
+    ),
+    listSelectableLocales().includes(brazilianPortugueseLocale),
+  );
   assert.equal(
     LANGUAGE_SELECTOR_OPTIONS.some(({ code }) => code === chineseLocale),
     listSelectableLocales().includes(chineseLocale),
@@ -72,6 +80,12 @@ test("locale path fallback preserves slugs and encoded path segments", () => {
   }
   if (isLanguageSelectorLocale(indonesianLocale)) {
     assert.equal(localizePathname("/lore", indonesianLocale), "/id-ID/lore");
+  }
+  if (isLanguageSelectorLocale(brazilianPortugueseLocale)) {
+    assert.equal(
+      localizePathname("/lore", brazilianPortugueseLocale),
+      "/pt-BR/lore",
+    );
   }
   assert.equal(localizePathname("/lore", "en"), "/lore");
   assert.equal(localizePathname("/", spanishLocale), "/es");

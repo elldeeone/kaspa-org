@@ -47,6 +47,13 @@ import indonesianHodl from "../../messages/id-ID/hodl.json" with { type: "json" 
 import indonesianHome from "../../messages/id-ID/home.json" with { type: "json" };
 import indonesianLore from "../../messages/id-ID/lore.json" with { type: "json" };
 import indonesianShared from "../../messages/id-ID/shared.json" with { type: "json" };
+import brazilianPortugueseAssets from "../../messages/pt-BR/assets.json" with { type: "json" };
+import brazilianPortugueseBuild from "../../messages/pt-BR/build.json" with { type: "json" };
+import brazilianPortugueseErrors from "../../messages/pt-BR/errors.json" with { type: "json" };
+import brazilianPortugueseHodl from "../../messages/pt-BR/hodl.json" with { type: "json" };
+import brazilianPortugueseHome from "../../messages/pt-BR/home.json" with { type: "json" };
+import brazilianPortugueseLore from "../../messages/pt-BR/lore.json" with { type: "json" };
+import brazilianPortugueseShared from "../../messages/pt-BR/shared.json" with { type: "json" };
 
 import {
   isLocaleEnabled,
@@ -54,6 +61,7 @@ import {
   listSelectableLocales,
 } from "./config.ts";
 import {
+  brazilianPortugueseLocale,
   chineseLocale,
   frenchLocale,
   germanLocale,
@@ -140,6 +148,16 @@ export const indonesianMessages = {
   shared: indonesianShared,
 } satisfies AppMessages;
 
+export const brazilianPortugueseMessages = {
+  assets: brazilianPortugueseAssets,
+  build: brazilianPortugueseBuild,
+  errors: brazilianPortugueseErrors,
+  hodl: brazilianPortugueseHodl,
+  home: brazilianPortugueseHome,
+  lore: brazilianPortugueseLore,
+  shared: brazilianPortugueseShared,
+} satisfies AppMessages;
+
 let generatedPseudoMessages: AppMessages | null = null;
 
 function assertNever(value: never): never {
@@ -200,6 +218,13 @@ export function getMessages(locale: Locale): LocaleMessages {
         );
       }
       return indonesianMessages;
+    case brazilianPortugueseLocale:
+      if (!isLocaleEnabled(brazilianPortugueseLocale)) {
+        throw new Error(
+          `${brazilianPortugueseLocale} messages are unavailable in this build target`,
+        );
+      }
+      return brazilianPortugueseMessages;
     default:
       return assertNever(locale);
   }

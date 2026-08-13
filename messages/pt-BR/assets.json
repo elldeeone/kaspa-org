@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "title": "Logotipos e materiais da Kaspa | Kaspa",
+    "description": "Baixe o conjunto oficial de logotipos da Kaspa — versões horizontais e empilhadas, o ícone e as cores da marca. SVG e PNG em alta resolução."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Descentralização em tempo real"
+  },
+  "page": {
+    "heading": "Materiais do logotipo da Kaspa"
+  },
+  "groups": {
+    "lockup": "Versão horizontal",
+    "stacked": "Versão empilhada",
+    "icon": "Ícone"
+  },
+  "logos": {
+    "lockupColor": {
+      "name": "Em cores",
+      "imageAlt": "Logotipo colorido da Kaspa",
+      "downloadAria": "Baixar o logotipo horizontal colorido da Kaspa em {format}"
+    },
+    "lockupReverse": {
+      "name": "Negativo",
+      "imageAlt": "Logotipo negativo da Kaspa",
+      "downloadAria": "Baixar o logotipo horizontal negativo da Kaspa em {format}"
+    },
+    "lockupBlack": {
+      "name": "Preto",
+      "imageAlt": "Logotipo preto da Kaspa",
+      "downloadAria": "Baixar o logotipo horizontal preto da Kaspa em {format}"
+    },
+    "lockupWhite": {
+      "name": "Branco",
+      "imageAlt": "Logotipo branco da Kaspa",
+      "downloadAria": "Baixar o logotipo horizontal branco da Kaspa em {format}"
+    },
+    "lockupOutline": {
+      "name": "Contorno",
+      "imageAlt": "Logotipo da Kaspa em contorno",
+      "downloadAria": "Baixar o logotipo horizontal da Kaspa em contorno no formato {format}"
+    },
+    "stackedColor": {
+      "name": "Em cores",
+      "imageAlt": "Logotipo colorido da Kaspa",
+      "downloadAria": "Baixar o logotipo empilhado colorido da Kaspa em {format}"
+    },
+    "stackedReverse": {
+      "name": "Negativo",
+      "imageAlt": "Logotipo negativo da Kaspa",
+      "downloadAria": "Baixar o logotipo empilhado negativo da Kaspa em {format}"
+    },
+    "stackedBlack": {
+      "name": "Preto",
+      "imageAlt": "Logotipo preto da Kaspa",
+      "downloadAria": "Baixar o logotipo empilhado preto da Kaspa em {format}"
+    },
+    "stackedWhite": {
+      "name": "Branco",
+      "imageAlt": "Logotipo branco da Kaspa",
+      "downloadAria": "Baixar o logotipo empilhado branco da Kaspa em {format}"
+    },
+    "stackedOutline": {
+      "name": "Contorno",
+      "imageAlt": "Logotipo da Kaspa em contorno",
+      "downloadAria": "Baixar o logotipo empilhado da Kaspa em contorno no formato {format}"
+    },
+    "iconGreen": {
+      "name": "Verde",
+      "imageAlt": "Ícone verde da Kaspa",
+      "downloadAria": "Baixar o ícone verde da Kaspa em {format}"
+    },
+    "iconGreenDark": {
+      "name": "Verde sobre fundo escuro",
+      "imageAlt": "Ícone verde da Kaspa sobre fundo escuro",
+      "downloadAria": "Baixar o ícone verde da Kaspa para fundo escuro em {format}"
+    },
+    "iconBlack": {
+      "name": "Preto",
+      "imageAlt": "Ícone preto da Kaspa",
+      "downloadAria": "Baixar o ícone preto da Kaspa em {format}"
+    },
+    "iconWhite": {
+      "name": "Branco",
+      "imageAlt": "Ícone branco da Kaspa",
+      "downloadAria": "Baixar o ícone branco da Kaspa em {format}"
+    }
+  },
+  "formats": {
+    "svg": "SVG",
+    "png": "PNG"
+  }
+}

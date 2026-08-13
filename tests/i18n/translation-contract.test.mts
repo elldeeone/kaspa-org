@@ -7,6 +7,7 @@ import {
   validateTranslationCatalogContract,
 } from "../../scripts/i18n/translation-contract.mts";
 import {
+  brazilianPortugueseMessages,
   chineseMessages,
   englishMessages,
   frenchMessages,
@@ -23,6 +24,7 @@ const translatedCatalogs = {
   "zh-CN": chineseMessages,
   ru: russianMessages,
   "id-ID": indonesianMessages,
+  "pt-BR": brazilianPortugueseMessages,
 } as const;
 
 test("complete translated catalogs satisfy the shared translation contract", () => {
@@ -134,6 +136,7 @@ test("locale policy adds only language-specific terminology and loanwords", () =
   assert.equal(isUnchangedMessageAllowed("fr", "Acceptable"), true);
   assert.equal(isUnchangedMessageAllowed("fr", "{date, date, medium}"), true);
   assert.equal(isUnchangedMessageAllowed("id-ID", "upstream"), true);
+  assert.equal(isUnchangedMessageAllowed("pt-BR", "Desktop"), true);
 
   assert.deepEqual(
     validateTranslationCatalogContract(

@@ -5,6 +5,7 @@ import { analyzeAppRouteFile } from "../../scripts/i18n/app-route-policy.mts";
 import { serializeJsonLd } from "../../src/i18n/document.ts";
 import { i18nBuildTarget, resolveLocale } from "../../src/i18n/config.ts";
 import {
+  brazilianPortugueseLocale,
   chineseLocale,
   defaultLocale,
   frenchLocale,
@@ -29,6 +30,7 @@ import {
   stablePathnames,
 } from "../../src/i18n/manifest.ts";
 import {
+  brazilianPortugueseMessages,
   chineseMessages,
   frenchMessages,
   germanMessages,
@@ -87,6 +89,7 @@ const expectedEnabledLocales =
         chineseLocale,
         russianLocale,
         indonesianLocale,
+        brazilianPortugueseLocale,
       ] as const)
     : i18nBuildTarget === "preview"
       ? ([
@@ -97,6 +100,7 @@ const expectedEnabledLocales =
           chineseLocale,
           russianLocale,
           indonesianLocale,
+          brazilianPortugueseLocale,
         ] as const)
       : ([
           "en",
@@ -106,6 +110,7 @@ const expectedEnabledLocales =
           chineseLocale,
           russianLocale,
           indonesianLocale,
+          brazilianPortugueseLocale,
         ] as const);
 const completeRouteMatrix = routeIds.flatMap((routeId, index) => {
   const stablePathname = stablePathnames[index];
@@ -139,6 +144,7 @@ test("the active build profile publishes and previews locales atomically", () =>
     chineseLocale,
     russianLocale,
     indonesianLocale,
+    brazilianPortugueseLocale,
   ]);
   assert.equal(localeRegistry.en.lifecycle, "production");
   assert.equal(localeRegistry[spanishLocale].lifecycle, "production");
@@ -148,18 +154,24 @@ test("the active build profile publishes and previews locales atomically", () =>
   assert.equal(localeRegistry[chineseLocale].lifecycle, "production");
   assert.equal(localeRegistry[russianLocale].lifecycle, "production");
   assert.equal(localeRegistry[indonesianLocale].lifecycle, "production");
+  assert.equal(
+    localeRegistry[brazilianPortugueseLocale].lifecycle,
+    "production",
+  );
   assert.equal(resolveSupportedLocale("ES"), spanishLocale);
   assert.equal(resolveSupportedLocale("DE"), germanLocale);
   assert.equal(resolveSupportedLocale("FR"), frenchLocale);
   assert.equal(resolveSupportedLocale("ZH-cn"), chineseLocale);
   assert.equal(resolveSupportedLocale("RU"), russianLocale);
   assert.equal(resolveSupportedLocale("ID-id"), indonesianLocale);
+  assert.equal(resolveSupportedLocale("PT-br"), brazilianPortugueseLocale);
   assert.equal(resolveLocale("es"), spanishLocale);
   assert.equal(resolveLocale("de"), germanLocale);
   assert.equal(resolveLocale("fr"), frenchLocale);
   assert.equal(resolveLocale("zh-CN"), chineseLocale);
   assert.equal(resolveLocale("ru"), russianLocale);
   assert.equal(resolveLocale("id-ID"), indonesianLocale);
+  assert.equal(resolveLocale("pt-BR"), brazilianPortugueseLocale);
   assert.deepEqual(listEnabledLocales(), expectedEnabledLocales);
   assert.deepEqual(
     listSelectableLocales(),
@@ -173,6 +185,7 @@ test("the active build profile publishes and previews locales atomically", () =>
     chineseLocale,
     russianLocale,
     indonesianLocale,
+    brazilianPortugueseLocale,
   ]);
   assert.deepEqual(routeIds, ["home", "lore", "build", "assets", "hodl"]);
   assert.deepEqual(stablePathnames, [
@@ -205,6 +218,7 @@ test("the active build profile publishes and previews locales atomically", () =>
   assert.equal(isLocaleRouteSetComplete(chineseLocale), true);
   assert.equal(isLocaleRouteSetComplete(russianLocale), true);
   assert.equal(isLocaleRouteSetComplete(indonesianLocale), true);
+  assert.equal(isLocaleRouteSetComplete(brazilianPortugueseLocale), true);
   for (const pathname of stablePathnames) {
     assert.equal(isPathnamePublished(pathname, "en"), true, pathname);
     assert.equal(
@@ -227,6 +241,7 @@ test("the active build profile publishes and previews locales atomically", () =>
       `${siteUrl}/zh-CN`,
       `${siteUrl}/ru`,
       `${siteUrl}/id-ID`,
+      `${siteUrl}/pt-BR`,
       `${siteUrl}/lore`,
       `${siteUrl}/es/lore`,
       `${siteUrl}/de/lore`,
@@ -234,6 +249,7 @@ test("the active build profile publishes and previews locales atomically", () =>
       `${siteUrl}/zh-CN/lore`,
       `${siteUrl}/ru/lore`,
       `${siteUrl}/id-ID/lore`,
+      `${siteUrl}/pt-BR/lore`,
       `${siteUrl}/build`,
       `${siteUrl}/es/build`,
       `${siteUrl}/de/build`,
@@ -241,6 +257,7 @@ test("the active build profile publishes and previews locales atomically", () =>
       `${siteUrl}/zh-CN/build`,
       `${siteUrl}/ru/build`,
       `${siteUrl}/id-ID/build`,
+      `${siteUrl}/pt-BR/build`,
       `${siteUrl}/assets`,
       `${siteUrl}/es/assets`,
       `${siteUrl}/de/assets`,
@@ -248,6 +265,7 @@ test("the active build profile publishes and previews locales atomically", () =>
       `${siteUrl}/zh-CN/assets`,
       `${siteUrl}/ru/assets`,
       `${siteUrl}/id-ID/assets`,
+      `${siteUrl}/pt-BR/assets`,
       `${siteUrl}/hodl`,
       `${siteUrl}/es/hodl`,
       `${siteUrl}/de/hodl`,
@@ -255,6 +273,7 @@ test("the active build profile publishes and previews locales atomically", () =>
       `${siteUrl}/zh-CN/hodl`,
       `${siteUrl}/ru/hodl`,
       `${siteUrl}/id-ID/hodl`,
+      `${siteUrl}/pt-BR/hodl`,
     ],
   );
   for (const routeId of routeIds) {
@@ -299,12 +318,26 @@ test("the active build profile publishes and previews locales atomically", () =>
     assert.equal(isAiAvailable(routeId, chineseLocale), false, routeId);
     assert.equal(isAiAvailable(routeId, russianLocale), false, routeId);
     assert.equal(isAiAvailable(routeId, indonesianLocale), false, routeId);
+    assert.equal(
+      isAiAvailable(routeId, brazilianPortugueseLocale),
+      false,
+      routeId,
+    );
+    assert.equal(
+      resolvePublishedRoute(routeId, brazilianPortugueseLocale)?.publication ??
+        null,
+      "public",
+      routeId,
+    );
   }
   assert.doesNotThrow(() => assertProductionLocaleComplete(spanishLocale));
   assert.doesNotThrow(() => assertProductionLocaleComplete(germanLocale));
   assert.doesNotThrow(() => assertProductionLocaleComplete(frenchLocale));
   assert.doesNotThrow(() => assertProductionLocaleComplete(chineseLocale));
   assert.doesNotThrow(() => assertProductionLocaleComplete(russianLocale));
+  assert.doesNotThrow(() =>
+    assertProductionLocaleComplete(brazilianPortugueseLocale),
+  );
   assert.throws(
     () =>
       assertProductionLocaleComplete(spanishLocale, (routeId, locale) =>
@@ -409,6 +442,12 @@ test("route resolution accepts only enabled locale prefixes and fixed English sl
     stablePathname: "/lore",
     hadLocalePrefix: true,
   });
+  assert.deepEqual(resolveRouteRequest("/PT-br/lore"), {
+    routeId: "lore",
+    locale: brazilianPortugueseLocale,
+    stablePathname: "/lore",
+    hadLocalePrefix: true,
+  });
 
   for (const pathname of [
     "/es/historia",
@@ -434,6 +473,9 @@ test(
     assert.doesNotThrow(() => assertProductionLocaleComplete(chineseLocale));
     assert.doesNotThrow(() => assertProductionLocaleComplete(russianLocale));
     assert.doesNotThrow(() => assertProductionLocaleComplete(indonesianLocale));
+    assert.doesNotThrow(() =>
+      assertProductionLocaleComplete(brazilianPortugueseLocale),
+    );
     assert.deepEqual(
       listPublishedRoutes().map(({ routeId, locale, canonicalPathname }) => ({
         routeId,
@@ -491,6 +533,10 @@ test(
       { locale: chineseLocale, messages: chineseMessages },
       { locale: russianLocale, messages: russianMessages },
       { locale: indonesianLocale, messages: indonesianMessages },
+      {
+        locale: brazilianPortugueseLocale,
+        messages: brazilianPortugueseMessages,
+      },
     ] as const;
     assert.doesNotThrow(() => assertProductionLocaleComplete(russianLocale));
     assert.equal(
@@ -505,6 +551,14 @@ test(
       indonesianMessages.home.verify.heading,
       "jangan percaya, verifikasi.",
     );
+    assert.equal(
+      brazilianPortugueseMessages.home.hero.dagAnnotation,
+      "pow em tempo real",
+    );
+    assert.equal(
+      brazilianPortugueseMessages.home.verify.heading,
+      "não confie, verifique.",
+    );
     for (const routeId of routeIds) {
       const spanishRoute = resolvePublishedRoute(routeId, spanishLocale);
       const germanRoute = resolvePublishedRoute(routeId, germanLocale);
@@ -512,12 +566,17 @@ test(
       const chineseRoute = resolvePublishedRoute(routeId, chineseLocale);
       const russianRoute = resolvePublishedRoute(routeId, russianLocale);
       const indonesianRoute = resolvePublishedRoute(routeId, indonesianLocale);
+      const brazilianPortugueseRoute = resolvePublishedRoute(
+        routeId,
+        brazilianPortugueseLocale,
+      );
       assert.ok(spanishRoute);
       assert.ok(germanRoute);
       assert.ok(frenchRoute);
       assert.ok(chineseRoute);
       assert.ok(russianRoute);
       assert.ok(indonesianRoute);
+      assert.ok(brazilianPortugueseRoute);
       const englishUrl = `${siteUrl}${spanishRoute.pathname}`;
       const xDefault =
         spanishRoute.pathname === "/"
@@ -531,6 +590,7 @@ test(
         "zh-CN": `${siteUrl}${chineseRoute.canonicalPathname}`,
         ru: `${siteUrl}${russianRoute.canonicalPathname}`,
         "id-ID": `${siteUrl}${indonesianRoute.canonicalPathname}`,
+        "pt-BR": `${siteUrl}${brazilianPortugueseRoute.canonicalPathname}`,
         "x-default": xDefault,
       };
 
@@ -700,6 +760,11 @@ test("published route contexts and English metadata share one authority", () => 
           expected[routeId].pathname === "/"
             ? "/id-ID"
             : `/id-ID${expected[routeId].pathname}`
+        }`,
+        "pt-BR": `${siteUrl}${
+          expected[routeId].pathname === "/"
+            ? "/pt-BR"
+            : `/pt-BR${expected[routeId].pathname}`
         }`,
         "x-default":
           expected[routeId].pathname === "/"

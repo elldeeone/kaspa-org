@@ -23,6 +23,7 @@ import {
   getSharedClientMessages,
 } from "../../src/i18n/messages.ts";
 import {
+  brazilianPortugueseLocale,
   chineseLocale,
   frenchLocale,
   germanLocale,
@@ -443,6 +444,7 @@ test("translated client payloads contain only route-owned messages", async () =>
     { locale: chineseLocale, languageLabel: "语言" },
     { locale: russianLocale, languageLabel: "Язык" },
     { locale: indonesianLocale, languageLabel: "Bahasa" },
+    { locale: brazilianPortugueseLocale, languageLabel: "Idioma" },
   ].filter(({ locale }) => isLocaleEnabled(locale))) {
     const shared = getSharedClientMessages(locale);
     assert.ok("language" in shared.shared.navigation);

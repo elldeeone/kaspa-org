@@ -130,14 +130,15 @@ test("artifact manifest follows the central Build-example contract", () => {
     "zh-CN",
     "ru",
     "id-ID",
+    "pt-BR",
   ]);
   assert.ok(
     manifest.locales.every(
       (locale) => manifest.pathsByLocale[locale].length === 6,
     ),
   );
-  assert.equal(manifest.localizedPaths.length, 42);
-  assert.equal(manifest.localizedUrls.length, 42);
+  assert.equal(manifest.localizedPaths.length, 48);
+  assert.equal(manifest.localizedUrls.length, 48);
   assert.ok(
     manifest.localizedUrls.every((path) =>
       path.startsWith(`${buildExampleContract.examplesPublicBasePath}/`),
@@ -479,6 +480,30 @@ test("catalog-backed Build artifacts are deterministic and complete", async () =
   assert.match(indonesianControls, /<- Kembali<\/a> \| Jaringan:/u);
   assert.match(indonesianControls, />Putuskan<\/a>/u);
   assert.match(indonesianControls, />Hubungkan kembali<\/a>/u);
+
+  for (const name of exampleNames) {
+    const brazilianPortuguese = first[`${name}.pt-BR.html`];
+    assert.match(brazilianPortuguese, /<html lang="pt-BR" dir="ltr">/u);
+    assert.match(
+      brazilianPortuguese,
+      /from '\.\/resources\/utils\.pt-BR\.js'/u,
+    );
+    assert.match(brazilianPortuguese, /Conectando à rede Kaspa/u);
+    assert.match(
+      brazilianPortuguese,
+      /<meta name="robots" content="noindex, nofollow">/u,
+    );
+    assert.doesNotMatch(brazilianPortuguese, /\[!! /u);
+  }
+  assert.match(
+    first["subscribe-block-added.pt-BR.html"],
+    /Assinando eventos de adição de bloco/u,
+  );
+  assert.match(first["utxo-context.pt-BR.html"], /eventos recebidos/u);
+
+  const brazilianPortugueseControls = first["resources/utils.pt-BR.js"];
+  assert.match(brazilianPortugueseControls, /href="\/pt-BR\/build#try-live"/u);
+  assert.match(brazilianPortugueseControls, /<- Voltar<\/a> \| Rede:/u);
 });
 
 test("Build artifacts use an RTL locale direction without generator changes", async () => {
@@ -760,7 +785,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   assert.deepEqual(
     (await readdir(directory))
       .filter((path) =>
-        /\.(?:de|en-XA|es|fr|id-ID|ru|zh-CN)\.html$/u.test(path),
+        /\.(?:de|en-XA|es|fr|id-ID|pt-BR|ru|zh-CN)\.html$/u.test(path),
       )
       .sort(),
     manifest.localizedPaths.filter((path) => path.endsWith(".html")).sort(),
@@ -771,7 +796,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   assert.deepEqual(
     (await readdir(directory))
       .filter((path) =>
-        /\.(?:de|en-XA|es|fr|id-ID|ru|zh-CN)\.html$/u.test(path),
+        /\.(?:de|en-XA|es|fr|id-ID|pt-BR|ru|zh-CN)\.html$/u.test(path),
       )
       .sort(),
     [
@@ -781,6 +806,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
       ...manifest.pathsByLocale["zh-CN"],
       ...manifest.pathsByLocale.ru,
       ...manifest.pathsByLocale["id-ID"],
+      ...manifest.pathsByLocale["pt-BR"],
     ]
       .filter((path) => path.endsWith(".html"))
       .sort(),
@@ -791,7 +817,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   assert.deepEqual(
     (await readdir(directory))
       .filter((path) =>
-        /\.(?:de|en-XA|es|fr|id-ID|ru|zh-CN)\.html$/u.test(path),
+        /\.(?:de|en-XA|es|fr|id-ID|pt-BR|ru|zh-CN)\.html$/u.test(path),
       )
       .sort(),
     [
@@ -801,6 +827,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
       ...manifest.pathsByLocale["zh-CN"],
       ...manifest.pathsByLocale.ru,
       ...manifest.pathsByLocale["id-ID"],
+      ...manifest.pathsByLocale["pt-BR"],
     ]
       .filter((path) => path.endsWith(".html"))
       .sort(),
@@ -832,7 +859,7 @@ test("cleanup refuses every other locale-suffixed artifact without deleting file
     "get-server-info.en-XA.html": "Test-only pseudo locale",
     "get-server-info.en.html": "Duplicate source locale",
     "get-server-info.es.html": "Known localized sibling",
-    "subscribe-block-added.pt-BR.html": "Regional localized sibling",
+    "subscribe-block-added.pt-PT.html": "Unknown regional localized sibling",
     "resources/utils.en-XA.js": "Test-only localized controls",
     "resources/utils.es.js": "Localized controls",
     "resources/utils.min.js": "Plausible minified vendor asset",
@@ -842,14 +869,14 @@ test("cleanup refuses every other locale-suffixed artifact without deleting file
 
   await assert.rejects(
     createBuildExampleArtifactWorkflow(root).clean(),
-    /Refusing to remove unexpected localized artifacts: get-server-info\.en\.html, resources\/utils\.min\.js, subscribe-block-added\.pt-BR\.html, unexpected\.es\.html/u,
+    /Refusing to remove unexpected localized artifacts: get-server-info\.en\.html, resources\/utils\.min\.js, subscribe-block-added\.pt-PT\.html, unexpected\.es\.html/u,
   );
   assert.deepEqual((await readdir(directory)).sort(), [
     "get-server-info.en-XA.html",
     "get-server-info.en.html",
     "get-server-info.es.html",
     "resources",
-    "subscribe-block-added.pt-BR.html",
+    "subscribe-block-added.pt-PT.html",
     "unexpected.es.html",
   ]);
   assert.deepEqual((await readdir(join(directory, "resources"))).sort(), [

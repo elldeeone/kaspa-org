@@ -31,6 +31,7 @@ export const frenchLocale = "fr" as const;
 export const chineseLocale = "zh-CN" as const;
 export const russianLocale = "ru" as const;
 export const indonesianLocale = "id-ID" as const;
+export const brazilianPortugueseLocale = "pt-BR" as const;
 export const supportedLocaleCodes = [
   "en",
   pseudoLocale,
@@ -40,6 +41,7 @@ export const supportedLocaleCodes = [
   chineseLocale,
   russianLocale,
   indonesianLocale,
+  brazilianPortugueseLocale,
 ] as const;
 export type Locale = (typeof supportedLocaleCodes)[number];
 export type TextDirection = "ltr" | "rtl";
@@ -106,6 +108,13 @@ export const localeRegistry: Readonly<Record<Locale, LocaleDefinition>> = {
     code: "id-ID",
     label: "Bahasa Indonesia",
     hrefLang: "id-ID",
+    dir: "ltr",
+    lifecycle: "production",
+  },
+  "pt-BR": {
+    code: "pt-BR",
+    label: "Português (Brasil)",
+    hrefLang: "pt-BR",
     dir: "ltr",
     lifecycle: "production",
   },
