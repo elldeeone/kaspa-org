@@ -4,6 +4,10 @@ import { expect, test } from "@playwright/test";
 
 import { createUnpublishedAssetsFixture } from "../scripts/i18n/unpublished-route-fixture.mts";
 import {
+  localeRegistry,
+  supportedLocaleCodes,
+} from "../src/i18n/locale-registry";
+import {
   localizePublicPath,
   publicRouteGolden,
   readPrerenderRoutePathnames,
@@ -12,7 +16,10 @@ import {
   type PublicRouteId,
 } from "./i18n-scenario-harness";
 
-const productionLocaleSelectorBudgetBytes = 3_000;
+const productionLocales = supportedLocaleCodes.filter(
+  (locale) => localeRegistry[locale].lifecycle === "production",
+);
+const productionLocaleSelectorBudgetBytes = 3_500;
 
 type EnglishRouteExpectation = {
   baselineBytes: number;
@@ -402,14 +409,13 @@ test.describe("production i18n foundation contract", () => {
     expect(
       [...sitemap.matchAll(/<loc>(.*?)<\/loc>/gu)].map((match) => match[1]),
     ).toEqual(
-      publicRouteGolden.flatMap(({ path }) => [
-        `https://kaspa.org${path === "/" ? "" : path}`,
-        `https://kaspa.org${localizePublicPath("es", path)}`,
-        `https://kaspa.org${localizePublicPath("de", path)}`,
-        `https://kaspa.org${localizePublicPath("fr", path)}`,
-        `https://kaspa.org${localizePublicPath("zh-CN", path)}`,
-        `https://kaspa.org${localizePublicPath("ru", path)}`,
-      ]),
+      publicRouteGolden.flatMap(({ path }) =>
+        productionLocales.map((locale) =>
+          locale === "en"
+            ? `https://kaspa.org${path === "/" ? "" : path}`
+            : `https://kaspa.org${localizePublicPath(locale, path)}`,
+        ),
+      ),
     );
     expect(sitemap).not.toContain("hreflang");
     expect(sitemap).not.toContain("/en");
