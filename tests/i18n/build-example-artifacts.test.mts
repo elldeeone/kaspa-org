@@ -876,6 +876,8 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
       ...manifest.pathsByLocale.ru,
       ...manifest.pathsByLocale["id-ID"],
       ...manifest.pathsByLocale["pt-BR"],
+      ...manifest.pathsByLocale.ja,
+      ...manifest.pathsByLocale.ko,
     ]
       .filter((path) => path.endsWith(".html"))
       .sort(),

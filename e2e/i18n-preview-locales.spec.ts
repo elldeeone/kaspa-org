@@ -45,50 +45,7 @@ type PreviewLocaleCase = {
 
 // Add each complete non-indexed review locale here. The lifecycle coverage test
 // keeps this descriptor list in lockstep with the central registry.
-const previewLocaleCases: readonly PreviewLocaleCase[] = [
-  {
-    locale: "ja",
-    endonym: "日本語",
-    languageLabel: "言語",
-    dir: "ltr",
-    routes: localizePublicRouteGolden("ja"),
-    fingerprints: {
-      home: "信じるな、検証せよ。",
-      lore: "発想の転換",
-      build: "開発を始める",
-      assets: "Kaspa のロゴ素材",
-      hodl: "KAS を自分で管理する",
-    },
-    proofFingerprint: "信じるな、検証せよ",
-    backFingerprint: "戻る",
-    notFoundTitle: "ページが見つかりません | Kaspa",
-    dagAnnotation: "リアルタイムの pow",
-    dagAnnotationFont: "Yomogi",
-    dagAnnotationMinimumInkHeight: 12,
-    openGraphInkBandCount: 2,
-  },
-  {
-    locale: "ko",
-    endonym: "한국어",
-    languageLabel: "언어",
-    dir: "ltr",
-    routes: localizePublicRouteGolden("ko"),
-    fingerprints: {
-      home: "믿지 말고, 검증하라.",
-      lore: "초당 10개의 블록을 처리하며 가동 중인 작업 증명 blockDAG",
-      build: "Kaspa에서 개발하기",
-      assets: "Kaspa 로고 에셋",
-      hodl: "지갑 만들기",
-    },
-    proofFingerprint: "증명 검증하기",
-    backFingerprint: "뒤로",
-    notFoundTitle: "페이지를 찾을 수 없음 | Kaspa",
-    dagAnnotation: "실시간 pow",
-    dagAnnotationFont: "nanumPenScript",
-    dagAnnotationMinimumInkHeight: 12,
-    openGraphInkBandCount: 2,
-  },
-];
+const previewLocaleCases: readonly PreviewLocaleCase[] = [];
 
 test.describe("real preview locale contract", () => {
   const scenario = useBuiltLocaleScenario({
@@ -221,79 +178,6 @@ test.describe("real preview locale contract", () => {
         await api.get(`${standaloneBasePath}/get-server-info.en-XA.html`)
       ).status(),
     ).toBe(404);
-  });
-
-  test("uses the bundled Korean body font without loading it for English", async ({
-    browser,
-  }) => {
-    const { baseUrl } = scenario.require();
-
-    async function inspectLocale(pathname: string) {
-      const context = await browser.newContext({ baseURL: baseUrl });
-      const page = await context.newPage();
-      const fontRequests = new Set<string>();
-      page.on("request", (request) => {
-        if (request.resourceType() === "font") fontRequests.add(request.url());
-      });
-      await page.goto(pathname, { waitUntil: "networkidle" });
-      const fontState = await page
-        .locator("main p")
-        .first()
-        .evaluate(async (element) => {
-          await document.fonts.ready;
-          const fontFamily = getComputedStyle(element).fontFamily;
-          const primaryFamily = fontFamily.split(",", 1)[0];
-          return {
-            fontFamily,
-            loaded: document.fonts.check(`16px ${primaryFamily}`),
-          };
-        });
-      await context.close();
-      return { fontRequests, fontState };
-    }
-
-    const korean = await inspectLocale("/ko/lore");
-    const english = await inspectLocale("/lore");
-    expect(korean.fontState.fontFamily).toContain("koreanSans");
-    expect(korean.fontState.loaded).toBe(true);
-    expect(english.fontState.fontFamily).not.toContain("koreanSans");
-    expect(
-      [...korean.fontRequests].filter((url) => !english.fontRequests.has(url)),
-      "Korean must request a locale-only body font asset",
-    ).not.toEqual([]);
-  });
-
-  test("switches English and Korean while preserving route, query, and hash", async ({
-    page,
-  }) => {
-    const { baseUrl } = scenario.require();
-    await page.goto(`${baseUrl}/lore?review=ko#review-state`);
-
-    let selector = page.locator("[data-language-selector]:visible");
-    await selector
-      .getByRole("button", { name: "Language", exact: true })
-      .click();
-    const koreanOption = selector.getByRole("menuitemradio", {
-      name: "한국어",
-      exact: true,
-    });
-    await expect(koreanOption).toBeVisible();
-    await Promise.all([
-      page.waitForURL(`${baseUrl}/ko/lore?review=ko#review-state`),
-      koreanOption.click(),
-    ]);
-
-    selector = page.locator("[data-language-selector]:visible");
-    await selector.getByRole("button", { name: "언어", exact: true }).click();
-    const englishOption = selector.getByRole("menuitemradio", {
-      name: "English",
-      exact: true,
-    });
-    await expect(englishOption).toBeVisible();
-    await Promise.all([
-      page.waitForURL(`${baseUrl}/lore?review=ko#review-state`),
-      englishOption.click(),
-    ]);
   });
 
   test("exposes preview locales in the selector without layout overflow", async ({

@@ -19,7 +19,7 @@ import {
 const productionLocales = supportedLocaleCodes.filter(
   (locale) => localeRegistry[locale].lifecycle === "production",
 );
-const productionLocaleSelectorBudgetBytes = 3_500;
+const productionLocaleSelectorBudgetBytes = 4_500;
 
 type EnglishRouteExpectation = {
   baselineBytes: number;

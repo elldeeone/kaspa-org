@@ -127,14 +127,14 @@ export const localeRegistry: Readonly<Record<Locale, LocaleDefinition>> = {
     label: "日本語",
     hrefLang: "ja",
     dir: "ltr",
-    lifecycle: "preview",
+    lifecycle: "production",
   },
   ko: {
     code: "ko",
     label: "한국어",
     hrefLang: "ko",
     dir: "ltr",
-    lifecycle: "preview",
+    lifecycle: "production",
   },
 };
 

@@ -402,6 +402,90 @@ const productionLocaleDescriptors = [
     },
     openGraphInkBandCount: 4,
   },
+  {
+    locale: "ja",
+    hrefLang: "ja",
+    dir: "ltr",
+    endonym: "日本語",
+    acceptLanguage: "ja-JP,ja;q=0.9",
+    aiAvailability: {
+      home: false,
+      lore: false,
+      build: false,
+      assets: false,
+      hodl: false,
+      "not-found": false,
+    },
+    reviewedCopy: {
+      languageLabel: "言語",
+      aiLauncherAskAnything: "何でも質問",
+      aiLauncherPlaceholder: "何でも質問してください…",
+      notFoundTitle: "ページが見つかりません | Kaspa",
+      proofTrigger: "証明を検証",
+      homeVerifyHeading: "信じるな、検証せよ。",
+      homeDagAnnotation: "リアルタイムの pow",
+      standaloneBackLabel: "戻る",
+      standaloneNetworkLabel: "ネットワーク",
+      standaloneConnectingLabel: "| 接続中…",
+      standaloneRuntimeOutput: {
+        "get-server-info": "GetServerInfo レスポンス:",
+        "get-block-dag-info": "GetBlockDagInfo レスポンス:",
+        "subscribe-block-added": "ブロック追加イベントを購読中…",
+        "subscribe-daa-changed": "DAA 通知を登録中…",
+        "utxo-context":
+          "このデモは、UtxoProcessor が発行するイベントを示すための手動テスト用です。",
+      },
+    },
+    preserveWhitespaceDelimitedWords: false,
+    forbiddenTranslatedSlugPaths: ["/ja/歴史", "/ja/開発", "/ja/素材"],
+    dagAnnotationFont: {
+      family: "yomogi",
+      minimumInkHeight: 12,
+    },
+    openGraphInkBandCount: 2,
+  },
+  {
+    locale: "ko",
+    hrefLang: "ko",
+    dir: "ltr",
+    endonym: "한국어",
+    acceptLanguage: "ko-KR,ko;q=0.9",
+    aiAvailability: {
+      home: false,
+      lore: false,
+      build: false,
+      assets: false,
+      hodl: false,
+      "not-found": false,
+    },
+    reviewedCopy: {
+      languageLabel: "언어",
+      aiLauncherAskAnything: "무엇이든 물어보세요",
+      aiLauncherPlaceholder: "무엇이든 물어보세요...",
+      notFoundTitle: "페이지를 찾을 수 없음 | Kaspa",
+      proofTrigger: "증명 검증하기",
+      homeVerifyHeading: "믿지 말고, 검증하라.",
+      homeDagAnnotation: "실시간 pow",
+      standaloneBackLabel: "뒤로",
+      standaloneNetworkLabel: "네트워크",
+      standaloneConnectingLabel: "| 연결 중...",
+      standaloneRuntimeOutput: {
+        "get-server-info": "GetServerInfo 응답:",
+        "get-block-dag-info": "GetBlockDagInfo 응답:",
+        "subscribe-block-added": "블록 추가 이벤트 구독 중...",
+        "subscribe-daa-changed": "DAA 알림 등록 중...",
+        "utxo-context":
+          "이 데모는 UtxoProcessor에서 발생하는 이벤트를 보여 주기 위한 수동 테스트용입니다.",
+      },
+    },
+    preserveWhitespaceDelimitedWords: false,
+    forbiddenTranslatedSlugPaths: ["/ko/역사", "/ko/개발", "/ko/에셋"],
+    dagAnnotationFont: {
+      family: "nanumPenScript",
+      minimumInkHeight: 12,
+    },
+    openGraphInkBandCount: 2,
+  },
 ] as const satisfies readonly ProductionLocaleDescriptor[];
 
 type ProductionLocaleCase = ProductionLocaleDescriptor & {
@@ -694,6 +778,46 @@ test.describe("complete public production locale contract", () => {
         lifecycle: "production",
       });
     }
+  });
+
+  test("loads the Korean body font only for Korean pages", async ({
+    browser,
+  }) => {
+    const { baseUrl } = scenario.require();
+
+    async function inspectLocale(pathname: string) {
+      const context = await browser.newContext({ baseURL: baseUrl });
+      const page = await context.newPage();
+      const fontRequests = new Set<string>();
+      page.on("request", (request) => {
+        if (request.resourceType() === "font") fontRequests.add(request.url());
+      });
+      await page.goto(pathname, { waitUntil: "networkidle" });
+      const fontState = await page
+        .locator("main p")
+        .first()
+        .evaluate(async (element) => {
+          await document.fonts.ready;
+          const fontFamily = getComputedStyle(element).fontFamily;
+          const primaryFamily = fontFamily.split(",", 1)[0];
+          return {
+            fontFamily,
+            loaded: document.fonts.check(`16px ${primaryFamily}`),
+          };
+        });
+      await context.close();
+      return { fontRequests, fontState };
+    }
+
+    const korean = await inspectLocale("/ko/lore");
+    const english = await inspectLocale("/lore");
+    expect(korean.fontState.fontFamily).toContain("koreanSans");
+    expect(korean.fontState.loaded).toBe(true);
+    expect(english.fontState.fontFamily).not.toContain("koreanSans");
+    expect(
+      [...korean.fontRequests].filter((url) => !english.fontRequests.has(url)),
+      "Korean must request a locale-only body font asset",
+    ).not.toEqual([]);
   });
 
   test("publishes the exact production locale sitemap matrix", async () => {

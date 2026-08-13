@@ -15,7 +15,7 @@ every visible character in the current Chinese Open Graph copy; regenerate the
 subsets when that copy changes.
 
 `NotoSansJP-Regular.ttf` and `NotoSansJP-Bold.ttf` are text subsets of Noto Sans
-JP used only for the Japanese Open Graph image in review Preview builds. The
+JP used only for the Japanese Open Graph image. The
 subsets cover the exact reviewed Japanese heading and tagline, including their Latin text. They
 come from the Google Fonts CSS API and use the Adobe Source SIL Open Font
 License already included in `NotoSansSC-OFL.txt`. Glyph tests prevent a copy
@@ -34,7 +34,7 @@ The source family is Ma Shan Zheng from
 from silently falling back to a mismatched system font.
 
 `Yomogi-Regular.ttf` is a text subset of Yomogi used for the Japanese desktop
-DAG annotation in review Preview builds. Its source family is Yomogi from
+DAG annotation. Its source family is Yomogi from
 `https://github.com/google/fonts/tree/main/ofl/yomogi`; its licence is in
 `Yomogi-OFL.txt`. The Japanese annotation glyph gate covers kana, Latin text,
 and punctuation in the reviewed copy.
