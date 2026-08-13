@@ -1,6 +1,11 @@
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 
+import { listSelectableLocales } from "@/i18n/config";
+import {
+  sanitizeAcceptLanguage,
+  sanitizeLocaleCookie,
+} from "@/i18n/locale-negotiation";
 import { ROUTE_MISS_HEADER } from "@/i18n/manifest";
 import {
   isStaticStylePathname,
@@ -14,6 +19,25 @@ const handleI18nRouting = createMiddleware(routing);
 
 export default function proxy(request: NextRequest): NextResponse {
   const requestHeaders = sanitizeRoutingHeaders(request.headers);
+  const detectableLocales = listSelectableLocales();
+  const cookie = sanitizeLocaleCookie(
+    requestHeaders.get("cookie"),
+    detectableLocales,
+  );
+  if (cookie) {
+    requestHeaders.set("cookie", cookie);
+  } else {
+    requestHeaders.delete("cookie");
+  }
+  const acceptLanguage = sanitizeAcceptLanguage(
+    requestHeaders.get("accept-language"),
+    detectableLocales,
+  );
+  if (acceptLanguage) {
+    requestHeaders.set("accept-language", acceptLanguage);
+  } else {
+    requestHeaders.delete("accept-language");
+  }
   const pathname = request.nextUrl.pathname;
 
   if (shouldBypassLocaleRouting(pathname)) {

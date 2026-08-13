@@ -6,6 +6,18 @@ French, Simplified Chinese, Russian, Bahasa Indonesia, Brazilian Portuguese,
 Japanese, and Korean are published.
 `en-XA` is a test-only, no-index pseudo-locale used for quality assurance.
 
+## Visitor Language Selection
+
+On an unprefixed URL, the site selects the closest published language from the
+visitor's saved language choice and browser preferences. A choice made in the
+language selector is saved for the browser session and takes priority over the
+browser setting. Explicit locale URLs such as `/fr/build` always win.
+
+Traditional Chinese browser preferences do not fall back to the Simplified
+Chinese (`zh-CN`) translation. They continue to English unless the visitor has
+also requested another published language. Test-only and unpublished locales
+never participate in automatic selection.
+
 ## Make a Request
 
 Open the repository's **New issue** page and choose **Language request**. Provide:

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { LOCALE_COOKIE_NAME } from "../../src/i18n/locale-negotiation.ts";
 import { stablePathnameMap } from "../../src/i18n/manifest.ts";
 import { createLocalizedPageAdapter } from "../../src/i18n/page-route.ts";
 import { routing } from "../../src/i18n/routing.ts";
@@ -15,6 +16,11 @@ test("the route manifest drives next-intl pathnames", () => {
     "/hodl": "/hodl",
   });
   assert.deepEqual(routing.pathnames, stablePathnameMap);
+  assert.equal(routing.localeDetection, true);
+  assert.deepEqual(routing.localeCookie, {
+    name: LOCALE_COOKIE_NAME,
+    sameSite: "lax",
+  });
 });
 
 test("localized page adapters own static params, validation, and metadata", async () => {

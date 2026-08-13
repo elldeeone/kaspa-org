@@ -292,24 +292,59 @@ test.describe("production i18n foundation contract", () => {
     );
   });
 
-  test("normalizes redundant English prefixes and ignores browser language", async ({
+  test("normalizes English prefixes and negotiates unprefixed browser languages", async ({
     request,
   }) => {
+    const languageResponse = await request.get("/build?source=system", {
+      headers: { "accept-language": "es-ES,es;q=0.9" },
+      maxRedirects: 0,
+    });
+    expect(languageResponse.status()).toBe(307);
+    expect(languageResponse.headers().location).toBe("/es/build?source=system");
+
+    const traditionalChinese = await request.get("/", {
+      headers: {
+        "accept-language": "zh-TW,zh;q=0.9,en;q=0.8",
+      },
+      maxRedirects: 0,
+    });
+    expect(traditionalChinese.status()).toBe(200);
+    expect(await traditionalChinese.text()).toContain(
+      '<html lang="en" dir="ltr"',
+    );
+
+    const simplifiedChinese = await request.get("/", {
+      headers: {
+        "accept-language": "zh-SG,zh;q=0.9,en;q=0.8",
+      },
+      maxRedirects: 0,
+    });
+    expect(simplifiedChinese.status()).toBe(307);
+    expect(simplifiedChinese.headers().location).toBe("/zh-CN");
+
+    const savedEnglish = await request.get("/", {
+      headers: {
+        "accept-language": "es-ES,es;q=0.9",
+        cookie: "NEXT_LOCALE=en",
+      },
+      maxRedirects: 0,
+    });
+    expect(savedEnglish.status()).toBe(200);
+    expect(await savedEnglish.text()).toContain('<html lang="en" dir="ltr"');
+
+    const explicitFrench = await request.get("/fr/build", {
+      headers: { "accept-language": "es-ES,es;q=0.9" },
+      maxRedirects: 0,
+    });
+    expect(explicitFrench.status()).toBe(200);
+    expect(await explicitFrench.text()).toContain('<html lang="fr" dir="ltr"');
+
     for (const route of publicRoutes) {
       const prefixed = route.path === "/" ? "/en" : `/en${route.path}`;
       const response = await request.get(prefixed, { maxRedirects: 0 });
       expect(response.status(), prefixed).toBe(307);
       expect(response.headers().location, prefixed).toBe(route.path);
     }
-
-    const languageResponse = await request.get("/", {
-      headers: { "accept-language": "es-ES,es;q=0.9" },
-      maxRedirects: 0,
-    });
-    expect(languageResponse.status()).toBe(200);
-    expect(await languageResponse.text()).toContain(
-      '<html lang="en" dir="ltr"',
-    );
   });
 
   test("keeps the published logo-assets menu keyboard accessible", async ({

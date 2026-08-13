@@ -2,9 +2,10 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 
 import { isUnchangedMessageAllowed } from "../scripts/i18n/translation-contract.mts";
+import { LOCALE_COOKIE_NAME } from "../src/i18n/locale-negotiation";
 import {
   defaultLocale,
   localeRegistry,
@@ -539,6 +540,21 @@ function getVisibleLanguageSelector(page: Page) {
   return page.locator("[data-language-selector]:visible");
 }
 
+async function expectLocalePreference(
+  context: BrowserContext,
+  locale: Locale,
+): Promise<void> {
+  const localeCookie = (await context.cookies()).find(
+    ({ name }) => name === LOCALE_COOKIE_NAME,
+  );
+  expect(localeCookie).toMatchObject({
+    name: LOCALE_COOKIE_NAME,
+    value: locale,
+    path: "/",
+    sameSite: "Lax",
+  });
+}
+
 async function openLanguageMenu(page: Page, label: string) {
   const selector = getVisibleLanguageSelector(page);
   const trigger = selector.getByRole("button", { name: label, exact: true });
@@ -1009,11 +1025,11 @@ test.describe("complete public production locale contract", () => {
       for (const unknown of [
         {
           path: "/missing",
-          locale: defaultLocale,
-          dir: localeRegistry[defaultLocale].dir,
-          title: reviewedDefaultLocaleCopy.notFoundTitle,
-          aiAvailable: defaultLocaleAiAvailability["not-found"],
-          aiText: reviewedDefaultLocaleCopy.aiLauncherAskAnything,
+          locale: localeCase.locale,
+          dir: localeCase.dir,
+          title: localeCase.reviewedCopy.notFoundTitle,
+          aiAvailable: localeCase.aiAvailability["not-found"],
+          aiText: localeCase.reviewedCopy.aiLauncherAskAnything,
         },
         {
           path: `${localeCase.homePath}/missing`,
@@ -1025,11 +1041,11 @@ test.describe("complete public production locale contract", () => {
         },
         {
           path: "/zz/missing",
-          locale: defaultLocale,
-          dir: localeRegistry[defaultLocale].dir,
-          title: reviewedDefaultLocaleCopy.notFoundTitle,
-          aiAvailable: defaultLocaleAiAvailability["not-found"],
-          aiText: reviewedDefaultLocaleCopy.aiLauncherAskAnything,
+          locale: localeCase.locale,
+          dir: localeCase.dir,
+          title: localeCase.reviewedCopy.notFoundTitle,
+          aiAvailable: localeCase.aiAvailability["not-found"],
+          aiText: localeCase.reviewedCopy.aiLauncherAskAnything,
         },
       ] as const) {
         const response = await api.get(unknown.path, {
@@ -1088,13 +1104,12 @@ test.describe("complete public production locale contract", () => {
           .digest("hex"),
       ).not.toBe(localizedOgHash);
 
-      const languageInvariant = await api.get("/", {
+      const browserLanguage = await api.get("/", {
         headers: { "accept-language": localeCase.acceptLanguage },
+        maxRedirects: 0,
       });
-      expect(languageInvariant.status()).toBe(200);
-      expect(await languageInvariant.text()).toContain(
-        `<html lang="${defaultLocale}" dir="${localeRegistry[defaultLocale].dir}"`,
-      );
+      expect(browserLanguage.status()).toBe(307);
+      expect(browserLanguage.headers().location).toBe(localeCase.homePath);
 
       expect((await api.get("/api/ask")).status()).toBe(405);
       const proofCatalog = await api.get(
@@ -1331,6 +1346,7 @@ test.describe("complete public production locale contract", () => {
         `${baseUrl}/lore?source=${desktopSource}&step=4#roadmap`,
       );
       await expect(page.locator("html")).toHaveAttribute("lang", defaultLocale);
+      await expectLocalePreference(context, defaultLocale);
       const englishSelector = getVisibleLanguageSelector(page);
       const englishTrigger = englishSelector.getByRole("button", {
         name: "Language",
@@ -1358,6 +1374,7 @@ test.describe("complete public production locale contract", () => {
           "u",
         ),
       );
+      await expectLocalePreference(context, localeCase.locale);
 
       for (const targetLocaleCase of productionLocaleCases) {
         if (targetLocaleCase.locale === localeCase.locale) continue;

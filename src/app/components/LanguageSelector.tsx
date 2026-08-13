@@ -4,6 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { buildLanguageHref, usePathname } from "@/i18n/navigation";
+import { persistLocalePreference } from "@/i18n/locale-negotiation";
 import { shouldBypassLocaleRouting } from "@/i18n/proxy-policy";
 
 import {
@@ -134,6 +135,7 @@ function EnabledLanguageSelector({
       return;
     }
 
+    persistLocalePreference(nextLocale);
     window.location.assign(
       buildLanguageHref(
         pathname,
