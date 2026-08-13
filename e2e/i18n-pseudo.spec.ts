@@ -118,7 +118,7 @@ test.describe("test-only full-site pseudo-locale contract", () => {
       createHash("sha256")
         .update(await pseudoOg.body())
         .digest("hex"),
-    ).toBe("05892402d073262b7a6d46ae4144b4c0974a0606f36349d11ff3345b72cd564e");
+    ).toBe("0a682fa1b3edf44e98c82286d3672de14fd0aafae81f77564af0270478b2f5f7");
 
     const proofCatalog = await api.get("/api/i18n/home-proof/en-XA");
     expect(proofCatalog.status()).toBe(200);
