@@ -721,6 +721,11 @@ test(
 );
 
 test("Open Graph heading typography fits content without locale branches", () => {
+  assert.equal(
+    brazilianPortugueseMessages.home.openGraph.heading,
+    "Descentralização\nem tempo real",
+  );
+
   const sharedWrapping = {
     letterSpacing: "-0.02em",
     lineHeight: 1,
@@ -735,12 +740,20 @@ test("Open Graph heading typography fits content without locale branches", () =>
     "Descentralización",
     "en tiempo real",
   ]);
+  const brazilianPortuguese = createOpenGraphHeadingStyle([
+    "Descentralização",
+    "em tempo real",
+  ]);
   const pseudo = createOpenGraphHeadingStyle([
     "[!! Řëëååļ-ţïïḿëë",
     "Ďëëçëëńţřååļïïžååţïïööń !!]",
   ]);
 
-  assert.deepEqual(english, { fontSize: 131, ...sharedWrapping });
+  assert.deepEqual(english, { fontSize: 130, ...sharedWrapping });
+  assert.deepEqual(brazilianPortuguese, {
+    fontSize: 130,
+    ...sharedWrapping,
+  });
   assert.deepEqual(
     {
       letterSpacing: spanish.letterSpacing,

@@ -11,6 +11,7 @@ export const openGraphContentType = "image/png" as const;
 
 const MAX_HEADING_FONT_SIZE = 140;
 const MIN_HEADING_FONT_SIZE = 68;
+const LONG_HEADING_FONT_SIZE_RESERVE = 1;
 // Keep a small width reserve for glyph and script differences that a character
 // count cannot predict. Longer lines scale smoothly instead of switching on locale.
 const REFERENCE_HEADING_LENGTH = 15;
@@ -20,7 +21,7 @@ export function createOpenGraphHeadingStyle(headingLines: readonly string[]) {
     1,
     ...headingLines.map((line) => Array.from(line).length),
   );
-  const fontSize = Math.max(
+  const fittedFontSize = Math.max(
     MIN_HEADING_FONT_SIZE,
     Math.min(
       MAX_HEADING_FONT_SIZE,
@@ -28,6 +29,13 @@ export function createOpenGraphHeadingStyle(headingLines: readonly string[]) {
         (MAX_HEADING_FONT_SIZE * REFERENCE_HEADING_LENGTH) / longestLineLength,
       ),
     ),
+  );
+  const fontSize = Math.max(
+    MIN_HEADING_FONT_SIZE,
+    fittedFontSize -
+      (longestLineLength > REFERENCE_HEADING_LENGTH
+        ? LONG_HEADING_FONT_SIZE_RESERVE
+        : 0),
   );
 
   return {

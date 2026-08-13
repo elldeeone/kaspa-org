@@ -400,7 +400,7 @@ const productionLocaleDescriptors = [
       family: "Rock Salt",
       minimumInkHeight: 8,
     },
-    openGraphInkBandCount: 4,
+    openGraphInkBandCount: 2,
   },
   {
     locale: "ja",
