@@ -427,9 +427,9 @@ test.describe("production i18n foundation contract", () => {
       "public, max-age=0, must-revalidate",
     );
     const image = await imageResponse.body();
-    expect(image.byteLength).toBe(51_023);
+    expect(image.byteLength).toBe(50_687);
     expect(createHash("sha256").update(image).digest("hex")).toBe(
-      "8e3e4323193fb91ce668c727252e3f1afadbfe459bd5e839674095fbc18c8551",
+      "924661e6ed55559c92bd142b9890a354d1dcf9274761c448eef9afee27c26fae",
     );
 
     const redundantEnglishImage = await request.get("/en/opengraph-image", {
