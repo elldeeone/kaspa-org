@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "title": "Kaspa ロゴ・ブランド素材 | Kaspa",
+    "description": "Kaspa 公式ロゴセットをダウンロードできます。横組み・縦組みのロゴ、アイコン、ブランドカラーを SVG および高解像度 PNG でご用意しています。"
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — リアルタイムの分散化"
+  },
+  "page": {
+    "heading": "Kaspa のロゴ素材"
+  },
+  "groups": {
+    "lockup": "横組み",
+    "stacked": "縦組み",
+    "icon": "アイコン"
+  },
+  "logos": {
+    "lockupColor": {
+      "name": "フルカラー",
+      "imageAlt": "Kaspa のフルカラーロゴ",
+      "downloadAria": "Kaspa の横組みフルカラーロゴ（{format} 形式）をダウンロード"
+    },
+    "lockupReverse": {
+      "name": "反転配色",
+      "imageAlt": "Kaspa の反転配色ロゴ",
+      "downloadAria": "Kaspa の横組み反転配色ロゴ（{format} 形式）をダウンロード"
+    },
+    "lockupBlack": {
+      "name": "ブラック",
+      "imageAlt": "Kaspa の黒色ロゴ",
+      "downloadAria": "Kaspa の横組み黒色ロゴ（{format} 形式）をダウンロード"
+    },
+    "lockupWhite": {
+      "name": "ホワイト",
+      "imageAlt": "Kaspa の白色ロゴ",
+      "downloadAria": "Kaspa の横組み白色ロゴ（{format} 形式）をダウンロード"
+    },
+    "lockupOutline": {
+      "name": "アウトライン",
+      "imageAlt": "Kaspa のアウトラインロゴ",
+      "downloadAria": "Kaspa の横組みアウトラインロゴ（{format} 形式）をダウンロード"
+    },
+    "stackedColor": {
+      "name": "フルカラー",
+      "imageAlt": "Kaspa のフルカラーロゴ",
+      "downloadAria": "Kaspa の縦組みフルカラーロゴ（{format} 形式）をダウンロード"
+    },
+    "stackedReverse": {
+      "name": "反転配色",
+      "imageAlt": "Kaspa の反転配色ロゴ",
+      "downloadAria": "Kaspa の縦組み反転配色ロゴ（{format} 形式）をダウンロード"
+    },
+    "stackedBlack": {
+      "name": "ブラック",
+      "imageAlt": "Kaspa の黒色ロゴ",
+      "downloadAria": "Kaspa の縦組み黒色ロゴ（{format} 形式）をダウンロード"
+    },
+    "stackedWhite": {
+      "name": "ホワイト",
+      "imageAlt": "Kaspa の白色ロゴ",
+      "downloadAria": "Kaspa の縦組み白色ロゴ（{format} 形式）をダウンロード"
+    },
+    "stackedOutline": {
+      "name": "アウトライン",
+      "imageAlt": "Kaspa のアウトラインロゴ",
+      "downloadAria": "Kaspa の縦組みアウトラインロゴ（{format} 形式）をダウンロード"
+    },
+    "iconGreen": {
+      "name": "グリーン",
+      "imageAlt": "緑色の Kaspa アイコン",
+      "downloadAria": "緑色の Kaspa アイコン（{format} 形式）をダウンロード"
+    },
+    "iconGreenDark": {
+      "name": "濃色背景用グリーン",
+      "imageAlt": "濃色背景用の緑色の Kaspa アイコン",
+      "downloadAria": "濃色背景用の緑色の Kaspa アイコン（{format} 形式）をダウンロード"
+    },
+    "iconBlack": {
+      "name": "ブラック",
+      "imageAlt": "黒色の Kaspa アイコン",
+      "downloadAria": "黒色の Kaspa アイコン（{format} 形式）をダウンロード"
+    },
+    "iconWhite": {
+      "name": "ホワイト",
+      "imageAlt": "白色の Kaspa アイコン",
+      "downloadAria": "白色の Kaspa アイコン（{format} 形式）をダウンロード"
+    }
+  },
+  "formats": {
+    "svg": "SVG",
+    "png": "PNG"
+  }
+}

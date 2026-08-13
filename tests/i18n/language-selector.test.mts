@@ -13,6 +13,7 @@ import {
   frenchLocale,
   germanLocale,
   indonesianLocale,
+  japaneseLocale,
   getLocaleDefinition,
   pseudoLocale,
   russianLocale,
@@ -48,6 +49,10 @@ test("selector options use registry endonyms and exclude the pseudo locale", () 
       ({ code }) => code === brazilianPortugueseLocale,
     ),
     listSelectableLocales().includes(brazilianPortugueseLocale),
+  );
+  assert.equal(
+    isLanguageSelectorLocale(japaneseLocale),
+    listSelectableLocales().includes(japaneseLocale),
   );
   assert.equal(
     LANGUAGE_SELECTOR_OPTIONS.some(({ code }) => code === chineseLocale),
@@ -86,6 +91,9 @@ test("locale path fallback preserves slugs and encoded path segments", () => {
       localizePathname("/lore", brazilianPortugueseLocale),
       "/pt-BR/lore",
     );
+  }
+  if (isLanguageSelectorLocale(japaneseLocale)) {
+    assert.equal(localizePathname("/lore", japaneseLocale), "/ja/lore");
   }
   assert.equal(localizePathname("/lore", "en"), "/lore");
   assert.equal(localizePathname("/", spanishLocale), "/es");

@@ -25,10 +25,17 @@ const maShanZheng = localFont({
   preload: false,
 });
 
+const yomogi = localFont({
+  src: "../fonts/Yomogi-Regular.ttf",
+  weight: "400",
+  preload: false,
+});
+
 const fontClassNames = {
   Caveat: caveat.className,
   "Ma Shan Zheng": maShanZheng.className,
   "Rock Salt": rockSalt.className,
+  Yomogi: yomogi.className,
 } as const;
 
 export default function DagAnnotation({

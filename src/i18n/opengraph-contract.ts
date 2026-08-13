@@ -1,4 +1,8 @@
-import { defaultLocale, type Locale } from "./locale-registry.ts";
+import {
+  defaultLocale,
+  japaneseLocale,
+  type Locale,
+} from "./locale-registry.ts";
 import type { RouteId } from "./manifest.ts";
 import { getHomeMessages, getRouteMessages } from "./messages.ts";
 
@@ -40,8 +44,20 @@ export function createOpenGraphRenderContract(locale: Locale) {
   const headingLines = copy.heading.split("\n");
   return {
     headingLines,
-    headingStyle: createOpenGraphHeadingStyle(headingLines),
+    headingStyle: {
+      ...createOpenGraphHeadingStyle(headingLines),
+      ...(locale === japaneseLocale ? { lineBreak: "strict" as const } : {}),
+    },
     tagline: copy.tagline,
+    ...(locale === japaneseLocale
+      ? {
+          taglineStyle: {
+            lineBreak: "strict",
+            overflowWrap: "anywhere",
+            wordBreak: "normal",
+          } as const,
+        }
+      : {}),
   } as const;
 }
 

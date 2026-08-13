@@ -14,6 +14,13 @@ The source family is Noto Sans SC from
 every visible character in the current Chinese Open Graph copy; regenerate the
 subsets when that copy changes.
 
+`NotoSansJP-Regular.ttf` and `NotoSansJP-Bold.ttf` are text subsets of Noto Sans
+JP used only for the private Japanese Open Graph image. The subsets cover the
+exact reviewed Japanese heading and tagline, including their Latin text. They
+come from the Google Fonts CSS API and use the Adobe Source SIL Open Font
+License already included in `NotoSansSC-OFL.txt`. Glyph tests prevent a copy
+change from silently falling back to another CJK font.
+
 `MaShanZheng-Regular.ttf` is a text subset of Ma Shan Zheng used for the
 Simplified Chinese desktop DAG annotation:
 
@@ -25,6 +32,12 @@ The source family is Ma Shan Zheng from
 `https://github.com/google/fonts/tree/main/ofl/mashanzheng`. Its license is in
 `MaShanZheng-OFL.txt`. The same coverage gate protects this reviewed annotation
 from silently falling back to a mismatched system font.
+
+`Yomogi-Regular.ttf` is a text subset of Yomogi used for the private Japanese
+desktop DAG annotation. Its source family is Yomogi from
+`https://github.com/google/fonts/tree/main/ofl/yomogi`; its licence is in
+`Yomogi-OFL.txt`. The Japanese annotation glyph gate covers kana, Latin text,
+and punctuation in the reviewed copy.
 
 The Russian desktop DAG annotation uses the Cyrillic subset of Caveat through
 `next/font`. Its source family is Caveat from

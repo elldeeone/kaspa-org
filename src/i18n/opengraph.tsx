@@ -73,6 +73,7 @@ export async function renderOpenGraphImage(locale: Locale) {
           marginLeft: 5,
           width: "100%",
           flexWrap: "wrap",
+          ...contract.taglineStyle,
         }}
       >
         {contract.tagline}

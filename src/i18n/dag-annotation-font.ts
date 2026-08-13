@@ -1,11 +1,12 @@
 import {
   chineseLocale,
+  japaneseLocale,
   russianLocale,
   type Locale,
 } from "./locale-registry.ts";
 
 export type DagAnnotationFontContract = {
-  readonly family: "Caveat" | "Ma Shan Zheng" | "Rock Salt";
+  readonly family: "Caveat" | "Ma Shan Zheng" | "Rock Salt" | "Yomogi";
   readonly filename: string | null;
   readonly fontSize: string;
 };
@@ -28,10 +29,17 @@ const russianFontContract = Object.freeze({
   fontSize: "clamp(15px, 1.45vw, 26px)",
 }) satisfies DagAnnotationFontContract;
 
+const japaneseFontContract = Object.freeze({
+  family: "Yomogi",
+  filename: "Yomogi-Regular.ttf",
+  fontSize: "clamp(13px, 1.35vw, 24px)",
+}) satisfies DagAnnotationFontContract;
+
 export function getDagAnnotationFontContract(
   locale: Locale,
 ): DagAnnotationFontContract {
   if (locale === chineseLocale) return simplifiedChineseFontContract;
+  if (locale === japaneseLocale) return japaneseFontContract;
   if (locale === russianLocale) return russianFontContract;
   return rockSaltFontContract;
 }

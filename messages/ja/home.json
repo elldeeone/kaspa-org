@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "title": "Kaspa | リアルタイム分散化のためのプルーフ・オブ・ワーク blockDAG",
+    "description": "Kaspaは、公正にローンチされたプルーフ・オブ・ワーク型のblockDAG暗号資産です。毎秒10ブロックで稼働し、リアルタイムの分散化を実現するために構築されています。"
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — リアルタイムの分散化",
+    "heading": "リアルタイムの\n分散化",
+    "tagline": "bitcoinのプルーフ・オブ・ワークを、待ち時間なしで。"
+  },
+  "hero": {
+    "heading": "リアルタイムの\n分散化",
+    "tagline": "bitcoinのプルーフ・オブ・ワークを、待ち時間なしで。",
+    "getStarted": "Kaspaを始める",
+    "getWallet": "ウォレットを入手",
+    "buyKaspa": "Kaspaを購入",
+    "dagAnnotation": "リアルタイムの pow"
+  },
+  "verify": {
+    "heading": "信じるな、検証せよ。",
+    "history": "Kaspaで発行されたすべてのコインは、暗号学的に供給量ゼロのジェネシスまで遡れます。",
+    "fairLaunch": "プレマインなし。隠れた割り当てなし。フェアローンチ。",
+    "explanation": "ジェネシスの証明は、プルーニングポイントのブロックハッシュの連鎖を元のジェネシスまで逆向きにたどり、そのUTXOコミットメントが空集合と一致することを検証します。ジェネシスのコインベースに埋め込まれたBitcoinのブロックハッシュがタイムスタンプとなり、隠されたプレマインがなかったことを証明します。",
+    "runProof": "証明を実行"
+  },
+  "proof": {
+    "trigger": "証明を検証",
+    "loader": {
+      "loading": "証明を読み込み中…",
+      "error": "証明を読み込めませんでした。",
+      "retry": "再試行"
+    },
+    "chrome": {
+      "back": "戻る",
+      "title": "証明を検証",
+      "sectionsAria": "証明のセクション",
+      "jumpToSection": "「{section}」へ移動"
+    },
+    "sections": {
+      "live": "ライブ",
+      "origin": "起点",
+      "runIt": "実行"
+    },
+    "live": {
+      "eyebrow": "過去・現在・継続",
+      "title": "リアルタイム供給量と発行スケジュールの比較",
+      "body": "Kaspaの流通供給量は、第一原理から再計算できます。ライブノードが現在の総量を報告します。2021年11月22日のチェックポイント時点の総量は、そのUTXOセットを通じてコードに組み込まれたジェネシスにコミットされており、それ以降に発行されたすべてのコインは決定論的な発行スケジュールに従います。"
+    },
+    "origin": {
+      "eyebrow": "起点",
+      "title": "供給の始点",
+      "supplyBody": "すべてのコインは、供給量が<strong>ゼロ</strong>だった一つのブロックまで遡れます。そのUTXOコミットメントは空集合の数学的なフィンガープリントであり、どのマシンで計算しても同じ定数になります。供給はここから始まり、それ以降のすべてのコインは割り当てではなく、スケジュールに従った発行によるものです。",
+      "verseBody": "そのブロックのコインベースには、古代ペルシャの王たちが掲げた自由の価値を称える、アラム語で記された<reference>エズラ記7章18節</reference>の一節も刻まれています。",
+      "translatedQuotation": "「残りの銀と金については、あなたとあなたの兄弟たちがよいと思うことを、あなたがたの神の御心に従って行いなさい。」",
+      "quotationAttribution": "エズラ記7章18節（ジェネシスのコインベース）",
+      "timestampBody": "コインベースには<bitcoinBlock>Bitcoinブロック #708,639</bitcoinBlock>のハッシュも含まれており、このブロックがその時点より後に生成されたことを証明し、プレマインの可能性を排除しています。"
+    },
+    "run": {
+      "eyebrow": "信じるな、検証せよ",
+      "title": "自分で実行する",
+      "intro": "ジェネシスから現在のチェーン先端まで、証明を自分で再現できます。ノートブックはプルーニングポイントのブロックハッシュの連鎖をジェネシスまで遡り、UTXOコミットメントを空集合のフィンガープリントと照合し、アンカーとなるBitcoinブロックハッシュを検証します。2021年11月22日のチェックポイント時点の過去の供給量を数値として得るには、証明でコミットされたUTXOセットを合計する追加の導出手順が一つ必要です。",
+      "notebookTitle": "証明ノートブック",
+      "notebookBody": "クローンし、実行し、確かめる。ノートブックはジェネシスとチェックポイントのつながりを検証しますが、過去の供給量そのものは出力しません。",
+      "notebookAction": "GitHubで開く",
+      "checkpointTitle": "チェックポイント総量を検証",
+      "checkpointStep1": "ノートブックを実行し、コードに組み込まれたジェネシス、チェックポイントとのつながり、空集合という起点、Bitcoinアンカーを検証します。",
+      "checkpointStep2": "旧版の<kaspad>kaspad v0.11.5-2</kaspad>を開き、<processor>ブロックプロセッサ</processor>が埋め込み済みチェックポイントの<code>utxos.gz</code>を読み込み、コードに組み込まれたジェネシスのUTXOコミットメントと照合して検証することを確認します。",
+      "checkpointStep3": "<serialization>serialization.go</serialization>の形式に従って<utxos>utxos.gz</utxos>を解析し、すべてのUTXOの金額を合計します。",
+      "checkpointStep4": "この合計が、チェックポイントDAA <daa>1,312,860</daa>（2021年11月22日）時点の過去の供給量です：<supply>984,222,544.04487171 KAS</supply>",
+      "checkpointNote": "これ以降の発行量は決定論的に定まります。チェックポイント以降のスケジュール済み発行量を加えれば、任意のDAA時点の予想供給量が得られ、ライブノードの報告値と一致するはずです。"
+    },
+    "supply": {
+      "intro": {
+        "eyebrow": "継続的な検証",
+        "title": "リアルタイム供給量と発行スケジュールの比較",
+        "body": "ライブノードの流通供給量を、チェックポイントを基準にした予想供給量と比較します。後者は、コードに組み込まれたジェネシスによってコミットされた2021年11月22日時点のチェックポイント総量に、Kaspaの決定論的な発行スケジュールを適用したものです。"
+      },
+      "emissionHistory": "発行履歴",
+      "connection": {
+        "connectedTo": "接続先：{nodeUrl}",
+        "error": "接続エラー",
+        "connecting": "Kaspaネットワークに接続中…"
+      },
+      "comparison": {
+        "nodeReported": "ノード報告の供給量",
+        "unit": "KAS",
+        "rpcSource": "getCoinSupply RPC経由",
+        "expected": "予想供給量",
+        "expectedBasis": "チェックポイント総量 + 2021年11月22日以降のスケジュール済み発行量"
+      },
+      "anchor": {
+        "label": "アンカー",
+        "title": "2021年11月22日のチェックポイント",
+        "body": "2021年11月22日のチェックポイント時点の過去の供給量は、そのUTXOセットを通じて、コードに組み込まれたジェネシスにコミットされています。それ以降に発行されるすべてのコインは決定論的なコンセンサススケジュールに従うため、ノード報告の供給量と、チェックポイントを基準にした予想供給量は一致するはずです。数百KAS程度の小さな差は、BitcoinなどのPoWによる通貨発行と同様に、DAAとブロック数のずれ、およびコンセンサス報酬テーブルにおける整数丸めによって生じます。"
+      },
+      "timeline": {
+        "genesis": {
+          "label": "ジェネシス",
+          "date": "{date, date, medium}",
+          "description": "UTXOセットは空で、存在するコインはゼロ。元のジェネシスはBitcoinブロック #708,639にアンカーされています。"
+        },
+        "checkpoint": {
+          "label": "チェックポイント",
+          "date": "{date, date, medium}",
+          "description": "メインネット開始後約2週間は、1ブロック当たりの報酬が1〜1,000 KASの範囲でランダム化され、ハードフォークでブロック報酬が固定されるまでに+327,792,544 KASが発行されました。この過去の供給量は、コードに組み込まれたジェネシスにコミットされています。"
+        },
+        "preDeflationary": {
+          "label": "デフレ移行前フェーズ",
+          "date": "{startDate, date, medium} – {endDate, date, medium}",
+          "description": "チェックポイント後の約6か月間はブロック報酬が固定され、その後デフレ型発行スケジュールが始まります。"
+        },
+        "chromatic": {
+          "label": "Chromaticフェーズの開始",
+          "date": "~{date, date, medium}",
+          "description": "デフレ移行前フェーズが終了。報酬は1ブロック当たり500 KASから440 KASへ減少し、その後は毎月幾何級数的に減少します。"
+        },
+        "crescendo": {
+          "label": "Crescendo",
+          "date": "~{date, date, medium}",
+          "description": "毎秒10ブロックとなり、1ブロック当たりの報酬は10分の1になります。"
+        },
+        "now": "現在",
+        "live": "ライブ",
+        "circulating": "流通中のKAS",
+        "expected": "予想されるKAS",
+        "loading": "読み込み中…",
+        "connecting": "ノードに接続中…"
+      },
+      "stats": {
+        "mined": "採掘済み",
+        "blockReward": "ブロック報酬",
+        "nodeDagBlocks": "ノードのDAGブロック",
+        "daaScore": "DAAスコア",
+        "blockCountAccessible": "ノードのDAGブロック：{count}"
+      }
+    }
+  }
+}

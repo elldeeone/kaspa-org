@@ -7,9 +7,14 @@ import test from "node:test";
 import { getDagAnnotationFontContract } from "../../src/i18n/dag-annotation-font.ts";
 import {
   chineseLocale,
+  japaneseLocale,
   russianLocale,
 } from "../../src/i18n/locale-registry.ts";
-import { chineseMessages, russianMessages } from "../../src/i18n/messages.ts";
+import {
+  chineseMessages,
+  japaneseMessages,
+  russianMessages,
+} from "../../src/i18n/messages.ts";
 import { getOpenGraphFontContract } from "../../src/i18n/opengraph-font.ts";
 
 const repositoryRoot = resolve(
@@ -107,6 +112,32 @@ test("Russian Open Graph fonts cover the offline render copy", async () => {
   }
 });
 
+test("Japanese Open Graph fonts cover the exact offline render copy", async () => {
+  const copy = japaneseMessages.home.openGraph;
+  assert.equal(copy.heading, "リアルタイムの\n分散化");
+  assert.equal(
+    copy.tagline,
+    "bitcoinのプルーフ・オブ・ワークを、待ち時間なしで。",
+  );
+  const visibleCharacters = new Set(
+    [...`${copy.heading.replace("\n", " ")} ${copy.tagline}`].filter(
+      (character) => !/\s/u.test(character),
+    ),
+  );
+  const fontContract = getOpenGraphFontContract(japaneseLocale);
+  assert.equal(fontContract.family, "Noto Sans JP");
+
+  for (const asset of fontContract.assets) {
+    const font = await readFile(
+      join(repositoryRoot, "src/app/fonts", asset.filename),
+    );
+    const missing = [...visibleCharacters].filter(
+      (character) => !fontHasGlyph(font, character.codePointAt(0)!),
+    );
+    assert.deepEqual(missing, [], `${asset.filename} glyph coverage`);
+  }
+});
+
 test("Simplified Chinese DAG annotation font covers the reviewed copy", async () => {
   const copy = chineseMessages.home.hero.dagAnnotation;
   const visibleCharacters = new Set(
@@ -135,4 +166,25 @@ test("Russian DAG annotation keeps its reviewed lowercase styling and Cyrillic f
   const fontContract = getDagAnnotationFontContract(russianLocale);
   assert.equal(fontContract.family, "Caveat");
   assert.equal(fontContract.filename, null);
+});
+
+test("Japanese DAG annotation uses an offline handwritten font with exact glyph coverage", async () => {
+  const copy = japaneseMessages.home.hero.dagAnnotation;
+  assert.equal(copy, "リアルタイムの pow");
+  const visibleCharacters = new Set(
+    [...copy].filter((character) => !/\s/u.test(character)),
+  );
+  const fontContract = getDagAnnotationFontContract(japaneseLocale);
+  assert.equal(fontContract.family, "Yomogi");
+  if (fontContract.filename === null) {
+    assert.fail("Japanese DAG annotation font needs a local asset");
+  }
+
+  const font = await readFile(
+    join(repositoryRoot, "src/app/fonts", fontContract.filename),
+  );
+  const missing = [...visibleCharacters].filter(
+    (character) => !fontHasGlyph(font, character.codePointAt(0)!),
+  );
+  assert.deepEqual(missing, [], `${fontContract.filename} glyph coverage`);
 });

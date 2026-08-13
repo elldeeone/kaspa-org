@@ -1,0 +1,112 @@
+{
+  "navigation": {
+    "homeAria": "Kaspa ホーム",
+    "toggleMenu": "メニューを切り替える",
+    "menu": "メニュー",
+    "language": {
+      "label": "言語"
+    },
+    "links": {
+      "lore": "LORE",
+      "hodl": "HODL",
+      "build": "BUIDL",
+      "think": "THINK",
+      "dagviz": "DAGVIZ"
+    }
+  },
+  "theme": {
+    "switchMode": "{mode}モードに切り替える",
+    "light": "ライト",
+    "dark": "ダーク"
+  },
+  "logoMenu": {
+    "aria": "Kaspa ロゴ",
+    "viewAssets": "ロゴ素材を見る"
+  },
+  "pageSections": {
+    "onThisPage": "このページの内容",
+    "openAria": "ページ内セクションを開く。現在のセクション：{section}",
+    "dialogAria": "ページ内セクション",
+    "close": "閉じる",
+    "current": "現在"
+  },
+  "footer": {
+    "glyphAria": "Kaspa グリフ",
+    "operatedBy": "<operator>KasMedia.com</operator> が運営",
+    "links": {
+      "explorer": "エクスプローラー",
+      "github": "GitHub",
+      "x": "X"
+    }
+  },
+  "structuredData": {
+    "organizationDescription": "Kaspa は、公平にローンチされたプルーフ・オブ・ワーク方式の blockDAG 暗号資産です。毎秒10ブロックで稼働し、リアルタイムの分散化を実現します。"
+  },
+  "ai": {
+    "externalPrompt": "{url} を読んで、その内容について質問したいです。",
+    "genericError": "申し訳ありません。問題が発生しました。もう一度お試しください。",
+    "launcher": {
+      "askAnything": "何でも質問",
+      "beta": "ベータ版",
+      "betaTitle": "この機能は開発中のため、問題が発生する場合があります",
+      "betaAria": "ベータ版 — 問題が発生する場合があります",
+      "poweredBy": "<provider>kaspa.news/ask</provider> が提供",
+      "collapsePanel": "パネルを折りたたむ",
+      "expandPanel": "パネルを展開する",
+      "closePanel": "パネルを閉じる",
+      "placeholder": "何でも質問してください…",
+      "sendMessage": "メッセージを送信",
+      "welcomeHeading": "Kaspa について何でも質問",
+      "welcomeBody": "下ですぐに回答を得るか、お好みの AI で詳しい会話を始められます。",
+      "ownAiDivider": "または自分の AI を使う",
+      "ownAiLabel": "自分の AI を使用：",
+      "sources": "{count, plural, =0 {出典} other {出典（#件）}}",
+      "copy": "コピー",
+      "copied": "コピーしました"
+    },
+    "suggestions": {
+      "kaspaPurpose": "Kaspa はどのような問題を解決しますか？",
+      "blockTimes": "ブロック時間はどのくらいですか？",
+      "decentralization": "リアルタイムの分散化が重要なのはなぜですか？",
+      "premine": "プレマインはありましたか？"
+    },
+    "providers": {
+      "chatgpt": "ChatGPT",
+      "claude": "Claude",
+      "perplexity": "Perplexity"
+    },
+    "loading": {
+      "atomicArc": "AtomicArc を安全に実行中…",
+      "ibd": "新しいノードで IBD を実行中…",
+      "ftr": "FTR でブロックを中継中…",
+      "kip": "KIP を有効化中…",
+      "template": "テンプレートをバインド中…",
+      "commitment": "コミットメントからブートストラップ中…",
+      "blueSet": "ブルーセットを編成中…",
+      "mergeDepth": "マージ深度を計算中…",
+      "silverscript": "Silverscript のコンパイルを試行中…",
+      "covenantId": "covenant_id を導出中…",
+      "covenantState": "コベナント状態をエンコード中…",
+      "orphans": "孤立ブロックを排除中…",
+      "mempool": "メモリープールを充填中…",
+      "fees": "手数料をレーン別に分類中…",
+      "covenants": "コベナントと交渉中…",
+      "blocks": "ブロックを並列配信中…",
+      "pruning": "過去データをプルーニング中…",
+      "dagLayer": "DAG レイヤーに公開中…",
+      "stack": "スタックにプッシュ中…",
+      "bps": "10 BPS を再調整中…",
+      "blueWork": "ブルーワークを再計算中…",
+      "l2": "L2 イベントのリオーグをフィルタリング中…",
+      "vprogBatch": "vProg バッチをスケジュール中…",
+      "schnorr": "Schnorr 署名を生成中…",
+      "virtualState": "仮想状態をシリアライズ中…",
+      "utxoSet": "UTXO セットのスナップショットを作成中…",
+      "anticone": "アンチコーンを走査中…",
+      "transactions": "孤立トランザクションを再処理中…",
+      "utxo": "UTXO をアンロック中…",
+      "vprogs": "vProg を仮想化中…",
+      "crescendo": "Crescendo を待機中…"
+    }
+  }
+}

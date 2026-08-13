@@ -1,4 +1,8 @@
-import { chineseLocale, type Locale } from "./locale-registry.ts";
+import {
+  chineseLocale,
+  japaneseLocale,
+  type Locale,
+} from "./locale-registry.ts";
 
 export type OpenGraphFontAsset = {
   readonly filename: string;
@@ -26,10 +30,18 @@ const simplifiedChineseFontContract = Object.freeze({
   ]),
 }) satisfies OpenGraphFontContract;
 
+const japaneseFontContract = Object.freeze({
+  family: "Noto Sans JP",
+  assets: Object.freeze([
+    Object.freeze({ filename: "NotoSansJP-Regular.ttf", weight: 400 }),
+    Object.freeze({ filename: "NotoSansJP-Bold.ttf", weight: 700 }),
+  ]),
+}) satisfies OpenGraphFontContract;
+
 export function getOpenGraphFontContract(
   locale: Locale,
 ): OpenGraphFontContract {
-  return locale === chineseLocale
-    ? simplifiedChineseFontContract
-    : geistFontContract;
+  if (locale === chineseLocale) return simplifiedChineseFontContract;
+  if (locale === japaneseLocale) return japaneseFontContract;
+  return geistFontContract;
 }

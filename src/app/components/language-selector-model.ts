@@ -33,5 +33,9 @@ export function isLanguageSelectorLocale(
   value: string,
 ): value is LanguageSelectorLocale {
   const locale = resolveSupportedLocale(value);
-  return locale !== null && locale !== pseudoLocale;
+  return (
+    locale !== null &&
+    locale !== pseudoLocale &&
+    LANGUAGE_SELECTOR_OPTIONS.some(({ code }) => code === locale)
+  );
 }

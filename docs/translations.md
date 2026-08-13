@@ -4,7 +4,9 @@ Kaspa.org accepts corrections to published translations, translator or reviewer
 volunteers, and requests for new site languages. English, Spanish, German,
 French, Simplified Chinese, Russian, Bahasa Indonesia, and Brazilian Portuguese
 are published.
-`en-XA` is a test-only, no-index pseudo-locale used for quality assurance.
+Japanese (`ja`) is available only in no-index Preview builds while it is
+reviewed; it is excluded from Production discovery and publication. `en-XA` is
+a test-only, no-index pseudo-locale used for quality assurance.
 
 ## Make a Request
 

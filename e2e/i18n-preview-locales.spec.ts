@@ -8,6 +8,7 @@ import {
   assertHeadingUsesResponsiveWrapping,
   assertLocatorsDoNotOverlap,
   assertNoHorizontalOverflow,
+  measureOpenGraphImage,
   standaloneBasePath,
   standaloneExampleNames,
   waitForStableLayout,
@@ -39,11 +40,34 @@ type PreviewLocaleCase = {
   dagAnnotation: string;
   dagAnnotationFont: string;
   dagAnnotationMinimumInkHeight: number;
+  openGraphInkBandCount: number;
 };
 
 // Add each complete private-review locale here. The lifecycle coverage test
 // keeps this descriptor list in lockstep with the central registry.
-const previewLocaleCases: readonly PreviewLocaleCase[] = [];
+const previewLocaleCases: readonly PreviewLocaleCase[] = [
+  {
+    locale: "ja",
+    endonym: "日本語",
+    languageLabel: "言語",
+    dir: "ltr",
+    routes: localizePublicRouteGolden("ja"),
+    fingerprints: {
+      home: "信じるな、検証せよ。",
+      lore: "発想の転換",
+      build: "開発を始める",
+      assets: "Kaspa のロゴ素材",
+      hodl: "KAS を自分で管理する",
+    },
+    proofFingerprint: "信じるな、検証せよ",
+    backFingerprint: "戻る",
+    notFoundTitle: "ページが見つかりません | Kaspa",
+    dagAnnotation: "リアルタイムの pow",
+    dagAnnotationFont: "Yomogi",
+    dagAnnotationMinimumInkHeight: 12,
+    openGraphInkBandCount: 2,
+  },
+];
 
 test.describe("real preview locale contract", () => {
   const scenario = useBuiltLocaleScenario({
@@ -197,6 +221,23 @@ test.describe("real preview locale contract", () => {
         });
         const page = await context.newPage();
 
+        if (viewport.width === 1440) {
+          await page.goto(`/${localeCase.locale}`, {
+            waitUntil: "domcontentloaded",
+          });
+          const metrics = await measureOpenGraphImage(
+            page,
+            `/${localeCase.locale}/opengraph-image`,
+          );
+          expect(metrics).toMatchObject({ width: 1200, height: 630 });
+          expect(metrics.inkPixels).toBeGreaterThan(1_000);
+          expect(metrics.inkBandCount).toBe(localeCase.openGraphInkBandCount);
+          expect(metrics.minX).toBeGreaterThanOrEqual(48);
+          expect(metrics.maxX).toBeLessThanOrEqual(1152);
+          expect(metrics.minY).toBeGreaterThanOrEqual(48);
+          expect(metrics.maxY).toBeLessThanOrEqual(582);
+        }
+
         for (const route of localeCase.routes) {
           await page.goto(route.path, { waitUntil: "domcontentloaded" });
           await waitForStableLayout(page);
@@ -235,8 +276,8 @@ test.describe("real preview locale contract", () => {
                     metrics.actualBoundingBoxDescent,
                 };
               });
-              expect(fontState.fontFamily).toContain(
-                localeCase.dagAnnotationFont,
+              expect(fontState.fontFamily.toLocaleLowerCase()).toContain(
+                localeCase.dagAnnotationFont.toLocaleLowerCase(),
               );
               expect(fontState.loaded).toBe(true);
               expect(fontState.inkHeight).toBeGreaterThanOrEqual(

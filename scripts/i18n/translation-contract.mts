@@ -2,11 +2,6 @@ import { flattenCatalog, type MessageCatalog } from "./catalog-contract.mts";
 
 type PreferredTermRule = readonly [pattern: RegExp, preferred: string];
 
-type TranslationPolicy = {
-  readonly allowedUnchangedValues?: readonly string[];
-  readonly preferredTerms?: readonly PreferredTermRule[];
-};
-
 export const SHARED_PROTECTED_TERMS = [
   "Kaspa",
   "KAS",
@@ -38,6 +33,13 @@ export const SHARED_PROTECTED_TERMS = [
 ] as const;
 
 type ProtectedTerm = (typeof SHARED_PROTECTED_TERMS)[number];
+type TranslationPolicy = {
+  readonly allowedUnchangedValues?: readonly string[];
+  readonly preferredTerms?: readonly PreferredTermRule[];
+  readonly protectedTermAliases?: Readonly<
+    Partial<Record<ProtectedTerm, RegExp>>
+  >;
+};
 type ProtectedTermMatchers = {
   readonly source: RegExp;
   readonly target: RegExp;
@@ -173,10 +175,55 @@ const translationPolicies = {
       [/(?:^|\W)self-custody(?:$|\W)/iu, "autocustódia"],
     ],
   },
+  ja: {
+    protectedTermAliases: {
+      cypherpunk: /サイファーパンク/gu,
+    },
+    preferredTerms: [
+      [/(?:^|\W)mainnet(?:$|\W)/iu, "メインネット"],
+      [/(?:^|\W)testnet(?:$|\W)/iu, "テストネット"],
+      [/(?:^|\W)hard[- ]?fork(?:$|\W)/iu, "ハードフォーク"],
+      [/(?:^|\W)on-chain(?:$|\W)/iu, "オンチェーン"],
+      [/(?:^|\W)off-chain(?:$|\W)/iu, "オフチェーン"],
+      [/(?:^|\W)proof[- ]of[- ]work(?:$|\W)/iu, "プルーフ・オブ・ワーク"],
+      [/(?:^|\W)fair[- ]launch(?:ed)?(?:$|\W)/iu, "公平なローンチ"],
+      [/(?:^|\W)self-custody(?:$|\W)/iu, "自己管理"],
+      [/(?:^|\W)hashrate(?:$|\W)/iu, "ハッシュレート"],
+      [/(?:^|\W)finality(?:$|\W)/iu, "確定性"],
+    ],
+  },
 } as const satisfies Readonly<Record<string, TranslationPolicy>>;
 
 const emptyPolicy = {} satisfies TranslationPolicy;
 const prohibitedZeroWidthCharacter = /[\u200B-\u200D\u2060\uFEFF]/u;
+const prohibitedJapaneseLineStart =
+  /^[、。，．・：；？！ー〜…‥）］｝〕〉》」』】〙〗〟’”｠»]/u;
+const prohibitedJapaneseLineEnd = /[（［｛〔〈《「『【〘〖〝‘“｟«]$/u;
+
+function validateJapaneseManualLineBreaks(
+  fullKey: string,
+  value: string,
+): string[] {
+  const lines = value.split("\n");
+  const errors: string[] = [];
+
+  for (let index = 1; index < lines.length; index += 1) {
+    const previous = lines[index - 1].trimEnd();
+    const next = lines[index].trimStart();
+    if (previous && prohibitedJapaneseLineEnd.test(previous)) {
+      errors.push(
+        `${fullKey} ends a manual line with prohibited Japanese opening punctuation`,
+      );
+    }
+    if (next && prohibitedJapaneseLineStart.test(next)) {
+      errors.push(
+        `${fullKey} starts a manual line with prohibited Japanese closing punctuation`,
+      );
+    }
+  }
+
+  return errors;
+}
 
 function getTranslationPolicy(locale: string): TranslationPolicy {
   return (
@@ -196,6 +243,13 @@ function protectedTermExpression(term: ProtectedTerm): string {
   return `(?<![\\p{L}\\p{N}_])${escapeRegExp(term)}${suffix}(?![\\p{L}\\p{N}_])`;
 }
 
+function japaneseProtectedTermExpression(term: ProtectedTerm): string {
+  const suffix = ["Kaspa", "Bitcoin", "Ethereum", "cypherpunk"].includes(term)
+    ? "s?"
+    : "";
+  return `(?<![\\p{Script=Latin}\\p{N}_])${escapeRegExp(term)}${suffix}(?![\\p{Script=Latin}\\p{N}_])`;
+}
+
 const protectedTermMatchers = new Map<ProtectedTerm, ProtectedTermMatchers>(
   SHARED_PROTECTED_TERMS.map((term) => {
     const expression = protectedTermExpression(term);
@@ -210,6 +264,15 @@ const protectedTermMatchers = new Map<ProtectedTerm, ProtectedTermMatchers>(
       },
     ];
   }),
+);
+const japaneseProtectedTargetMatchers = new Map<ProtectedTerm, RegExp>(
+  SHARED_PROTECTED_TERMS.map((term) => [
+    term,
+    new RegExp(
+      japaneseProtectedTermExpression(term),
+      term === "cypherpunk" ? "giu" : "gu",
+    ),
+  ]),
 );
 
 function countProtectedTerm(value: string, pattern: RegExp): number {
@@ -267,6 +330,10 @@ export function validateTranslationCatalogContract(
       );
     }
 
+    if (locale === "ja") {
+      errors.push(...validateJapaneseManualLineBreaks(fullKey, targetValue));
+    }
+
     if (
       sourceValue === targetValue &&
       !isUnchangedMessageAllowed(locale, sourceValue)
@@ -285,10 +352,17 @@ export function validateTranslationCatalogContract(
         visibleSourceValue,
         matchers.source,
       );
-      const targetCount = countProtectedTerm(
-        visibleTargetValue,
-        matchers.target,
-      );
+      const targetMatcher =
+        locale === "ja"
+          ? japaneseProtectedTargetMatchers.get(term)
+          : matchers.target;
+      if (!targetMatcher) continue;
+      const aliasMatcher = policy.protectedTermAliases?.[term];
+      const targetCount =
+        countProtectedTerm(visibleTargetValue, targetMatcher) +
+        (aliasMatcher
+          ? countProtectedTerm(visibleTargetValue, aliasMatcher)
+          : 0);
       if (sourceCount > 0 && targetCount === 0) {
         errors.push(
           `${fullKey} removes protected term ${term} from translated copy`,

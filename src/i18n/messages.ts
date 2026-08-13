@@ -54,6 +54,13 @@ import brazilianPortugueseHodl from "../../messages/pt-BR/hodl.json" with { type
 import brazilianPortugueseHome from "../../messages/pt-BR/home.json" with { type: "json" };
 import brazilianPortugueseLore from "../../messages/pt-BR/lore.json" with { type: "json" };
 import brazilianPortugueseShared from "../../messages/pt-BR/shared.json" with { type: "json" };
+import japaneseAssets from "../../messages/ja/assets.json" with { type: "json" };
+import japaneseBuild from "../../messages/ja/build.json" with { type: "json" };
+import japaneseErrors from "../../messages/ja/errors.json" with { type: "json" };
+import japaneseHodl from "../../messages/ja/hodl.json" with { type: "json" };
+import japaneseHome from "../../messages/ja/home.json" with { type: "json" };
+import japaneseLore from "../../messages/ja/lore.json" with { type: "json" };
+import japaneseShared from "../../messages/ja/shared.json" with { type: "json" };
 
 import {
   isLocaleEnabled,
@@ -66,6 +73,7 @@ import {
   frenchLocale,
   germanLocale,
   indonesianLocale,
+  japaneseLocale,
   pseudoLocale,
   russianLocale,
   spanishLocale,
@@ -158,6 +166,16 @@ export const brazilianPortugueseMessages = {
   shared: brazilianPortugueseShared,
 } satisfies AppMessages;
 
+export const japaneseMessages = {
+  assets: japaneseAssets,
+  build: japaneseBuild,
+  errors: japaneseErrors,
+  hodl: japaneseHodl,
+  home: japaneseHome,
+  lore: japaneseLore,
+  shared: japaneseShared,
+} satisfies AppMessages;
+
 let generatedPseudoMessages: AppMessages | null = null;
 
 function assertNever(value: never): never {
@@ -225,6 +243,13 @@ export function getMessages(locale: Locale): LocaleMessages {
         );
       }
       return brazilianPortugueseMessages;
+    case japaneseLocale:
+      if (!isLocaleEnabled(japaneseLocale)) {
+        throw new Error(
+          `${japaneseLocale} messages are unavailable in this build target`,
+        );
+      }
+      return japaneseMessages;
     default:
       return assertNever(locale);
   }
