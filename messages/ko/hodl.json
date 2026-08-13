@@ -1,0 +1,294 @@
+{
+  "metadata": {
+    "title": "KAS 구매, 지갑 설정 및 자기 보관 | Kaspa",
+    "description": "지갑을 만들고 KAS를 구매한 뒤 자기 보관 지갑으로 전송하세요."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — 실시간 탈중앙화"
+  },
+  "navigation": {
+    "current": "HODL",
+    "sections": {
+      "wallet": {
+        "label": "1. 지갑 만들기",
+        "compactLabel": "지갑",
+        "description": "KAS를 보관할 지갑을 설정하세요."
+      },
+      "buy": {
+        "label": "2. KAS 구매",
+        "compactLabel": "구매",
+        "description": "주요 거래소에서 KAS를 찾아보세요."
+      },
+      "transfer": {
+        "label": "3. 지갑으로 이동",
+        "compactLabel": "전송",
+        "description": "거래소에서 내 지갑으로 KAS를 보내세요."
+      },
+      "help": {
+        "label": "도움말",
+        "compactLabel": "도움말",
+        "description": "커뮤니티 도움말과 탐색기 도구입니다."
+      }
+    }
+  },
+  "start": {
+    "heading": "<flicker><source>H</source><replacement>K</replacement></flicker>ODL Kaspa",
+    "tagline": "KAS를 구매해 직접 관리하는 지갑으로 옮기세요."
+  },
+  "wallet": {
+    "heading": "지갑 만들기",
+    "description": "KAS를 보관하고 사용할 방식에 맞는 지갑을 선택하세요.",
+    "safety": {
+      "label": "중요:",
+      "body": "상당한 금액을 옮기기 전에 복구 문구나 지갑 안내 사항을 백업하세요. 먼저 소액의 테스트 트랜잭션을 보내고, 정상적으로 도착한 것을 확인한 후에만 나머지를 옮기세요."
+    }
+  },
+  "buy": {
+    "heading": "KAS 구매",
+    "description": "KAS는 여러 거래소에 상장되어 있습니다. 거주 지역에서 지원되는 플랫폼을 통해 구매한 뒤 개인 지갑으로 전송하세요.",
+    "moreExchanges": "외 {count, number}개 이상"
+  },
+  "transfer": {
+    "heading": "KAS를 직접 보관하세요",
+    "description": "거래소에서 개인 지갑으로 전송해 자산을 안전하게 관리하세요.",
+    "receive": "받기",
+    "screenReaderDiagram": "거래소 계정에서 개인 지갑으로 이동하는 KAS",
+    "stepLabel": "{step}단계",
+    "steps": {
+      "receiveAddress": {
+        "title": "수신 주소 확인",
+        "description": "Kaspium 앱을 열고 '받기'를 누른 뒤 고유 주소를 복사하세요."
+      },
+      "testTransaction": {
+        "title": "테스트 트랜잭션 보내기",
+        "description": "전송 경로가 올바른지 확인할 수 있도록 거래소에서 극소량의 KAS를 출금하세요."
+      },
+      "balance": {
+        "title": "남은 잔액 전송",
+        "description": "테스트 트랜잭션이 지갑에 안전하게 도착하면 남은 잔액을 출금하세요."
+      }
+    },
+    "waitTimes": {
+      "label": "거래소 대기 시간:",
+      "body": "Kaspa 네이티브 전송은 사실상 즉시 처리되지만, 거래소는 자체적인 내부 지연 시간을 적용합니다. 거래소가 자금을 네트워크로 보내기까지 30~60분 정도 기다리는 것은 지극히 정상입니다."
+    },
+    "security": {
+      "label": "보안 확인:",
+      "body": "확정하기 전에 항상 주소의 처음과 끝 몇 글자가 맞는지 확인하세요."
+    }
+  },
+  "help": {
+    "eyebrow": "도움말",
+    "heading": "계속 진행하기",
+    "descriptionWithAi": "지갑, 구매 및 보안에 관한 즉각적인 답변은 Kaspa AI에 질문하세요. 커뮤니티의 도움이 필요하면 Discord에 참여하고, 트랜잭션은 탐색기에서 확인하세요.",
+    "descriptionWithoutAi": "커뮤니티의 도움이 필요하면 Discord에 참여하고, 트랜잭션은 탐색기에서 확인하세요.",
+    "openAi": "AI 열기",
+    "community": "커뮤니티",
+    "discord": "Discord",
+    "trackTransaction": "트랜잭션 추적",
+    "explorer": "탐색기",
+    "prompts": {
+      "backupWallet": "지갑을 백업하려면 어떻게 해야 하나요?",
+      "buyKas": "KAS는 어디에서 구매할 수 있나요?",
+      "firstPurchase": "KAS를 처음 구매하려면 어떻게 해야 하나요?",
+      "leaveOnExchange": "KAS를 거래소에 그대로 두어도 되나요?",
+      "moveFromExchange": "거래소에서 내 지갑으로 KAS를 보내려면 어떻게 해야 하나요?",
+      "fees": "KAS를 구매하거나 전송할 때 어떤 수수료가 발생하나요?",
+      "recoveryPhrase": "복구 문구란 무엇인가요?",
+      "walletVsExchange": "지갑과 거래소의 차이는 무엇인가요?",
+      "receiveKas": "다른 사람에게서 KAS를 받으려면 어떻게 해야 하나요?",
+      "multipleWallets": "Kaspa 지갑을 여러 개 만들 수 있나요?",
+      "maxSupply": "Kaspa의 최대 공급량은 얼마인가요?"
+    }
+  },
+  "media": {
+    "kaspiumScreenshotAlt": "Kaspium 지갑 앱 스크린샷"
+  },
+  "walletFinder": {
+    "common": {
+      "optional": "선택 사항",
+      "notAvailable": "사용할 수 없음",
+      "notAvailableSentence": "사용할 수 없습니다.",
+      "moreInformation": "자세한 정보",
+      "pros": "장점",
+      "cons": "단점",
+      "newUser": "초보자",
+      "experiencedUser": "숙련자"
+    },
+    "operatingSystems": {
+      "android": "Android",
+      "ios": "iOS",
+      "windows": "Windows",
+      "mac": "macOS",
+      "linux": "Linux",
+      "hardware": "하드웨어"
+    },
+    "guidance": {
+      "mobile": {
+        "title": "모바일 지갑",
+        "shortTitle": "모바일",
+        "pros": {
+          "portable": "휴대성과 편의성이 뛰어나 대면 거래에 적합함",
+          "qr": "QR 코드로 빠르고 간편하게 거래할 수 있도록 설계됨"
+        },
+        "cons": {
+          "marketplaces": "앱 마켓에서 지갑이 등록 취소되거나 삭제될 수 있어 향후 업데이트를 받기 어려워질 수 있음",
+          "deviceLoss": "기기가 손상되거나 분실되면 자금을 잃을 가능성이 있음"
+        }
+      },
+      "desktop": {
+        "title": "데스크톱 지갑",
+        "shortTitle": "데스크톱",
+        "pros": {
+          "control": "데스크톱 환경에서는 사용자가 자금을 완전히 통제할 수 있음",
+          "advanced": "일부 데스크톱 지갑은 하드웨어 지갑을 지원하거나 풀 노드로 작동함"
+        },
+        "cons": {
+          "qr": "대면 거래 시 QR 코드 결제에 불편함",
+          "malware": "감염된 컴퓨터에서는 사용자가 멀웨어, 스파이웨어 또는 바이러스에 노출될 수 있음"
+        }
+      },
+      "hardware": {
+        "title": "하드웨어 지갑",
+        "shortTitle": "하드웨어",
+        "pros": {
+          "secure": "자금을 보관하는 가장 안전한 방법 중 하나",
+          "longTerm": "많은 양의 KAS를 장기간 보관하는 데 적합함"
+        },
+        "cons": {
+          "mobile": "이동 중에는 사용하기 불편하며 빠른 거래용으로 설계되지 않음",
+          "deviceLoss": "제대로 백업하지 않은 채 기기를 분실하면 자금을 복구하지 못할 수 있음"
+        }
+      }
+    },
+    "wizard": {
+      "progress": "{total, number}단계 중 {step, number}단계",
+      "skip": "건너뛰기 →",
+      "skipAll": "건너뛰고 모든 지갑 보기 →",
+      "prosAndCons": "장단점",
+      "back": "뒤로",
+      "next": "다음",
+      "showWallets": "지갑 보기",
+      "showMatchingWallets": "조건에 맞는 지갑 보기",
+      "steps": {
+        "os": {
+          "title": "사용 중인 운영체제는 무엇인가요?",
+          "subtitle": "사용 중인 OS에서 실행되는 지갑만 표시합니다."
+        },
+        "experience": {
+          "title": "Kaspa를 얼마나 잘 알고 계신가요?",
+          "subtitle": "경험 수준에 맞는 지갑을 표시하는 데 사용됩니다."
+        },
+        "criteria": {
+          "title": "어떤 기준이 중요하신가요?",
+          "subtitle": "선택 사항"
+        },
+        "features": {
+          "title": "어떤 기능을 찾고 계신가요?",
+          "subtitle": "선택 사항"
+        }
+      },
+      "experience": {
+        "newDescription": "초보자에게 적합한 지갑을 표시합니다.",
+        "experiencedDescription": "모든 지갑을 표시합니다."
+      }
+    },
+    "filters": {
+      "heading": "지갑 필터링",
+      "clearAll": "모두 지우기",
+      "operatingSystem": "운영체제",
+      "userType": "사용자 유형",
+      "criteria": "기준",
+      "features": "기능",
+      "showNewUsers": "초보자에게 적합한 지갑을 표시합니다.",
+      "showExperiencedUsers": "모든 지갑을 표시합니다.",
+      "show": "필터",
+      "hide": "필터 숨기기",
+      "remove": "{filter} 필터 제거"
+    },
+    "criteria": {
+      "control": {
+        "label": "통제권",
+        "description": "일부 지갑에서는 KAS를 완전히 통제할 수 있습니다. 이는 제3자가 자금을 동결하거나 빼앗을 수 없다는 뜻입니다. 다만 지갑을 안전하게 보호하고 백업할 책임은 여전히 본인에게 있습니다."
+      },
+      "validation": {
+        "label": "검증",
+        "description": "일부 지갑은 자체 노드를 실행하거나 신뢰하는 Kaspa 노드를 직접 지정할 수 있게 하여, 트랜잭션을 처리할 노드를 사용자가 선택할 수 있도록 합니다."
+      },
+      "transparency": {
+        "label": "투명성",
+        "description": "일부 지갑은 오픈 소스이며 결정론적으로 빌드할 수 있습니다. 이는 결과 코드를 동일하게 재현할 수 있도록 소프트웨어를 컴파일하는 과정으로, 코드가 변조되지 않았는지 확인하는 데 도움이 됩니다."
+      },
+      "fees": {
+        "label": "수수료",
+        "description": "일부 지갑에서는 트랜잭션을 보내기 전에 Kaspa 네트워크에 지불할 수수료를 직접 설정할 수 있습니다. 이를 통해 필요 이상으로 지불하지 않으면서 트랜잭션이 적시에 확정되도록 할 수 있습니다."
+      }
+    },
+    "features": {
+      "two_fa": {
+        "label": "2FA",
+        "description": "이중 인증(2FA)은 지갑에 두 번째 보안 계층을 추가합니다. 자금에 접근하려면 비밀번호 외에도 앱이나 문자 메시지로 받은 인증 코드가 필요합니다. 일반적으로 2FA 인증은 제3자 서비스에 의존한다는 점에 유의하세요."
+      },
+      "hardware_wallet": {
+        "label": "하드웨어 지갑 지원",
+        "description": "일부 소프트웨어 지갑은 하드웨어 지갑 기기(예: Ledger 또는 Tangem)와 페어링할 수 있습니다. 이를 통해 개인 키는 기기에 격리해 두면서 익숙한 소프트웨어 인터페이스를 계속 사용할 수 있습니다."
+      },
+      "multisig": {
+        "label": "다중 서명",
+        "description": "일부 지갑은 전송 승인에 둘 이상의 키가 필요한 다중 서명 트랜잭션을 지원합니다. 이를 사용해 여러 당사자에게 책임을 분산하거나 고액 자산에 보안 계층을 추가할 수 있습니다."
+      }
+    },
+    "ratings": {
+      "good": "좋음",
+      "acceptable": "보통",
+      "caution": "주의",
+      "not_applicable": "해당 없음",
+      "notApplicableCompact": "N/A",
+      "aria": "{criterion}: {rating}",
+      "tooltipHeading": "{criterion}: {rating}",
+      "explanations": {
+        "control": {
+          "good": "자기 보관형입니다. 개인 키를 직접 보유하므로 제3자가 자금을 동결하거나 압류할 수 없습니다.",
+          "caution": "수탁형입니다. 제3자가 키를 보유하며 자금을 동결하거나 압류할 수 있습니다."
+        },
+        "validation": {
+          "good": "기본적으로 자체 Kaspa 풀 노드를 실행하므로 트랜잭션을 독립적으로 검증합니다.",
+          "acceptable": "신뢰하는 Kaspa 노드를 자유롭게 지정할 수 있지만, 지갑 자체가 노드로 실행되지는 않습니다.",
+          "caution": "고정된 중앙화 인프라에만 연결되므로 지갑이 선택한 노드를 신뢰해야 합니다.",
+          "not_applicable": "하드웨어 기기 전용입니다. 기기 자체에서는 트랜잭션을 처리하지 않습니다."
+        },
+        "transparency": {
+          "good": "재현 가능한 빌드를 제공하는 오픈 소스이므로 공개된 바이너리를 소스 코드와 대조해 검증할 수 있습니다.",
+          "acceptable": "오픈 소스이지만 빌드를 재현할 수 없으므로 공개된 바이너리가 소스와 일치한다고 신뢰해야 합니다.",
+          "caution": "비공개 소스입니다. 코드를 독립적으로 감사할 수 없습니다."
+        },
+        "fees": {
+          "good": "각 트랜잭션에서 원하는 사용자 지정 수수료를 설정할 수 있습니다.",
+          "acceptable": "미리 설정된 수수료 단계를 제공하지만 완전히 사용자 지정한 수수료는 설정할 수 없습니다.",
+          "caution": "수수료가 강제로 정해지거나 숨겨져 있어 사용자가 통제할 수 없습니다."
+        }
+      }
+    },
+    "results": {
+      "summary": "총 {total, plural, one {#개 지갑} other {#개 지갑}} 중 <strong>{matches, number}</strong>개",
+      "compactSummary": "<strong>{matches, number}</strong> / {total, plural, one {#개 지갑} other {#개 지갑}}",
+      "helpChoose": "지갑 선택 도와주기",
+      "walletColumn": "지갑",
+      "noMatches": "조건에 맞는 지갑이 없습니다",
+      "removeFilters": "일부 필터를 제거해 보세요.",
+      "noLinks": "이 필터에 사용할 수 있는 링크가 없습니다.",
+      "aboutCriterion": "{criterion} 정보"
+    },
+    "actions": {
+      "app_store": "App Store",
+      "google_play": "Google Play",
+      "download": "다운로드",
+      "open": "지갑 열기",
+      "view_source": "소스 보기"
+    },
+    "submission": {
+      "question": "찾는 지갑이 없나요?",
+      "action": "GitHub에서 제출 방법 알아보기"
+    }
+  }
+}

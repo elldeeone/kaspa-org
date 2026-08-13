@@ -132,14 +132,15 @@ test("artifact manifest follows the central Build-example contract", () => {
     "id-ID",
     "pt-BR",
     "ja",
+    "ko",
   ]);
   assert.ok(
     manifest.locales.every(
       (locale) => manifest.pathsByLocale[locale].length === 6,
     ),
   );
-  assert.equal(manifest.localizedPaths.length, 54);
-  assert.equal(manifest.localizedUrls.length, 54);
+  assert.equal(manifest.localizedPaths.length, 60);
+  assert.equal(manifest.localizedUrls.length, 60);
   assert.ok(
     manifest.localizedUrls.every((path) =>
       path.startsWith(`${buildExampleContract.examplesPublicBasePath}/`),
@@ -529,6 +530,26 @@ test("catalog-backed Build artifacts are deterministic and complete", async () =
   assert.match(japaneseControls, /<- 戻る<\/a> \| ネットワーク:/u);
   assert.match(japaneseControls, />切断<\/a>/u);
   assert.match(japaneseControls, />再接続<\/a>/u);
+
+  for (const name of exampleNames) {
+    const korean = first[`${name}.ko.html`];
+    assert.match(korean, /<html lang="ko" dir="ltr">/u);
+    assert.match(korean, /from '\.\/resources\/utils\.ko\.js'/u);
+    assert.match(korean, /Kaspa 네트워크에 연결 중/u);
+    assert.match(korean, /<meta name="robots" content="noindex, nofollow">/u);
+    assert.doesNotMatch(korean, /\[!! /u);
+  }
+  assert.match(first["get-server-info.ko.html"], /GetServerInfo 요청/u);
+  assert.match(first["get-block-dag-info.ko.html"], /GetBlockDagInfo 응답/u);
+  assert.match(first["subscribe-block-added.ko.html"], /연결이 해제된 대상/u);
+  assert.match(first["utxo-context.ko.html"], /수천 개의 UTXO/u);
+  assert.doesNotMatch(first["utxo-context.ko.html"], /UTXOs/u);
+
+  const koreanControls = first["resources/utils.ko.js"];
+  assert.match(koreanControls, /href="\/ko\/build#try-live"/u);
+  assert.match(koreanControls, /<- 뒤로<\/a> \| 네트워크:/u);
+  assert.match(koreanControls, />연결 해제<\/a>/u);
+  assert.match(koreanControls, />다시 연결<\/a>/u);
 });
 
 test("Build artifacts use an RTL locale direction without generator changes", async () => {
@@ -810,7 +831,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   assert.deepEqual(
     (await readdir(directory))
       .filter((path) =>
-        /\.(?:de|en-XA|es|fr|id-ID|ja|pt-BR|ru|zh-CN)\.html$/u.test(path),
+        /\.(?:de|en-XA|es|fr|id-ID|ja|ko|pt-BR|ru|zh-CN)\.html$/u.test(path),
       )
       .sort(),
     manifest.localizedPaths.filter((path) => path.endsWith(".html")).sort(),
@@ -821,7 +842,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   assert.deepEqual(
     (await readdir(directory))
       .filter((path) =>
-        /\.(?:de|en-XA|es|fr|id-ID|ja|pt-BR|ru|zh-CN)\.html$/u.test(path),
+        /\.(?:de|en-XA|es|fr|id-ID|ja|ko|pt-BR|ru|zh-CN)\.html$/u.test(path),
       )
       .sort(),
     [
@@ -833,6 +854,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
       ...manifest.pathsByLocale["id-ID"],
       ...manifest.pathsByLocale["pt-BR"],
       ...manifest.pathsByLocale.ja,
+      ...manifest.pathsByLocale.ko,
     ]
       .filter((path) => path.endsWith(".html"))
       .sort(),
@@ -843,7 +865,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   assert.deepEqual(
     (await readdir(directory))
       .filter((path) =>
-        /\.(?:de|en-XA|es|fr|id-ID|ja|pt-BR|ru|zh-CN)\.html$/u.test(path),
+        /\.(?:de|en-XA|es|fr|id-ID|ja|ko|pt-BR|ru|zh-CN)\.html$/u.test(path),
       )
       .sort(),
     [

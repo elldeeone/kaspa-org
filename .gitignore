@@ -103,3 +103,9 @@ next-env.d.ts
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-daa-changed.ja.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/utxo-context.ja.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/resources/utils.ja.js
+/public/vendor/kaspa-wasm/2.0.0/examples/web/get-block-dag-info.ko.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/get-server-info.ko.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-block-added.ko.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-daa-changed.ko.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/utxo-context.ko.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/resources/utils.ko.js

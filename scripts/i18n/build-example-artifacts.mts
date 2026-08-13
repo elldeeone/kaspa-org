@@ -539,7 +539,9 @@ function buildHtmlReplacements(
   const { runtime: sourceRuntime, utxo: sourceUtxo } = sourceMessages;
   const { runtime: targetRuntime, utxo: targetUtxo } = targetMessages;
   const localizedUtxoTerm =
-    locale === "zh-CN" || locale === "ru" || locale === "ja" ? "UTXO" : "UTXOs";
+    locale === "zh-CN" || locale === "ru" || locale === "ja" || locale === "ko"
+      ? "UTXO"
+      : "UTXOs";
   const common: readonly Replacement[] = [
     [
       sourceTemplate(sourceRuntime.connectingKaspaNetwork),

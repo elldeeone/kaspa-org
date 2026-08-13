@@ -1,6 +1,7 @@
 import {
   chineseLocale,
   japaneseLocale,
+  koreanLocale,
   type Locale,
 } from "./locale-registry.ts";
 
@@ -38,10 +39,19 @@ const japaneseFontContract = Object.freeze({
   ]),
 }) satisfies OpenGraphFontContract;
 
+const koreanFontContract = Object.freeze({
+  family: "Noto Sans KR",
+  assets: Object.freeze([
+    Object.freeze({ filename: "NotoSansKR-Regular.ttf", weight: 400 }),
+    Object.freeze({ filename: "NotoSansKR-Bold.ttf", weight: 700 }),
+  ]),
+}) satisfies OpenGraphFontContract;
+
 export function getOpenGraphFontContract(
   locale: Locale,
 ): OpenGraphFontContract {
   if (locale === chineseLocale) return simplifiedChineseFontContract;
   if (locale === japaneseLocale) return japaneseFontContract;
+  if (locale === koreanLocale) return koreanFontContract;
   return geistFontContract;
 }

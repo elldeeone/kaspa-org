@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "title": "Kaspa 로고 및 에셋 | Kaspa",
+    "description": "가로형과 세로형 조합, 아이콘, 브랜드 색상으로 구성된 공식 Kaspa 로고 세트를 다운로드하세요. SVG와 고해상도 PNG로 제공됩니다."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — 실시간 탈중앙화"
+  },
+  "page": {
+    "heading": "Kaspa 로고 에셋"
+  },
+  "groups": {
+    "lockup": "가로형",
+    "stacked": "세로형",
+    "icon": "아이콘"
+  },
+  "logos": {
+    "lockupColor": {
+      "name": "풀 컬러",
+      "imageAlt": "Kaspa 풀 컬러 로고",
+      "downloadAria": "Kaspa 가로형 풀 컬러 로고를 {format} 형식으로 다운로드"
+    },
+    "lockupReverse": {
+      "name": "반전 색상",
+      "imageAlt": "Kaspa 반전 색상 로고",
+      "downloadAria": "Kaspa 가로형 반전 색상 로고를 {format} 형식으로 다운로드"
+    },
+    "lockupBlack": {
+      "name": "검은색",
+      "imageAlt": "Kaspa 검은색 로고",
+      "downloadAria": "Kaspa 가로형 검은색 로고를 {format} 형식으로 다운로드"
+    },
+    "lockupWhite": {
+      "name": "흰색",
+      "imageAlt": "Kaspa 흰색 로고",
+      "downloadAria": "Kaspa 가로형 흰색 로고를 {format} 형식으로 다운로드"
+    },
+    "lockupOutline": {
+      "name": "윤곽선",
+      "imageAlt": "Kaspa 윤곽선 로고",
+      "downloadAria": "Kaspa 가로형 윤곽선 로고를 {format} 형식으로 다운로드"
+    },
+    "stackedColor": {
+      "name": "풀 컬러",
+      "imageAlt": "Kaspa 풀 컬러 로고",
+      "downloadAria": "Kaspa 세로형 풀 컬러 로고를 {format} 형식으로 다운로드"
+    },
+    "stackedReverse": {
+      "name": "반전 색상",
+      "imageAlt": "Kaspa 반전 색상 로고",
+      "downloadAria": "Kaspa 세로형 반전 색상 로고를 {format} 형식으로 다운로드"
+    },
+    "stackedBlack": {
+      "name": "검은색",
+      "imageAlt": "Kaspa 검은색 로고",
+      "downloadAria": "Kaspa 세로형 검은색 로고를 {format} 형식으로 다운로드"
+    },
+    "stackedWhite": {
+      "name": "흰색",
+      "imageAlt": "Kaspa 흰색 로고",
+      "downloadAria": "Kaspa 세로형 흰색 로고를 {format} 형식으로 다운로드"
+    },
+    "stackedOutline": {
+      "name": "윤곽선",
+      "imageAlt": "Kaspa 윤곽선 로고",
+      "downloadAria": "Kaspa 세로형 윤곽선 로고를 {format} 형식으로 다운로드"
+    },
+    "iconGreen": {
+      "name": "녹색",
+      "imageAlt": "Kaspa 녹색 로고",
+      "downloadAria": "Kaspa 녹색 아이콘 로고를 {format} 형식으로 다운로드"
+    },
+    "iconGreenDark": {
+      "name": "어두운 배경용 녹색",
+      "imageAlt": "어두운 배경용 Kaspa 녹색 로고",
+      "downloadAria": "어두운 배경용 Kaspa 녹색 아이콘 로고를 {format} 형식으로 다운로드"
+    },
+    "iconBlack": {
+      "name": "검은색",
+      "imageAlt": "Kaspa 검은색 로고",
+      "downloadAria": "Kaspa 검은색 아이콘 로고를 {format} 형식으로 다운로드"
+    },
+    "iconWhite": {
+      "name": "흰색",
+      "imageAlt": "Kaspa 흰색 로고",
+      "downloadAria": "Kaspa 흰색 아이콘 로고를 {format} 형식으로 다운로드"
+    }
+  },
+  "formats": {
+    "svg": "SVG",
+    "png": "PNG"
+  }
+}

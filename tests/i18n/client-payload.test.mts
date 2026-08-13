@@ -29,6 +29,7 @@ import {
   germanLocale,
   indonesianLocale,
   japaneseLocale,
+  koreanLocale,
   russianLocale,
   spanishLocale,
 } from "../../src/i18n/locale-registry.ts";
@@ -447,6 +448,7 @@ test("translated client payloads contain only route-owned messages", async () =>
     { locale: indonesianLocale, languageLabel: "Bahasa" },
     { locale: brazilianPortugueseLocale, languageLabel: "Idioma" },
     { locale: japaneseLocale, languageLabel: "言語" },
+    { locale: koreanLocale, languageLabel: "언어" },
   ].filter(({ locale }) => isLocaleEnabled(locale))) {
     const shared = getSharedClientMessages(locale);
     assert.ok("language" in shared.shared.navigation);

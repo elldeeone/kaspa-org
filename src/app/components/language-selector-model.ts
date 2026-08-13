@@ -36,6 +36,6 @@ export function isLanguageSelectorLocale(
   return (
     locale !== null &&
     locale !== pseudoLocale &&
-    LANGUAGE_SELECTOR_OPTIONS.some(({ code }) => code === locale)
+    listSelectableLocales().includes(locale)
   );
 }

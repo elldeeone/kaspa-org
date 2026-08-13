@@ -15,6 +15,7 @@ import {
   germanLocale,
   indonesianLocale,
   japaneseLocale,
+  koreanLocale,
   pseudoLocale,
   russianLocale,
   spanishLocale,
@@ -179,6 +180,7 @@ test("fixture policy resolves once into the generic publication profile", () => 
       "public",
     );
     assert.equal(production.routePublications[routeId][japaneseLocale], null);
+    assert.equal(production.routePublications[routeId][koreanLocale], null);
     assert.equal(preview.routePublications[routeId].en, "public");
     assert.equal(preview.routePublications[routeId][spanishLocale], "public");
     assert.equal(preview.routePublications[routeId][germanLocale], "public");
@@ -195,6 +197,7 @@ test("fixture policy resolves once into the generic publication profile", () => 
       preview.routePublications[routeId][brazilianPortugueseLocale],
       "public",
     );
+    assert.equal(preview.routePublications[routeId][koreanLocale], "preview");
     assert.equal(
       testProfile.routePublications[routeId][frenchLocale],
       "public",
@@ -221,6 +224,10 @@ test("fixture policy resolves once into the generic publication profile", () => 
     );
     assert.equal(
       testProfile.routePublications[routeId][japaneseLocale],
+      "preview",
+    );
+    assert.equal(
+      testProfile.routePublications[routeId][koreanLocale],
       "preview",
     );
     assert.equal(rollback.routePublications[routeId].en, "public");

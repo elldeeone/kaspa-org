@@ -12,6 +12,7 @@ import {
   germanLocale,
   indonesianLocale,
   japaneseLocale,
+  koreanLocale,
   localeRegistry,
   pseudoLocale,
   resolveSupportedLocale,
@@ -37,6 +38,7 @@ import {
   germanMessages,
   indonesianMessages,
   japaneseMessages,
+  koreanMessages,
   russianMessages,
   spanishMessages,
 } from "../../src/i18n/messages.ts";
@@ -93,6 +95,7 @@ const expectedEnabledLocales =
         indonesianLocale,
         brazilianPortugueseLocale,
         japaneseLocale,
+        koreanLocale,
       ] as const)
     : i18nBuildTarget === "preview"
       ? ([
@@ -105,6 +108,7 @@ const expectedEnabledLocales =
           indonesianLocale,
           brazilianPortugueseLocale,
           japaneseLocale,
+          koreanLocale,
         ] as const)
       : ([
           "en",
@@ -150,6 +154,7 @@ test("the active build profile publishes and previews locales atomically", () =>
     indonesianLocale,
     brazilianPortugueseLocale,
     japaneseLocale,
+    koreanLocale,
   ]);
   assert.equal(localeRegistry.en.lifecycle, "production");
   assert.equal(localeRegistry[spanishLocale].lifecycle, "production");
@@ -164,6 +169,7 @@ test("the active build profile publishes and previews locales atomically", () =>
     "production",
   );
   assert.equal(localeRegistry[japaneseLocale].lifecycle, "preview");
+  assert.equal(localeRegistry[koreanLocale].lifecycle, "preview");
   assert.equal(resolveSupportedLocale("ES"), spanishLocale);
   assert.equal(resolveSupportedLocale("DE"), germanLocale);
   assert.equal(resolveSupportedLocale("FR"), frenchLocale);
@@ -172,6 +178,7 @@ test("the active build profile publishes and previews locales atomically", () =>
   assert.equal(resolveSupportedLocale("ID-id"), indonesianLocale);
   assert.equal(resolveSupportedLocale("PT-br"), brazilianPortugueseLocale);
   assert.equal(resolveSupportedLocale("JA"), japaneseLocale);
+  assert.equal(resolveSupportedLocale("KO"), koreanLocale);
   assert.equal(resolveLocale("es"), spanishLocale);
   assert.equal(resolveLocale("de"), germanLocale);
   assert.equal(resolveLocale("fr"), frenchLocale);
@@ -182,6 +189,10 @@ test("the active build profile publishes and previews locales atomically", () =>
   assert.equal(
     resolveLocale("JA"),
     i18nBuildTarget === "production" ? null : japaneseLocale,
+  );
+  assert.equal(
+    resolveLocale("ko"),
+    i18nBuildTarget === "production" ? null : koreanLocale,
   );
   assert.deepEqual(listEnabledLocales(), expectedEnabledLocales);
   assert.deepEqual(
@@ -232,6 +243,10 @@ test("the active build profile publishes and previews locales atomically", () =>
   assert.equal(isLocaleRouteSetComplete(brazilianPortugueseLocale), true);
   assert.equal(
     isLocaleRouteSetComplete(japaneseLocale),
+    i18nBuildTarget !== "production",
+  );
+  assert.equal(
+    isLocaleRouteSetComplete(koreanLocale),
     i18nBuildTarget !== "production",
   );
   for (const pathname of stablePathnames) {
@@ -313,6 +328,11 @@ test("the active build profile publishes and previews locales atomically", () =>
       routeId,
     );
     assert.equal(
+      resolvePublishedRoute(routeId, koreanLocale)?.publication ?? null,
+      i18nBuildTarget === "production" ? null : "preview",
+      routeId,
+    );
+    assert.equal(
       resolvePublishedRoute(routeId, frenchLocale)?.publication ?? null,
       "public",
       routeId,
@@ -350,6 +370,7 @@ test("the active build profile publishes and previews locales atomically", () =>
       i18nBuildTarget === "production" ? null : "preview",
       routeId,
     );
+    assert.equal(isAiAvailable(routeId, koreanLocale), false, routeId);
   }
   assert.doesNotThrow(() => assertProductionLocaleComplete(spanishLocale));
   assert.doesNotThrow(() => assertProductionLocaleComplete(germanLocale));
@@ -500,6 +521,7 @@ test(
       assert.doesNotThrow(() => assertPreviewLocaleComplete(pseudoLocale));
     }
     assert.doesNotThrow(() => assertPreviewLocaleComplete(japaneseLocale));
+    assert.doesNotThrow(() => assertPreviewLocaleComplete(koreanLocale));
     assert.doesNotThrow(() => assertProductionLocaleComplete(spanishLocale));
     assert.doesNotThrow(() => assertProductionLocaleComplete(germanLocale));
     assert.doesNotThrow(() => assertProductionLocaleComplete(frenchLocale));
@@ -518,9 +540,11 @@ test(
       completeRouteMatrix,
     );
 
-    const privateLocales = pseudoEnabled
-      ? ([pseudoLocale, japaneseLocale] as const)
-      : ([japaneseLocale] as const);
+    const privateLocales = [
+      ...(pseudoEnabled ? [pseudoLocale] : []),
+      japaneseLocale,
+      koreanLocale,
+    ] as const;
     for (const privateLocale of privateLocales) {
       for (const routeId of routeIds) {
         const stablePathname = stablePathnames[routeIds.indexOf(routeId)];
@@ -598,6 +622,7 @@ test(
       japaneseMessages.home.hero.dagAnnotation,
       "リアルタイムの pow",
     );
+    assert.equal(koreanMessages.home.hero.dagAnnotation, "실시간 pow");
     for (const routeId of routeIds) {
       const spanishRoute = resolvePublishedRoute(routeId, spanishLocale);
       const germanRoute = resolvePublishedRoute(routeId, germanLocale);

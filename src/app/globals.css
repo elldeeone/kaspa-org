@@ -119,6 +119,11 @@ body {
   overflow-x: clip;
 }
 
+.korean-body-font {
+  --font-sans: var(--font-korean-sans);
+  font-family: var(--font-korean-sans), var(--font-geist-sans), sans-serif;
+}
+
 ::selection {
   background: var(--selection-bg);
 }

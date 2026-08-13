@@ -61,6 +61,13 @@ import japaneseHodl from "../../messages/ja/hodl.json" with { type: "json" };
 import japaneseHome from "../../messages/ja/home.json" with { type: "json" };
 import japaneseLore from "../../messages/ja/lore.json" with { type: "json" };
 import japaneseShared from "../../messages/ja/shared.json" with { type: "json" };
+import koreanAssets from "../../messages/ko/assets.json" with { type: "json" };
+import koreanBuild from "../../messages/ko/build.json" with { type: "json" };
+import koreanErrors from "../../messages/ko/errors.json" with { type: "json" };
+import koreanHodl from "../../messages/ko/hodl.json" with { type: "json" };
+import koreanHome from "../../messages/ko/home.json" with { type: "json" };
+import koreanLore from "../../messages/ko/lore.json" with { type: "json" };
+import koreanShared from "../../messages/ko/shared.json" with { type: "json" };
 
 import {
   isLocaleEnabled,
@@ -74,6 +81,7 @@ import {
   germanLocale,
   indonesianLocale,
   japaneseLocale,
+  koreanLocale,
   pseudoLocale,
   russianLocale,
   spanishLocale,
@@ -176,6 +184,16 @@ export const japaneseMessages = {
   shared: japaneseShared,
 } satisfies AppMessages;
 
+export const koreanMessages = {
+  assets: koreanAssets,
+  build: koreanBuild,
+  errors: koreanErrors,
+  hodl: koreanHodl,
+  home: koreanHome,
+  lore: koreanLore,
+  shared: koreanShared,
+} satisfies AppMessages;
+
 let generatedPseudoMessages: AppMessages | null = null;
 
 function assertNever(value: never): never {
@@ -250,6 +268,13 @@ export function getMessages(locale: Locale): LocaleMessages {
         );
       }
       return japaneseMessages;
+    case koreanLocale:
+      if (!isLocaleEnabled(koreanLocale)) {
+        throw new Error(
+          `${koreanLocale} messages are unavailable in this build target`,
+        );
+      }
+      return koreanMessages;
     default:
       return assertNever(locale);
   }

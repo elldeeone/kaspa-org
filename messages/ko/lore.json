@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "title": "LORE | Kaspa",
+    "description": "Kaspa는 프리마인이나 내부자 할당 없이 공정하게 출시된 작업 증명 blockDAG로, 실시간 탈중앙화에 초점을 맞추며 메인넷에서 10 BPS의 성능을 낸다."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — 실시간 탈중앙화"
+  },
+  "article": {
+    "heading": "Kaspa는 초당 10개의 블록을 처리하며 가동 중인 작업 증명 blockDAG다.",
+    "shift": {
+      "heading": "전환",
+      "body": "Kaspa는 기존 작업 증명 체인과 다른 길을 택한다. 병렬 블록을 버리지 않고 순서대로 정렬한다. 작업 증명과 관련된 많은 한계는 작업 증명 자체가 아니라 과거의 체인 아키텍처에서 비롯됐다. <paper>PHANTOM / GHOSTDAG 논문</paper>"
+    },
+    "history": {
+      "heading": "간략한 역사",
+      "research": "Kaspa는 예루살렘 히브리 대학교와 이후 하버드 대학교에서 진행된 blockDAG 연구에서 출발했다. 이 연구의 계보는 <ghost>Ethereum 백서의 GHOST 프로토콜 섹션</ghost>으로 거슬러 올라가며, 초기에 Bitcoin 연구계에서 모습을 드러낸 뒤 SPECTRE와 PHANTOM을 거쳐 오늘날 Kaspa에서 실행되는 프로토콜로 이어졌다. <scaling>Scaling Bitcoin 2015</scaling> · <coindesk>CoinDesk, 2017</coindesk>",
+      "launch": "메인넷은 2021년 11월 공정하게 출시된 작업 증명 네트워크로 출범했다. 프리마인도, 내부자 할당도, 사전 판매도 없었다. 현재 유통되는 모든 코인은 제네시스 이후 공개적으로 채굴됐다. 이러한 공정한 출시는 Kaspa에 폭넓고 충성도 높은 커뮤니티를 안겨 주었다. 이는 여전히 Kaspa가 이룬 가장 큰 성과이자 핵심 강점 중 하나다. <launchPlan>출시 계획</launchPlan> · <genesisProof>제네시스 증명</genesisProof>"
+    },
+    "northStar": {
+      "heading": "북극성",
+      "intro": "실시간 탈중앙화는 Kaspa의 북극성이다.",
+      "urgency": "실시간은 타협할 수 없는 조건이다. 조급함은 Kaspa의 원초적 본능이다. 어른들이 그저 받아들이는 한계와 대기 시간에 떼쓰듯 맞선다. 그리고 우리는 속도뿐 아니라 검열 저항성, 무허가 정산, 경쟁적 채굴이라는 철저한 Satoshi 속성까지 요구한다. 언젠가가 아니라 모두 실시간으로 달성되어야 한다. 작업 증명 없이는 이를 실시간으로 달성할 수 없다. <uniqueness>PoW의 고유성</uniqueness>",
+      "consensus": "Kaspa가 RTD를 달성한다는 것은 프로토콜이 매 합의 라운드마다 채굴 네트워크의 정직한 과반을 샘플링한다는 뜻이다. 그 결과 Bitcoin에서 한 시간 뒤에야 안전하게 확정되는 거래가 Kaspa에서는 몇 초 만에 확정될 수 있다. 또는 Bitcoin에서 한 시간이 걸리는 검열 저항성을 Kaspa는 몇 초 안에 달성하도록 보장한다. 이는 정산 속도뿐 아니라 실시간 순서 지정이 중요한 모든 상황에서 중요하다. 시장 결과 확정, 연쇄 청산 등 단일 합의 리더가 자기 재량으로 거래 순서를 정할 때 지나치게 큰 권한을 갖게 되는 모든 경우가 이에 해당한다.",
+      "eventFeed": "정직한 과반을 실시간으로 샘플링하는 방식은 채굴 네트워크의 합의로 제어되는 무신뢰 실시간 데이터 및 이벤트 피드를 구현하는 데에도 활용할 수 있다. <post>RTD 게시물</post>",
+      "resilience": "RTD에는 방어적인 측면도 있다. 부분 동기식 프로토콜(향후 도입될 DAGKnight 포함)만이 네트워크가 정상일 때는 빠르고, 그렇지 않을 때는 느리지만 안전하다는 이중 특성을 구현한다. Kaspa는 일반 대중에게는 속도를, cypherpunk에게는 전쟁급 화폐를 제공한다."
+    },
+    "shipped": {
+      "heading": "완료된 것과 다음 단계",
+      "rewrite": "기존 Golang 노드는 Rust로 처음부터 다시 작성됐다. 이 재작성은 커뮤니티의 100M KAS 보조금으로 뒷받침됐으며, 폭넓은 기여자 기반을 갖춘 <code>rusty-kaspa</code> 중심의 진정한 오픈 소스 프로젝트로 발전했다. <github>Rusty Kaspa GitHub</github>",
+      "crescendo": "이 재작성 덕분에 Crescendo가 가능해졌다. 이것이 없었다면 Kaspa는 메인넷에서 초당 10개의 블록으로 전환할 수 없었다. Crescendo는 그 구상이 실제로 가동되기 시작한 지점이다. <reference>Crescendo 참고 자료</reference> · <release>릴리스 노트</release>"
+    },
+    "roadmap": {
+      "toccata": {
+        "heading": "Toccata 하드포크",
+        "overview": "다음 하드포크는 커버넌트 기반의 베이스 레이어 프로그래밍 기능을 도입하는 Toccata다. 커버넌트는 코인을 사용할 수 있는 주체와 방식을 제한하는 재귀적 지출 규칙으로, 볼트, 스마트 지갑, 네이티브 자산, ZK 보조 구조로 가는 길을 연다.",
+        "implementation": "Bitcoin에서 OP_CAT은 Satoshi가 비활성화한 오래된 옵코드다. 다시 제안됐지만 여전히 논의 중이며 아직 포함되지 않았다. Toccata는 더 폭넓은 커버넌트 기능과 Kaspa에서 커버넌트를 작성하기 위한 전용 컴파일러인 <silverscript>Silverscript</silverscript>를 갖춰 OP_CAT++에 더 가깝다. 성숙한 구현이 이미 <tn12>TN12</tn12>에서 실행 중이다."
+      },
+      "dagKnight": {
+        "heading": "DAGKnight 하드포크",
+        "overview": "DAGKnight는 Toccata에 이어지는 합의 프로토콜 업그레이드다. 작업 증명과 무허가 합의 모두에 큰 도약으로, oblivious setup에서 유일한 49% BFT 부분 동기식 프로토콜이다. netsplit에 강한 작업 증명을 향한 한 걸음이다. 블록 시간은 40~25밀리초 범위를 목표로 한다. <paper>DAGKnight 논문</paper>"
+      },
+      "hardfork2027": {
+        "heading": "2027년 하드포크",
+        "performance": "블록 시간 10밀리초, 즉 초당 100개의 블록을 달성하려면 추가적인 노드 성능 최적화와 함께 채굴자가 DAG 팁을 참조하는 방식에 대한 DAG 알고리즘 조정이 필요할 가능성이 높다. 2027년 하드포크를 목표로 한다.",
+        "resilience": "합의 측면에서 DAGKnight는 이미 netsplit 상황에서도 안전성을 제공한다. 분할 전에 확정된 거래는 최종 상태로 유지된다. 하지만 분할 중 진행성은 제공하지 못한다. 분할이 끝날 때까지 거래를 실제로 확정할 수 없다. 2027년 작업은 온체인 결제 채널과 해시레이트 적응형 최종성 창을 결합해 실질적인 진행성을 추가하는 것을 목표로 한다. 이를 통해 Kaspa는 인터넷 연결이 끊어진 상황에서도 지역 결제 흐름이 살아남는 전쟁급 하드 머니가 될 것이다."
+      }
+    },
+    "closing": {
+      "origin": "Kaspa는 흔한 과대광고의 순환 속에서 탄생하지 않았다. 베테랑 연구진의 연구, 공정한 출시, 오픈 소스 기반의 실행력, 그리고 암호화폐 업계 대부분이 멈춰 선 지점에서도 수년간 계속 밀어붙인 노력에서 탄생했다.",
+      "summary": "가동 중인 blockDAG. 메인넷 10 BPS. 북극성은 실시간 탈중앙화. 다음은 Toccata. 그다음은 DAGKnight.",
+      "early": "아직 초기처럼 느껴진다면, 실제로 그렇기 때문이다."
+    }
+  },
+  "contributors": {
+    "viewOnGitHub": "GitHub에서 Rusty Kaspa 기여자 보기",
+    "more": "+{count, plural, one {기여자 #명} other {기여자 #명}}"
+  }
+}

@@ -1,8 +1,10 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 
 import { serializeJsonLd } from "@/i18n/document";
+import { getBodyFontContract } from "@/i18n/body-font";
 import type { Locale } from "@/i18n/locale-registry";
 import type { getSharedClientMessages } from "@/i18n/messages";
 
@@ -20,7 +22,21 @@ const geistMono = Geist_Mono({
   preload: false,
 });
 
+const koreanSans = localFont({
+  src: "./fonts/NotoSansKR-Body.ttf",
+  variable: "--font-korean-sans",
+  weight: "100 900",
+  display: "swap",
+  preload: false,
+});
+
 export const siteDocumentBodyClassName = `${geistSans.variable} ${geistMono.variable} antialiased`;
+
+export function getSiteDocumentBodyClassName(locale: Locale): string {
+  return getBodyFontContract(locale).family === "Noto Sans KR"
+    ? `${siteDocumentBodyClassName} ${koreanSans.variable} korean-body-font`
+    : siteDocumentBodyClassName;
+}
 
 export function StructuredDataScript({ data }: { data: unknown }) {
   return (

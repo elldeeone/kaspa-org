@@ -14,6 +14,7 @@ import {
   germanLocale,
   indonesianLocale,
   japaneseLocale,
+  koreanLocale,
   getLocaleDefinition,
   pseudoLocale,
   russianLocale,
@@ -55,6 +56,10 @@ test("selector options use registry endonyms and exclude the pseudo locale", () 
     listSelectableLocales().includes(japaneseLocale),
   );
   assert.equal(
+    isLanguageSelectorLocale(koreanLocale),
+    listSelectableLocales().includes(koreanLocale),
+  );
+  assert.equal(
     LANGUAGE_SELECTOR_OPTIONS.some(({ code }) => code === chineseLocale),
     listSelectableLocales().includes(chineseLocale),
   );
@@ -94,6 +99,9 @@ test("locale path fallback preserves slugs and encoded path segments", () => {
   }
   if (isLanguageSelectorLocale(japaneseLocale)) {
     assert.equal(localizePathname("/lore", japaneseLocale), "/ja/lore");
+  }
+  if (isLanguageSelectorLocale(koreanLocale)) {
+    assert.equal(localizePathname("/lore", koreanLocale), "/ko/lore");
   }
   assert.equal(localizePathname("/lore", "en"), "/lore");
   assert.equal(localizePathname("/", spanishLocale), "/es");

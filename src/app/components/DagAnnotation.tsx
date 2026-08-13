@@ -31,9 +31,16 @@ const yomogi = localFont({
   preload: false,
 });
 
+const nanumPenScript = localFont({
+  src: "../fonts/NanumPenScript-Regular.ttf",
+  weight: "400",
+  preload: false,
+});
+
 const fontClassNames = {
   Caveat: caveat.className,
   "Ma Shan Zheng": maShanZheng.className,
+  "Nanum Pen Script": nanumPenScript.className,
   "Rock Salt": rockSalt.className,
   Yomogi: yomogi.className,
 } as const;

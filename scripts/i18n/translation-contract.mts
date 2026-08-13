@@ -192,6 +192,9 @@ const translationPolicies = {
       [/(?:^|\W)finality(?:$|\W)/iu, "確定性"],
     ],
   },
+  ko: {
+    allowedUnchangedValues: ["N/A", "{telegram} R&D"],
+  },
 } as const satisfies Readonly<Record<string, TranslationPolicy>>;
 
 const emptyPolicy = {} satisfies TranslationPolicy;
@@ -279,6 +282,25 @@ function countProtectedTerm(value: string, pattern: RegExp): number {
   return value.match(pattern)?.length ?? 0;
 }
 
+function getProtectedTargetMatcher(
+  locale: string,
+  term: ProtectedTerm,
+  fallback: RegExp,
+): RegExp {
+  if (locale === "ja") {
+    return japaneseProtectedTargetMatchers.get(term) ?? fallback;
+  }
+  if (locale !== "ko") return fallback;
+  const flags = term === "cypherpunk" ? "giu" : "gu";
+  // Korean grammatical particles attach directly to Latin-script names. Keep
+  // rejecting Latin identifier growth such as `Kaspad`, while accepting the
+  // protected visible token in natural forms such as `Kaspa에서`.
+  return new RegExp(
+    `(?<![\\p{L}\\p{N}_])${escapeRegExp(term)}(?![\\p{Script=Latin}\\p{N}_])`,
+    flags,
+  );
+}
+
 function visibleMessageText(value: string): string {
   return value
     .replace(/\{[^{}]+\}/gu, "")
@@ -352,11 +374,11 @@ export function validateTranslationCatalogContract(
         visibleSourceValue,
         matchers.source,
       );
-      const targetMatcher =
-        locale === "ja"
-          ? japaneseProtectedTargetMatchers.get(term)
-          : matchers.target;
-      if (!targetMatcher) continue;
+      const targetMatcher = getProtectedTargetMatcher(
+        locale,
+        term,
+        matchers.target,
+      );
       const aliasMatcher = policy.protectedTermAliases?.[term];
       const targetCount =
         countProtectedTerm(visibleTargetValue, targetMatcher) +

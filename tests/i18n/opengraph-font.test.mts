@@ -4,15 +4,19 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
+import koreanWalletSummaries from "../../messages/ko/wallets.json" with { type: "json" };
+import { getBodyFontContract } from "../../src/i18n/body-font.ts";
 import { getDagAnnotationFontContract } from "../../src/i18n/dag-annotation-font.ts";
 import {
   chineseLocale,
   japaneseLocale,
+  koreanLocale,
   russianLocale,
 } from "../../src/i18n/locale-registry.ts";
 import {
   chineseMessages,
   japaneseMessages,
+  koreanMessages,
   russianMessages,
 } from "../../src/i18n/messages.ts";
 import { getOpenGraphFontContract } from "../../src/i18n/opengraph-font.ts";
@@ -20,6 +24,17 @@ import { getOpenGraphFontContract } from "../../src/i18n/opengraph-font.ts";
 const repositoryRoot = resolve(
   fileURLToPath(new URL("../../", import.meta.url)),
 );
+
+function collectStringLeaves(value: unknown, output: string[] = []): string[] {
+  if (typeof value === "string") {
+    output.push(value);
+  } else if (value && typeof value === "object") {
+    for (const child of Object.values(value)) {
+      collectStringLeaves(child, output);
+    }
+  }
+  return output;
+}
 
 function findTable(font: Buffer, tag: string): number {
   const tableCount = font.readUInt16BE(4);
@@ -138,6 +153,50 @@ test("Japanese Open Graph fonts cover the exact offline render copy", async () =
   }
 });
 
+test("Korean Open Graph fonts cover the offline render copy", async () => {
+  const copy = koreanMessages.home.openGraph;
+  const visibleCharacters = new Set(
+    [...`${copy.heading.replace("\n", " ")} ${copy.tagline}`].filter(
+      (character) => !/\s/u.test(character),
+    ),
+  );
+  const fontContract = getOpenGraphFontContract(koreanLocale);
+  assert.equal(fontContract.family, "Noto Sans KR");
+
+  for (const asset of fontContract.assets) {
+    const font = await readFile(
+      join(repositoryRoot, "src/app/fonts", asset.filename),
+    );
+    const missing = [...visibleCharacters].filter(
+      (character) => !fontHasGlyph(font, character.codePointAt(0)!),
+    );
+    assert.deepEqual(missing, [], `${asset.filename} glyph coverage`);
+  }
+});
+
+test("Korean body font covers every Hangul character in all catalogs", async () => {
+  const visibleHangul = new Set(
+    collectStringLeaves({ koreanMessages, koreanWalletSummaries })
+      .flatMap((message) => [...message])
+      .filter((character) => /\p{Script=Hangul}/u.test(character)),
+  );
+  assert.ok(visibleHangul.size >= 500, "expected full-site Korean coverage");
+
+  const fontContract = getBodyFontContract(koreanLocale);
+  assert.equal(fontContract.family, "Noto Sans KR");
+  if (fontContract.filename === null) {
+    assert.fail("Korean body font needs a local asset");
+  }
+
+  const font = await readFile(
+    join(repositoryRoot, "src/app/fonts", fontContract.filename),
+  );
+  const missing = [...visibleHangul].filter(
+    (character) => !fontHasGlyph(font, character.codePointAt(0)!),
+  );
+  assert.deepEqual(missing, [], `${fontContract.filename} glyph coverage`);
+});
+
 test("Simplified Chinese DAG annotation font covers the reviewed copy", async () => {
   const copy = chineseMessages.home.hero.dagAnnotation;
   const visibleCharacters = new Set(
@@ -178,6 +237,26 @@ test("Japanese DAG annotation uses an offline handwritten font with exact glyph 
   assert.equal(fontContract.family, "Yomogi");
   if (fontContract.filename === null) {
     assert.fail("Japanese DAG annotation font needs a local asset");
+  }
+
+  const font = await readFile(
+    join(repositoryRoot, "src/app/fonts", fontContract.filename),
+  );
+  const missing = [...visibleCharacters].filter(
+    (character) => !fontHasGlyph(font, character.codePointAt(0)!),
+  );
+  assert.deepEqual(missing, [], `${fontContract.filename} glyph coverage`);
+});
+
+test("Korean DAG annotation font covers the reviewed copy", async () => {
+  const copy = koreanMessages.home.hero.dagAnnotation;
+  const visibleCharacters = new Set(
+    [...copy].filter((character) => !/\s/u.test(character)),
+  );
+  const fontContract = getDagAnnotationFontContract(koreanLocale);
+  assert.equal(fontContract.family, "Nanum Pen Script");
+  if (fontContract.filename === null) {
+    assert.fail("Korean DAG annotation font needs a local asset");
   }
 
   const font = await readFile(

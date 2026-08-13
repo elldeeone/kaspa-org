@@ -112,8 +112,8 @@ npm run test:e2e:headed
 npm run test:e2e:ui
 ```
 
-Production publishes each reviewed locale atomically. Japanese (`ja`) is
-available only in no-index Preview builds while it is reviewed and is excluded
+Production publishes each reviewed locale atomically. Japanese (`ja`) and Korean
+(`ko`) are available only in non-indexed review Preview builds; they are excluded
 from Production discovery and publication. The `en-XA` pseudo-locale is
 test-only. Run all three full browser gates with:
 
@@ -141,8 +141,8 @@ NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=test npm start
 
 Production generates ignored `es`, `de`, `fr`, `zh-CN`, `ru`, `id-ID`, and
 `pt-BR` Build-example siblings under `public/vendor/kaspa-wasm`. Preview
-additionally generates `ja` siblings for review; they remain no-index and
-excluded from Production publication. Test also generates `en-XA`. After
+additionally generates `ja` and `ko` siblings for review; they remain non-indexed
+and excluded from Production publication. Test also generates `en-XA`. After
 stopping the server, remove those derived files with:
 
 ```bash

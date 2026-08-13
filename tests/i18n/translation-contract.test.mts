@@ -14,6 +14,7 @@ import {
   germanMessages,
   indonesianMessages,
   japaneseMessages,
+  koreanMessages,
   russianMessages,
   spanishMessages,
 } from "../../src/i18n/messages.ts";
@@ -27,6 +28,7 @@ const translatedCatalogs = {
   "id-ID": indonesianMessages,
   "pt-BR": brazilianPortugueseMessages,
   ja: japaneseMessages,
+  ko: koreanMessages,
 } as const;
 
 test("complete translated catalogs satisfy the shared translation contract", () => {
@@ -200,6 +202,38 @@ test("locale policy adds only language-specific terminology and loanwords", () =
     ),
     [
       "example.heading starts a manual line with prohibited Japanese closing punctuation",
+    ],
+  );
+
+  assert.equal(isUnchangedMessageAllowed("ko", "{telegram} R&D"), true);
+
+  assert.deepEqual(
+    validateTranslationCatalogContract(
+      "ko",
+      "example",
+      {
+        naturalParticle: "Build on Kaspa",
+        changedIdentifier: "Use Kaspa",
+        kaspaPlural: "Use Kaspa",
+        bitcoinPlural: "Use Bitcoin",
+        ethereumPlural: "Use Ethereum",
+        cypherpunkPlural: "Meet a cypherpunk",
+      },
+      {
+        naturalParticle: "Kaspa에서 개발하기",
+        changedIdentifier: "Kaspad 사용",
+        kaspaPlural: "Kaspas 사용",
+        bitcoinPlural: "Bitcoins 사용",
+        ethereumPlural: "Ethereums 사용",
+        cypherpunkPlural: "cypherpunks 만나기",
+      },
+    ),
+    [
+      "example.changedIdentifier removes protected term Kaspa from translated copy",
+      "example.kaspaPlural removes protected term Kaspa from translated copy",
+      "example.bitcoinPlural removes protected term Bitcoin from translated copy",
+      "example.ethereumPlural removes protected term Ethereum from translated copy",
+      "example.cypherpunkPlural removes protected term cypherpunk from translated copy",
     ],
   );
 

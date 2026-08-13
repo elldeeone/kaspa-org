@@ -11,7 +11,7 @@ import { isAiAvailable } from "@/i18n/site-capabilities";
 import NotFoundContent from "./components/NotFoundContent";
 import {
   SiteDocumentContent,
-  siteDocumentBodyClassName,
+  getSiteDocumentBodyClassName,
   StructuredDataScript,
 } from "./document-shell";
 import "./globals.css";
@@ -56,7 +56,7 @@ export default async function GlobalNotFound() {
       <head>
         <StructuredDataScript data={structuredData} />
       </head>
-      <body className={siteDocumentBodyClassName}>
+      <body className={getSiteDocumentBodyClassName(locale.code)}>
         <SiteDocumentContent locale={locale.code} messages={sharedMessages}>
           <NotFoundContent
             global

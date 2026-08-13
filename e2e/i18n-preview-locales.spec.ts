@@ -43,7 +43,7 @@ type PreviewLocaleCase = {
   openGraphInkBandCount: number;
 };
 
-// Add each complete private-review locale here. The lifecycle coverage test
+// Add each complete non-indexed review locale here. The lifecycle coverage test
 // keeps this descriptor list in lockstep with the central registry.
 const previewLocaleCases: readonly PreviewLocaleCase[] = [
   {
@@ -67,6 +67,27 @@ const previewLocaleCases: readonly PreviewLocaleCase[] = [
     dagAnnotationMinimumInkHeight: 12,
     openGraphInkBandCount: 2,
   },
+  {
+    locale: "ko",
+    endonym: "한국어",
+    languageLabel: "언어",
+    dir: "ltr",
+    routes: localizePublicRouteGolden("ko"),
+    fingerprints: {
+      home: "믿지 말고, 검증하라.",
+      lore: "초당 10개의 블록을 처리하며 가동 중인 작업 증명 blockDAG",
+      build: "Kaspa에서 개발하기",
+      assets: "Kaspa 로고 에셋",
+      hodl: "지갑 만들기",
+    },
+    proofFingerprint: "증명 검증하기",
+    backFingerprint: "뒤로",
+    notFoundTitle: "페이지를 찾을 수 없음 | Kaspa",
+    dagAnnotation: "실시간 pow",
+    dagAnnotationFont: "nanumPenScript",
+    dagAnnotationMinimumInkHeight: 12,
+    openGraphInkBandCount: 2,
+  },
 ];
 
 test.describe("real preview locale contract", () => {
@@ -86,7 +107,7 @@ test.describe("real preview locale contract", () => {
     );
   });
 
-  test("renders every preview route statically and privately", async () => {
+  test("renders every preview route statically without discovery metadata", async () => {
     const { fixtureRoot, readLogs, request: api } = scenario.require();
     const prerenderRoutes = await readPrerenderRoutePathnames(fixtureRoot);
 
@@ -202,6 +223,79 @@ test.describe("real preview locale contract", () => {
     ).toBe(404);
   });
 
+  test("uses the bundled Korean body font without loading it for English", async ({
+    browser,
+  }) => {
+    const { baseUrl } = scenario.require();
+
+    async function inspectLocale(pathname: string) {
+      const context = await browser.newContext({ baseURL: baseUrl });
+      const page = await context.newPage();
+      const fontRequests = new Set<string>();
+      page.on("request", (request) => {
+        if (request.resourceType() === "font") fontRequests.add(request.url());
+      });
+      await page.goto(pathname, { waitUntil: "networkidle" });
+      const fontState = await page
+        .locator("main p")
+        .first()
+        .evaluate(async (element) => {
+          await document.fonts.ready;
+          const fontFamily = getComputedStyle(element).fontFamily;
+          const primaryFamily = fontFamily.split(",", 1)[0];
+          return {
+            fontFamily,
+            loaded: document.fonts.check(`16px ${primaryFamily}`),
+          };
+        });
+      await context.close();
+      return { fontRequests, fontState };
+    }
+
+    const korean = await inspectLocale("/ko/lore");
+    const english = await inspectLocale("/lore");
+    expect(korean.fontState.fontFamily).toContain("koreanSans");
+    expect(korean.fontState.loaded).toBe(true);
+    expect(english.fontState.fontFamily).not.toContain("koreanSans");
+    expect(
+      [...korean.fontRequests].filter((url) => !english.fontRequests.has(url)),
+      "Korean must request a locale-only body font asset",
+    ).not.toEqual([]);
+  });
+
+  test("switches English and Korean while preserving route, query, and hash", async ({
+    page,
+  }) => {
+    const { baseUrl } = scenario.require();
+    await page.goto(`${baseUrl}/lore?review=ko#review-state`);
+
+    let selector = page.locator("[data-language-selector]:visible");
+    await selector
+      .getByRole("button", { name: "Language", exact: true })
+      .click();
+    const koreanOption = selector.getByRole("menuitemradio", {
+      name: "한국어",
+      exact: true,
+    });
+    await expect(koreanOption).toBeVisible();
+    await Promise.all([
+      page.waitForURL(`${baseUrl}/ko/lore?review=ko#review-state`),
+      koreanOption.click(),
+    ]);
+
+    selector = page.locator("[data-language-selector]:visible");
+    await selector.getByRole("button", { name: "언어", exact: true }).click();
+    const englishOption = selector.getByRole("menuitemradio", {
+      name: "English",
+      exact: true,
+    });
+    await expect(englishOption).toBeVisible();
+    await Promise.all([
+      page.waitForURL(`${baseUrl}/lore?review=ko#review-state`),
+      englishOption.click(),
+    ]);
+  });
+
   test("exposes preview locales in the selector without layout overflow", async ({
     browser,
   }) => {
@@ -221,7 +315,7 @@ test.describe("real preview locale contract", () => {
         });
         const page = await context.newPage();
 
-        if (viewport.width === 1440) {
+        if (viewport.width === 1440 && localeCase.locale === "ja") {
           await page.goto(`/${localeCase.locale}`, {
             waitUntil: "domcontentloaded",
           });
@@ -252,6 +346,20 @@ test.describe("real preview locale contract", () => {
               page.locator("main h1").first(),
               `${viewport.width}px ${localeCase.locale} home hero`,
             );
+
+            if (viewport.width === 1440 && localeCase.locale === "ko") {
+              const image = await measureOpenGraphImage(
+                page,
+                `/${localeCase.locale}/opengraph-image`,
+              );
+              expect(image).toMatchObject({ width: 1200, height: 630 });
+              expect(image.inkPixels).toBeGreaterThan(10_000);
+              expect(image.inkBandCount).toBe(localeCase.openGraphInkBandCount);
+              expect(image.minX).toBeGreaterThanOrEqual(0);
+              expect(image.maxX).toBeLessThan(1200);
+              expect(image.minY).toBeGreaterThanOrEqual(0);
+              expect(image.maxY).toBeLessThan(630);
+            }
 
             if (viewport.width >= 1280) {
               const annotation = page.getByText(localeCase.dagAnnotation, {

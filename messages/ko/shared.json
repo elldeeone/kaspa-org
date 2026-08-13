@@ -1,0 +1,112 @@
+{
+  "navigation": {
+    "homeAria": "Kaspa 홈",
+    "toggleMenu": "메뉴 열기/닫기",
+    "menu": "메뉴",
+    "language": {
+      "label": "언어"
+    },
+    "links": {
+      "lore": "LORE",
+      "hodl": "HODL",
+      "build": "BUIDL",
+      "think": "THINK",
+      "dagviz": "DAGVIZ"
+    }
+  },
+  "theme": {
+    "switchMode": "{mode} 모드로 전환",
+    "light": "라이트",
+    "dark": "다크"
+  },
+  "logoMenu": {
+    "aria": "Kaspa 로고",
+    "viewAssets": "로고 자산 보기"
+  },
+  "pageSections": {
+    "onThisPage": "이 페이지에서",
+    "openAria": "페이지 섹션 열기, 현재 섹션: {section}",
+    "dialogAria": "페이지 섹션",
+    "close": "닫기",
+    "current": "현재"
+  },
+  "footer": {
+    "glyphAria": "Kaspa 글리프",
+    "operatedBy": "운영: <operator>KasMedia.com</operator>",
+    "links": {
+      "explorer": "탐색기",
+      "github": "GitHub",
+      "x": "X"
+    }
+  },
+  "structuredData": {
+    "organizationDescription": "Kaspa는 공정하게 출시된 작업 증명 blockDAG 암호화폐로, 초당 10개의 블록을 처리하며 실시간 탈중앙화를 위해 설계되었습니다."
+  },
+  "ai": {
+    "externalPrompt": "{url}의 내용을 읽어 주세요. 이에 관해 질문하고 싶습니다.",
+    "genericError": "죄송합니다. 문제가 발생했습니다. 다시 시도해 주세요.",
+    "launcher": {
+      "askAnything": "무엇이든 물어보세요",
+      "beta": "베타",
+      "betaTitle": "이 기능은 현재 개발 중이며 간혹 문제가 발생할 수 있습니다",
+      "betaAria": "베타 — 간혹 문제가 발생할 수 있습니다",
+      "poweredBy": "<provider>kaspa.news/ask</provider> 제공",
+      "collapsePanel": "패널 접기",
+      "expandPanel": "패널 펼치기",
+      "closePanel": "패널 닫기",
+      "placeholder": "무엇이든 물어보세요...",
+      "sendMessage": "메시지 보내기",
+      "welcomeHeading": "Kaspa에 대해 무엇이든 물어보세요",
+      "welcomeBody": "아래에서 빠르게 답변을 받거나 선호하는 AI로 전체 대화를 시작하세요.",
+      "ownAiDivider": "또는 내 AI 사용",
+      "ownAiLabel": "내 AI 사용:",
+      "sources": "{count, plural, =0 {출처} other {출처 (#)}}",
+      "copy": "복사",
+      "copied": "복사됨"
+    },
+    "suggestions": {
+      "kaspaPurpose": "Kaspa는 어떤 문제를 해결하나요?",
+      "blockTimes": "블록 생성 시간은 얼마나 되나요?",
+      "decentralization": "실시간 탈중앙화가 왜 중요한가요?",
+      "premine": "사전 채굴이 있었나요?"
+    },
+    "providers": {
+      "chatgpt": "ChatGPT",
+      "claude": "Claude",
+      "perplexity": "Perplexity"
+    },
+    "loading": {
+      "atomicArc": "AtomicArc를 안전하게 처리하는 중...",
+      "ibd": "새 노드에서 IBD를 진행하는 중...",
+      "ftr": "FTR로 블록을 중계하는 중...",
+      "kip": "KIP를 활성화하는 중...",
+      "template": "템플릿을 바인딩하는 중...",
+      "commitment": "커밋먼트에서 부트스트랩하는 중...",
+      "blueSet": "블루 세트를 엮는 중...",
+      "mergeDepth": "병합 깊이를 계산하는 중...",
+      "silverscript": "Silverscript 컴파일을 설득하는 중...",
+      "covenantId": "covenant_id를 도출하는 중...",
+      "covenantState": "커버넌트 상태를 인코딩하는 중...",
+      "orphans": "고아 항목을 제거하는 중...",
+      "mempool": "멤풀을 채우는 중...",
+      "fees": "수수료를 레인별로 분류하는 중...",
+      "covenants": "커버넌트와 협상하는 중...",
+      "blocks": "블록을 병렬로 배포하는 중...",
+      "pruning": "과거 데이터를 프루닝하는 중...",
+      "dagLayer": "DAG 레이어에 게시하는 중...",
+      "stack": "스택에 푸시하는 중...",
+      "bps": "10 BPS를 재조정하는 중...",
+      "blueWork": "블루 워크를 다시 계산하는 중...",
+      "l2": "L2 이벤트에서 리오그를 필터링하는 중...",
+      "vprogBatch": "vProg 배치를 예약하는 중...",
+      "schnorr": "Schnorr 서명을 처리하는 중...",
+      "virtualState": "가상 상태를 직렬화하는 중...",
+      "utxoSet": "UTXO 세트를 스냅샷하는 중...",
+      "anticone": "안티콘을 순회하는 중...",
+      "transactions": "트랜잭션을 고아 상태에서 복구하는 중...",
+      "utxo": "UTXO 잠금을 해제하는 중...",
+      "vprogs": "vProg를 가상화하는 중...",
+      "crescendo": "Crescendo를 기다리는 중..."
+    }
+  }
+}
