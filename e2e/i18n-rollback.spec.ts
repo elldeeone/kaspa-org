@@ -27,6 +27,9 @@ const chineseRoutes = localizePublicRouteGolden("zh-CN").map(
   ({ path }) => path,
 );
 const russianRoutes = localizePublicRouteGolden("ru").map(({ path }) => path);
+const indonesianRoutes = localizePublicRouteGolden("id-ID").map(
+  ({ path }) => path,
+);
 const internalEnglishRoutes = localizePublicRouteGolden("en").map(
   ({ path }) => path,
 );
@@ -37,6 +40,7 @@ const localizedRouteGolden = new Set([
   ...frenchRoutes,
   ...chineseRoutes,
   ...russianRoutes,
+  ...indonesianRoutes,
 ]);
 
 test.describe("atomic locale publication profiles", () => {
@@ -75,11 +79,13 @@ test.describe("atomic locale publication profiles", () => {
       expect(prerenderRoutes.has("/fr/opengraph-image")).toBe(false);
       expect(prerenderRoutes.has("/zh-CN/opengraph-image")).toBe(false);
       expect(prerenderRoutes.has("/ru/opengraph-image")).toBe(false);
+      expect(prerenderRoutes.has("/id-ID/opengraph-image")).toBe(false);
       expect(prerenderRoutes.has("/api/i18n/home-proof/es")).toBe(false);
       expect(prerenderRoutes.has("/api/i18n/home-proof/de")).toBe(false);
       expect(prerenderRoutes.has("/api/i18n/home-proof/fr")).toBe(false);
       expect(prerenderRoutes.has("/api/i18n/home-proof/zh-CN")).toBe(false);
       expect(prerenderRoutes.has("/api/i18n/home-proof/ru")).toBe(false);
+      expect(prerenderRoutes.has("/api/i18n/home-proof/id-ID")).toBe(false);
 
       for (const pathname of englishRoutes) {
         const response = await scenario.request.get(pathname);
@@ -99,6 +105,7 @@ test.describe("atomic locale publication profiles", () => {
         ...frenchRoutes,
         ...chineseRoutes,
         ...russianRoutes,
+        ...indonesianRoutes,
       ]) {
         const response = await scenario.request.get(pathname, {
           maxRedirects: 0,
@@ -138,16 +145,19 @@ test.describe("atomic locale publication profiles", () => {
         "/fr/opengraph-image",
         "/zh-CN/opengraph-image",
         "/ru/opengraph-image",
+        "/id-ID/opengraph-image",
         "/api/i18n/home-proof/es",
         "/api/i18n/home-proof/de",
         "/api/i18n/home-proof/fr",
         "/api/i18n/home-proof/zh-CN",
         "/api/i18n/home-proof/ru",
+        "/api/i18n/home-proof/id-ID",
         ...buildExampleContract.artifactManifest.urlsByLocale.es,
         ...buildExampleContract.artifactManifest.urlsByLocale.de,
         ...buildExampleContract.artifactManifest.urlsByLocale.fr,
         ...buildExampleContract.artifactManifest.urlsByLocale["zh-CN"],
         ...buildExampleContract.artifactManifest.urlsByLocale.ru,
+        ...buildExampleContract.artifactManifest.urlsByLocale["id-ID"],
         ...buildExampleContract.artifactManifest.urlsByLocale["en-XA"],
       ]) {
         const response = await scenario.request.get(pathname, {
@@ -171,6 +181,7 @@ test.describe("atomic locale publication profiles", () => {
       expect(sitemap).not.toContain("/fr");
       expect(sitemap).not.toContain("/zh-CN");
       expect(sitemap).not.toContain("/ru");
+      expect(sitemap).not.toContain("/id-ID");
       expect(sitemap).not.toContain("hreflang");
 
       await page.goto(`${scenario.baseUrl}/`);

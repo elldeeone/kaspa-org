@@ -1,0 +1,7 @@
+{
+  "kaspa-cli-wallet": "Perangkat dompet berbasis baris perintah bagi pengguna yang terbiasa mengelola kunci dan transaksi Kaspa melalui terminal.",
+  "kng-desktop": "Dompet desktop Kaspa modern dengan antarmuka bawaan yang ramah, opsi untuk menjalankan node penuh, dan konfigurasi mendalam bagi penggunaan tingkat lanjut.",
+  "kng-web": "Versi Kaspa NG berbasis peramban dengan antarmuka bawaan yang ramah, tanpa perlu instalasi, serta konfigurasi lanjutan opsional.",
+  "kaspacom-wallet": "Dompet KaspaCom nonkustodial berbasis peramban untuk membuat, mengimpor, dan menggunakan dompet Kaspa.",
+  "kaspium": "Dompet seluler nonkustodial untuk mengirim, menerima, dan menyimpan KAS."
+}

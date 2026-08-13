@@ -129,14 +129,15 @@ test("artifact manifest follows the central Build-example contract", () => {
     "fr",
     "zh-CN",
     "ru",
+    "id-ID",
   ]);
   assert.ok(
     manifest.locales.every(
       (locale) => manifest.pathsByLocale[locale].length === 6,
     ),
   );
-  assert.equal(manifest.localizedPaths.length, 36);
-  assert.equal(manifest.localizedUrls.length, 36);
+  assert.equal(manifest.localizedPaths.length, 42);
+  assert.equal(manifest.localizedUrls.length, 42);
   assert.ok(
     manifest.localizedUrls.every((path) =>
       path.startsWith(`${buildExampleContract.examplesPublicBasePath}/`),
@@ -450,6 +451,34 @@ test("catalog-backed Build artifacts are deterministic and complete", async () =
   assert.match(russianControls, /<- Назад<\/a> \| Сеть:/u);
   assert.match(russianControls, />Отключить<\/a>/u);
   assert.match(russianControls, />Восстановить соединение<\/a>/u);
+
+  for (const name of exampleNames) {
+    const indonesian = first[`${name}.id-ID.html`];
+    assert.match(indonesian, /<html lang="id-ID" dir="ltr">/u);
+    assert.match(indonesian, /from '\.\/resources\/utils\.id-ID\.js'/u);
+    assert.match(indonesian, /Menghubungkan ke jaringan Kaspa/u);
+    assert.match(
+      indonesian,
+      /<meta name="robots" content="noindex, nofollow">/u,
+    );
+    assert.doesNotMatch(indonesian, /\[!! /u);
+  }
+  assert.match(
+    first["get-server-info.id-ID.html"],
+    /Permintaan GetServerInfo/u,
+  );
+  assert.match(
+    first["get-block-dag-info.id-ID.html"],
+    /Respons GetBlockDagInfo/u,
+  );
+  assert.match(first["subscribe-block-added.id-ID.html"], /Terputus dari/u);
+  assert.match(first["utxo-context.id-ID.html"], /ribuan UTXO/u);
+
+  const indonesianControls = first["resources/utils.id-ID.js"];
+  assert.match(indonesianControls, /href="\/id-ID\/build#try-live"/u);
+  assert.match(indonesianControls, /<- Kembali<\/a> \| Jaringan:/u);
+  assert.match(indonesianControls, />Putuskan<\/a>/u);
+  assert.match(indonesianControls, />Hubungkan kembali<\/a>/u);
 });
 
 test("Build artifacts use an RTL locale direction without generator changes", async () => {
@@ -730,7 +759,9 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   await fixture.check("test");
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.(?:de|en-XA|es|fr|ru|zh-CN)\.html$/u.test(path))
+      .filter((path) =>
+        /\.(?:de|en-XA|es|fr|id-ID|ru|zh-CN)\.html$/u.test(path),
+      )
       .sort(),
     manifest.localizedPaths.filter((path) => path.endsWith(".html")).sort(),
   );
@@ -739,7 +770,9 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   await fixture.check("preview");
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.(?:de|en-XA|es|fr|ru|zh-CN)\.html$/u.test(path))
+      .filter((path) =>
+        /\.(?:de|en-XA|es|fr|id-ID|ru|zh-CN)\.html$/u.test(path),
+      )
       .sort(),
     [
       ...manifest.pathsByLocale.es,
@@ -747,6 +780,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
       ...manifest.pathsByLocale.fr,
       ...manifest.pathsByLocale["zh-CN"],
       ...manifest.pathsByLocale.ru,
+      ...manifest.pathsByLocale["id-ID"],
     ]
       .filter((path) => path.endsWith(".html"))
       .sort(),
@@ -756,7 +790,9 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
   await fixture.check("production");
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.(?:de|en-XA|es|fr|ru|zh-CN)\.html$/u.test(path))
+      .filter((path) =>
+        /\.(?:de|en-XA|es|fr|id-ID|ru|zh-CN)\.html$/u.test(path),
+      )
       .sort(),
     [
       ...manifest.pathsByLocale.es,
@@ -764,6 +800,7 @@ test("workflow sync and check enforce each target artifact set", async (t) => {
       ...manifest.pathsByLocale.fr,
       ...manifest.pathsByLocale["zh-CN"],
       ...manifest.pathsByLocale.ru,
+      ...manifest.pathsByLocale["id-ID"],
     ]
       .filter((path) => path.endsWith(".html"))
       .sort(),

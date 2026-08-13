@@ -11,6 +11,7 @@ import {
   englishMessages,
   frenchMessages,
   germanMessages,
+  indonesianMessages,
   russianMessages,
   spanishMessages,
 } from "../../src/i18n/messages.ts";
@@ -21,6 +22,7 @@ const translatedCatalogs = {
   fr: frenchMessages,
   "zh-CN": chineseMessages,
   ru: russianMessages,
+  "id-ID": indonesianMessages,
 } as const;
 
 test("complete translated catalogs satisfy the shared translation contract", () => {
@@ -131,6 +133,7 @@ test("locale policy adds only language-specific terminology and loanwords", () =
   assert.equal(isUnchangedMessageAllowed("fr", "Menu"), true);
   assert.equal(isUnchangedMessageAllowed("fr", "Acceptable"), true);
   assert.equal(isUnchangedMessageAllowed("fr", "{date, date, medium}"), true);
+  assert.equal(isUnchangedMessageAllowed("id-ID", "upstream"), true);
 
   assert.deepEqual(
     validateTranslationCatalogContract(

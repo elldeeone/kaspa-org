@@ -312,6 +312,51 @@ const productionLocaleDescriptors = [
     },
     openGraphInkBandCount: 4,
   },
+  {
+    locale: "id-ID",
+    hrefLang: "id-ID",
+    dir: "ltr",
+    endonym: "Bahasa Indonesia",
+    acceptLanguage: "id-ID,id;q=0.9",
+    aiAvailability: {
+      home: false,
+      lore: false,
+      build: false,
+      assets: false,
+      hodl: false,
+      "not-found": false,
+    },
+    reviewedCopy: {
+      languageLabel: "Bahasa",
+      aiLauncherAskAnything: "Tanyakan apa saja",
+      aiLauncherPlaceholder: "Tanyakan apa saja...",
+      notFoundTitle: "Halaman Tidak Ditemukan | Kaspa",
+      proofTrigger: "Verifikasi bukti",
+      homeVerifyHeading: "jangan percaya, verifikasi.",
+      homeDagAnnotation: "pow secara real-time",
+      standaloneBackLabel: "Kembali",
+      standaloneNetworkLabel: "Jaringan",
+      standaloneConnectingLabel: "| Menghubungkan...",
+      standaloneRuntimeOutput: {
+        "get-server-info": "Respons GetServerInfo:",
+        "get-block-dag-info": "Respons GetBlockDagInfo:",
+        "subscribe-block-added": "Berlangganan Block Added...",
+        "subscribe-daa-changed": "Mendaftarkan notifikasi DAA...",
+        "utxo-context": "Demo ini ditujukan untuk pengujian manual",
+      },
+    },
+    preserveWhitespaceDelimitedWords: true,
+    forbiddenTranslatedSlugPaths: [
+      "/id-ID/cerita",
+      "/id-ID/bangun",
+      "/id-ID/aset",
+    ],
+    dagAnnotationFont: {
+      family: "Rock Salt",
+      minimumInkHeight: 8,
+    },
+    openGraphInkBandCount: 3,
+  },
 ] as const satisfies readonly ProductionLocaleDescriptor[];
 
 type ProductionLocaleCase = ProductionLocaleDescriptor & {

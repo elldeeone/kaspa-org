@@ -40,6 +40,13 @@ import russianHodl from "../../messages/ru/hodl.json" with { type: "json" };
 import russianHome from "../../messages/ru/home.json" with { type: "json" };
 import russianLore from "../../messages/ru/lore.json" with { type: "json" };
 import russianShared from "../../messages/ru/shared.json" with { type: "json" };
+import indonesianAssets from "../../messages/id-ID/assets.json" with { type: "json" };
+import indonesianBuild from "../../messages/id-ID/build.json" with { type: "json" };
+import indonesianErrors from "../../messages/id-ID/errors.json" with { type: "json" };
+import indonesianHodl from "../../messages/id-ID/hodl.json" with { type: "json" };
+import indonesianHome from "../../messages/id-ID/home.json" with { type: "json" };
+import indonesianLore from "../../messages/id-ID/lore.json" with { type: "json" };
+import indonesianShared from "../../messages/id-ID/shared.json" with { type: "json" };
 
 import {
   isLocaleEnabled,
@@ -50,6 +57,7 @@ import {
   chineseLocale,
   frenchLocale,
   germanLocale,
+  indonesianLocale,
   pseudoLocale,
   russianLocale,
   spanishLocale,
@@ -122,6 +130,16 @@ export const russianMessages = {
   shared: russianShared,
 } satisfies AppMessages;
 
+export const indonesianMessages = {
+  assets: indonesianAssets,
+  build: indonesianBuild,
+  errors: indonesianErrors,
+  hodl: indonesianHodl,
+  home: indonesianHome,
+  lore: indonesianLore,
+  shared: indonesianShared,
+} satisfies AppMessages;
+
 let generatedPseudoMessages: AppMessages | null = null;
 
 function assertNever(value: never): never {
@@ -175,6 +193,13 @@ export function getMessages(locale: Locale): LocaleMessages {
         );
       }
       return russianMessages;
+    case indonesianLocale:
+      if (!isLocaleEnabled(indonesianLocale)) {
+        throw new Error(
+          `${indonesianLocale} messages are unavailable in this build target`,
+        );
+      }
+      return indonesianMessages;
     default:
       return assertNever(locale);
   }

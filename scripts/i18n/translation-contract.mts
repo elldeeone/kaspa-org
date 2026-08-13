@@ -139,6 +139,24 @@ const translationPolicies = {
     allowedUnchangedValues: ["Acceptable", "Hard fork", "Menu"],
     preferredTerms: [[/(?:^|\W)blocks?(?:$|\W)/iu, "bloc"]],
   },
+  "id-ID": {
+    allowedUnchangedValues: [
+      "Beta",
+      "Checkpoint",
+      "Desktop",
+      "Dev",
+      "Forum",
+      "Genesis",
+      "Hosting",
+      "Infra",
+      "Menu",
+      "N/A",
+      "Node",
+      "Server",
+      "Testnet",
+      "upstream",
+    ],
+  },
 } as const satisfies Readonly<Record<string, TranslationPolicy>>;
 
 const emptyPolicy = {} satisfies TranslationPolicy;

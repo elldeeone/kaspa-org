@@ -30,5 +30,8 @@ test("Production offers every public locale and excludes private locales", async
   await expect(
     menu.getByRole("menuitemradio", { name: "Русский" }),
   ).toBeVisible();
+  await expect(
+    menu.getByRole("menuitemradio", { name: "Bahasa Indonesia" }),
+  ).toBeVisible();
   await expect(menu).not.toContainText("Pseudo");
 });

@@ -11,6 +11,7 @@ import {
   defaultLocale,
   frenchLocale,
   germanLocale,
+  indonesianLocale,
   getLocaleDefinition,
   pseudoLocale,
   russianLocale,
@@ -39,9 +40,14 @@ test("selector options use registry endonyms and exclude the pseudo locale", () 
   assert.equal(isLanguageSelectorLocale(frenchLocale), true);
   assert.equal(isLanguageSelectorLocale(chineseLocale), true);
   assert.equal(isLanguageSelectorLocale(russianLocale), true);
+  assert.equal(isLanguageSelectorLocale(indonesianLocale), true);
   assert.equal(
     LANGUAGE_SELECTOR_OPTIONS.some(({ code }) => code === chineseLocale),
     listSelectableLocales().includes(chineseLocale),
+  );
+  assert.equal(
+    LANGUAGE_SELECTOR_OPTIONS.some(({ code }) => code === indonesianLocale),
+    listSelectableLocales().includes(indonesianLocale),
   );
   assert.equal(isLanguageSelectorLocale("en-XA"), false);
 });
@@ -63,6 +69,9 @@ test("locale path fallback preserves slugs and encoded path segments", () => {
   }
   if (isLanguageSelectorLocale(russianLocale)) {
     assert.equal(localizePathname("/lore", russianLocale), "/ru/lore");
+  }
+  if (isLanguageSelectorLocale(indonesianLocale)) {
+    assert.equal(localizePathname("/lore", indonesianLocale), "/id-ID/lore");
   }
   assert.equal(localizePathname("/lore", "en"), "/lore");
   assert.equal(localizePathname("/", spanishLocale), "/es");
