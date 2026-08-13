@@ -40,7 +40,7 @@
     "description": "根据您持有和使用 KAS 的方式选择合适的钱包。",
     "safety": {
       "label": "重要提示：",
-      "body": "转移大额资金前，请备份恢复短语或钱包恢复说明。先发送一笔小额测试交易，确认到账后再转移剩余资金。"
+      "body": "转移大额资金前，请备份助记词或钱包说明。先发送一笔小额测试交易，确认到账后再转移剩余资金。"
     }
   },
   "buy": {
@@ -94,7 +94,7 @@
       "leaveOnExchange": "我应该把 KAS 留在交易所吗？",
       "moveFromExchange": "如何将 KAS 从交易所发送到我的钱包？",
       "fees": "购买或转移 KAS 时会产生哪些费用？",
-      "recoveryPhrase": "什么是恢复短语？",
+      "recoveryPhrase": "什么是助记词？",
       "walletVsExchange": "钱包和交易所有什么区别？",
       "receiveKas": "如何接收别人发送的 KAS？",
       "multipleWallets": "我可以拥有多个 Kaspa 钱包吗？",
@@ -231,7 +231,7 @@
       },
       "hardware_wallet": {
         "label": "支持硬件钱包",
-        "description": "部分软件钱包可与硬件钱包设备（如 Ledger 或 Tangem）配对，让私钥与设备之外的环境隔离，同时仍可使用熟悉的软件界面。"
+        "description": "部分软件钱包可与硬件钱包设备（如 Ledger 或 Tangem）配对，将私钥隔离保存在硬件设备上，同时仍可使用熟悉的软件界面。"
       },
       "multisig": {
         "label": "多重签名",

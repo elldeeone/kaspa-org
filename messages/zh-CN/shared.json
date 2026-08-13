@@ -97,7 +97,7 @@
       "stack": "正在推入技术栈…",
       "bps": "正在重新平衡 10 BPS…",
       "blueWork": "正在重新计算蓝色工作量…",
-      "l2": "正在过滤 L2 重组事件…",
+      "l2": "正在过滤 L2 重组相关事件…",
       "vprogBatch": "正在调度 vProg 批次…",
       "schnorr": "正在生成 Schnorr 签名…",
       "virtualState": "正在序列化虚拟状态…",

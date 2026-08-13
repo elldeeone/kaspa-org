@@ -215,7 +215,7 @@
     },
     "quickstart": "{docker} 快速入门",
     "title": "运行最新的 {rustyKaspa} 镜像",
-    "description": "在 16110 端口公开 {grpc}，让您可以从开发机器与节点通信。此容器为临时容器，不提供持久化存储或入站 {p2p}。",
+    "description": "在 16110 端口公开 {grpc}，让您可以从开发机器与节点通信。临时容器：无持久化存储，也不接受入站 {p2p} 连接。",
     "copyCommand": "复制 {docker} 命令",
     "commandCopied": "已复制 {docker} 命令",
     "dockerHub": "{dockerHub}",
