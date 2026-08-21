@@ -50,11 +50,9 @@ export function SiteDocumentContent({
         </Providers>
       </NextIntlClientProvider>
       <Script
-        src="https://rybbit.kasmedia.com/api/script.js"
-        data-site-id="1"
+        src="https://webanalytics.kasmedia.com/api/script.js"
+        data-site-id="90480f07a2f6"
         strategy="afterInteractive"
-        integrity="sha384-H0pPS5ok8JJU1gmvnWE/8MDghtGFYeyfM5WjL8LYxEOh6lNozzFWp4AXrlPeUbJo"
-        crossOrigin="anonymous"
       />
     </>
   );
