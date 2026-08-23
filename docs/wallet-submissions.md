@@ -37,21 +37,21 @@ Wallets should meet these expectations:
 
 Open-source software wallets are preferred. Closed-source wallets may still be
 listed when there is strong evidence of maturity or community usage, but they
-must use `transparency: "caution"`.
+must use `check.transparency: "caution"`.
 
 ## Submission Rules
 
 - Add or update exactly one wallet record per pull request.
+- Use one record for one wallet product. Keep OS variants together; use separate
+  records for independently named products or models with their own setup and
+  security characteristics.
 - Use a stable lowercase, hyphen-separated `id`, for example `example-wallet`.
 - Add the wallet icon at `public/hodl/wallets/<wallet-id>/icon.<ext>`.
 - Set `icon` to `/hodl/wallets/<wallet-id>/icon.<ext>`.
-- List every supported OS in `platforms`.
-- Set wallet-level `features` and `check` to the values that apply to every
-  platform. Use the rating rubric below and provide evidence in the pull
-  request. Use `platformOverrides` only when one platform genuinely differs.
-- For hardware wallets that require companion apps, list both `hardware` and
-  the supported companion app OSs. Use wallet-level ratings for the app-platform
-  defaults, then add hardware-specific overrides where needed.
+- Use `platforms` for independently usable OSs or `paths` for components that
+  must be used together, never both.
+- Set wallet-level `features` and `check` defaults using the rubric below. Use
+  `platformOverrides` only for genuine platform differences.
 - List every acquisition path in `actions`. Use `platforms` on an action only
   when the link is OS-specific (App Store, Google Play, OS-specific downloads).
 - Use official wallet links.
@@ -104,18 +104,19 @@ mean the submitter is expected to provide translations.
 
 ## Schema
 
-| Field               | Required | Notes                                                                                                            |
-| ------------------- | -------- | ---------------------------------------------------------------------------------------------------------------- |
-| `id`                | yes      | Stable kebab-case identifier. Must match the icon folder name.                                                   |
-| `title`             | yes      | Wallet name shown in the list. Wallets are displayed alphabetically by this value.                               |
-| `icon`              | yes      | `/hodl/wallets/<id>/icon.<ext>`.                                                                                 |
-| `user`              | yes      | `beginner` (approachable) or `experienced` (technical familiarity assumed).                                      |
-| `summary`           | yes      | Short, neutral English description. Maintainers own translated versions.                                         |
-| `platforms`         | yes      | Non-empty list of supported OSs from `windows`, `mac`, `linux`, `ios`, `android`, `hardware`.                    |
-| `features`          | yes      | Default features that apply to every platform. Use `[]` if none.                                                 |
-| `check`             | yes      | Default rating per criterion (`control`, `validation`, `transparency`, `fees`). Applies to every platform.       |
-| `platformOverrides` | no       | Per-OS overrides for `features` and/or specific criteria in `check`. Use only when a platform genuinely differs. |
-| `actions`           | yes      | Non-empty list of acquisition paths. Each has `action`, `link`, optional `platforms` to scope to specific OSs.   |
+| Field               | Required    | Notes                                                                                                            |
+| ------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------- |
+| `id`                | yes         | Stable kebab-case identifier. Must match the icon folder name.                                                   |
+| `title`             | yes         | Wallet name shown in the list. Wallets are displayed alphabetically by this value.                               |
+| `icon`              | yes         | `/hodl/wallets/<id>/icon.<ext>`.                                                                                 |
+| `user`              | yes         | `beginner` (approachable) or `experienced` (technical familiarity assumed).                                      |
+| `summary`           | yes         | Short, neutral English description. Maintainers own translated versions.                                         |
+| `platforms`         | conditional | Non-empty list of independently usable OSs. Use this or `paths`, never both.                                     |
+| `paths`             | conditional | Non-empty list of platform combinations that must be used together. Use this or `platforms`, never both.         |
+| `features`          | yes         | Default features inherited by each platform. Use `[]` if none.                                                   |
+| `check`             | yes         | Default rating per criterion (`control`, `validation`, `transparency`, `fees`).                                  |
+| `platformOverrides` | no          | Per-OS overrides for `features` and/or specific criteria in `check`. Use only when a platform genuinely differs. |
+| `actions`           | yes         | Non-empty list of acquisition paths. Each has `action`, `link`, optional `platforms` to scope to specific OSs.   |
 
 ### Rating rubric
 
@@ -123,14 +124,23 @@ Use these values in `check` and provide evidence in the pull request. Evidence
 can be official docs, source repositories, app store listings, release notes, or
 screenshots.
 
-| Criterion      | `good`                                 | `acceptable`                       | `caution`                              | `not_applicable`      |
-| -------------- | -------------------------------------- | ---------------------------------- | -------------------------------------- | --------------------- |
-| `control`      | User controls the private keys.        | Do not use.                        | A custodian or third party holds keys. | Do not use.           |
-| `validation`   | Runs a Kaspa node by default.          | Lets users choose a Kaspa node.    | Uses fixed wallet-controlled nodes.    | Hardware device only. |
-| `transparency` | Open source with reproducible builds.  | Open source, but not reproducible. | Closed source.                         | Do not use.           |
-| `fees`         | User can set a custom transaction fee. | User can choose from preset fees.  | Fees are hidden or forced.             | Do not use.           |
+| Criterion      | `good`                                 | `acceptable`                       | `caution`                              | `not_applicable`                                                             |
+| -------------- | -------------------------------------- | ---------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------- |
+| `control`      | User controls the private keys.        | Do not use.                        | A custodian or third party holds keys. | Do not use.                                                                  |
+| `validation`   | Runs a Kaspa node by default.          | Lets users choose a Kaspa node.    | Uses fixed wallet-controlled nodes.    | Signing-only hardware device; companion software handles network validation. |
+| `transparency` | Open source with reproducible builds.  | Open source, but not reproducible. | Closed source.                         | Do not use.                                                                  |
+| `fees`         | User can set a custom transaction fee. | User can choose from preset fees.  | Fees are hidden or forced.             | Do not use.                                                                  |
 
 If you are unsure, choose the cautious rating and explain why.
+
+### Calculated display ratings
+
+Wallet records store only the rubric values above. The wallet finder calculates
+each rating across complete usable paths. An OS filter selects paths containing
+that OS; selecting `hardware` can include several companion paths. `mixed`
+appears when the applicable platform ratings differ across the selected paths.
+`not_applicable` ratings are excluded, so hardware `not_applicable`
+plus companion-app `caution` displays as `caution`, not `mixed`.
 
 ### Action types
 
@@ -173,14 +183,15 @@ overrides.
 
 ### Hardware platforms
 
-If `platforms` includes `hardware`, the effective `validation` rating for the
+If a wallet supports `hardware`, the effective `validation` rating for the
 hardware platform must be `not_applicable`. Set `check.validation` to
 `not_applicable` for hardware-only wallets, or override on
-`platformOverrides.hardware.check.validation` for mixed wallets.
+`platformOverrides.hardware.check.validation` for wallets with companion apps.
 
 For hardware wallets that require Android, iOS, Windows, macOS, or Linux
 companion apps, use the companion app's validation behavior as the wallet-level
-value. Then override only the hardware platform:
+value. Declare each combination that can actually be used, then override only
+the hardware platform:
 
 ```ts
 check: {
@@ -189,12 +200,26 @@ check: {
   transparency: "acceptable",
   fees: "acceptable",
 },
+paths: [
+  { platforms: ["hardware", "android"] },
+  { platforms: ["hardware", "ios"] },
+],
 platformOverrides: {
   hardware: {
-    check: { validation: "not_applicable" },
+    check: {
+      validation: "not_applicable",
+      transparency: "caution",
+    },
   },
 },
 ```
+
+For transparency, the `hardware` rating describes device firmware; Android,
+iOS, Windows, macOS, and Linux ratings describe the corresponding companion
+application. The tooltip labels those parts automatically.
+
+Each entry in `platforms` is independently usable. Each entry in `paths` is a
+combination whose components must be used together.
 
 If the companion app lets users choose a Kaspa node, `validation: "acceptable"`
 may fit. If it uses fixed wallet-controlled nodes, use `validation: "caution"`.

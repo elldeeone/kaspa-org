@@ -14,7 +14,7 @@ import {
   toggleCriterion,
   toggleFeature,
 } from "./filterState";
-import { createWalletFinderModel } from "./filterWallets";
+import { createWalletFinderModel } from "./walletModel";
 import type {
   KaspaWallet,
   WalletCriterion,
@@ -265,7 +265,7 @@ export default function WalletFinder({ wallets }: { wallets: KaspaWallet[] }) {
             )}
 
             <div className="md:hidden">
-              <MobileResults matches={model.matches} filterOs={filters.os} />
+              <MobileResults matches={model.matches} />
             </div>
 
             <div className="hidden md:block lg:hidden">
@@ -274,7 +274,6 @@ export default function WalletFinder({ wallets }: { wallets: KaspaWallet[] }) {
                 totalWallets={model.totalWallets}
                 mode={mode}
                 onRestartWizard={startWizard}
-                filterOs={filters.os}
                 hideHeader
               />
             </div>
@@ -288,7 +287,6 @@ export default function WalletFinder({ wallets }: { wallets: KaspaWallet[] }) {
                 totalWallets={model.totalWallets}
                 mode={mode}
                 onRestartWizard={startWizard}
-                filterOs={filters.os}
               />
             </div>
           </>

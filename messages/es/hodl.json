@@ -241,9 +241,13 @@
     "ratings": {
       "good": "Bien",
       "acceptable": "Aceptable",
+      "mixed": "Mixta",
+      "mixedExplanation": "Esta valoración varía entre las plataformas seleccionadas.",
       "caution": "Precaución",
       "not_applicable": "No aplicable",
       "notApplicableCompact": "N/A",
+      "breakdown": "Desglose",
+      "why": "¿Por qué?",
       "aria": "{criterion}: {rating}",
       "tooltipHeading": "{criterion}: {rating}",
       "explanations": {
@@ -255,11 +259,12 @@
           "good": "Ejecuta de forma predeterminada su propio nodo completo de Kaspa, por lo que valida las transacciones de manera independiente.",
           "acceptable": "Permite conectarla a cualquier nodo de Kaspa de confianza, pero no puede funcionar como nodo por sí misma.",
           "caution": "Solo se conecta a una infraestructura centralizada fija, por lo que debes confiar en el nodo elegido por la billetera.",
-          "not_applicable": "Es solo un dispositivo de hardware y no gestiona las transacciones por sí mismo."
+          "not_applicable": "El dispositivo de hardware firma las transacciones, mientras que el software complementario se encarga del acceso a la red y la validación."
         },
         "transparency": {
-          "good": "Es de código abierto y ofrece compilaciones reproducibles, por lo que el binario publicado se puede verificar comparándolo con el código fuente.",
-          "acceptable": "Es de código abierto, pero las compilaciones no son reproducibles, por lo que debes confiar en que el binario publicado coincida con el código fuente.",
+          "good": "El código es público y las verificaciones independientes permiten confirmar que el software publicado se creó a partir de él.",
+          "acceptable": "El código es público, pero no existe una forma fiable de verificar que el software publicado se creó a partir de él.",
+          "mixed": "Las partes necesarias de esta billetera tienen distintos niveles de transparencia.",
           "caution": "Es de código cerrado. El código no se puede auditar de forma independiente."
         },
         "fees": {
@@ -268,6 +273,10 @@
           "caution": "Las comisiones son obligatorias u ocultas y el usuario no puede controlarlas."
         }
       }
+    },
+    "transparencySurfaces": {
+      "firmware": "Firmware del dispositivo",
+      "application": "Aplicación para {platform}"
     },
     "results": {
       "summary": "<strong>{matches, number}</strong> de {total, plural, one {# billetera} other {# billeteras}}",

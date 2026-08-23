@@ -8,8 +8,8 @@ import {
   ratingExplanations,
 } from "../../src/app/hodl/wallet-finder/walletMetadata.ts";
 import {
-  WALLET_CHECK_RATINGS,
   WALLET_CRITERIA_IDS,
+  WALLET_RATINGS_BY_CRITERION,
 } from "../../src/app/hodl/wallet-finder/taxonomy.ts";
 import type { WalletCheckRating } from "../../src/app/hodl/wallet-finder/types.ts";
 import { kaspaWallets } from "../../src/data/wallets.ts";
@@ -69,21 +69,20 @@ test("every validator-approved rating resolves through the explanation map", () 
     englishMessages.hodl.walletFinder.ratings.explanations;
 
   for (const criterion of WALLET_CRITERIA_IDS) {
-    const approvedRatings = ratingExplanations[criterion] as Partial<
-      Record<WalletCheckRating, string>
-    >;
+    const approvedRatings = WALLET_RATINGS_BY_CRITERION[criterion];
+    assert.deepEqual(
+      Object.keys(ratingExplanations[criterion]).sort(),
+      [...approvedRatings].sort(),
+    );
 
-    for (const rating of WALLET_CHECK_RATINGS) {
+    for (const rating of approvedRatings) {
       const key = getRatingExplanationKey(criterion, rating);
-      assert.equal(key, approvedRatings[rating]);
-
-      if (key) {
-        const catalogKey = key.split(".").at(-1) as WalletCheckRating;
-        const criterionCatalog = explanationCatalog[criterion] as Partial<
-          Record<WalletCheckRating, string>
-        >;
-        assert.equal(typeof criterionCatalog[catalogKey], "string");
-      }
+      assert.ok(key);
+      const catalogKey = key.split(".").at(-1) as WalletCheckRating;
+      const criterionCatalog = explanationCatalog[criterion] as Partial<
+        Record<WalletCheckRating, string>
+      >;
+      assert.equal(typeof criterionCatalog[catalogKey], "string");
     }
   }
 });

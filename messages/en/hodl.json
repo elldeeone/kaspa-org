@@ -241,9 +241,13 @@
     "ratings": {
       "good": "Good",
       "acceptable": "Acceptable",
+      "mixed": "Mixed",
+      "mixedExplanation": "This rating varies across the selected platforms.",
       "caution": "Caution",
       "not_applicable": "Not applicable",
       "notApplicableCompact": "N/A",
+      "breakdown": "Breakdown",
+      "why": "Why?",
       "aria": "{criterion}: {rating}",
       "tooltipHeading": "{criterion}: {rating}",
       "explanations": {
@@ -255,11 +259,12 @@
           "good": "Runs its own full Kaspa node by default, so it validates transactions independently.",
           "acceptable": "Lets you point it at any Kaspa node you trust, but cannot run as a node itself.",
           "caution": "Connects only to fixed centralised infrastructure, so you have to trust the wallet's chosen node.",
-          "not_applicable": "Hardware device only. It does not handle transactions itself."
+          "not_applicable": "The hardware device signs transactions, while companion software handles network access and validation."
         },
         "transparency": {
-          "good": "Open source with reproducible builds, so the published binary can be verified against the source code.",
-          "acceptable": "Open source, but builds are not reproducible, so you have to trust that the published binary matches the source.",
+          "good": "The code is public, and independent checks can verify that the released software was built from it.",
+          "acceptable": "The code is public, but there is no reliable way to verify that the released software was built from it.",
+          "mixed": "Required parts of this wallet have different transparency levels.",
           "caution": "Closed source. The code cannot be independently audited."
         },
         "fees": {
@@ -268,6 +273,10 @@
           "caution": "Fees are forced or hidden, with no user control."
         }
       }
+    },
+    "transparencySurfaces": {
+      "firmware": "Device firmware",
+      "application": "{platform} app"
     },
     "results": {
       "summary": "<strong>{matches, number}</strong> of {total, plural, one {# wallet} other {# wallets}}",

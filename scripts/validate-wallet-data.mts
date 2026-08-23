@@ -3,35 +3,26 @@ import { extname, join } from "node:path";
 
 import { kaspaWallets } from "../src/data/wallets.ts";
 import {
-  ratingExplanations,
-  walletCriteria,
-  walletFeatures,
-} from "../src/app/hodl/wallet-finder/walletMetadata.ts";
-import {
   ACTION_IMPLIED_OS,
   WALLET_ACTION_IDS,
   WALLET_CHECK_RATINGS,
+  WALLET_CRITERIA_IDS,
+  WALLET_FEATURE_IDS,
   WALLET_OS_IDS,
+  WALLET_RATINGS_BY_CRITERION,
   WALLET_USER_TYPES,
 } from "../src/app/hodl/wallet-finder/taxonomy.ts";
 import { supportedLocaleCodes } from "../src/i18n/locale-registry.ts";
 import { getLocalizedWallets } from "../src/i18n/wallets.ts";
+import { validateWalletAvailability } from "./wallet-availability-validation.mts";
 
 const allowedOs = new Set<string>(WALLET_OS_IDS);
 const allowedUsers = new Set<string>(WALLET_USER_TYPES);
 const allowedActions = new Set<string>(WALLET_ACTION_IDS);
 const allowedRatings = new Set<string>(WALLET_CHECK_RATINGS);
-const requiredCriteria = walletCriteria.map((criterion) => criterion.id);
-const allowedFeatures = new Set<string>(
-  walletFeatures.map((feature) => feature.id),
-);
+const requiredCriteria = WALLET_CRITERIA_IDS;
+const allowedFeatures = new Set<string>(WALLET_FEATURE_IDS);
 const actionImpliedOs: Partial<Record<string, string>> = ACTION_IMPLIED_OS;
-const ratingsByCriterion = new Map<string, Set<string>>(
-  walletCriteria.map((criterion) => [
-    criterion.id,
-    new Set(Object.keys(ratingExplanations[criterion.id])),
-  ]),
-);
 
 const errors: string[] = [];
 const walletIdPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -225,7 +216,11 @@ function validateCheck(
         `${path}.${criterion}`,
         "must be good, acceptable, caution, or not_applicable",
       );
-    } else if (!ratingsByCriterion.get(criterion)?.has(rating)) {
+    } else if (
+      !(WALLET_RATINGS_BY_CRITERION[criterion] as readonly string[]).includes(
+        rating,
+      )
+    ) {
       fail(`${path}.${criterion}`, `"${rating}" is not valid for ${criterion}`);
     }
   }
@@ -315,24 +310,10 @@ kaspaWallets.forEach((wallet, walletIndex) => {
     }
   }
 
-  const platformList: string[] = Array.isArray(wallet.platforms)
-    ? wallet.platforms
-    : [];
-  if (!Array.isArray(wallet.platforms) || wallet.platforms.length === 0) {
-    fail(`${walletPath}.platforms`, "must list at least one platform");
-  } else {
-    const seen = new Set<string>();
-    wallet.platforms.forEach((os, index) => {
-      if (!allowedOs.has(os)) {
-        fail(`${walletPath}.platforms[${index}]`, `invalid OS "${os}"`);
-      } else if (seen.has(os)) {
-        fail(`${walletPath}.platforms[${index}]`, `duplicate platform "${os}"`);
-      } else {
-        seen.add(os);
-      }
-    });
-  }
-  const supportedPlatforms = new Set(platformList);
+  const availability = validateWalletAvailability(walletPath, wallet);
+  errors.push(...availability.errors);
+  const supportedPlatforms = availability.platforms;
+  const platformList = [...supportedPlatforms];
 
   validateFeatures(`${walletPath}.features`, wallet.features);
   validateCheck(`${walletPath}.check`, wallet.check, { partial: false });
@@ -357,7 +338,7 @@ kaspaWallets.forEach((wallet, walletIndex) => {
         if (!supportedPlatforms.has(os)) {
           fail(
             overridePath,
-            `override targets "${os}" but it is not in platforms`,
+            `override targets "${os}" but it is not in the wallet availability`,
           );
         }
         if (typeof override !== "object" || override === null) {
@@ -429,7 +410,7 @@ kaspaWallets.forEach((wallet, walletIndex) => {
           } else if (!supportedPlatforms.has(os)) {
             fail(
               `${actionPath}.platforms[${osIndex}]`,
-              `"${os}" is not in wallet.platforms`,
+              `"${os}" is not in the wallet's platforms or paths`,
             );
           } else {
             seen.add(os);

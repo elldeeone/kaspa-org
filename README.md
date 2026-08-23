@@ -163,6 +163,7 @@ GitHub Actions lives at `.github/workflows/ci.yml` and runs:
 
 - `npm run lint`
 - `npm run wallets:check`
+- `npm run test:wallets`
 - `npm run i18n:check`
 - `npm run format:check`
 - `npm run types:check`

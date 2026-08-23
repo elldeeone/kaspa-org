@@ -6,17 +6,20 @@ See docs/wallet-submissions.md for the full submission template.
 
 Required:
 - put the icon under public/hodl/wallets/<wallet-id>/icon.<ext>
-- list every supported OS in `platforms`
+- list supported OSs in `platforms`, or use `paths` when components must be
+  used together
 - choose user as "beginner" or "experienced"
-- set wallet-level `features` and `check` to the values that apply to every
-  platform; use `platformOverrides` only when one platform genuinely differs
+- set wallet-level `features` and `check` defaults; use `platformOverrides` only
+  for genuine platform differences (`hardware` represents device firmware when
+  rating transparency)
 - list every acquisition path in `actions`. An action without a `platforms`
   field applies to every platform the wallet supports; use the field to scope
   store listings (App Store, Google Play) or per-OS downloads.
 
 Maintainers validate rating accuracy before merge.
 */
-type WalletWithId<Id extends string> = Omit<KaspaWallet, "id"> & { id: Id };
+type WithoutId<Wallet> = Wallet extends unknown ? Omit<Wallet, "id"> : never;
+type WalletWithId<Id extends string> = WithoutId<KaspaWallet> & { id: Id };
 
 function defineWallet<const Id extends string>(
   wallet: WalletWithId<Id>,

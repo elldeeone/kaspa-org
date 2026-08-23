@@ -9,17 +9,12 @@ import { ACCENT, accentAlpha } from "../content";
 import { getStoreIcon } from "./icons";
 import InfoTooltip from "./InfoTooltip";
 import { RatingLegend, RatingSymbol, RatingTooltip } from "./Rating";
-import {
-  actionsForPlatform,
-  effectiveCheck,
-  effectiveFeatures,
-  type WalletMatch,
-} from "./filterWallets";
-import { WALLET_CHECK_RATINGS } from "./taxonomy";
+import type { WalletMatch } from "./walletModel";
+import { WALLET_DISPLAY_RATINGS } from "./taxonomy";
 import type { WalletEntryAction, WalletOs } from "./types";
 import { walletCriteria } from "./walletMetadata";
 
-const RATING_ORDER = WALLET_CHECK_RATINGS;
+const RATING_ORDER = WALLET_DISPLAY_RATINGS;
 
 function getActionStoreIconOs(action: WalletEntryAction): WalletOs | null {
   if (action === "app_store") return "ios";
@@ -29,19 +24,15 @@ function getActionStoreIconOs(action: WalletEntryAction): WalletOs | null {
 
 function WalletRow({
   match,
-  filterOs,
   isExpanded,
   onToggle,
 }: {
   match: WalletMatch;
-  filterOs: WalletOs | undefined;
   isExpanded: boolean;
   onToggle: () => void;
 }) {
   const t = useTranslations("hodl");
-  const { wallet, primary } = match;
-  const check = effectiveCheck(wallet, primary);
-  const visibleActions = actionsForPlatform(wallet, filterOs);
+  const { wallet, presentation, actions: visibleActions } = match;
   const totalColumns = walletCriteria.length + 1;
 
   return (
@@ -78,8 +69,9 @@ function WalletRow({
           <td key={criterion.id} className="min-w-[64px] px-2 py-4 text-center">
             <div className="flex justify-center">
               <RatingTooltip
-                rating={check[criterion.id]}
+                rating={presentation.ratings[criterion.id]}
                 criterion={criterion.id}
+                breakdown={presentation.breakdowns[criterion.id]}
               />
             </div>
           </td>
@@ -130,20 +122,10 @@ function WalletRow({
   );
 }
 
-function WalletCard({
-  match,
-  filterOs,
-}: {
-  match: WalletMatch;
-  filterOs: WalletOs | undefined;
-}) {
+function WalletCard({ match }: { match: WalletMatch }) {
   const t = useTranslations("hodl");
-  const { wallet, platforms, primary } = match;
-  const check = effectiveCheck(wallet, primary);
-  const uniqueFeatures = Array.from(
-    new Set(platforms.flatMap((os) => effectiveFeatures(wallet, os))),
-  ).slice(0, 4);
-  const visibleActions = actionsForPlatform(wallet, filterOs);
+  const { wallet, presentation, actions: visibleActions, features } = match;
+  const uniqueFeatures = features.slice(0, 4);
 
   return (
     <div className="border-subtle rounded-[20px] border p-4 sm:p-5">
@@ -192,11 +174,12 @@ function WalletCard({
             className="flex items-center justify-between gap-3"
           >
             <RatingTooltip
-              rating={check[criterion.id]}
+              rating={presentation.ratings[criterion.id]}
               criterion={criterion.id}
+              breakdown={presentation.breakdowns[criterion.id]}
               className="-mx-1.5 flex flex-1 items-center gap-2.5 rounded-[8px] px-1.5 py-1.5 transition-colors hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
             >
-              <RatingSymbol rating={check[criterion.id]} />
+              <RatingSymbol rating={presentation.ratings[criterion.id]} />
               <span className="text-secondary text-[13px] font-medium">
                 {t(`walletFinder.criteria.${criterion.id}.label`)}
               </span>
@@ -241,7 +224,7 @@ function MobileLegendBanner() {
   const t = useTranslations("hodl");
 
   return (
-    <div className="border-subtle mb-3 flex flex-nowrap items-center justify-between gap-x-2 rounded-[10px] border bg-black/[0.015] px-3 py-1.5 dark:bg-white/[0.02]">
+    <div className="border-subtle mb-3 flex flex-wrap items-center justify-between gap-2 rounded-[10px] border bg-black/[0.015] px-3 py-1.5 dark:bg-white/[0.02]">
       {RATING_ORDER.map((rating) => (
         <div key={rating} className="flex shrink-0 items-center gap-1.5">
           <RatingSymbol rating={rating} />
@@ -276,14 +259,12 @@ export function DesktopResults({
   totalWallets,
   mode,
   onRestartWizard,
-  filterOs,
   hideHeader = false,
 }: {
   matches: WalletMatch[];
   totalWallets: number;
   mode: "intro" | "guided" | "table";
   onRestartWizard: () => void;
-  filterOs: WalletOs | undefined;
   hideHeader?: boolean;
 }) {
   const t = useTranslations("hodl");
@@ -355,7 +336,6 @@ export function DesktopResults({
                   <WalletRow
                     key={match.wallet.id}
                     match={match}
-                    filterOs={filterOs}
                     isExpanded={expandedId === match.wallet.id}
                     onToggle={() =>
                       setExpandedId((current) =>
@@ -374,13 +354,7 @@ export function DesktopResults({
   );
 }
 
-export function MobileResults({
-  matches,
-  filterOs,
-}: {
-  matches: WalletMatch[];
-  filterOs: WalletOs | undefined;
-}) {
+export function MobileResults({ matches }: { matches: WalletMatch[] }) {
   const t = useTranslations("hodl");
 
   if (matches.length === 0) {
@@ -401,7 +375,7 @@ export function MobileResults({
       <MobileLegendBanner />
       <div className="grid gap-4">
         {matches.map((match) => (
-          <WalletCard key={match.wallet.id} match={match} filterOs={filterOs} />
+          <WalletCard key={match.wallet.id} match={match} />
         ))}
       </div>
     </>
