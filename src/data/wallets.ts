@@ -109,6 +109,49 @@ const walletRecords = [
     ],
   }),
   defineWallet({
+    id: "kastle",
+    title: "Kastle",
+    icon: "/hodl/wallets/kastle/icon.svg",
+    user: "beginner",
+    summary:
+      "Self-custody Kaspa wallet for KAS, KRC-20, KNS, and NFTs, with L2 bridging and in-app swaps. Mobile and browser extension.",
+    platforms: ["ios", "android", "windows", "mac", "linux"],
+    features: [],
+    check: {
+      control: "good",
+      validation: "caution",
+      transparency: "caution",
+      fees: "caution",
+    },
+    platformOverrides: {
+      windows: { check: { transparency: "acceptable" } },
+      mac: { check: { transparency: "acceptable" } },
+      linux: { check: { transparency: "acceptable" } },
+    },
+    actions: [
+      {
+        action: "app_store",
+        link: "https://apps.apple.com/app/id6745494363",
+        platforms: ["ios"],
+      },
+      {
+        action: "google_play",
+        link: "https://play.google.com/store/apps/details?id=cc.kastle",
+        platforms: ["android"],
+      },
+      {
+        action: "download",
+        link: "https://chromewebstore.google.com/detail/kastle/oambclflhjfppdmkghokjmpppmaebego",
+        platforms: ["windows", "mac", "linux"],
+      },
+      {
+        action: "view_source",
+        link: "https://github.com/forbole/kastle",
+        platforms: ["windows", "mac", "linux"],
+      },
+    ],
+  }),
+  defineWallet({
     id: "kng-desktop",
     title: "Kaspa NG",
     icon: "/hodl/wallets/kng-desktop/icon.png",
