@@ -262,9 +262,8 @@ test.describe("production i18n foundation contract", () => {
       expect(html, route.path).toMatch(
         /<body class="geist_[^"]+__variable geist_mono_[^"]+__variable antialiased">/u,
       );
-      expect(html, route.path).toContain("rybbit.kasmedia.com/api/script.js");
       expect(html, route.path).toContain(
-        'integrity="sha384-H0pPS5ok8JJU1gmvnWE/8MDghtGFYeyfM5WjL8LYxEOh6lNozzFWp4AXrlPeUbJo"',
+        "webanalytics.kasmedia.com/api/script.js",
       );
     }
 
@@ -275,14 +274,9 @@ test.describe("production i18n foundation contract", () => {
 
     await page.goto("/");
     const analytics = page.locator(
-      'script[src="https://rybbit.kasmedia.com/api/script.js"]',
+      'script[src="https://webanalytics.kasmedia.com/api/script.js"]',
     );
-    await expect(analytics).toHaveAttribute("data-site-id", "1");
-    await expect(analytics).toHaveAttribute("crossorigin", "anonymous");
-    await expect(analytics).toHaveAttribute(
-      "integrity",
-      "sha384-H0pPS5ok8JJU1gmvnWE/8MDghtGFYeyfM5WjL8LYxEOh6lNozzFWp4AXrlPeUbJo",
-    );
+    await expect(analytics).toHaveAttribute("data-site-id", "90480f07a2f6");
   });
 
   test("normalizes redundant English prefixes and ignores browser language", async ({
