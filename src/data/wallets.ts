@@ -203,6 +203,59 @@ const walletRecords = [
       },
     ],
   }),
+  defineWallet({
+    id: "tangem-wallet",
+    title: "Tangem Wallet",
+    icon: "/hodl/wallets/tangem-wallet/icon.png",
+    user: "beginner",
+    summary:
+      "Tangem Wallet is a secure self-custody hardware wallet for Kaspa and 14,000+ digital assets. No seed phrases required.",
+    paths: [
+      { platforms: ["hardware", "android"] },
+      { platforms: ["hardware", "ios"] },
+    ],
+    features: ["two_fa", "hardware_wallet"],
+    check: {
+      control: "good",
+      validation: "caution",
+      transparency: "acceptable",
+      fees: "good",
+    },
+    platformOverrides: {
+      hardware: {
+        check: {
+          validation: "not_applicable",
+          transparency: "caution",
+        },
+      },
+    },
+    actions: [
+      {
+        action: "open",
+        link: "https://tangem.com",
+      },
+      {
+        action: "app_store",
+        link: "https://apps.apple.com/app/tangem-crypto-wallet/id1354868448",
+        platforms: ["ios"],
+      },
+      {
+        action: "google_play",
+        link: "https://play.google.com/store/apps/details?id=com.tangem.wallet",
+        platforms: ["android"],
+      },
+      {
+        action: "view_source",
+        link: "https://github.com/tangem/tangem-app-ios/",
+        platforms: ["ios"],
+      },
+      {
+        action: "view_source",
+        link: "https://github.com/tangem/tangem-app-android/",
+        platforms: ["android"],
+      },
+    ],
+  }),
 ];
 
 export type WalletId = (typeof walletRecords)[number]["id"];

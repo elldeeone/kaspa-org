@@ -4,5 +4,6 @@
   "kaspium": "Una billetera móvil de autocustodia para enviar, recibir y guardar KAS desde un teléfono.",
   "kastle": "Billetera Kaspa de autocustodia para KAS, KRC-20, KNS y NFT, con puentes L2 e intercambios integrados. Disponible para móviles y como extensión de navegador.",
   "kng-desktop": "Una billetera de escritorio moderna de Kaspa con una interfaz predeterminada fácil de usar, funcionamiento opcional como nodo completo y configuración avanzada.",
-  "kng-web": "La versión para navegador de Kaspa NG. Fácil de usar de forma predeterminada, sin instalación y con configuración avanzada opcional."
+  "kng-web": "La versión para navegador de Kaspa NG. Fácil de usar de forma predeterminada, sin instalación y con configuración avanzada opcional.",
+  "tangem-wallet": "Tangem Wallet es una billetera de hardware de autocustodia segura para Kaspa y más de 14 000 activos digitales. Sin frases semilla."
 }
