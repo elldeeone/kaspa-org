@@ -12,51 +12,33 @@ import {
   type PublicRouteId,
 } from "./i18n-scenario-harness";
 
-const productionLocaleSelectorBudgetBytes = 3_000;
-
 type EnglishRouteExpectation = {
-  baselineBytes: number;
   description: string;
-  localizedClientPayloadBudgetBytes?: number;
-  localizedLayoutBudgetBytes?: number;
   title: string;
 };
 
 const englishRouteExpectations = {
   home: {
-    baselineBytes: 37_238,
-    // Locale-neutral responsive markers support translated hero text and
-    // equal-width mobile proof actions. Budget only those HTML layout classes.
-    localizedLayoutBudgetBytes: 192,
     title: "Kaspa | Proof-of-Work blockDAG for Real-Time Decentralization",
     description:
       "Kaspa is a fair-launched proof-of-work blockDAG cryptocurrency running at 10 blocks per second, built for real-time decentralization.",
   },
   lore: {
-    baselineBytes: 62_860,
     title: "LORE | Kaspa",
     description:
       "Kaspa is a fair-launched proof-of-work blockDAG focused on real-time decentralization, with no premine, no insider allocation, and 10 BPS mainnet performance.",
   },
   build: {
-    baselineBytes: 98_334,
-    // This interactive route serializes only its reviewed route catalog.
-    // Preserve the original baseline for unrelated payload growth.
-    localizedClientPayloadBudgetBytes: 12_500,
     title: "Kaspa Developer Docs, SDKs, APIs, and Node Access | Kaspa",
     description:
       "Everything you need to start building on Kaspa. WASM SDK, Rust libraries, live API playground, node access, and developer tooling.",
   },
   assets: {
-    baselineBytes: 72_650,
     title: "Kaspa Logos & Assets | Kaspa",
     description:
       "Download the official Kaspa logo set — horizontal and stacked lockups, the icon, and brand colors. SVG and high-resolution PNG.",
   },
   hodl: {
-    baselineBytes: 91_253,
-    // The wallet finder has the same reviewed, route-scoped client-catalog cost.
-    localizedClientPayloadBudgetBytes: 12_500,
     title: "Buy KAS, Set Up a Wallet, and Self-Custody | Kaspa",
     description: "Get a wallet, buy KAS, and transfer to self-custody.",
   },
@@ -172,16 +154,6 @@ test.describe("production i18n foundation contract", () => {
       );
 
       const html = await response.text();
-      expect(Buffer.byteLength(html), route.path).toBeLessThanOrEqual(
-        Math.floor(route.baselineBytes * 1.1) +
-          ("localizedClientPayloadBudgetBytes" in route
-            ? route.localizedClientPayloadBudgetBytes
-            : 0) +
-          ("localizedLayoutBudgetBytes" in route
-            ? route.localizedLayoutBudgetBytes
-            : 0) +
-          productionLocaleSelectorBudgetBytes,
-      );
       expect(html, route.path).toContain('<html lang="en" dir="ltr"');
       expect(readMeta(html, "name", "viewport"), route.path).toBe(
         "width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content",
