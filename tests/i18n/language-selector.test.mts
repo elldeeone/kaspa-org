@@ -24,7 +24,7 @@ test("selector options use registry endonyms", () => {
   );
   assert.equal(isLanguageSelectorLocale(defaultLocale), true);
   assert.equal(isLanguageSelectorLocale(spanishLocale), true);
-  assert.equal(isLanguageSelectorLocale("fr"), false);
+  assert.equal(isLanguageSelectorLocale("not-a-locale"), false);
 });
 
 test("the selector is enabled only for the complete published locale set", () => {

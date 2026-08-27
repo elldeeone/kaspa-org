@@ -1,8 +1,10 @@
 export const spanishLocale = "es" as const;
+export const frenchLocale = "fr" as const;
 export const chineseLocale = "zh-CN" as const;
 export const supportedLocaleCodes = [
   "en",
   spanishLocale,
+  frenchLocale,
   chineseLocale,
 ] as const;
 export type Locale = (typeof supportedLocaleCodes)[number];
@@ -26,6 +28,12 @@ export const localeRegistry: Readonly<Record<Locale, LocaleDefinition>> = {
     code: "es",
     label: "Español",
     hrefLang: "es",
+    dir: "ltr",
+  },
+  fr: {
+    code: "fr",
+    label: "Français",
+    hrefLang: "fr",
     dir: "ltr",
   },
   "zh-CN": {

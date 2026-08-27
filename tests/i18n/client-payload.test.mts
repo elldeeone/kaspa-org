@@ -507,9 +507,9 @@ test("server-only fingerprints ignore unconfigured partial locale work", async (
     await cp(join(process.cwd(), "messages"), join(fixture, "messages"), {
       recursive: true,
     });
-    await mkdir(join(fixture, "messages/fr"), { recursive: true });
+    await mkdir(join(fixture, "messages/zz"), { recursive: true });
     await writeFile(
-      join(fixture, "messages/fr/shared.json"),
+      join(fixture, "messages/zz/shared.json"),
       JSON.stringify({ navigation: { language: { label: "Langue" } } }),
     );
 

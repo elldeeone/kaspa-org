@@ -1,0 +1,303 @@
+{
+  "metadata": {
+    "title": "Acheter des KAS, configurer un portefeuille et passer à l’autocustodie | Kaspa",
+    "description": "Obtenez un portefeuille, achetez des KAS et transférez-les en autocustodie."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — La décentralisation en temps réel"
+  },
+  "navigation": {
+    "current": "HODL",
+    "sections": {
+      "wallet": {
+        "label": "1. Obtenir un portefeuille",
+        "compactLabel": "Portefeuille",
+        "description": "Configurez un portefeuille pour conserver vos KAS."
+      },
+      "buy": {
+        "label": "2. Acheter des KAS",
+        "compactLabel": "Acheter",
+        "description": "Trouvez des KAS sur les principales plateformes d’échange."
+      },
+      "transfer": {
+        "label": "3. Transférer vers le portefeuille",
+        "compactLabel": "Transférer",
+        "description": "Envoyez les KAS de la plateforme d’échange vers votre portefeuille."
+      },
+      "help": {
+        "label": "Aide",
+        "compactLabel": "Aide",
+        "description": "Aide de la communauté et outils d’exploration."
+      }
+    }
+  },
+  "start": {
+    "heading": "<flicker><source>H</source><replacement>K</replacement></flicker>ODL Kaspa",
+    "tagline": "Achetez des KAS et transférez-les vers un portefeuille que vous contrôlez."
+  },
+  "wallet": {
+    "heading": "Obtenir un portefeuille",
+    "description": "Choisissez un portefeuille adapté à la manière dont vous comptez conserver et utiliser vos KAS.",
+    "safety": {
+      "label": "Important :",
+      "body": "Sauvegardez votre phrase de récupération ou les instructions de votre portefeuille avant d’y transférer des fonds importants. Effectuez d’abord une petite transaction de test, puis transférez le reste uniquement après sa réception."
+    }
+  },
+  "buy": {
+    "heading": "Acheter des KAS",
+    "description": "Le KAS est coté sur de nombreuses plateformes d’échange. Achetez des KAS sur une plateforme disponible dans votre région, puis transférez-les vers votre portefeuille privé.",
+    "moreExchanges": "Et plus de {count, number} autres"
+  },
+  "transfer": {
+    "heading": "Prenez le contrôle de vos KAS",
+    "description": "Sécurisez vos actifs en les transférant de la plateforme d’échange vers votre portefeuille privé.",
+    "receive": "Recevoir",
+    "screenReaderDiagram": "Transfert de KAS depuis un compte de plateforme d’échange vers un portefeuille privé",
+    "stepLabel": "Étape {step}",
+    "steps": {
+      "receiveAddress": {
+        "title": "Obtenir votre adresse de réception",
+        "description": "Ouvrez l’application Kaspium, appuyez sur « Recevoir », puis copiez votre adresse unique."
+      },
+      "testTransaction": {
+        "title": "Envoyer une transaction de test",
+        "description": "Retirez une très petite quantité de KAS de la plateforme d’échange afin de vérifier que le transfert fonctionne."
+      },
+      "balance": {
+        "title": "Transférer le solde",
+        "description": "Une fois la transaction de test arrivée dans votre portefeuille, retirez le solde restant."
+      }
+    },
+    "waitTimes": {
+      "label": "Délais des plateformes d’échange :",
+      "body": "Les transferts natifs sur Kaspa sont pratiquement instantanés, mais les plateformes d’échange appliquent leurs propres délais internes. Il est tout à fait normal d’attendre 30 à 60 minutes avant qu’une plateforme ne transmette vos fonds au réseau."
+    },
+    "security": {
+      "label": "Contrôle de sécurité :",
+      "body": "Vérifiez toujours les premiers et les derniers caractères de votre adresse avant de confirmer."
+    }
+  },
+  "help": {
+    "eyebrow": "Aide",
+    "heading": "Continuez",
+    "descriptionWithAi": "Interrogez l’IA de Kaspa pour obtenir des réponses immédiates sur les portefeuilles, les achats et la sécurité. Pour demander de l’aide à la communauté, rejoignez Discord ou consultez une transaction dans l’explorateur.",
+    "descriptionWithoutAi": "Pour demander de l’aide à la communauté, rejoignez Discord ou consultez une transaction dans l’explorateur.",
+    "openAi": "Ouvrir l’IA",
+    "community": "Communauté",
+    "discord": "Discord",
+    "trackTransaction": "Suivre une transaction",
+    "explorer": "Explorateur",
+    "prompts": {
+      "backupWallet": "Comment sauvegarder mon portefeuille ?",
+      "buyKas": "Où puis-je acheter des KAS ?",
+      "firstPurchase": "Comment acheter des KAS pour la première fois ?",
+      "leaveOnExchange": "Dois-je laisser mes KAS sur la plateforme d’échange ?",
+      "moveFromExchange": "Comment envoyer des KAS d’une plateforme d’échange vers mon portefeuille ?",
+      "fees": "À quels frais dois-je m’attendre lors de l’achat ou du transfert de KAS ?",
+      "recoveryPhrase": "Qu’est-ce qu’une phrase de récupération ?",
+      "walletVsExchange": "Quelle est la différence entre un portefeuille et une plateforme d’échange ?",
+      "receiveKas": "Comment recevoir des KAS d’une autre personne ?",
+      "multipleWallets": "Puis-je avoir plusieurs portefeuilles Kaspa ?",
+      "maxSupply": "Quelle est l’offre maximale de Kaspa ?"
+    }
+  },
+  "media": {
+    "kaspiumScreenshotAlt": "Capture d’écran de l’application Kaspium"
+  },
+  "walletFinder": {
+    "common": {
+      "optional": "Facultatif",
+      "notAvailable": "Indisponible",
+      "notAvailableSentence": "Indisponible.",
+      "moreInformation": "Plus d’informations",
+      "pros": "Avantages",
+      "cons": "Inconvénients",
+      "newUser": "Débutant",
+      "experiencedUser": "Expérimenté"
+    },
+    "operatingSystems": {
+      "android": "Android",
+      "ios": "iOS",
+      "windows": "Windows",
+      "mac": "macOS",
+      "linux": "Linux",
+      "hardware": "Matériel"
+    },
+    "guidance": {
+      "mobile": {
+        "title": "Portefeuilles mobiles",
+        "shortTitle": "Téléphone",
+        "pros": {
+          "portable": "Faciles à transporter et pratiques, notamment pour les transactions en personne",
+          "qr": "Conçus pour utiliser des codes QR afin d’effectuer des transactions rapidement et sans difficulté"
+        },
+        "cons": {
+          "marketplaces": "Les boutiques d’applications peuvent retirer des portefeuilles, ce qui complique l’obtention des mises à jour ultérieures",
+          "deviceLoss": "L’endommagement ou la perte de l’appareil peut entraîner une perte de fonds"
+        }
+      },
+      "desktop": {
+        "title": "Portefeuilles pour ordinateur",
+        "shortTitle": "Ordinateur",
+        "pros": {
+          "control": "Les environnements de bureau peuvent donner aux utilisateurs un contrôle total sur leurs fonds",
+          "advanced": "Certains portefeuilles pour ordinateur prennent en charge les portefeuilles matériels ou l’utilisation d’un nœud complet"
+        },
+        "cons": {
+          "qr": "Moins pratiques pour les paiements par code QR lors de transactions en personne",
+          "malware": "Un ordinateur compromis peut exposer les utilisateurs à des logiciels malveillants, des logiciels espions ou des virus"
+        }
+      },
+      "hardware": {
+        "title": "Portefeuilles matériels",
+        "shortTitle": "Matériel",
+        "pros": {
+          "secure": "L’une des méthodes les plus sûres pour conserver des fonds",
+          "longTerm": "Idéals pour conserver de grandes quantités de KAS à long terme"
+        },
+        "cons": {
+          "mobile": "Moins pratiques en déplacement et non conçus pour les transactions rapides",
+          "deviceLoss": "La perte de l’appareil sans sauvegarde adéquate peut rendre les fonds irrécupérables"
+        }
+      }
+    },
+    "wizard": {
+      "progress": "Étape {step, number} sur {total, number}",
+      "skip": "Ignorer →",
+      "skipAll": "Voir tous les portefeuilles →",
+      "prosAndCons": "Avantages et inconvénients",
+      "back": "Retour",
+      "next": "Suivant",
+      "showWallets": "Afficher les portefeuilles",
+      "showMatchingWallets": "Afficher les portefeuilles correspondants",
+      "steps": {
+        "os": {
+          "title": "Quel est votre système d’exploitation ?",
+          "subtitle": "Ce choix limite la liste aux portefeuilles compatibles avec votre système."
+        },
+        "experience": {
+          "title": "Que savez-vous de Kaspa ?",
+          "subtitle": "Cela nous aide à proposer des portefeuilles adaptés à votre niveau d’expérience."
+        },
+        "criteria": {
+          "title": "Quels critères sont importants pour vous ?",
+          "subtitle": "Facultatif"
+        },
+        "features": {
+          "title": "Quelles fonctionnalités recherchez-vous ?",
+          "subtitle": "Facultatif"
+        }
+      },
+      "experience": {
+        "newDescription": "Afficher les portefeuilles adaptés aux débutants.",
+        "experiencedDescription": "Afficher tous les portefeuilles."
+      }
+    },
+    "filters": {
+      "heading": "Filtrer les portefeuilles",
+      "clearAll": "Tout effacer",
+      "operatingSystem": "Système d’exploitation",
+      "userType": "Type d’utilisateur",
+      "criteria": "Critères",
+      "features": "Fonctionnalités",
+      "showNewUsers": "Afficher les portefeuilles adaptés aux débutants.",
+      "showExperiencedUsers": "Afficher tous les portefeuilles.",
+      "show": "Filtres",
+      "hide": "Masquer les filtres",
+      "remove": "Supprimer le filtre {filter}"
+    },
+    "criteria": {
+      "control": {
+        "label": "Contrôle",
+        "description": "Certains portefeuilles vous donnent le contrôle total de vos KAS. Aucun tiers ne peut alors bloquer ou saisir vos fonds. Vous restez toutefois responsable de la sécurité et de la sauvegarde de votre portefeuille."
+      },
+      "validation": {
+        "label": "Vérification",
+        "description": "Certains portefeuilles vous permettent de contrôler le nœud Kaspa qui traite vos transactions, soit en exécutant leur propre nœud, soit en vous laissant choisir n’importe quel nœud de confiance."
+      },
+      "transparency": {
+        "label": "Transparence",
+        "description": "Certains portefeuilles sont open source et peuvent être compilés de manière déterministe. Ce procédé garantit que le code obtenu peut être reproduit afin de vérifier qu’il n’a pas été altéré."
+      },
+      "fees": {
+        "label": "Frais",
+        "description": "Certains portefeuilles vous donnent un contrôle total sur les frais versés au réseau Kaspa avant une transaction, afin qu’elle soit confirmée dans un délai raisonnable sans payer plus que nécessaire."
+      }
+    },
+    "features": {
+      "two_fa": {
+        "label": "2FA",
+        "description": "L’authentification à deux facteurs (2FA) ajoute une seconde couche de sécurité à votre portefeuille. En plus du mot de passe, un code de vérification provenant d’une application ou d’un SMS est nécessaire pour accéder à vos fonds. Sachez que la 2FA repose généralement sur un service tiers chargé de fournir cette vérification."
+      },
+      "hardware_wallet": {
+        "label": "Prise en charge des portefeuilles matériels",
+        "description": "Certains portefeuilles logiciels peuvent être associés à un portefeuille matériel, comme Ledger ou Tangem. Vos clés privées restent ainsi isolées sur l’appareil, tout en conservant une interface logicielle familière."
+      },
+      "multisig": {
+        "label": "Multisignature",
+        "description": "Certains portefeuilles prennent en charge les transactions multisignatures, qui nécessitent plusieurs clés pour autoriser un transfert. Cela permet de répartir la responsabilité entre plusieurs parties ou d’ajouter une protection supplémentaire aux avoirs de grande valeur."
+      }
+    },
+    "ratings": {
+      "good": "Bien",
+      "acceptable": "Acceptable",
+      "mixed": "Mixte",
+      "mixedExplanation": "Cette évaluation varie selon les plateformes sélectionnées.",
+      "caution": "Prudence",
+      "not_applicable": "Sans objet",
+      "notApplicableCompact": "S. O.",
+      "breakdown": "Détail",
+      "why": "Pourquoi ?",
+      "aria": "{criterion} : {rating}",
+      "tooltipHeading": "{criterion} : {rating}",
+      "explanations": {
+        "control": {
+          "good": "En autocustodie. Vous détenez vos clés privées : aucun tiers ne peut bloquer ou saisir vos fonds.",
+          "caution": "Sous la garde d’un tiers. Un tiers détient vos clés et peut bloquer ou saisir vos fonds."
+        },
+        "validation": {
+          "good": "Exécute son propre nœud Kaspa complet par défaut et valide donc les transactions de façon indépendante.",
+          "acceptable": "Permet de choisir n’importe quel nœud Kaspa de confiance, mais ne peut pas fonctionner lui-même comme nœud.",
+          "caution": "Se connecte uniquement à une infrastructure centralisée prédéfinie : vous devez donc faire confiance au nœud choisi par le portefeuille.",
+          "not_applicable": "Le dispositif matériel signe les transactions, tandis que le logiciel compagnon assure l’accès au réseau et la validation."
+        },
+        "transparency": {
+          "good": "Le code est public, et des vérifications indépendantes permettent de confirmer que le logiciel publié a bien été compilé à partir de celui-ci.",
+          "acceptable": "Le code est public, mais il n’existe aucun moyen fiable de vérifier que le logiciel publié a été compilé à partir de celui-ci.",
+          "mixed": "Les composants requis de ce portefeuille présentent différents niveaux de transparence.",
+          "caution": "Code source fermé. Le code ne peut pas faire l’objet d’un audit indépendant."
+        },
+        "fees": {
+          "good": "Permet de définir librement des frais personnalisés pour chaque transaction.",
+          "acceptable": "Propose des niveaux de frais prédéfinis, sans permettre de définir des frais entièrement personnalisés.",
+          "caution": "Les frais sont imposés ou masqués, sans aucun contrôle de l’utilisateur."
+        }
+      }
+    },
+    "transparencySurfaces": {
+      "firmware": "Micrologiciel de l’appareil",
+      "application": "Application {platform}"
+    },
+    "results": {
+      "summary": "<strong>{matches, number}</strong> sur {total, plural, one {# portefeuille} other {# portefeuilles}}",
+      "compactSummary": "<strong>{matches, number}</strong> / {total, plural, one {# portefeuille} other {# portefeuilles}}",
+      "helpChoose": "Aidez-moi à choisir",
+      "walletColumn": "Portefeuille",
+      "noMatches": "Aucun portefeuille correspondant",
+      "removeFilters": "Essayez de retirer certains filtres.",
+      "noLinks": "Aucun lien disponible pour ce filtre.",
+      "aboutCriterion": "À propos du critère {criterion}"
+    },
+    "actions": {
+      "app_store": "App Store",
+      "google_play": "Google Play",
+      "download": "Télécharger",
+      "open": "Ouvrir le portefeuille",
+      "view_source": "Voir le code source"
+    },
+    "submission": {
+      "question": "Un portefeuille manque ?",
+      "action": "Découvrez comment le proposer sur GitHub"
+    }
+  }
+}

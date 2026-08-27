@@ -1,0 +1,12 @@
+{
+  "metadata": {
+    "title": "Page introuvable | Kaspa",
+    "description": "La page demandée est introuvable."
+  },
+  "page": {
+    "code": "404",
+    "heading": "Mauvaise route.",
+    "body": "Bon réseau.",
+    "home": "Retour à l’accueil"
+  }
+}

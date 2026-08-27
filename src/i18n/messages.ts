@@ -12,6 +12,13 @@ import spanishHodl from "../../messages/es/hodl.json" with { type: "json" };
 import spanishHome from "../../messages/es/home.json" with { type: "json" };
 import spanishLore from "../../messages/es/lore.json" with { type: "json" };
 import spanishShared from "../../messages/es/shared.json" with { type: "json" };
+import frenchAssets from "../../messages/fr/assets.json" with { type: "json" };
+import frenchBuild from "../../messages/fr/build.json" with { type: "json" };
+import frenchErrors from "../../messages/fr/errors.json" with { type: "json" };
+import frenchHodl from "../../messages/fr/hodl.json" with { type: "json" };
+import frenchHome from "../../messages/fr/home.json" with { type: "json" };
+import frenchLore from "../../messages/fr/lore.json" with { type: "json" };
+import frenchShared from "../../messages/fr/shared.json" with { type: "json" };
 import chineseAssets from "../../messages/zh-CN/assets.json" with { type: "json" };
 import chineseBuild from "../../messages/zh-CN/build.json" with { type: "json" };
 import chineseErrors from "../../messages/zh-CN/errors.json" with { type: "json" };
@@ -22,6 +29,7 @@ import chineseShared from "../../messages/zh-CN/shared.json" with { type: "json"
 
 import {
   chineseLocale,
+  frenchLocale,
   spanishLocale,
   supportedLocaleCodes,
   type Locale,
@@ -52,6 +60,16 @@ export const spanishMessages = {
   shared: spanishShared,
 } satisfies AppMessages;
 
+export const frenchMessages = {
+  assets: frenchAssets,
+  build: frenchBuild,
+  errors: frenchErrors,
+  hodl: frenchHodl,
+  home: frenchHome,
+  lore: frenchLore,
+  shared: frenchShared,
+} satisfies AppMessages;
+
 export const chineseMessages = {
   assets: chineseAssets,
   build: chineseBuild,
@@ -72,6 +90,8 @@ export function getMessages(locale: Locale): LocaleMessages {
       return englishMessages;
     case spanishLocale:
       return spanishMessages;
+    case frenchLocale:
+      return frenchMessages;
     case chineseLocale:
       return chineseMessages;
     default:
