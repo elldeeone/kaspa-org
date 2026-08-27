@@ -1,6 +1,6 @@
 "use client";
 
-import { Rock_Salt } from "next/font/google";
+import { Caveat, Rock_Salt } from "next/font/google";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
 
@@ -13,6 +13,12 @@ const rockSalt = Rock_Salt({
   preload: false,
 });
 
+const caveat = Caveat({
+  subsets: ["cyrillic", "latin"],
+  weight: ["400"],
+  preload: false,
+});
+
 const maShanZheng = localFont({
   src: "../fonts/MaShanZheng-Regular.ttf",
   weight: "400",
@@ -20,6 +26,7 @@ const maShanZheng = localFont({
 });
 
 const fontClassNames = {
+  Caveat: caveat.className,
   "Ma Shan Zheng": maShanZheng.className,
   "Rock Salt": rockSalt.className,
 } as const;

@@ -26,10 +26,18 @@ import chineseHodl from "../../messages/zh-CN/hodl.json" with { type: "json" };
 import chineseHome from "../../messages/zh-CN/home.json" with { type: "json" };
 import chineseLore from "../../messages/zh-CN/lore.json" with { type: "json" };
 import chineseShared from "../../messages/zh-CN/shared.json" with { type: "json" };
+import russianAssets from "../../messages/ru/assets.json" with { type: "json" };
+import russianBuild from "../../messages/ru/build.json" with { type: "json" };
+import russianErrors from "../../messages/ru/errors.json" with { type: "json" };
+import russianHodl from "../../messages/ru/hodl.json" with { type: "json" };
+import russianHome from "../../messages/ru/home.json" with { type: "json" };
+import russianLore from "../../messages/ru/lore.json" with { type: "json" };
+import russianShared from "../../messages/ru/shared.json" with { type: "json" };
 
 import {
   chineseLocale,
   frenchLocale,
+  russianLocale,
   spanishLocale,
   supportedLocaleCodes,
   type Locale,
@@ -80,6 +88,16 @@ export const chineseMessages = {
   shared: chineseShared,
 } satisfies AppMessages;
 
+export const russianMessages = {
+  assets: russianAssets,
+  build: russianBuild,
+  errors: russianErrors,
+  hodl: russianHodl,
+  home: russianHome,
+  lore: russianLore,
+  shared: russianShared,
+} satisfies AppMessages;
+
 function assertNever(value: never): never {
   throw new Error(`Unsupported locale: ${String(value)}`);
 }
@@ -94,6 +112,8 @@ export function getMessages(locale: Locale): LocaleMessages {
       return frenchMessages;
     case chineseLocale:
       return chineseMessages;
+    case russianLocale:
+      return russianMessages;
     default:
       return assertNever(locale);
   }

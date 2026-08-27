@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "title": "Логотипы и материалы Kaspa | Kaspa",
+    "description": "Скачайте официальный набор логотипов Kaspa: горизонтальные и вертикальные версии, значок и фирменные цвета. Доступны SVG и PNG высокого разрешения."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Децентрализация в реальном времени"
+  },
+  "page": {
+    "heading": "Логотипы Kaspa"
+  },
+  "groups": {
+    "lockup": "Горизонтальный логотип",
+    "stacked": "Вертикальный логотип",
+    "icon": "Значок"
+  },
+  "logos": {
+    "lockupColor": {
+      "name": "Полноцветный",
+      "imageAlt": "Полноцветный логотип Kaspa",
+      "downloadAria": "Скачать полноцветный горизонтальный логотип Kaspa в формате {format}"
+    },
+    "lockupReverse": {
+      "name": "Инвертированный",
+      "imageAlt": "Инвертированный логотип Kaspa",
+      "downloadAria": "Скачать инвертированный горизонтальный логотип Kaspa в формате {format}"
+    },
+    "lockupBlack": {
+      "name": "Чёрный",
+      "imageAlt": "Чёрный логотип Kaspa",
+      "downloadAria": "Скачать чёрный горизонтальный логотип Kaspa в формате {format}"
+    },
+    "lockupWhite": {
+      "name": "Белый",
+      "imageAlt": "Белый логотип Kaspa",
+      "downloadAria": "Скачать белый горизонтальный логотип Kaspa в формате {format}"
+    },
+    "lockupOutline": {
+      "name": "Контурный",
+      "imageAlt": "Контурный логотип Kaspa",
+      "downloadAria": "Скачать контурный горизонтальный логотип Kaspa в формате {format}"
+    },
+    "stackedColor": {
+      "name": "Полноцветный",
+      "imageAlt": "Полноцветный логотип Kaspa",
+      "downloadAria": "Скачать полноцветный вертикальный логотип Kaspa в формате {format}"
+    },
+    "stackedReverse": {
+      "name": "Инвертированный",
+      "imageAlt": "Инвертированный логотип Kaspa",
+      "downloadAria": "Скачать инвертированный вертикальный логотип Kaspa в формате {format}"
+    },
+    "stackedBlack": {
+      "name": "Чёрный",
+      "imageAlt": "Чёрный логотип Kaspa",
+      "downloadAria": "Скачать чёрный вертикальный логотип Kaspa в формате {format}"
+    },
+    "stackedWhite": {
+      "name": "Белый",
+      "imageAlt": "Белый логотип Kaspa",
+      "downloadAria": "Скачать белый вертикальный логотип Kaspa в формате {format}"
+    },
+    "stackedOutline": {
+      "name": "Контурный",
+      "imageAlt": "Контурный логотип Kaspa",
+      "downloadAria": "Скачать контурный вертикальный логотип Kaspa в формате {format}"
+    },
+    "iconGreen": {
+      "name": "Зелёный",
+      "imageAlt": "Зелёный значок Kaspa",
+      "downloadAria": "Скачать зелёный значок Kaspa в формате {format}"
+    },
+    "iconGreenDark": {
+      "name": "Зелёный на тёмном фоне",
+      "imageAlt": "Зелёный значок Kaspa на тёмном фоне",
+      "downloadAria": "Скачать зелёный значок Kaspa для тёмного фона в формате {format}"
+    },
+    "iconBlack": {
+      "name": "Чёрный",
+      "imageAlt": "Чёрный значок Kaspa",
+      "downloadAria": "Скачать чёрный значок Kaspa в формате {format}"
+    },
+    "iconWhite": {
+      "name": "Белый",
+      "imageAlt": "Белый значок Kaspa",
+      "downloadAria": "Скачать белый значок Kaspa в формате {format}"
+    }
+  },
+  "formats": {
+    "svg": "SVG",
+    "png": "PNG"
+  }
+}
