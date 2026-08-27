@@ -2,6 +2,7 @@ import spanishWalletSummariesSource from "../../messages/es/wallets.json" with {
 import frenchWalletSummariesSource from "../../messages/fr/wallets.json" with { type: "json" };
 import chineseWalletSummariesSource from "../../messages/zh-CN/wallets.json" with { type: "json" };
 import russianWalletSummariesSource from "../../messages/ru/wallets.json" with { type: "json" };
+import germanWalletSummariesSource from "../../messages/de/wallets.json" with { type: "json" };
 
 import type { KaspaWallet } from "../app/hodl/wallet-finder/types.ts";
 import { kaspaWallets, type WalletId } from "../data/wallets.ts";
@@ -9,6 +10,7 @@ import { kaspaWallets, type WalletId } from "../data/wallets.ts";
 import {
   chineseLocale,
   frenchLocale,
+  germanLocale,
   russianLocale,
   spanishLocale,
   type Locale,
@@ -24,6 +26,8 @@ const chineseWalletSummaries =
   chineseWalletSummariesSource satisfies WalletSummaryCatalog;
 const russianWalletSummaries =
   russianWalletSummariesSource satisfies WalletSummaryCatalog;
+const germanWalletSummaries =
+  germanWalletSummariesSource satisfies WalletSummaryCatalog;
 
 function assertNever(value: never): never {
   throw new Error(`Unsupported wallet locale: ${String(value)}`);
@@ -79,6 +83,12 @@ export function getLocalizedWallets(locale: Locale): KaspaWallet[] {
       return kaspaWallets.map((wallet) => ({
         ...wallet,
         summary: russianWalletSummaries[wallet.id],
+      }));
+    case germanLocale:
+      assertCompleteCatalog(germanLocale, germanWalletSummaries);
+      return kaspaWallets.map((wallet) => ({
+        ...wallet,
+        summary: germanWalletSummaries[wallet.id],
       }));
     default:
       return assertNever(locale);

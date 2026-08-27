@@ -5,17 +5,53 @@ import type { RouteId } from "./manifest.ts";
 export type SiteSurfaceId = RouteId | "not-found";
 
 const aiLocaleContracts: Record<SiteSurfaceId, Record<Locale, boolean>> = {
-  home: { en: true, es: false, fr: false, "zh-CN": false, ru: false },
-  lore: { en: true, es: false, fr: false, "zh-CN": false, ru: false },
-  build: { en: true, es: false, fr: false, "zh-CN": false, ru: false },
-  assets: { en: false, es: false, fr: false, "zh-CN": false, ru: false },
-  hodl: { en: true, es: false, fr: false, "zh-CN": false, ru: false },
+  home: {
+    en: true,
+    es: false,
+    fr: false,
+    "zh-CN": false,
+    ru: false,
+    de: false,
+  },
+  lore: {
+    en: true,
+    es: false,
+    fr: false,
+    "zh-CN": false,
+    ru: false,
+    de: false,
+  },
+  build: {
+    en: true,
+    es: false,
+    fr: false,
+    "zh-CN": false,
+    ru: false,
+    de: false,
+  },
+  assets: {
+    en: false,
+    es: false,
+    fr: false,
+    "zh-CN": false,
+    ru: false,
+    de: false,
+  },
+  hodl: {
+    en: true,
+    es: false,
+    fr: false,
+    "zh-CN": false,
+    ru: false,
+    de: false,
+  },
   "not-found": {
     en: true,
     es: false,
     fr: false,
     "zh-CN": false,
     ru: false,
+    de: false,
   },
 };
 

@@ -1,0 +1,303 @@
+{
+  "metadata": {
+    "title": "KAS kaufen, Wallet einrichten und selbst verwahren | Kaspa",
+    "description": "Richte eine Wallet ein, kaufe KAS und übertrage sie in die Selbstverwahrung."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa – Echtzeit-Dezentralisierung"
+  },
+  "navigation": {
+    "current": "HODL",
+    "sections": {
+      "wallet": {
+        "label": "1. Wallet holen",
+        "compactLabel": "Wallet",
+        "description": "Richte eine Wallet zur Aufbewahrung deiner KAS ein."
+      },
+      "buy": {
+        "label": "2. KAS kaufen",
+        "compactLabel": "Kaufen",
+        "description": "Finde KAS auf großen Börsen."
+      },
+      "transfer": {
+        "label": "3. In die Wallet übertragen",
+        "compactLabel": "Übertragen",
+        "description": "Sende KAS von der Börse an deine Wallet."
+      },
+      "help": {
+        "label": "Hilfe",
+        "compactLabel": "Hilfe",
+        "description": "Hilfe aus der Community und Explorer-Werkzeuge."
+      }
+    }
+  },
+  "start": {
+    "heading": "<flicker><source>H</source><replacement>K</replacement></flicker>ODL Kaspa",
+    "tagline": "Kaufe KAS und übertrage sie in eine Wallet, die du kontrollierst."
+  },
+  "wallet": {
+    "heading": "Wallet holen",
+    "description": "Wähle eine Wallet, die dazu passt, wie du KAS aufbewahren und verwenden möchtest.",
+    "safety": {
+      "label": "Wichtig:",
+      "body": "Sichere deine Wiederherstellungsphrase oder Wallet-Anweisungen, bevor du größere Beträge überträgst. Sende zuerst eine kleine Testtransaktion und übertrage den Rest erst, nachdem sie angekommen ist."
+    }
+  },
+  "buy": {
+    "heading": "KAS kaufen",
+    "description": "KAS ist an vielen Börsen gelistet. Kaufe KAS auf einer Plattform, die in deiner Region verfügbar ist, und übertrage sie anschließend an deine private Wallet.",
+    "moreExchanges": "Und {count, number}+ weitere"
+  },
+  "transfer": {
+    "heading": "Übernimm die Verwahrung deiner KAS",
+    "description": "Sichere deine Vermögenswerte, indem du sie von der Börse an deine private Wallet überträgst.",
+    "receive": "Empfangen",
+    "screenReaderDiagram": "KAS werden von einem Börsenkonto an eine private Wallet übertragen",
+    "stepLabel": "Schritt {step}",
+    "steps": {
+      "receiveAddress": {
+        "title": "Empfangsadresse abrufen",
+        "description": "Öffne deine Kaspium-App, tippe auf „Empfangen“ und kopiere deine eindeutige Adresse."
+      },
+      "testTransaction": {
+        "title": "Testtransaktion senden",
+        "description": "Zahle einen winzigen KAS-Betrag von der Börse aus, um zu prüfen, ob der Übertragungsweg stimmt."
+      },
+      "balance": {
+        "title": "Restbetrag übertragen",
+        "description": "Sobald die Testtransaktion sicher in deiner Wallet angekommen ist, zahle den verbleibenden Betrag aus."
+      }
+    },
+    "waitTimes": {
+      "label": "Wartezeiten bei Börsen:",
+      "body": "Native Kaspa-Übertragungen erfolgen praktisch sofort, Börsen wenden jedoch eigene interne Verzögerungen an. Es ist völlig normal, 30 bis 60 Minuten darauf zu warten, dass eine Börse dein Guthaben an das Netzwerk freigibt."
+    },
+    "security": {
+      "label": "Sicherheitsprüfung:",
+      "body": "Prüfe vor dem Bestätigen immer die ersten und letzten Zeichen deiner Adresse."
+    }
+  },
+  "help": {
+    "eyebrow": "Hilfe",
+    "heading": "Weiter geht's",
+    "descriptionWithAi": "Frag Kaspa AI nach schnellen Antworten zu Wallets, Kauf und Sicherheit. Hilfe aus der Community findest du auf Discord; eine Transaktion kannst du im Explorer prüfen.",
+    "descriptionWithoutAi": "Hilfe aus der Community findest du auf Discord; eine Transaktion kannst du im Explorer prüfen.",
+    "openAi": "KI öffnen",
+    "community": "Community",
+    "discord": "Discord",
+    "trackTransaction": "Transaktion verfolgen",
+    "explorer": "Explorer",
+    "prompts": {
+      "backupWallet": "Wie sichere ich meine Wallet?",
+      "buyKas": "Wo kann ich KAS kaufen?",
+      "firstPurchase": "Wie kaufe ich zum ersten Mal KAS?",
+      "leaveOnExchange": "Sollte ich meine KAS auf der Börse lassen?",
+      "moveFromExchange": "Wie sende ich KAS von einer Börse an meine Wallet?",
+      "fees": "Mit welchen Gebühren muss ich beim Kauf oder Übertragen von KAS rechnen?",
+      "recoveryPhrase": "Was ist eine Wiederherstellungsphrase?",
+      "walletVsExchange": "Was ist der Unterschied zwischen einer Wallet und einer Börse?",
+      "receiveKas": "Wie empfange ich KAS von jemand anderem?",
+      "multipleWallets": "Kann ich mehrere Kaspa-Wallets haben?",
+      "maxSupply": "Wie hoch ist Kaspas maximale Gesamtmenge an KAS?"
+    }
+  },
+  "media": {
+    "kaspiumScreenshotAlt": "Screenshot der Kaspium-Wallet-App"
+  },
+  "walletFinder": {
+    "common": {
+      "optional": "Optional",
+      "notAvailable": "Nicht verfügbar",
+      "notAvailableSentence": "Nicht verfügbar.",
+      "moreInformation": "Weitere Informationen",
+      "pros": "Vorteile",
+      "cons": "Nachteile",
+      "newUser": "Neu",
+      "experiencedUser": "Erfahren"
+    },
+    "operatingSystems": {
+      "android": "Android",
+      "ios": "iOS",
+      "windows": "Windows",
+      "mac": "macOS",
+      "linux": "Linux",
+      "hardware": "Hardware"
+    },
+    "guidance": {
+      "mobile": {
+        "title": "Mobile Wallets",
+        "shortTitle": "Mobil",
+        "pros": {
+          "portable": "Tragbar und praktisch; ideal für persönliche Transaktionen vor Ort",
+          "qr": "Für schnelle und reibungslose Transaktionen mit QR-Codes ausgelegt"
+        },
+        "cons": {
+          "marketplaces": "App-Marktplätze können Wallets aus dem Angebot nehmen, wodurch künftige Updates schwerer erhältlich sind",
+          "deviceLoss": "Beschädigung oder Verlust des Geräts kann möglicherweise zum Verlust von Guthaben führen"
+        }
+      },
+      "desktop": {
+        "title": "Desktop-Wallets",
+        "shortTitle": "Desktop",
+        "pros": {
+          "control": "Desktop-Umgebungen können Nutzern die vollständige Kontrolle über ihr Guthaben geben",
+          "advanced": "Einige Desktop-Wallets unterstützen Hardware-Wallets oder den Betrieb eines Full Nodes"
+        },
+        "cons": {
+          "qr": "Weniger praktisch für persönliche Zahlungen mit QR-Code",
+          "malware": "Kompromittierte Computer können Nutzer Malware, Spyware oder Viren aussetzen"
+        }
+      },
+      "hardware": {
+        "title": "Hardware-Wallets",
+        "shortTitle": "Hardware",
+        "pros": {
+          "secure": "Eine der sichersten Methoden zur Aufbewahrung von Guthaben",
+          "longTerm": "Ideal, um große Mengen KAS langfristig aufzubewahren"
+        },
+        "cons": {
+          "mobile": "Unterwegs weniger praktisch und nicht für schnelle Transaktionen ausgelegt",
+          "deviceLoss": "Der Verlust des Geräts ohne ordnungsgemäße Sicherung kann dazu führen, dass das Guthaben nicht wiederhergestellt werden kann"
+        }
+      }
+    },
+    "wizard": {
+      "progress": "Schritt {step, number} von {total, number}",
+      "skip": "Überspringen →",
+      "skipAll": "Zu allen Wallets springen →",
+      "prosAndCons": "Vor- und Nachteile",
+      "back": "Zurück",
+      "next": "Weiter",
+      "showWallets": "Wallets anzeigen",
+      "showMatchingWallets": "Passende Wallets anzeigen",
+      "steps": {
+        "os": {
+          "title": "Welches Betriebssystem verwendest du?",
+          "subtitle": "Filtert die Liste nach Wallets, die auf deinem Betriebssystem laufen."
+        },
+        "experience": {
+          "title": "Wie gut kennst du dich mit Kaspa aus?",
+          "subtitle": "Hilft uns, Wallets anzuzeigen, die zu deiner Erfahrung passen."
+        },
+        "criteria": {
+          "title": "Welche Kriterien sind dir wichtig?",
+          "subtitle": "Optional"
+        },
+        "features": {
+          "title": "Welche Funktionen suchst du?",
+          "subtitle": "Optional"
+        }
+      },
+      "experience": {
+        "newDescription": "Für neue Nutzer geeignete Wallets anzeigen.",
+        "experiencedDescription": "Alle Wallets anzeigen."
+      }
+    },
+    "filters": {
+      "heading": "Wallets filtern",
+      "clearAll": "Alle löschen",
+      "operatingSystem": "Betriebssystem",
+      "userType": "Nutzertyp",
+      "criteria": "Kriterien",
+      "features": "Funktionen",
+      "showNewUsers": "Für neue Nutzer geeignete Wallets anzeigen.",
+      "showExperiencedUsers": "Alle Wallets anzeigen.",
+      "show": "Filter",
+      "hide": "Filter ausblenden",
+      "remove": "Filter {filter} entfernen"
+    },
+    "criteria": {
+      "control": {
+        "label": "Kontrolle",
+        "description": "Einige Wallets geben dir die vollständige Kontrolle über deine KAS. Das bedeutet, dass Dritte dein Guthaben weder einfrieren noch wegnehmen können. Du bist jedoch weiterhin dafür verantwortlich, deine Wallet zu sichern und eine Sicherungskopie anzulegen."
+      },
+      "validation": {
+        "label": "Validierung",
+        "description": "Bei einigen Wallets kannst du steuern, welcher Kaspa-Node deine Transaktionen verarbeitet: entweder indem sie einen eigenen betreiben oder indem sie Verbindungen zu einem beliebigen Node deines Vertrauens erlauben."
+      },
+      "transparency": {
+        "label": "Transparenz",
+        "description": "Einige Wallets sind quelloffen und lassen sich deterministisch bauen. Bei diesem Kompilierungsverfahren kann der resultierende Code reproduziert werden, um Manipulationen leichter auszuschließen."
+      },
+      "fees": {
+        "label": "Gebühren",
+        "description": "Einige Wallets geben dir vor einer Transaktion die vollständige Kontrolle über die an das Kaspa-Netzwerk gezahlte Gebühr. So können Transaktionen rechtzeitig bestätigt werden, ohne mehr als nötig zu bezahlen."
+      }
+    },
+    "features": {
+      "two_fa": {
+        "label": "2FA",
+        "description": "Die Zwei-Faktor-Authentifizierung (2FA) fügt deiner Wallet eine zweite Sicherheitsebene hinzu. Zusätzlich zu deinem Passwort ist ein Bestätigungscode aus einer App oder SMS erforderlich, um auf dein Guthaben zuzugreifen. Beachte, dass 2FA für die Bestätigung normalerweise auf einen Drittanbieterdienst angewiesen ist."
+      },
+      "hardware_wallet": {
+        "label": "Hardware-Wallet-Unterstützung",
+        "description": "Einige Software-Wallets können mit einer Hardware-Wallet wie Ledger oder Tangem gekoppelt werden. So bleiben deine privaten Schlüssel auf dem Gerät isoliert, während du weiterhin eine vertraute Software-Oberfläche nutzt."
+      },
+      "multisig": {
+        "label": "Multisig",
+        "description": "Einige Wallets unterstützen Transaktionen mit mehreren Signaturen, bei denen mehr als ein Schlüssel eine Übertragung autorisieren muss. Damit lässt sich die Verantwortung auf mehrere Parteien verteilen oder eine zusätzliche Schutzebene für wertvolle Bestände schaffen."
+      }
+    },
+    "ratings": {
+      "good": "Gut",
+      "acceptable": "Akzeptabel",
+      "mixed": "Gemischt",
+      "mixedExplanation": "Diese Bewertung variiert je nach ausgewählter Plattform.",
+      "caution": "Vorsicht",
+      "not_applicable": "Nicht zutreffend",
+      "notApplicableCompact": "n. z.",
+      "breakdown": "Aufschlüsselung",
+      "why": "Warum?",
+      "aria": "{criterion}: {rating}",
+      "tooltipHeading": "{criterion}: {rating}",
+      "explanations": {
+        "control": {
+          "good": "Selbstverwahrt. Du hältst deine privaten Schlüssel, sodass Dritte dein Guthaben weder einfrieren noch beschlagnahmen können.",
+          "caution": "Fremdverwahrt. Ein Dritter hält deine Schlüssel und kann dein Guthaben einfrieren oder beschlagnahmen."
+        },
+        "validation": {
+          "good": "Betreibt standardmäßig einen eigenen vollständigen Kaspa-Node und validiert Transaktionen daher unabhängig.",
+          "acceptable": "Erlaubt die Verbindung zu einem beliebigen Kaspa-Node deines Vertrauens, kann aber nicht selbst als Node betrieben werden.",
+          "caution": "Verbindet sich nur mit fest vorgegebener zentralisierter Infrastruktur. Du musst daher dem von der Wallet ausgewählten Node vertrauen.",
+          "not_applicable": "Das Hardwaregerät signiert Transaktionen, während die Begleitsoftware den Netzwerkzugriff und die Validierung übernimmt."
+        },
+        "transparency": {
+          "good": "Der Code ist öffentlich, und unabhängige Prüfungen können bestätigen, dass die veröffentlichte Software daraus erstellt wurde.",
+          "acceptable": "Der Code ist öffentlich, aber es gibt keine zuverlässige Möglichkeit zu überprüfen, ob die veröffentlichte Software daraus erstellt wurde.",
+          "mixed": "Erforderliche Bestandteile dieser Wallet haben unterschiedliche Transparenzstufen.",
+          "caution": "Geschlossener Quellcode. Der Code kann nicht unabhängig geprüft werden."
+        },
+        "fees": {
+          "good": "Erlaubt dir, für jede Transaktion eine beliebige eigene Gebühr festzulegen.",
+          "acceptable": "Bietet voreingestellte Gebührenstufen, erlaubt aber keine vollständig frei gewählte Gebühr.",
+          "caution": "Gebühren sind fest vorgegeben oder verborgen; Nutzer haben keine Kontrolle darüber."
+        }
+      }
+    },
+    "transparencySurfaces": {
+      "firmware": "Gerätefirmware",
+      "application": "{platform}-App"
+    },
+    "results": {
+      "summary": "<strong>{matches, number}</strong> von {total, plural, one {# Wallet} other {# Wallets}}",
+      "compactSummary": "<strong>{matches, number}</strong> / {total, plural, one {# Wallet} other {# Wallets}}",
+      "helpChoose": "Hilfe bei der Auswahl",
+      "walletColumn": "Wallet",
+      "noMatches": "Keine passenden Wallets",
+      "removeFilters": "Versuche, einige Filter zu entfernen.",
+      "noLinks": "Für diesen Filter sind keine Links verfügbar.",
+      "aboutCriterion": "Über {criterion}"
+    },
+    "actions": {
+      "app_store": "App Store",
+      "google_play": "Google Play",
+      "download": "Herunterladen",
+      "open": "Wallet öffnen",
+      "view_source": "Quellcode ansehen"
+    },
+    "submission": {
+      "question": "Fehlt eine Wallet?",
+      "action": "Erfahre auf GitHub, wie du sie einreichen kannst"
+    }
+  }
+}

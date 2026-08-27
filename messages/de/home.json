@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "title": "Kaspa | Proof-of-Work-blockDAG für Echtzeit-Dezentralisierung",
+    "description": "Kaspa ist eine fair gestartete Proof-of-Work-blockDAG-Kryptowährung mit 10 Blöcken pro Sekunde, entwickelt für Echtzeit-Dezentralisierung."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa – Echtzeit-Dezentralisierung",
+    "heading": "Echtzeit-\nDezentralisierung",
+    "tagline": "bitcoins proof-of-work ohne Wartezeit."
+  },
+  "hero": {
+    "heading": "Echtzeit-\nDezentralisierung",
+    "tagline": "bitcoins proof-of-work ohne Wartezeit.",
+    "getStarted": "Loslegen",
+    "getWallet": "Wallet holen",
+    "buyKaspa": "Kaspa kaufen",
+    "dagAnnotation": "pow in Echtzeit"
+  },
+  "verify": {
+    "heading": "vertrau nicht, verifiziere.",
+    "history": "Jeder Coin in Kaspas Geschichte lässt sich kryptografisch bis zu einer leeren Genesis zurückverfolgen.",
+    "fairLaunch": "Kein Premine. Keine versteckte Zuteilung. Fairer Start.",
+    "explanation": "Der Genesis-Nachweis verfolgt die Kette der Block-Hashes von Pruning Points rückwärts bis zur ursprünglichen Genesis und verifiziert, dass ihr UTXO-Commitment einer leeren Menge entspricht. In der Genesis-Coinbase eingebettete Bitcoin-Block-Hashes dienen als Zeitstempel und schließen ein verstecktes Premine aus.",
+    "runProof": "Nachweis ausführen"
+  },
+  "proof": {
+    "trigger": "Nachweis verifizieren",
+    "loader": {
+      "loading": "Nachweis wird geladen ...",
+      "error": "Der Nachweis konnte nicht geladen werden.",
+      "retry": "Erneut versuchen"
+    },
+    "chrome": {
+      "back": "Zurück",
+      "title": "Nachweis verifizieren",
+      "sectionsAria": "Abschnitte des Nachweises",
+      "jumpToSection": "Zu {section} springen"
+    },
+    "sections": {
+      "live": "Live",
+      "origin": "Ursprung",
+      "runIt": "Ausführen"
+    },
+    "live": {
+      "eyebrow": "Historisch · Aktuell · Fortlaufend",
+      "title": "Live-Umlaufmenge im Vergleich zum Emissionsplan",
+      "body": "Die Umlaufmenge von Kaspa lässt sich aus den Grundprinzipien neu berechnen. Ein aktiver Node meldet den aktuellen Gesamtbetrag. Die historische Gesamtmenge am Checkpoint vom 22. November 2021 wird durch die fest verdrahtete Genesis über ihr UTXO-Set festgeschrieben, und jeder danach ausgegebene Coin folgt dem deterministischen Emissionsplan."
+    },
+    "origin": {
+      "eyebrow": "Ursprung",
+      "title": "Wo die Umlaufmenge beginnt",
+      "supplyBody": "Jeder Coin lässt sich zu einem einzigen Block zurückverfolgen, in dem die Umlaufmenge <strong>null</strong> betrug. Sein UTXO-Commitment ist der mathematische Fingerabdruck einer leeren Menge – dieselbe Konstante auf jedem Rechner, der sie berechnet. Hier beginnt die Umlaufmenge; jeder Coin seitdem ist planmäßige Emission, keine Zuteilung.",
+      "verseBody": "Die Coinbase dieses Blocks enthält einen Vers aus <reference>Esra 7,18</reference>, der auf Aramäisch verfasst ist und die von den alten persischen Königen geförderten Werte der Freiheit würdigt.",
+      "translatedQuotation": "„Und was dir und deinen Brüdern mit dem übrigen Silber und Gold zu tun gut erscheint, das tut nach dem Willen eures Gottes.“",
+      "quotationAttribution": "Esra 7,18, in der Genesis-Coinbase",
+      "timestampBody": "Die Coinbase enthält außerdem den Hash von <bitcoinBlock>Bitcoin-Block Nr. 708.639</bitcoinBlock>. Dieser Hash belegt, dass der Genesis-Block erst danach erzeugt wurde – ohne Premine."
+    },
+    "run": {
+      "eyebrow": "Vertrau nicht, verifiziere",
+      "title": "Führe es selbst aus",
+      "intro": "Reproduziere den Nachweis von der Genesis bis zur aktuellen DAG-Spitze. Das Notebook verfolgt die Kette der Block-Hashes von Pruning Points zurück zur Genesis, verifiziert das UTXO-Commitment anhand des Fingerabdrucks der leeren Menge und prüft die verankernden Bitcoin-Block-Hashes. Um die historische Umlaufmenge am Checkpoint vom 22. November 2021 als Zahl zu erhalten, summiert ein zusätzlicher Ableitungsschritt das durch den Nachweis festgeschriebene UTXO-Set.",
+      "notebookTitle": "Das Nachweis-Notebook",
+      "notebookBody": "Klonen, ausführen, prüfen. Das Notebook verifiziert die Verknüpfung von Genesis und Checkpoint, gibt aber die historische Umlaufmenge nicht selbst aus.",
+      "notebookAction": "Auf GitHub öffnen",
+      "checkpointTitle": "Checkpoint-Gesamtmenge verifizieren",
+      "checkpointStep1": "Führe das Notebook aus, um die fest verdrahtete Genesis, die Checkpoint-Verknüpfung, den Ursprung in der leeren Menge und die Bitcoin-Anker zu verifizieren.",
+      "checkpointStep2": "Öffne das historische <kaspad>kaspad v0.11.5-2</kaspad> und beachte, dass <processor>der Blockprozessor</processor> die eingebettete Checkpoint-Datei <code>utxos.gz</code> lädt und anhand des fest verdrahteten Genesis-UTXO-Commitments verifiziert.",
+      "checkpointStep3": "Lies <utxos>utxos.gz</utxos> gemäß dem in <serialization>serialization.go</serialization> definierten Format ein und summiere alle UTXO-Beträge.",
+      "checkpointStep4": "Diese Summe ist die historische Umlaufmenge bei Checkpoint-DAA <daa>1.312.860</daa> (22. November 2021): <supply>984.222.544,04487171 KAS</supply>",
+      "checkpointNote": "Ab diesem Punkt ist die Ausgabe deterministisch. Addiert man die seit dem Checkpoint planmäßig ausgegebene Menge, erhält man die erwartete Umlaufmenge für jeden DAA-Wert. Sie sollte mit der Meldung eines aktiven Nodes übereinstimmen."
+    },
+    "supply": {
+      "intro": {
+        "eyebrow": "Fortlaufend verifizieren",
+        "title": "Live-Umlaufmenge im Vergleich zum Emissionsplan",
+        "body": "Vergleiche die von einem aktiven Node gemeldete Umlaufmenge mit der am Checkpoint verankerten erwarteten Menge – der durch die fest verdrahtete Genesis festgeschriebenen Gesamtmenge vom 22. November 2021, fortgeführt anhand von Kaspas deterministischem Emissionsplan."
+      },
+      "emissionHistory": "Emissionsverlauf",
+      "connection": {
+        "connectedTo": "Verbunden mit {nodeUrl}",
+        "error": "Verbindungsfehler",
+        "connecting": "Verbindung zum Kaspa-Netzwerk wird hergestellt ..."
+      },
+      "comparison": {
+        "nodeReported": "Vom Node gemeldete Umlaufmenge",
+        "unit": "KAS",
+        "rpcSource": "über getCoinSupply-RPC",
+        "expected": "Erwartete Umlaufmenge",
+        "expectedBasis": "Checkpoint-Gesamtmenge + planmäßige Ausgabe seit dem 22. November 2021"
+      },
+      "anchor": {
+        "label": "Anker",
+        "title": "Checkpoint vom 22. November 2021",
+        "body": "Die historische Umlaufmenge am Checkpoint vom 22. November 2021 wird durch die fest verdrahtete Genesis über ihr UTXO-Set festgeschrieben. Jeder nach diesem Zeitpunkt ausgegebene Coin folgt einem deterministischen Konsensplan. Deshalb sollten die vom Node gemeldete und die am Checkpoint verankerte erwartete Umlaufmenge übereinstimmen. Kleine Abweichungen in der Größenordnung einiger Hundert KAS entstehen durch Unterschiede zwischen DAA und Blockzahl sowie Ganzzahlrundungen in der Konsens-Subventionstabelle, ähnlich wie bei Bitcoin und anderen PoW-Emissionen."
+      },
+      "timeline": {
+        "genesis": {
+          "label": "Genesis",
+          "date": "{date, date, medium}",
+          "description": "Leeres UTXO-Set, daher existieren null Coins. Die ursprüngliche Genesis ist über den Hash von Bitcoin-Block Nr. 708.639 verankert."
+        },
+        "checkpoint": {
+          "label": "Checkpoint",
+          "date": "{date, date, medium}",
+          "description": "In den ersten rund zwei Wochen des Mainnets wurden die Blockbelohnungen zufällig zwischen 1 und 1.000 KAS pro Block festgelegt. Dadurch wurden vor einem Hardfork, der die Belohnung pro Block fixierte, zusätzlich 327.792.544 KAS ausgegeben. Die historische Umlaufmenge wird durch die fest verdrahtete Genesis festgeschrieben."
+        },
+        "preDeflationary": {
+          "label": "Prädeflationäre Phase",
+          "date": "{startDate, date, medium} – {endDate, date, medium}",
+          "description": "Feste Belohnung pro Block für rund sechs Monate nach dem Checkpoint, bevor der deflationäre Plan einsetzt."
+        },
+        "chromatic": {
+          "label": "Beginn der chromatischen Phase",
+          "date": "~{date, date, medium}",
+          "description": "Die prädeflationäre Phase endet. Die Belohnung sinkt von 500 auf 440 KAS pro Block und nimmt anschließend jeden Monat geometrisch ab."
+        },
+        "crescendo": {
+          "label": "Crescendo",
+          "date": "~{date, date, medium}",
+          "description": "10 Blöcke pro Sekunde, wobei die Belohnung pro Block durch 10 geteilt wird."
+        },
+        "now": "Jetzt",
+        "live": "live",
+        "circulating": "KAS im Umlauf",
+        "expected": "KAS erwartet",
+        "loading": "Wird geladen ...",
+        "connecting": "Verbindung zum Node wird hergestellt ..."
+      },
+      "stats": {
+        "mined": "Gemint",
+        "blockReward": "Blockbelohnung",
+        "nodeDagBlocks": "DAG-Blöcke des Nodes",
+        "daaScore": "DAA-Score",
+        "blockCountAccessible": "DAG-Blöcke des Nodes: {count}"
+      }
+    }
+  }
+}

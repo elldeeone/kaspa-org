@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "title": "Kaspa-Logos und -Medien | Kaspa",
+    "description": "Lade das offizielle Kaspa-Logo-Set herunter – horizontale und gestapelte Varianten, das Symbol und die Markenfarben. Als SVG und hochauflösendes PNG."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa – Echtzeit-Dezentralisierung"
+  },
+  "page": {
+    "heading": "Kaspa-Logos"
+  },
+  "groups": {
+    "lockup": "Horizontal",
+    "stacked": "Gestapelt",
+    "icon": "Symbol"
+  },
+  "logos": {
+    "lockupColor": {
+      "name": "Vollfarbe",
+      "imageAlt": "Kaspa-Logo in Vollfarbe",
+      "downloadAria": "Horizontales Kaspa-Logo in Vollfarbe als {format} herunterladen"
+    },
+    "lockupReverse": {
+      "name": "Negativ",
+      "imageAlt": "Kaspa-Logo als Negativversion",
+      "downloadAria": "Horizontales Kaspa-Logo als Negativversion im Format {format} herunterladen"
+    },
+    "lockupBlack": {
+      "name": "Schwarz",
+      "imageAlt": "Schwarzes Kaspa-Logo",
+      "downloadAria": "Horizontales schwarzes Kaspa-Logo als {format} herunterladen"
+    },
+    "lockupWhite": {
+      "name": "Weiß",
+      "imageAlt": "Weißes Kaspa-Logo",
+      "downloadAria": "Horizontales weißes Kaspa-Logo als {format} herunterladen"
+    },
+    "lockupOutline": {
+      "name": "Kontur",
+      "imageAlt": "Kaspa-Logo als Kontur",
+      "downloadAria": "Horizontales Kaspa-Konturlogo als {format} herunterladen"
+    },
+    "stackedColor": {
+      "name": "Vollfarbe",
+      "imageAlt": "Kaspa-Logo in Vollfarbe",
+      "downloadAria": "Gestapeltes Kaspa-Logo in Vollfarbe als {format} herunterladen"
+    },
+    "stackedReverse": {
+      "name": "Negativ",
+      "imageAlt": "Kaspa-Logo als Negativversion",
+      "downloadAria": "Gestapeltes Kaspa-Logo als Negativversion im Format {format} herunterladen"
+    },
+    "stackedBlack": {
+      "name": "Schwarz",
+      "imageAlt": "Schwarzes Kaspa-Logo",
+      "downloadAria": "Gestapeltes schwarzes Kaspa-Logo als {format} herunterladen"
+    },
+    "stackedWhite": {
+      "name": "Weiß",
+      "imageAlt": "Weißes Kaspa-Logo",
+      "downloadAria": "Gestapeltes weißes Kaspa-Logo als {format} herunterladen"
+    },
+    "stackedOutline": {
+      "name": "Kontur",
+      "imageAlt": "Kaspa-Logo als Kontur",
+      "downloadAria": "Gestapeltes Kaspa-Konturlogo als {format} herunterladen"
+    },
+    "iconGreen": {
+      "name": "Grün",
+      "imageAlt": "Grünes Kaspa-Logo",
+      "downloadAria": "Grünes Kaspa-Symbol als {format} herunterladen"
+    },
+    "iconGreenDark": {
+      "name": "Grün auf Dunkel",
+      "imageAlt": "Grünes Kaspa-Logo auf dunklem Hintergrund",
+      "downloadAria": "Grünes Kaspa-Symbol auf dunklem Hintergrund als {format} herunterladen"
+    },
+    "iconBlack": {
+      "name": "Schwarz",
+      "imageAlt": "Schwarzes Kaspa-Logo",
+      "downloadAria": "Schwarzes Kaspa-Symbol als {format} herunterladen"
+    },
+    "iconWhite": {
+      "name": "Weiß",
+      "imageAlt": "Weißes Kaspa-Logo",
+      "downloadAria": "Weißes Kaspa-Symbol als {format} herunterladen"
+    }
+  },
+  "formats": {
+    "svg": "SVG",
+    "png": "PNG"
+  }
+}
