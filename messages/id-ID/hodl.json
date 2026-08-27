@@ -1,0 +1,303 @@
+{
+  "metadata": {
+    "title": "Beli KAS, Siapkan Dompet, dan Lakukan Kustodi Mandiri | Kaspa",
+    "description": "Dapatkan dompet, beli KAS, dan pindahkan ke kustodi mandiri."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Desentralisasi Real-time"
+  },
+  "navigation": {
+    "current": "HODL",
+    "sections": {
+      "wallet": {
+        "label": "1. Dapatkan dompet",
+        "compactLabel": "Dompet",
+        "description": "Siapkan dompet untuk menyimpan KAS Anda."
+      },
+      "buy": {
+        "label": "2. Beli KAS",
+        "compactLabel": "Beli",
+        "description": "Temukan KAS di bursa utama."
+      },
+      "transfer": {
+        "label": "3. Pindahkan ke dompet",
+        "compactLabel": "Pindahkan",
+        "description": "Kirim KAS dari bursa ke dompet Anda."
+      },
+      "help": {
+        "label": "Bantuan",
+        "compactLabel": "Bantuan",
+        "description": "Bantuan komunitas dan perangkat penjelajah."
+      }
+    }
+  },
+  "start": {
+    "heading": "<flicker><source>H</source><replacement>K</replacement></flicker>ODL Kaspa",
+    "tagline": "Beli KAS dan pindahkan ke dompet yang Anda kendalikan."
+  },
+  "wallet": {
+    "heading": "Dapatkan dompet",
+    "description": "Pilih dompet yang sesuai dengan cara Anda berencana menyimpan dan menggunakan KAS.",
+    "safety": {
+      "label": "Penting:",
+      "body": "Cadangkan frasa pemulihan atau petunjuk dompet Anda sebelum memindahkan dana dalam jumlah berarti. Kirim transaksi uji coba berjumlah kecil terlebih dahulu, lalu pindahkan sisanya hanya setelah transaksi itu tiba."
+    }
+  },
+  "buy": {
+    "heading": "Beli KAS",
+    "description": "KAS terdaftar di banyak bursa. Dapatkan KAS melalui platform yang didukung di wilayah Anda, lalu pindahkan ke dompet pribadi.",
+    "moreExchanges": "Dan {count, number}+ lainnya"
+  },
+  "transfer": {
+    "heading": "Pegang sendiri KAS Anda",
+    "description": "Amankan aset Anda dengan memindahkannya dari bursa ke dompet pribadi.",
+    "receive": "Terima",
+    "screenReaderDiagram": "KAS berpindah dari akun bursa ke dompet pribadi",
+    "stepLabel": "Langkah {step}",
+    "steps": {
+      "receiveAddress": {
+        "title": "Dapatkan alamat penerimaan Anda",
+        "description": "Buka aplikasi Kaspium, ketuk 'Terima', lalu salin alamat unik Anda."
+      },
+      "testTransaction": {
+        "title": "Kirim transaksi uji coba",
+        "description": "Tarik sebagian kecil KAS dari bursa untuk memastikan rutenya sudah benar."
+      },
+      "balance": {
+        "title": "Pindahkan sisa saldo",
+        "description": "Setelah transaksi uji coba tiba dengan aman di dompet, tarik sisa saldo."
+      }
+    },
+    "waitTimes": {
+      "label": "Waktu tunggu bursa:",
+      "body": "Pengiriman Kaspa secara native praktis seketika, tetapi bursa menerapkan jeda internalnya sendiri. Menunggu 30–60 menit hingga bursa melepas dana Anda ke jaringan adalah hal yang sepenuhnya wajar."
+    },
+    "security": {
+      "label": "Pemeriksaan keamanan:",
+      "body": "Selalu periksa beberapa karakter pertama dan terakhir alamat Anda sebelum mengonfirmasi."
+    }
+  },
+  "help": {
+    "eyebrow": "Bantuan",
+    "heading": "Terus melangkah",
+    "descriptionWithAi": "Tanyakan kepada Kaspa AI untuk jawaban instan tentang dompet, pembelian, dan keamanan. Untuk bantuan komunitas, bergabunglah ke Discord atau periksa transaksi di penjelajah.",
+    "descriptionWithoutAi": "Untuk bantuan komunitas, bergabunglah ke Discord atau periksa transaksi di penjelajah.",
+    "openAi": "Buka AI",
+    "community": "Komunitas",
+    "discord": "Discord",
+    "trackTransaction": "Lacak transaksi",
+    "explorer": "Penjelajah",
+    "prompts": {
+      "backupWallet": "Bagaimana cara mencadangkan dompet saya?",
+      "buyKas": "Di mana saya dapat membeli KAS?",
+      "firstPurchase": "Bagaimana cara membeli KAS untuk pertama kalinya?",
+      "leaveOnExchange": "Apakah sebaiknya KAS saya tetap disimpan di bursa?",
+      "moveFromExchange": "Bagaimana cara mengirim KAS dari bursa ke dompet saya?",
+      "fees": "Biaya apa yang perlu saya perkirakan saat membeli atau memindahkan KAS?",
+      "recoveryPhrase": "Apa itu frasa pemulihan?",
+      "walletVsExchange": "Apa perbedaan antara dompet dan bursa?",
+      "receiveKas": "Bagaimana cara menerima KAS dari orang lain?",
+      "multipleWallets": "Bisakah saya memiliki lebih dari satu dompet Kaspa?",
+      "maxSupply": "Berapa suplai maksimum Kaspa?"
+    }
+  },
+  "media": {
+    "kaspiumScreenshotAlt": "Tangkapan layar aplikasi dompet Kaspium"
+  },
+  "walletFinder": {
+    "common": {
+      "optional": "Opsional",
+      "notAvailable": "Tidak tersedia",
+      "notAvailableSentence": "Tidak tersedia.",
+      "moreInformation": "Informasi selengkapnya",
+      "pros": "Kelebihan",
+      "cons": "Kekurangan",
+      "newUser": "Pemula",
+      "experiencedUser": "Berpengalaman"
+    },
+    "operatingSystems": {
+      "android": "Android",
+      "ios": "iOS",
+      "windows": "Windows",
+      "mac": "macOS",
+      "linux": "Linux",
+      "hardware": "Perangkat keras"
+    },
+    "guidance": {
+      "mobile": {
+        "title": "Dompet seluler",
+        "shortTitle": "Seluler",
+        "pros": {
+          "portable": "Mudah dibawa dan praktis; ideal untuk transaksi tatap muka",
+          "qr": "Dirancang untuk menggunakan kode QR agar transaksi berlangsung cepat dan lancar"
+        },
+        "cons": {
+          "marketplaces": "Toko aplikasi dapat menghapus dompet dari daftar, sehingga pembaruan berikutnya lebih sulit diperoleh",
+          "deviceLoss": "Kerusakan atau kehilangan perangkat berpotensi menyebabkan hilangnya dana"
+        }
+      },
+      "desktop": {
+        "title": "Dompet desktop",
+        "shortTitle": "Desktop",
+        "pros": {
+          "control": "Lingkungan desktop dapat memberi pengguna kendali penuh atas dana",
+          "advanced": "Beberapa dompet desktop mendukung dompet perangkat keras atau pengoperasian node penuh"
+        },
+        "cons": {
+          "qr": "Kurang praktis untuk pembayaran kode QR ketika bertransaksi secara langsung",
+          "malware": "Komputer yang telah disusupi dapat mengekspos pengguna pada malware, spyware, atau virus"
+        }
+      },
+      "hardware": {
+        "title": "Dompet perangkat keras",
+        "shortTitle": "Perangkat keras",
+        "pros": {
+          "secure": "Salah satu cara paling aman untuk menyimpan dana",
+          "longTerm": "Ideal untuk menyimpan KAS dalam jumlah besar untuk jangka panjang"
+        },
+        "cons": {
+          "mobile": "Kurang praktis saat bepergian dan tidak dirancang untuk transaksi cepat",
+          "deviceLoss": "Kehilangan perangkat tanpa cadangan yang tepat dapat membuat dana tidak dapat dipulihkan"
+        }
+      }
+    },
+    "wizard": {
+      "progress": "Langkah {step, number} dari {total, number}",
+      "skip": "Lewati →",
+      "skipAll": "Lewati ke semua dompet →",
+      "prosAndCons": "Kelebihan dan kekurangan",
+      "back": "Kembali",
+      "next": "Berikutnya",
+      "showWallets": "Tampilkan dompet",
+      "showMatchingWallets": "Tampilkan dompet yang cocok",
+      "steps": {
+        "os": {
+          "title": "Apa sistem operasi Anda?",
+          "subtitle": "Ini menyaring daftar menjadi dompet yang berjalan di sistem operasi Anda."
+        },
+        "experience": {
+          "title": "Seberapa jauh Anda mengenal Kaspa?",
+          "subtitle": "Membantu kami menampilkan dompet yang sesuai dengan tingkat pengalaman Anda."
+        },
+        "criteria": {
+          "title": "Kriteria apa yang penting bagi Anda?",
+          "subtitle": "Opsional"
+        },
+        "features": {
+          "title": "Fitur apa yang Anda cari?",
+          "subtitle": "Opsional"
+        }
+      },
+      "experience": {
+        "newDescription": "Tampilkan dompet yang ideal untuk pengguna baru.",
+        "experiencedDescription": "Tampilkan semua dompet."
+      }
+    },
+    "filters": {
+      "heading": "Saring dompet",
+      "clearAll": "Hapus semua",
+      "operatingSystem": "Sistem operasi",
+      "userType": "Jenis pengguna",
+      "criteria": "Kriteria",
+      "features": "Fitur",
+      "showNewUsers": "Tampilkan dompet yang ideal untuk pengguna baru.",
+      "showExperiencedUsers": "Tampilkan semua dompet.",
+      "show": "Filter",
+      "hide": "Sembunyikan filter",
+      "remove": "Hapus filter {filter}"
+    },
+    "criteria": {
+      "control": {
+        "label": "Kendali",
+        "description": "Beberapa dompet memberi Anda kendali penuh atas KAS. Artinya, tidak ada pihak ketiga yang dapat membekukan atau mengambil dana Anda. Namun, Anda tetap bertanggung jawab untuk mengamankan dan mencadangkan dompet."
+      },
+      "validation": {
+        "label": "Validasi",
+        "description": "Beberapa dompet memungkinkan Anda mengendalikan node Kaspa mana yang memproses transaksi, baik dengan menjalankan node sendiri maupun dengan mengarahkannya ke node mana pun yang Anda percayai."
+      },
+      "transparency": {
+        "label": "Transparansi",
+        "description": "Beberapa dompet bersifat sumber terbuka dan dapat dibangun secara deterministik, yaitu proses kompilasi perangkat lunak yang memastikan kode hasilnya dapat direproduksi untuk membantu memastikan bahwa kode itu tidak dimanipulasi."
+      },
+      "fees": {
+        "label": "Biaya",
+        "description": "Beberapa dompet memberi Anda kendali penuh untuk menetapkan biaya yang dibayarkan ke jaringan Kaspa sebelum melakukan transaksi, agar transaksi dikonfirmasi tepat waktu tanpa membayar lebih dari yang diperlukan."
+      }
+    },
+    "features": {
+      "two_fa": {
+        "label": "2FA",
+        "description": "Autentikasi dua faktor (2FA) menambahkan lapisan keamanan kedua ke dompet. Selain kata sandi, kode verifikasi dari aplikasi atau pesan teks diperlukan untuk mengakses dana Anda. Perhatikan bahwa 2FA biasanya mengandalkan layanan pihak ketiga untuk menyediakan verifikasi."
+      },
+      "hardware_wallet": {
+        "label": "Dukungan dompet perangkat keras",
+        "description": "Beberapa dompet perangkat lunak dapat dipasangkan dengan perangkat dompet perangkat keras (misalnya Ledger atau Tangem), sehingga kunci privat Anda tetap terisolasi di perangkat sambil tetap menggunakan antarmuka perangkat lunak yang familier."
+      },
+      "multisig": {
+        "label": "Multitanda tangan",
+        "description": "Beberapa dompet mendukung transaksi multitanda tangan yang memerlukan lebih dari satu kunci untuk mengesahkan transfer. Fitur ini dapat digunakan untuk membagi tanggung jawab di antara beberapa pihak atau menambahkan perlindungan ekstra bagi simpanan bernilai tinggi."
+      }
+    },
+    "ratings": {
+      "good": "Baik",
+      "acceptable": "Memadai",
+      "mixed": "Campuran",
+      "mixedExplanation": "Peringkat ini berbeda-beda di antara platform yang dipilih.",
+      "caution": "Waspada",
+      "not_applicable": "Tidak berlaku",
+      "notApplicableCompact": "N/A",
+      "breakdown": "Rincian",
+      "why": "Mengapa?",
+      "aria": "{criterion}: {rating}",
+      "tooltipHeading": "{criterion}: {rating}",
+      "explanations": {
+        "control": {
+          "good": "Kustodi mandiri. Anda memegang kunci privat, sehingga tidak ada pihak ketiga yang dapat membekukan atau menyita dana Anda.",
+          "caution": "Kustodial. Pihak ketiga memegang kunci Anda dan dapat membekukan atau menyita dana Anda."
+        },
+        "validation": {
+          "good": "Secara default menjalankan node penuh Kaspa sendiri, sehingga memvalidasi transaksi secara mandiri.",
+          "acceptable": "Memungkinkan Anda mengarahkannya ke node Kaspa mana pun yang Anda percayai, tetapi tidak dapat berjalan sebagai node itu sendiri.",
+          "caution": "Hanya terhubung ke infrastruktur terpusat yang tetap, sehingga Anda harus memercayai node pilihan dompet.",
+          "not_applicable": "Perangkat keras menandatangani transaksi, sementara perangkat lunak pendamping menangani akses jaringan dan validasi."
+        },
+        "transparency": {
+          "good": "Kodenya tersedia untuk publik, dan pemeriksaan independen dapat memverifikasi bahwa perangkat lunak yang dirilis dibuat dari kode tersebut.",
+          "acceptable": "Kodenya tersedia untuk publik, tetapi tidak ada cara yang andal untuk memverifikasi bahwa perangkat lunak yang dirilis dibuat dari kode tersebut.",
+          "mixed": "Komponen wajib dompet ini memiliki tingkat transparansi yang berbeda.",
+          "caution": "Sumber tertutup. Kodenya tidak dapat diaudit secara mandiri."
+        },
+        "fees": {
+          "good": "Memungkinkan Anda menetapkan biaya khusus apa pun untuk setiap transaksi.",
+          "acceptable": "Menawarkan tingkatan biaya yang telah ditentukan, tetapi tidak memungkinkan biaya yang sepenuhnya khusus.",
+          "caution": "Biaya dipaksakan atau disembunyikan, tanpa kendali pengguna."
+        }
+      }
+    },
+    "transparencySurfaces": {
+      "firmware": "Firmware perangkat",
+      "application": "Aplikasi {platform}"
+    },
+    "results": {
+      "summary": "<strong>{matches, number}</strong> dari {total, plural, one {# dompet} other {# dompet}}",
+      "compactSummary": "<strong>{matches, number}</strong> / {total, plural, one {# dompet} other {# dompet}}",
+      "helpChoose": "Bantu saya memilih",
+      "walletColumn": "Dompet",
+      "noMatches": "Tidak ada dompet yang cocok",
+      "removeFilters": "Coba hapus beberapa filter.",
+      "noLinks": "Tidak ada tautan untuk filter ini.",
+      "aboutCriterion": "Tentang {criterion}"
+    },
+    "actions": {
+      "app_store": "App Store",
+      "google_play": "Google Play",
+      "download": "Unduh",
+      "open": "Buka dompet",
+      "view_source": "Lihat kode sumber"
+    },
+    "submission": {
+      "question": "Ada dompet yang belum tercantum?",
+      "action": "Pelajari cara mengajukannya di GitHub"
+    }
+  }
+}

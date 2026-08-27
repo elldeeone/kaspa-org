@@ -1,0 +1,417 @@
+{
+  "metadata": {
+    "title": "Dokumentasi Pengembang, SDK, API, dan Akses Node Kaspa | Kaspa",
+    "description": "Semua yang Anda perlukan untuk mulai membangun di Kaspa. SDK WASM, pustaka Rust, playground API langsung, akses node, dan alat pengembangan."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Desentralisasi Real-time"
+  },
+  "terms": {
+    "daa": "DAA",
+    "dag": "DAG",
+    "node": "Node",
+    "publicNodeNetwork": "Jaringan Node Publik",
+    "utxo": "UTXO"
+  },
+  "artifacts": {
+    "controls": {
+      "back": "Kembali",
+      "network": "Jaringan",
+      "disconnect": "Putuskan",
+      "reconnect": "Hubungkan kembali",
+      "connecting": "| Menghubungkan..."
+    },
+    "runtime": {
+      "connectingKaspaNetwork": "Menghubungkan ke jaringan Kaspa...",
+      "selectedNetwork": "Jaringan yang dipilih adalah {network}...",
+      "connectedTo": "Terhubung ke",
+      "disconnected": "Terputus...",
+      "disconnectedFrom": "Terputus dari",
+      "connectingPublicNode": "Menghubungkan ke node publik...",
+      "disconnect": "Putuskan",
+      "apiRequest": "Permintaan {api}...",
+      "apiResponse": "Respons {api}:",
+      "subscribingBlockAdded": "Berlangganan peristiwa penambahan blok...",
+      "registeringProtocolNotifications": "Mendaftarkan notifikasi {protocol}...",
+      "subscribingProtocolScore": "Berlangganan skor {protocol}...",
+      "event": "peristiwa:",
+      "networkConsole": "jaringan"
+    },
+    "utxo": {
+      "receivedEvents": "| Menerima {count, plural, one {# peristiwa} other {# peristiwa}}",
+      "noticeManyUtxos": "Perhatikan bahwa beberapa alamat mungkin memiliki ribuan {term}, sehingga tidak praktis bagi peramban untuk menampilkannya sebagai daftar. Keluaran data semacam ini sebaiknya dibagi menjadi beberapa halaman.",
+      "noticeManualTesting": "Demo ini ditujukan untuk pengujian manual guna memperagakan peristiwa yang dipancarkan oleh {api}; peramban Anda mungkin kesulitan merender kumpulan {term} yang besar.",
+      "addressPlaceholder": "Masukkan alamat {network}...",
+      "monitorAddress": "Klik untuk memantau alamat",
+      "restart": "Mulai ulang",
+      "trackingAddress": "Memantau alamat:",
+      "error": "Kesalahan:",
+      "restarting": "Memulai ulang...",
+      "stoppingProcessor": "Menghentikan pemroses...",
+      "startingProcessor": "Memulai pemroses...",
+      "processorStarted": "Pemroses dimulai..."
+    }
+  },
+  "navigation": {
+    "current": "Bangun",
+    "sections": {
+      "start": {
+        "label": "Mulai",
+        "compactLabel": "Mulai",
+        "description": "Gambaran umum dan cara tercepat memasuki stack."
+      },
+      "tryLive": {
+        "label": "Coba langsung",
+        "compactLabel": "Langsung",
+        "description": "Contoh peramban upstream dan demo langsung."
+      },
+      "paths": {
+        "label": "Pilih jalur",
+        "compactLabel": "Jalur",
+        "description": "{wasmSdk}, {rust} native, atau penyiapan node penuh."
+      },
+      "runNode": {
+        "label": "Jalankan node",
+        "compactLabel": "Node",
+        "description": "Perintah satu baris {docker} untuk menjalankan {rustyKaspa} secara lokal."
+      },
+      "tooling": {
+        "label": "Alat pengembangan",
+        "compactLabel": "Alat",
+        "description": "Pustaka upstream, infrastruktur, dan proyek ekosistem."
+      },
+      "access": {
+        "label": "Akses",
+        "compactLabel": "Akses",
+        "description": "Dokumentasi, sarana kueri, referensi node, dan alur pengujian."
+      },
+      "developments": {
+        "label": "Pengembangan",
+        "compactLabel": "Dev",
+        "description": "Ikuti pekerjaan aktif dan diskusi R&D publik."
+      },
+      "help": {
+        "label": "Bantuan",
+        "compactLabel": "Bantuan",
+        "description": "Dokumentasi dan kanal komunitas saat Anda menemui kendala."
+      }
+    }
+  },
+  "start": {
+    "release": {
+      "version": "{version}",
+      "action": "Lihat rilis"
+    },
+    "heading": "Bangun di {kaspa}",
+    "description": "{wasmSdk}, pustaka {rust} native, dan infrastruktur node untuk membangun di {kaspa}.",
+    "actions": {
+      "openDocs": "Buka dokumentasi",
+      "viewGitHub": "Lihat di {github}"
+    },
+    "quickstart": {
+      "eyebrow": "Cara tercepat masuk",
+      "title": "Mulai membangun",
+      "descriptionWithAi": "Gunakan {kaspaAi} untuk mendapatkan arahan, lalu masuk ke jalur yang sesuai dengan kebutuhan Anda.",
+      "descriptionWithoutAi": "Mulailah dari dokumentasi, contoh langsung, atau jalur node yang sesuai dengan kebutuhan Anda.",
+      "aiTitle": "Tanya {kaspaAi}",
+      "aiDescription": "Dapatkan arahan ke jalur {sdk}, {api}, atau node yang tepat.",
+      "jumpLabel": "Langsung menuju",
+      "routes": {
+        "chainData": "Baca data rantai",
+        "stack": "Pilih stack Anda",
+        "node": "Jalankan node"
+      }
+    }
+  },
+  "tryLive": {
+    "heading": {
+      "label": "Coba langsung",
+      "title": "Jalankan contoh peramban {rustyKaspa}",
+      "description": "Contoh di bawah disajikan dari rilis {sdk} peramban {rustyKaspaVersion}, sehingga Anda dapat melihat cara kerja {sdk} tanpa meninggalkan halaman."
+    },
+    "upstream": "upstream",
+    "actions": {
+      "openStandalone": "Buka tersendiri",
+      "viewSource": "Lihat kode sumber"
+    },
+    "networkNotice": "Berjalan pada <network>{publicNodeNetwork}</network>, kumpulan node terdesentralisasi yang dioperasikan komunitas dan diakses melalui {kaspaResolver}. Inisialisasi mungkin memerlukan beberapa detik dan tidak disarankan untuk penggunaan produksi berskala besar.",
+    "examples": {
+      "serverInfo": {
+        "title": "Dapatkan info server",
+        "shortLabel": "Info server",
+        "mobileTabLabel": "Server",
+        "description": "Hubungkan melalui resolver publik dan ambil informasi dasar node langsung dari peramban.",
+        "runtime": "{rpc}"
+      },
+      "dagInfo": {
+        "title": "Dapatkan info blok {dag}",
+        "shortLabel": "Info {dag}",
+        "mobileTabLabel": "{dag}",
+        "description": "Baca status tingkat tinggi {dag} dari node {kaspa} langsung menggunakan binding {rpc} peramban upstream.",
+        "runtime": "{rpc}"
+      },
+      "blockAdded": {
+        "title": "Pantau blok baru",
+        "shortLabel": "Blok baru",
+        "mobileTabLabel": "Blok",
+        "description": "Berlangganan peristiwa penambahan blok dan saksikan blok tiba secara real-time dari peramban.",
+        "runtime": "{rpc}"
+      },
+      "daaChanged": {
+        "title": "Pantau perubahan {daa}",
+        "shortLabel": "Perubahan {daa}",
+        "mobileTabLabel": "{daa}",
+        "description": "Berlangganan pembaruan skor {daa} dan saksikan alirannya berubah secara real-time.",
+        "runtime": "{rpc}"
+      },
+      "utxoContext": {
+        "title": "Lacak konteks {utxo}",
+        "shortLabel": "Konteks {utxo}",
+        "mobileTabLabel": "{utxo}",
+        "description": "Gunakan binding inti peramban untuk memantau alamat dan menerima peristiwa {utxo} secara langsung.",
+        "runtime": "{core}"
+      }
+    }
+  },
+  "paths": {
+    "heading": {
+      "label": "Jalur",
+      "title": "Pilih jalur Anda",
+      "description": "Mulailah dengan jalur {sdk} atau infrastruktur yang sesuai dengan sistem yang Anda bangun."
+    },
+    "cards": {
+      "wasm": {
+        "tier": "{sdk} aplikasi",
+        "title": "Bangun dengan {wasmSdk}",
+        "description": "Gunakan binding peramban dan {nodeJs} upstream untuk alur dompet, transaksi, dan akses {rpc}.",
+        "docs": "Dokumentasi {wasmSdk}",
+        "examples": "Contoh upstream"
+      },
+      "rust": {
+        "tier": "{rust} native",
+        "title": "Bangun dengan {rust} native",
+        "description": "Gunakan crate {rust} di dalam {rustyKaspa} untuk layanan backend, integrasi sistem, komponen internal dompet, dan beban kerja di sekitar node.",
+        "repo": "Repo {rustyKaspa}"
+      },
+      "node": {
+        "tier": "Node",
+        "title": "Jalankan node",
+        "description": "Gunakan {rustyKaspa} untuk akses penuh, pengindeksan {utxo}, dan infrastruktur produksi.",
+        "release": "Rilis terbaru",
+        "repo": "Repo {rustyKaspa}"
+      }
+    },
+    "communityApi": {
+      "label": "{api} komunitas",
+      "description": "Untuk pembacaan cepat atau lingkungan terbatas, tersedia {api} yang dihosting komunitas. Layanan bersifat upaya terbaik, tanpa SLA.",
+      "action": "Dokumentasi {restApi}"
+    }
+  },
+  "runNode": {
+    "heading": {
+      "label": "Node",
+      "title": "Jalankan node",
+      "description": "Jalankan {rustyKaspa} secara lokal dengan {docker}. Untuk penyiapan persisten, lihat {dockerHub} atau bangun dari kode sumber."
+    },
+    "quickstart": "Mulai cepat {docker}",
+    "title": "Jalankan image {rustyKaspa} terbaru",
+    "description": "Membuka {grpc} pada port 16110 agar Anda dapat berkomunikasi dengan node dari mesin pengembangan. Kontainer sementara — tanpa penyimpanan persisten atau {p2p} masuk.",
+    "copyCommand": "Salin perintah {docker}",
+    "commandCopied": "Perintah {docker} disalin",
+    "dockerHub": "{dockerHub}",
+    "compile": "Kompilasi dari kode sumber"
+  },
+  "tooling": {
+    "heading": {
+      "label": "Alat pengembangan",
+      "title": "Toolchain saat ini",
+      "description": "Sarana stabil yang dapat diandalkan para pengembang saat ini, dengan pekerjaan baru ditandai secara terpisah."
+    },
+    "stable": {
+      "rustyKaspa": {
+        "eyebrow": "Stack native",
+        "title": "{rustyKaspa}",
+        "description": "Crate {rust}, komponen internal dompet, node penuh, {rpc}, pengindeksan, dan akses jaringan langsung.",
+        "tags": {
+          "rust": "{rust} native",
+          "infra": "Node & infrastruktur"
+        },
+        "action": "Buka repo"
+      },
+      "wasm": {
+        "eyebrow": "Pustaka & {sdks}",
+        "title": "{wasmSdk}",
+        "description": "Binding peramban dan {node} upstream untuk aplikasi, dompet, dan alur transaksi.",
+        "tag": "Peramban + {node}",
+        "action": "Buka dokumentasi"
+      }
+    },
+    "emerging": {
+      "python": {
+        "status": "Beta",
+        "title": "{pythonSdk}",
+        "description": "Hampir selesai. Sudah dapat digunakan jika {python} menjadi bagian dari stack Anda.",
+        "action": "Buka repo"
+      }
+    },
+    "community": {
+      "eyebrow": "Proyek komunitas",
+      "title": "Alat dan infrastruktur ekosistem",
+      "description": "Proyek sumber terbuka dari ekosistem {kaspa} yang lebih luas dan melengkapi {sdk} upstream serta stack node.",
+      "open": "Buka",
+      "cards": {
+        "indexer": {
+          "type": "Pengindeks",
+          "title": "{simplyKaspaIndexer}",
+          "description": "Pengindeksan mandiri untuk data blok dan transaksi {kaspa}."
+        },
+        "dnsSeeder": {
+          "type": "Infra",
+          "title": "{dnsSeeder}",
+          "description": "Infrastruktur bootstrap untuk jaringan peer-to-peer {kaspa}."
+        },
+        "khost": {
+          "type": "Hosting",
+          "title": "{khost}",
+          "description": "Perangkat untuk menjalankan dan menyumbangkan kapasitas node ke ekosistem yang lebih luas."
+        },
+        "kaspaJs": {
+          "type": "Pustaka",
+          "title": "{kaspaJs}",
+          "description": "Perangkat {javascript} yang dikelola komunitas di sekitar stack {kaspa}."
+        }
+      }
+    }
+  },
+  "access": {
+    "heading": {
+      "label": "Akses",
+      "title": "Akses jaringan",
+      "description": "Dokumentasi, sarana kueri, referensi node, dan alur pengujian dikelompokkan berdasarkan kebutuhan nyata pengembang."
+    },
+    "groups": {
+      "docs": {
+        "title": "Dokumentasi",
+        "description": "Mulailah dari panduan, referensi teknis, dan proposal terbuka.",
+        "links": {
+          "docs": "Buka dokumentasi",
+          "wasm": "Dokumentasi {wasmSdk}",
+          "deepWiki": "{deepWiki} {rustyKaspa}",
+          "kips": "{kips}",
+          "research": "Forum riset",
+          "qa": "{kaspaQAndA}"
+        }
+      },
+      "query": {
+        "title": "Kueri dan akses",
+        "description": "Kueri jaringan melalui perangkat publik dan {api} ringan yang dihosting komunitas. {api} komunitas bersifat upaya terbaik tanpa SLA.",
+        "links": {
+          "api": "Dokumentasi {api} komunitas",
+          "explorer": "Penjelajah",
+          "dag": "Visualisasi {dag}",
+          "dumps": "Penjelajah / dump DB {api}"
+        }
+      },
+      "node": {
+        "title": "Node dan {rpc}",
+        "description": "Jalankan infrastruktur penuh atau pelajari stack node lebih dalam.",
+        "links": {
+          "rustyKaspa": "{rustyKaspa}",
+          "release": "Rilis terbaru"
+        }
+      },
+      "testnet": {
+        "title": "Testnet",
+        "description": "Gunakan sumber daya pengujian publik sebelum merilis ke mainnet.",
+        "faucet": "Faucet testnet"
+      }
+    }
+  },
+  "developments": {
+    "heading": {
+      "label": "Pengembangan",
+      "title": "Ikuti pekerjaannya secara terbuka",
+      "description": "Pantau kanal diskusi utama, lalu ikuti perkembangan {sdk}, protokol, dan kemampuan pemrograman eksperimental."
+    },
+    "liveDiscussion": "Diskusi langsung",
+    "cards": {
+      "channel": {
+        "label": "Kanal",
+        "title": "R&D inti {telegram}",
+        "description": "Aliran publik utama untuk diskusi riset dan pengembangan {kaspa} terkini. {discord} masih digunakan, tetapi sebagian besar diskusi inti kini berlangsung di sini."
+      },
+      "research": {
+        "label": "Forum",
+        "title": "{kaspaResearch}",
+        "description": "Forum tulisan panjang untuk diskusi protokol, konsensus, ekonomi, dan penambangan, serta draf dan proposal {kip}."
+      },
+      "toccata": {
+        "label": "Hardfork",
+        "title": "{toccata}: covenant & {zk}",
+        "description": "Hardfork yang menggabungkan opcode skrip tambahan ({kip17}), ID covenant ({kip20}), opcode {zk} dengan subsistem precompile pemverifikasi ({kip16}), dan komitmen pengurutan ({kip21}). Saat ini aktif di {tn12} menjelang aktivasi mainnet."
+      },
+      "silverscript": {
+        "label": "Kemampuan pemrograman",
+        "title": "{silverscript}",
+        "description": "Bahasa skrip tingkat tinggi yang dikompilasi menjadi {kaspaScript} native. Sedang diuji di {tn12} menjelang hardfork {toccata} yang menghadirkan covenant dan opcode {zk} ke mainnet."
+      },
+      "vprogs": {
+        "label": "Kemampuan pemrograman",
+        "title": "{vprogs}",
+        "description": "Riset awal tentang program yang dapat diverifikasi: pengurutan on-chain dengan eksekusi off-chain yang diselesaikan melalui bukti {zk}. Dibangun di atas primitif skrip yang hadir dalam {toccata}."
+      },
+      "python": {
+        "label": "{sdk}",
+        "title": "{pythonSdk}",
+        "description": "Dalam tahap beta dan hampir selesai. Alat {python} terus dikembangkan secara terbuka dan memperluas sarana bagi pengembang."
+      },
+      "kips": {
+        "label": "Protokol",
+        "title": "{kips}",
+        "description": "Pantau proposal yang dapat mengubah cara aplikasi dan infrastruktur berintegrasi dengan jaringan."
+      }
+    }
+  },
+  "help": {
+    "eyebrow": "Bantuan",
+    "title": "Terus melangkah",
+    "descriptionWithAi": "Mulailah dengan dokumentasi atau {kaspaAi}. Untuk bantuan lebih mendalam, coba {qa}, {github}, {discord}, atau R&D {telegram}.",
+    "descriptionWithoutAi": "Mulailah dengan dokumentasi. Untuk bantuan lebih mendalam, coba {qa}, {github}, {discord}, atau R&D {telegram}.",
+    "actions": {
+      "openDocs": "Buka dokumentasi",
+      "openAi": "Buka AI"
+    },
+    "links": {
+      "github": {
+        "eyebrow": "Kode",
+        "title": "{github}"
+      },
+      "discord": {
+        "eyebrow": "Obrolan",
+        "title": "{discord}"
+      },
+      "qa": {
+        "eyebrow": "Pertanyaan",
+        "title": "{kaspaQAndA}"
+      },
+      "telegram": {
+        "eyebrow": "Pengembangan terbaru",
+        "title": "R&D {telegram}"
+      }
+    },
+    "prompts": {
+      "gettingStarted": "Bagaimana cara mulai membangun di {kaspa}?",
+      "choosePath": "Jalur mana yang sebaiknya saya pilih — {wasmSdk}, {rust} native, atau menjalankan node?",
+      "nodeOrApi": "Apakah saya perlu menjalankan node sendiri, atau dapat menggunakan {api} komunitas?",
+      "smartContracts": "Apakah {kaspa} memiliki smart contract?",
+      "wallet": "Bagaimana cara membuat dompet dengan {wasmSdk}?",
+      "transaction": "Bagaimana cara membuat dan menandatangani transaksi?",
+      "runNode": "Bagaimana cara menjalankan node {kaspa}?",
+      "hardware": "Perangkat keras apa yang saya perlukan untuk node?",
+      "toccata": "Apa itu {toccata} dan perubahan apa yang dibawanya?",
+      "covenants": "Apa itu covenant di {kaspa}?",
+      "silverscript": "Apa itu {silverscript}?",
+      "networks": "Apa perbedaan antara mainnet dan {tn12}?"
+    }
+  }
+}

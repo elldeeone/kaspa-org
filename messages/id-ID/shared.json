@@ -1,0 +1,112 @@
+{
+  "navigation": {
+    "homeAria": "Beranda Kaspa",
+    "toggleMenu": "Buka atau tutup menu",
+    "menu": "Menu",
+    "language": {
+      "label": "Bahasa"
+    },
+    "links": {
+      "lore": "LORE",
+      "hodl": "HODL",
+      "build": "BUIDL",
+      "think": "THINK",
+      "dagviz": "DAGVIZ"
+    }
+  },
+  "theme": {
+    "switchMode": "Beralih ke mode {mode}",
+    "light": "terang",
+    "dark": "gelap"
+  },
+  "logoMenu": {
+    "aria": "Logo Kaspa",
+    "viewAssets": "Lihat aset logo"
+  },
+  "pageSections": {
+    "onThisPage": "Di halaman ini",
+    "openAria": "Buka bagian halaman, bagian saat ini {section}",
+    "dialogAria": "Bagian halaman",
+    "close": "Tutup",
+    "current": "Saat ini"
+  },
+  "footer": {
+    "glyphAria": "Simbol Kaspa",
+    "operatedBy": "Dioperasikan oleh <operator>KasMedia.com</operator>",
+    "links": {
+      "explorer": "Penjelajah",
+      "github": "GitHub",
+      "x": "X"
+    }
+  },
+  "structuredData": {
+    "organizationDescription": "Kaspa adalah mata uang kripto blockDAG proof-of-work dengan peluncuran adil yang berjalan pada 10 blok per detik, dibangun untuk desentralisasi real-time."
+  },
+  "ai": {
+    "externalPrompt": "Baca {url}, saya ingin mengajukan pertanyaan tentangnya.",
+    "genericError": "Maaf, terjadi kesalahan. Silakan coba lagi.",
+    "launcher": {
+      "askAnything": "Tanyakan apa saja",
+      "beta": "Beta",
+      "betaTitle": "Fitur ini sedang aktif dikembangkan — sesekali mungkin terjadi masalah",
+      "betaAria": "Beta — sesekali mungkin terjadi masalah",
+      "poweredBy": "Didukung oleh <provider>kaspa.news/ask</provider>",
+      "collapsePanel": "Ciutkan panel",
+      "expandPanel": "Bentangkan panel",
+      "closePanel": "Tutup panel",
+      "placeholder": "Tanyakan apa saja...",
+      "sendMessage": "Kirim pesan",
+      "welcomeHeading": "Tanyakan apa saja tentang Kaspa",
+      "welcomeBody": "Dapatkan jawaban singkat di bawah, atau buka percakapan lengkap dengan AI pilihan Anda.",
+      "ownAiDivider": "atau gunakan AI Anda sendiri",
+      "ownAiLabel": "Gunakan AI Anda sendiri:",
+      "sources": "{count, plural, =0 {Sumber} other {Sumber (#)}}",
+      "copy": "salin",
+      "copied": "disalin"
+    },
+    "suggestions": {
+      "kaspaPurpose": "Masalah apa yang diselesaikan Kaspa?",
+      "blockTimes": "Berapa lama waktu bloknya?",
+      "decentralization": "Mengapa desentralisasi real-time penting?",
+      "premine": "Apakah ada premine?"
+    },
+    "providers": {
+      "chatgpt": "ChatGPT",
+      "claude": "Claude",
+      "perplexity": "Perplexity"
+    },
+    "loading": {
+      "atomicArc": "menjalankan AtomicArc dengan aman...",
+      "ibd": "menjalankan IBD pada node baru...",
+      "ftr": "meneruskan blok melalui FTR...",
+      "kip": "mengaktifkan KIP...",
+      "template": "mengikat template...",
+      "commitment": "melakukan bootstrap dari komitmen...",
+      "blueSet": "merajut blue set...",
+      "mergeDepth": "menghitung merge depth...",
+      "silverscript": "membujuk Silverscript agar melakukan kompilasi...",
+      "covenantId": "menurunkan covenant_id...",
+      "covenantState": "mengodekan status covenant...",
+      "orphans": "mengeluarkan blok orphan...",
+      "mempool": "mengisi mempool...",
+      "fees": "mengelompokkan biaya per jalur...",
+      "covenants": "bernegosiasi dengan covenant...",
+      "blocks": "mendistribusikan blok secara paralel...",
+      "pruning": "memangkas masa lalu...",
+      "dagLayer": "menerbitkan ke lapisan DAG...",
+      "stack": "mendorong ke stack...",
+      "bps": "menyeimbangkan kembali 10 BPS...",
+      "blueWork": "menghitung ulang blue work...",
+      "l2": "menyaring reorganisasi peristiwa L2...",
+      "vprogBatch": "menjadwalkan batch vProg...",
+      "schnorr": "menjalankan Schnorr pada tanda tangan...",
+      "virtualState": "menyerialisasi virtual state...",
+      "utxoSet": "membuat snapshot himpunan UTXO...",
+      "anticone": "menelusuri anticone...",
+      "transactions": "mengembalikan transaksi orphan...",
+      "utxo": "membuka kunci UTXO...",
+      "vprogs": "memvirtualisasi vProg...",
+      "crescendo": "menunggu Crescendo..."
+    }
+  }
+}

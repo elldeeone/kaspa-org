@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "title": "LORE | Kaspa",
+    "description": "Kaspa adalah blockDAG proof-of-work dengan peluncuran adil yang berfokus pada desentralisasi real-time, tanpa premine, tanpa alokasi orang dalam, dan berperforma 10 BPS di mainnet."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Desentralisasi Real-time"
+  },
+  "article": {
+    "heading": "Kaspa adalah blockDAG proof-of-work aktif yang berjalan pada 10 blok per detik.",
+    "shift": {
+      "heading": "Perubahan arah",
+      "body": "Kaspa mengambil jalur berbeda dari rantai proof-of-work yang lebih lama. Blok paralel tidak dibuang. Blok-blok itu diurutkan. Banyak keterbatasan yang dikaitkan dengan proof-of-work berasal dari arsitektur rantai lama, bukan dari proof-of-work itu sendiri. <paper>Makalah PHANTOM / GHOSTDAG</paper>"
+    },
+    "history": {
+      "heading": "Sejarah singkat",
+      "research": "Kaspa tumbuh dari riset blockDAG di Hebrew University of Jerusalem dan kemudian Harvard. Jalur riset ini bermula dari <ghost>bagian protokol GHOST dalam whitepaper Ethereum</ghost>, muncul sejak dini di lingkungan riset Bitcoin, lalu berlanjut melalui SPECTRE dan PHANTOM hingga protokol yang menjalankan Kaspa saat ini. <scaling>Scaling Bitcoin 2015</scaling> · <coindesk>CoinDesk, 2017</coindesk>",
+      "launch": "Mainnet diluncurkan pada November 2021 sebagai jaringan proof-of-work dengan peluncuran adil. Tanpa premine, alokasi orang dalam, atau prapenjualan. Setiap koin yang beredar telah ditambang secara terbuka sejak genesis. Peluncuran adil itu membentuk komunitas Kaspa yang luas dan loyal. Hal tersebut tetap menjadi salah satu pencapaian terkuat dan kekuatan utamanya. <launchPlan>Rencana peluncuran</launchPlan> · <genesisProof>Bukti genesis</genesisProof>"
+    },
+    "northStar": {
+      "heading": "Bintang penuntun",
+      "intro": "Desentralisasi real-time adalah bintang penuntun Kaspa.",
+      "urgency": "Real-time tidak dapat dikompromikan. Ketidaksabaran adalah naluri dasar Kaspa — sebuah amukan terhadap waktu tunggu yang menolak batasan yang begitu saja diterima orang dewasa. Dan kami menuntutnya bukan hanya demi kecepatan, tetapi juga demi sifat inti Satoshi: ketahanan terhadap sensor, penyelesaian tanpa izin, dan penambangan kompetitif — semuanya dicapai secara real-time, bukan nanti. Hal ini tidak dapat dicapai secara real-time tanpa proof-of-work. <uniqueness>Keunikan PoW</uniqueness>",
+      "consensus": "Tercapainya RTD pada Kaspa berarti protokol mengambil sampel mayoritas jujur dari jaringan penambangan pada setiap putaran konsensus. Dengan demikian, transaksi yang memerlukan satu jam untuk dikonfirmasi secara aman di Bitcoin dapat dikonfirmasi dalam hitungan detik di Kaspa; atau Kaspa menjamin ketahanan terhadap sensor dalam hitungan detik — sesuatu yang membutuhkan satu jam di Bitcoin. Ini penting bukan hanya untuk kecepatan penyelesaian, tetapi juga dalam setiap konteks ketika pengurutan real-time sangat penting: penentuan hasil pasar, rangkaian likuidasi, dan situasi apa pun ketika seorang pemimpin konsensus tunggal yang mengurutkan transaksi menurut kebijakannya sendiri memperoleh terlalu banyak kuasa.",
+      "eventFeed": "Pengambilan sampel mayoritas jujur secara real-time juga dapat digunakan untuk mewujudkan aliran data dan peristiwa real-time yang tidak memerlukan kepercayaan dan dikelola oleh jaringan penambangan. <post>Posting RTD</post>",
+      "resilience": "RTD juga memiliki sisi defensif. Protokol sinkron sebagian (dengan DAGKnight mendatang) secara unik menerapkan sifat ganda: cepat ketika jaringan sehat, serta lambat namun aman ketika tidak sehat. Kaspa menjual kecepatan kepada pengguna awam dan uang berdaya tahan perang kepada para cypherpunk."
+    },
+    "shipped": {
+      "heading": "Yang telah hadir dan berikutnya",
+      "rewrite": "Node Golang awal ditulis ulang sepenuhnya dari nol dalam Rust. Penulisan ulang ini didukung hibah komunitas sebesar 100 juta KAS dan berkembang menjadi upaya sumber terbuka nyata di sekitar <code>rusty-kaspa</code>, dengan basis kontributor yang luas. <github>GitHub Rusty Kaspa</github>",
+      "crescendo": "Penulisan ulang itulah yang memungkinkan Crescendo. Kaspa tidak dapat beralih ke 10 blok per detik di mainnet tanpanya. Crescendo adalah titik ketika tesis tersebut benar-benar berjalan. <reference>Referensi Crescendo</reference> · <release>Catatan rilis</release>"
+    },
+    "roadmap": {
+      "toccata": {
+        "heading": "Hardfork Toccata",
+        "overview": "Hardfork berikutnya adalah Toccata, yang memperkenalkan kemampuan pemrograman lapisan dasar berbasis covenant. Covenant adalah aturan pembelanjaan rekursif yang membatasi siapa yang dapat membelanjakan koin dan bagaimana caranya, sehingga membuka jalan bagi brankas, dompet pintar, aset native, dan konstruksi berbantuan ZK.",
+        "implementation": "Di Bitcoin, OP_CAT adalah opcode lama yang dinonaktifkan Satoshi — kini diusulkan lagi, masih diperdebatkan, dan tetap belum disertakan. Toccata lebih mendekati OP_CAT++, dengan cakupan covenant yang lebih luas dan <silverscript>Silverscript</silverscript> sebagai kompilator khusus untuk menulis covenant di Kaspa. Implementasi yang matang sudah aktif dan berjalan di <tn12>TN12</tn12>."
+      },
+      "dagKnight": {
+        "heading": "Hardfork DAGKnight",
+        "overview": "DAGKnight adalah peningkatan protokol konsensus setelah Toccata. Ini merupakan lompatan besar bagi proof-of-work dan konsensus tanpa izin: satu-satunya protokol sinkron sebagian 49% BFT (dalam pengaturan oblivious). Ini adalah langkah menuju proof-of-work yang tahan terhadap pemisahan jaringan. Waktu blok ditargetkan pada kisaran 40–25 milidetik. <paper>Makalah DAGKnight</paper>"
+      },
+      "hardfork2027": {
+        "heading": "Hardfork 2027",
+        "performance": "Waktu blok 10 milidetik — 100 blok per detik — kemungkinan memerlukan penyesuaian algoritmik DAG pada cara penambang merujuk ujung DAG, disertai optimasi kinerja node lebih lanjut. Ditargetkan untuk hardfork 2027.",
+        "resilience": "Di sisi konsensus, DAGKnight sudah memberikan keamanan saat jaringan terpisah: transaksi yang dikonfirmasi sebelum pemisahan tetap final. Namun, protokol ini belum memungkinkan kemajuan selama pemisahan — transaksi tidak dapat dikonfirmasi hingga pemisahan berakhir. Pekerjaan 2027 bertujuan menambahkan kemajuan praktis melalui gabungan saluran pembayaran on-chain dan jendela finalitas adaptif terhadap hashrate. Hal ini akan menjadikan Kaspa uang keras berdaya tahan perang, dengan aliran pembayaran lokal yang tetap hidup saat kondisi internet terganggu."
+      }
+    },
+    "closing": {
+      "origin": "Kaspa tidak lahir dari siklus sensasi biasa. Kaspa lahir dari riset para peneliti berpengalaman, peluncuran adil, pengembangan sumber terbuka, dan upaya bertahun-tahun untuk terus melangkah maju ketika sebagian besar dunia kripto berhenti.",
+      "summary": "blockDAG aktif. 10 BPS di mainnet. Desentralisasi real-time sebagai bintang penuntun. Toccata berikutnya. DAGKnight setelah itu.",
+      "early": "Jika semua ini terasa masih dini, memang begitulah adanya."
+    }
+  },
+  "contributors": {
+    "viewOnGitHub": "Lihat kontributor Rusty Kaspa di GitHub",
+    "more": "+{count, plural, one {# kontributor} other {# kontributor}}"
+  }
+}

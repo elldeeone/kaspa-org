@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "title": "Kaspa | blockDAG Proof-of-Work untuk Desentralisasi Real-time",
+    "description": "Kaspa adalah mata uang kripto blockDAG proof-of-work dengan peluncuran adil yang berjalan pada 10 blok per detik, dibangun untuk desentralisasi real-time."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Desentralisasi Real-time",
+    "heading": "Desentralisasi\nReal-time",
+    "tagline": "proof-of-work bitcoin tanpa menunggu."
+  },
+  "hero": {
+    "heading": "Desentralisasi\nReal-time",
+    "tagline": "proof-of-work bitcoin tanpa menunggu.",
+    "getStarted": "Mulai",
+    "getWallet": "Dapatkan dompet",
+    "buyKaspa": "Beli Kaspa",
+    "dagAnnotation": "pow secara real-time"
+  },
+  "verify": {
+    "heading": "jangan percaya, verifikasi.",
+    "history": "Setiap koin dalam sejarah Kaspa dapat ditelusuri secara kriptografis hingga genesis kosong.",
+    "fairLaunch": "Tanpa premine. Tanpa alokasi tersembunyi. Peluncuran adil.",
+    "explanation": "Bukti genesis menelusuri rantai hash blok pruning point mundur hingga genesis awal dan memverifikasi bahwa komitmen UTXO-nya cocok dengan himpunan kosong. Hash blok Bitcoin yang disematkan dalam coinbase genesis berfungsi sebagai stempel waktu, sehingga menutup kemungkinan adanya premine tersembunyi.",
+    "runProof": "Jalankan bukti"
+  },
+  "proof": {
+    "trigger": "Verifikasi bukti",
+    "loader": {
+      "loading": "Memuat bukti...",
+      "error": "Bukti tidak dapat dimuat.",
+      "retry": "Coba lagi"
+    },
+    "chrome": {
+      "back": "Kembali",
+      "title": "Verifikasi bukti",
+      "sectionsAria": "Bagian bukti",
+      "jumpToSection": "Lompat ke {section}"
+    },
+    "sections": {
+      "live": "Terkini",
+      "origin": "Asal",
+      "runIt": "Jalankan"
+    },
+    "live": {
+      "eyebrow": "Historis · Saat ini · Berkelanjutan",
+      "title": "Suplai terkini vs. jadwal emisi",
+      "body": "Suplai Kaspa yang beredar dapat dihitung ulang dari prinsip dasar. Node aktif melaporkan total saat ini. Total historis pada checkpoint 22 Nov 2021 terikat secara kriptografis pada genesis yang tertanam dalam protokol melalui himpunan UTXO-nya, dan setiap koin yang diterbitkan setelah checkpoint tersebut mengikuti jadwal emisi deterministik."
+    },
+    "origin": {
+      "eyebrow": "Asal",
+      "title": "Tempat suplai bermula",
+      "supplyBody": "Setiap koin dapat ditelusuri kembali ke satu blok ketika suplainya <strong>nol</strong>. Komitmen UTXO-nya adalah sidik jari matematis dari himpunan kosong, konstanta yang sama di mesin mana pun yang menghitungnya. Suplai bermula di sini, dan setiap koin sejak itu merupakan emisi terjadwal, bukan alokasi.",
+      "verseBody": "Di dalam coinbase blok tersebut terdapat ayat dari <reference>Ezra 7:18</reference>, ditulis dalam bahasa Aram, yang merayakan nilai-nilai kebebasan yang dijunjung para raja Persia kuno.",
+      "translatedQuotation": "“Dan apa pun yang menurutmu dan saudara-saudaramu baik untuk dilakukan dengan sisa perak dan emas itu, lakukanlah sesuai kehendak Allahmu.”",
+      "quotationAttribution": "Ezra 7:18, dalam coinbase genesis",
+      "timestampBody": "Coinbase tersebut juga memuat hash <bitcoinBlock>blok Bitcoin #708.639</bitcoinBlock>, yang membuktikan bahwa blok itu dibuat setelah titik waktu tersebut, tanpa premine."
+    },
+    "run": {
+      "eyebrow": "Jangan percaya, verifikasi",
+      "title": "Jalankan sendiri",
+      "intro": "Buat ulang bukti dari genesis hingga ujung rantai saat ini. Notebook menelusuri rantai hash blok pruning point kembali ke genesis, memverifikasi komitmen UTXO terhadap sidik jari himpunan kosong, dan memeriksa hash blok Bitcoin yang menjadi jangkar. Untuk membaca suplai historis pada checkpoint 22 Nov 2021 sebagai angka, satu langkah turunan tambahan menjumlahkan himpunan UTXO yang terikat secara kriptografis dalam bukti.",
+      "notebookTitle": "Notebook bukti",
+      "notebookBody": "Klon, jalankan, periksa. Notebook memverifikasi genesis dan keterkaitan checkpoint, tetapi tidak mencetak sendiri angka suplai historis.",
+      "notebookAction": "Buka di GitHub",
+      "checkpointTitle": "Verifikasi total checkpoint",
+      "checkpointStep1": "Jalankan notebook untuk memverifikasi genesis yang tertanam dalam protokol, keterkaitan checkpoint, asal himpunan kosong, dan jangkar Bitcoin.",
+      "checkpointStep2": "Buka <kaspad>kaspad v0.11.5-2</kaspad> historis dan perhatikan bahwa <processor>pemroses blok</processor> memuat serta memverifikasi checkpoint <code>utxos.gz</code> yang disematkan terhadap komitmen UTXO pada genesis yang tertanam dalam protokol.",
+      "checkpointStep3": "Uraikan <utxos>utxos.gz</utxos> menggunakan format dalam <serialization>serialization.go</serialization> dan jumlahkan setiap nilai UTXO.",
+      "checkpointStep4": "Jumlah tersebut adalah suplai historis pada checkpoint DAA <daa>1.312.860</daa> (22 Nov 2021): <supply>984.222.544,04487171 KAS</supply>",
+      "checkpointNote": "Sejak titik ini, penerbitan bersifat deterministik. Menambahkan penerbitan terjadwal sejak checkpoint menghasilkan suplai yang diharapkan pada DAA mana pun, yang seharusnya cocok dengan laporan node aktif."
+    },
+    "supply": {
+      "intro": {
+        "eyebrow": "Verifikasi Berkelanjutan",
+        "title": "Suplai terkini vs. jadwal emisi",
+        "body": "Bandingkan suplai beredar yang dilaporkan node aktif dengan suplai yang diharapkan dan tertambat pada checkpoint — total checkpoint 22 Nov 2021 yang terikat secara kriptografis pada genesis yang tertanam dalam protokol, lalu diteruskan oleh jadwal emisi deterministik Kaspa."
+      },
+      "emissionHistory": "Riwayat emisi",
+      "connection": {
+        "connectedTo": "Terhubung ke {nodeUrl}",
+        "error": "Kesalahan koneksi",
+        "connecting": "Menghubungkan ke jaringan Kaspa..."
+      },
+      "comparison": {
+        "nodeReported": "Suplai yang dilaporkan node",
+        "unit": "KAS",
+        "rpcSource": "melalui RPC getCoinSupply",
+        "expected": "Suplai yang diharapkan",
+        "expectedBasis": "total checkpoint + penerbitan terjadwal sejak 22 Nov 2021"
+      },
+      "anchor": {
+        "label": "Jangkar",
+        "title": "Checkpoint 22 Nov 2021",
+        "body": "Suplai historis pada checkpoint 22 Nov 2021 terikat secara kriptografis pada genesis yang tertanam dalam protokol melalui himpunan UTXO-nya. Setiap koin yang diterbitkan setelah titik itu mengikuti jadwal konsensus deterministik, sehingga suplai yang dilaporkan node dan suplai yang diharapkan berdasarkan checkpoint seharusnya cocok. Selisih kecil dalam kisaran ratusan KAS muncul akibat penyimpangan DAA terhadap jumlah blok dan pembulatan bilangan bulat dalam tabel subsidi konsensus, serupa dengan Bitcoin dan sistem penerbitan koin PoW lainnya."
+      },
+      "timeline": {
+        "genesis": {
+          "label": "Genesis",
+          "date": "{date, date, medium}",
+          "description": "Himpunan UTXO kosong, jadi belum ada koin. Genesis awal ditambatkan ke blok Bitcoin #708.639."
+        },
+        "checkpoint": {
+          "label": "Checkpoint",
+          "date": "{date, date, medium}",
+          "description": "Imbalan blok diacak antara 1–1.000 KAS per blok selama ~2 minggu pertama mainnet, menerbitkan +327.792.544 KAS sebelum hardfork menetapkan imbalan per blok. Suplai historis terikat secara kriptografis pada genesis yang tertanam dalam protokol."
+        },
+        "preDeflationary": {
+          "label": "Fase pradeflasi",
+          "date": "{startDate, date, medium} – {endDate, date, medium}",
+          "description": "Imbalan tetap per blok selama ~6 bulan setelah checkpoint, sebelum jadwal deflasi mulai berlaku."
+        },
+        "chromatic": {
+          "label": "Fase kromatik dimulai",
+          "date": "~{date, date, medium}",
+          "description": "Fase pradeflasi berakhir. Imbalan turun dari 500 menjadi 440 KAS/blok dan berkurang secara geometris setiap bulan."
+        },
+        "crescendo": {
+          "label": "Crescendo",
+          "date": "~{date, date, medium}",
+          "description": "10 blok per detik, dengan imbalan per blok dibagi 10."
+        },
+        "now": "Sekarang",
+        "live": "aktif",
+        "circulating": "KAS beredar",
+        "expected": "KAS yang diharapkan",
+        "loading": "Memuat...",
+        "connecting": "Menghubungkan ke node..."
+      },
+      "stats": {
+        "mined": "Ditambang",
+        "blockReward": "Imbalan blok",
+        "nodeDagBlocks": "Blok DAG node",
+        "daaScore": "Skor DAA",
+        "blockCountAccessible": "Blok DAG node: {count}"
+      }
+    }
+  }
+}

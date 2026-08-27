@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "title": "Logo & Aset Kaspa | Kaspa",
+    "description": "Unduh kumpulan logo resmi Kaspa — susunan mendatar dan bertumpuk, ikon, serta warna merek. Tersedia dalam SVG dan PNG resolusi tinggi."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Desentralisasi Real-time"
+  },
+  "page": {
+    "heading": "Aset logo Kaspa"
+  },
+  "groups": {
+    "lockup": "Mendatar",
+    "stacked": "Bertumpuk",
+    "icon": "Ikon"
+  },
+  "logos": {
+    "lockupColor": {
+      "name": "Penuh warna",
+      "imageAlt": "Logo Kaspa penuh warna",
+      "downloadAria": "Unduh logo mendatar Kaspa penuh warna sebagai {format}"
+    },
+    "lockupReverse": {
+      "name": "Versi negatif",
+      "imageAlt": "Logo Kaspa versi negatif",
+      "downloadAria": "Unduh logo mendatar Kaspa versi negatif dalam format {format}"
+    },
+    "lockupBlack": {
+      "name": "Hitam",
+      "imageAlt": "Logo Kaspa hitam",
+      "downloadAria": "Unduh logo mendatar Kaspa hitam sebagai {format}"
+    },
+    "lockupWhite": {
+      "name": "Putih",
+      "imageAlt": "Logo Kaspa putih",
+      "downloadAria": "Unduh logo mendatar Kaspa putih sebagai {format}"
+    },
+    "lockupOutline": {
+      "name": "Garis tepi",
+      "imageAlt": "Logo Kaspa bergaris tepi",
+      "downloadAria": "Unduh logo mendatar Kaspa bergaris tepi sebagai {format}"
+    },
+    "stackedColor": {
+      "name": "Penuh warna",
+      "imageAlt": "Logo Kaspa penuh warna",
+      "downloadAria": "Unduh logo bertumpuk Kaspa penuh warna sebagai {format}"
+    },
+    "stackedReverse": {
+      "name": "Versi negatif",
+      "imageAlt": "Logo Kaspa versi negatif",
+      "downloadAria": "Unduh logo bertumpuk Kaspa versi negatif dalam format {format}"
+    },
+    "stackedBlack": {
+      "name": "Hitam",
+      "imageAlt": "Logo Kaspa hitam",
+      "downloadAria": "Unduh logo bertumpuk Kaspa hitam sebagai {format}"
+    },
+    "stackedWhite": {
+      "name": "Putih",
+      "imageAlt": "Logo Kaspa putih",
+      "downloadAria": "Unduh logo bertumpuk Kaspa putih sebagai {format}"
+    },
+    "stackedOutline": {
+      "name": "Garis tepi",
+      "imageAlt": "Logo Kaspa bergaris tepi",
+      "downloadAria": "Unduh logo bertumpuk Kaspa bergaris tepi sebagai {format}"
+    },
+    "iconGreen": {
+      "name": "Hijau",
+      "imageAlt": "Logo Kaspa hijau",
+      "downloadAria": "Unduh ikon logo Kaspa hijau sebagai {format}"
+    },
+    "iconGreenDark": {
+      "name": "Hijau di atas gelap",
+      "imageAlt": "Logo Kaspa hijau di atas latar gelap",
+      "downloadAria": "Unduh ikon logo Kaspa hijau di atas latar gelap sebagai {format}"
+    },
+    "iconBlack": {
+      "name": "Hitam",
+      "imageAlt": "Logo Kaspa hitam",
+      "downloadAria": "Unduh ikon logo Kaspa hitam sebagai {format}"
+    },
+    "iconWhite": {
+      "name": "Putih",
+      "imageAlt": "Logo Kaspa putih",
+      "downloadAria": "Unduh ikon logo Kaspa putih sebagai {format}"
+    }
+  },
+  "formats": {
+    "svg": "SVG",
+    "png": "PNG"
+  }
+}

@@ -40,11 +40,19 @@ import germanHodl from "../../messages/de/hodl.json" with { type: "json" };
 import germanHome from "../../messages/de/home.json" with { type: "json" };
 import germanLore from "../../messages/de/lore.json" with { type: "json" };
 import germanShared from "../../messages/de/shared.json" with { type: "json" };
+import indonesianAssets from "../../messages/id-ID/assets.json" with { type: "json" };
+import indonesianBuild from "../../messages/id-ID/build.json" with { type: "json" };
+import indonesianErrors from "../../messages/id-ID/errors.json" with { type: "json" };
+import indonesianHodl from "../../messages/id-ID/hodl.json" with { type: "json" };
+import indonesianHome from "../../messages/id-ID/home.json" with { type: "json" };
+import indonesianLore from "../../messages/id-ID/lore.json" with { type: "json" };
+import indonesianShared from "../../messages/id-ID/shared.json" with { type: "json" };
 
 import {
   chineseLocale,
   frenchLocale,
   germanLocale,
+  indonesianLocale,
   russianLocale,
   spanishLocale,
   supportedLocaleCodes,
@@ -116,6 +124,16 @@ export const germanMessages = {
   shared: germanShared,
 } satisfies AppMessages;
 
+export const indonesianMessages = {
+  assets: indonesianAssets,
+  build: indonesianBuild,
+  errors: indonesianErrors,
+  hodl: indonesianHodl,
+  home: indonesianHome,
+  lore: indonesianLore,
+  shared: indonesianShared,
+} satisfies AppMessages;
+
 function assertNever(value: never): never {
   throw new Error(`Unsupported locale: ${String(value)}`);
 }
@@ -134,6 +152,8 @@ export function getMessages(locale: Locale): LocaleMessages {
       return russianMessages;
     case germanLocale:
       return germanMessages;
+    case indonesianLocale:
+      return indonesianMessages;
     default:
       return assertNever(locale);
   }
