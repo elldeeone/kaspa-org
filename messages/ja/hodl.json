@@ -1,0 +1,303 @@
+{
+  "metadata": {
+    "title": "KAS の購入、ウォレット設定、セルフカストディ | Kaspa",
+    "description": "ウォレットを用意し、KAS を購入して、自己管理のウォレットへ移す方法。"
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — リアルタイムの分散化"
+  },
+  "navigation": {
+    "current": "HODL",
+    "sections": {
+      "wallet": {
+        "label": "1. ウォレットを用意",
+        "compactLabel": "ウォレット",
+        "description": "KAS を保管するウォレットを設定します。"
+      },
+      "buy": {
+        "label": "2. KAS を購入",
+        "compactLabel": "購入",
+        "description": "KAS を取り扱う主要な取引所を探します。"
+      },
+      "transfer": {
+        "label": "3. ウォレットへ移す",
+        "compactLabel": "送金",
+        "description": "KAS を取引所から自分のウォレットへ送ります。"
+      },
+      "help": {
+        "label": "ヘルプ",
+        "compactLabel": "ヘルプ",
+        "description": "コミュニティのサポートとエクスプローラーのツール。"
+      }
+    }
+  },
+  "start": {
+    "heading": "<flicker><source>H</source><replacement>K</replacement></flicker>ODL Kaspa",
+    "tagline": "KAS を購入し、自分で管理するウォレットへ移しましょう。"
+  },
+  "wallet": {
+    "heading": "ウォレットを用意",
+    "description": "KAS の保有方法や使い方に合うウォレットを選びましょう。",
+    "safety": {
+      "label": "重要：",
+      "body": "まとまった資産を移す前に、リカバリーフレーズをバックアップするか、ウォレットの指示に従ってバックアップを済ませてください。まず少額のテストトランザクションを送り、着金を確認してから残りを移してください。"
+    }
+  },
+  "buy": {
+    "heading": "KAS を購入",
+    "description": "KAS は多くの取引所に上場しています。お住まいの地域で利用できるプラットフォームで入手し、その後、自分で管理するウォレットへ移してください。",
+    "moreExchanges": "ほか {count, number}件以上"
+  },
+  "transfer": {
+    "heading": "KAS を自分で管理する",
+    "description": "取引所から自分で管理するウォレットへ移し、資産を安全に保管しましょう。",
+    "receive": "受け取る",
+    "screenReaderDiagram": "KAS が取引所アカウントから自己管理ウォレットへ移動する図",
+    "stepLabel": "ステップ {step}",
+    "steps": {
+      "receiveAddress": {
+        "title": "受取アドレスを取得",
+        "description": "Kaspium アプリを開いて「受け取る」をタップし、自分のアドレスをコピーします。"
+      },
+      "testTransaction": {
+        "title": "テストトランザクションを送る",
+        "description": "取引所からごく少量の KAS を出金し、送金経路が正しいことを確認します。"
+      },
+      "balance": {
+        "title": "残りの残高を移す",
+        "description": "テストトランザクションがウォレットへ無事に着金したら、残りの残高を出金します。"
+      }
+    },
+    "waitTimes": {
+      "label": "取引所での待ち時間：",
+      "body": "Kaspa のネイティブ送金は実質的に即時ですが、取引所にはそれぞれ独自の内部処理時間があります。取引所からネットワークへ資産が送出されるまで30〜60分待つことは、まったく珍しくありません。"
+    },
+    "security": {
+      "label": "セキュリティチェック：",
+      "body": "確定する前に、必ずアドレスの先頭と末尾の数文字を確認してください。"
+    }
+  },
+  "help": {
+    "eyebrow": "ヘルプ",
+    "heading": "次へ進む",
+    "descriptionWithAi": "ウォレット、購入、安全対策についてすぐに答えが必要なら Kaspa AI に質問できます。コミュニティのサポートは Discord で受けられ、エクスプローラーではトランザクションを確認できます。",
+    "descriptionWithoutAi": "コミュニティのサポートは Discord で受けられ、エクスプローラーではトランザクションを確認できます。",
+    "openAi": "AI を開く",
+    "community": "コミュニティ",
+    "discord": "Discord",
+    "trackTransaction": "トランザクションを追跡",
+    "explorer": "エクスプローラー",
+    "prompts": {
+      "backupWallet": "ウォレットをバックアップするにはどうすればよいですか？",
+      "buyKas": "KAS はどこで購入できますか？",
+      "firstPurchase": "初めて KAS を購入するにはどうすればよいですか？",
+      "leaveOnExchange": "KAS を取引所に置いたままにしてもよいですか？",
+      "moveFromExchange": "KAS を取引所から自分のウォレットへ送るにはどうすればよいですか？",
+      "fees": "KAS の購入や送金には、どのような手数料がかかりますか？",
+      "recoveryPhrase": "リカバリーフレーズとは何ですか？",
+      "walletVsExchange": "ウォレットと取引所の違いは何ですか？",
+      "receiveKas": "ほかの人から KAS を受け取るにはどうすればよいですか？",
+      "multipleWallets": "Kaspa ウォレットを複数持つことはできますか？",
+      "maxSupply": "Kaspa の最大供給量はいくらですか？"
+    }
+  },
+  "media": {
+    "kaspiumScreenshotAlt": "Kaspium ウォレットアプリのスクリーンショット"
+  },
+  "walletFinder": {
+    "common": {
+      "optional": "任意",
+      "notAvailable": "利用不可",
+      "notAvailableSentence": "利用できません。",
+      "moreInformation": "詳細情報",
+      "pros": "メリット",
+      "cons": "デメリット",
+      "newUser": "初心者",
+      "experiencedUser": "経験者"
+    },
+    "operatingSystems": {
+      "android": "Android",
+      "ios": "iOS",
+      "windows": "Windows",
+      "mac": "macOS",
+      "linux": "Linux",
+      "hardware": "ハードウェア"
+    },
+    "guidance": {
+      "mobile": {
+        "title": "モバイルウォレット",
+        "shortTitle": "モバイル",
+        "pros": {
+          "portable": "持ち運びやすく便利で、対面での取引に最適",
+          "qr": "QR コードですばやくスムーズに取引できるように設計されている"
+        },
+        "cons": {
+          "marketplaces": "アプリストアでウォレットが掲載停止または削除されると、今後のアップデートを受け取りにくくなる",
+          "deviceLoss": "端末の破損や紛失により、資産を失う可能性がある"
+        }
+      },
+      "desktop": {
+        "title": "デスクトップウォレット",
+        "shortTitle": "デスクトップ",
+        "pros": {
+          "control": "デスクトップ環境では、ユーザーが資産を完全に管理できる",
+          "advanced": "ハードウェアウォレット対応やフルノード運用に対応するデスクトップウォレットもある"
+        },
+        "cons": {
+          "qr": "対面取引で QR コード決済を使う場合は利便性が低い",
+          "malware": "侵害されたコンピューターでは、マルウェア、スパイウェア、ウイルスにさらされる可能性がある"
+        }
+      },
+      "hardware": {
+        "title": "ハードウェアウォレット",
+        "shortTitle": "ハードウェア",
+        "pros": {
+          "secure": "資産を保管する方法の中でも、特に安全性が高いものの一つ",
+          "longTerm": "多額の KAS を長期保管するのに最適"
+        },
+        "cons": {
+          "mobile": "持ち運び中は使いにくく、すばやい取引には向いていない",
+          "deviceLoss": "適切なバックアップなしで端末を紛失すると、資産を復元できなくなる可能性がある"
+        }
+      }
+    },
+    "wizard": {
+      "progress": "ステップ {step, number} / {total, number}",
+      "skip": "スキップ →",
+      "skipAll": "すべてのウォレットを見る →",
+      "prosAndCons": "メリットとデメリット",
+      "back": "戻る",
+      "next": "次へ",
+      "showWallets": "ウォレットを表示",
+      "showMatchingWallets": "条件に合うウォレットを表示",
+      "steps": {
+        "os": {
+          "title": "どの OS を使用していますか？",
+          "subtitle": "使用中の OS で動作するウォレットだけに絞り込みます。"
+        },
+        "experience": {
+          "title": "Kaspa についてどの程度詳しいですか？",
+          "subtitle": "経験レベルに合うウォレットを表示するために使います。"
+        },
+        "criteria": {
+          "title": "重視する基準はどれですか？",
+          "subtitle": "任意"
+        },
+        "features": {
+          "title": "どの機能を探していますか？",
+          "subtitle": "任意"
+        }
+      },
+      "experience": {
+        "newDescription": "初心者向けのウォレットを表示します。",
+        "experiencedDescription": "すべてのウォレットを表示します。"
+      }
+    },
+    "filters": {
+      "heading": "ウォレットを絞り込む",
+      "clearAll": "すべてクリア",
+      "operatingSystem": "OS",
+      "userType": "ユーザータイプ",
+      "criteria": "基準",
+      "features": "機能",
+      "showNewUsers": "初心者向けのウォレットを表示します。",
+      "showExperiencedUsers": "すべてのウォレットを表示します。",
+      "show": "フィルター",
+      "hide": "フィルターを隠す",
+      "remove": "フィルター「{filter}」を削除"
+    },
+    "criteria": {
+      "control": {
+        "label": "管理権",
+        "description": "KAS を完全に自己管理できるウォレットもあります。この場合、第三者が資産を凍結したり取り上げたりすることはできません。ただし、ウォレットの保護とバックアップは引き続き自分の責任です。"
+      },
+      "validation": {
+        "label": "検証",
+        "description": "トランザクションを処理する Kaspa ノードを選べるウォレットもあります。ウォレット自身のノードを動かすものと、信頼する任意のノードを指定できるものがあります。"
+      },
+      "transparency": {
+        "label": "透明性",
+        "description": "オープンソースで決定論的にビルドできるウォレットもあります。これはソフトウェアをコンパイルし、生成されるコードを再現できるようにするプロセスで、改ざんされていないことの確認に役立ちます。"
+      },
+      "fees": {
+        "label": "手数料",
+        "description": "トランザクションの実行前に Kaspa ネットワークへ支払う手数料を自由に設定できるウォレットもあります。必要以上の手数料を払わず、適切なタイミングで承認されるよう調整できます。"
+      }
+    },
+    "features": {
+      "two_fa": {
+        "label": "2FA",
+        "description": "二要素認証（2FA）は、ウォレットにもう一段のセキュリティを追加します。資産へアクセスするには、パスワードに加えて、アプリまたはテキストメッセージで届く確認コードが必要です。通常、2FA の認証には第三者サービスが使われる点に注意してください。"
+      },
+      "hardware_wallet": {
+        "label": "ハードウェアウォレット対応",
+        "description": "ソフトウェアウォレットによっては、ハードウェアウォレット端末（Ledger や Tangem など）とペアリングできます。使い慣れたソフトウェア画面を利用しながら、秘密鍵を端末内に隔離して保管できます。"
+      },
+      "multisig": {
+        "label": "マルチシグ",
+        "description": "複数の鍵による承認が必要なマルチシグトランザクションに対応するウォレットもあります。複数の当事者で責任を分担したり、高額な保有資産に保護層を追加したりできます。"
+      }
+    },
+    "ratings": {
+      "good": "良好",
+      "acceptable": "許容範囲",
+      "mixed": "混在",
+      "mixedExplanation": "この評価は、選択したプラットフォームによって異なります。",
+      "caution": "注意",
+      "not_applicable": "該当なし",
+      "notApplicableCompact": "対象外",
+      "breakdown": "内訳",
+      "why": "理由",
+      "aria": "{criterion}の評価：{rating}",
+      "tooltipHeading": "{criterion}の評価：{rating}",
+      "explanations": {
+        "control": {
+          "good": "セルフカストディ型。秘密鍵を自分で保持するため、第三者が資産を凍結または差し押さえることはできません。",
+          "caution": "カストディ型。第三者が鍵を保持し、資産を凍結または差し押さえることができます。"
+        },
+        "validation": {
+          "good": "デフォルトで独自の Kaspa フルノードを実行し、トランザクションを独立して検証します。",
+          "acceptable": "信頼する任意の Kaspa ノードを指定できますが、ウォレット自体をノードとして実行することはできません。",
+          "caution": "固定された中央集権型インフラにのみ接続するため、ウォレットが選んだノードを信頼する必要があります。",
+          "not_applicable": "ハードウェアデバイスがトランザクションに署名し、コンパニオンソフトウェアがネットワークアクセスと検証を担います。"
+        },
+        "transparency": {
+          "good": "コードは公開されており、リリースされたソフトウェアがそのコードからビルドされたことを独立した検証で確認できます。",
+          "acceptable": "コードは公開されていますが、リリースされたソフトウェアがそのコードからビルドされたことを確実に検証する方法はありません。",
+          "mixed": "このウォレットに必要な各コンポーネントは、透明性のレベルが異なります。",
+          "caution": "クローズドソース。コードを独立して監査することはできません。"
+        },
+        "fees": {
+          "good": "トランザクションごとに任意のカスタム手数料を設定できます。",
+          "acceptable": "あらかじめ用意された手数料レベルを選べますが、完全に自由な手数料設定はできません。",
+          "caution": "手数料が固定または非表示で、ユーザーが調整できません。"
+        }
+      }
+    },
+    "transparencySurfaces": {
+      "firmware": "デバイスのファームウェア",
+      "application": "{platform} アプリ"
+    },
+    "results": {
+      "summary": "全 {total, plural, one {#件} other {#件}}中 <strong>{matches, number}</strong>件",
+      "compactSummary": "<strong>{matches, number}</strong> / {total, plural, one {#件} other {#件}}",
+      "helpChoose": "選び方を案内",
+      "walletColumn": "ウォレット",
+      "noMatches": "条件に合うウォレットはありません",
+      "removeFilters": "フィルターをいくつか外してみてください。",
+      "noLinks": "このフィルターで利用できるリンクはありません。",
+      "aboutCriterion": "{criterion} について"
+    },
+    "actions": {
+      "app_store": "App Store",
+      "google_play": "Google Play",
+      "download": "ダウンロード",
+      "open": "ウォレットを開く",
+      "view_source": "ソースを見る"
+    },
+    "submission": {
+      "question": "掲載されていないウォレットがありますか？",
+      "action": "GitHub での掲載申請方法を見る"
+    }
+  }
+}

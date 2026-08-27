@@ -14,6 +14,7 @@ const aiLocaleContracts: Record<SiteSurfaceId, Record<Locale, boolean>> = {
     de: false,
     "id-ID": false,
     "pt-BR": false,
+    ja: false,
   },
   lore: {
     en: true,
@@ -24,6 +25,7 @@ const aiLocaleContracts: Record<SiteSurfaceId, Record<Locale, boolean>> = {
     de: false,
     "id-ID": false,
     "pt-BR": false,
+    ja: false,
   },
   build: {
     en: true,
@@ -34,6 +36,7 @@ const aiLocaleContracts: Record<SiteSurfaceId, Record<Locale, boolean>> = {
     de: false,
     "id-ID": false,
     "pt-BR": false,
+    ja: false,
   },
   assets: {
     en: false,
@@ -44,6 +47,7 @@ const aiLocaleContracts: Record<SiteSurfaceId, Record<Locale, boolean>> = {
     de: false,
     "id-ID": false,
     "pt-BR": false,
+    ja: false,
   },
   hodl: {
     en: true,
@@ -54,6 +58,7 @@ const aiLocaleContracts: Record<SiteSurfaceId, Record<Locale, boolean>> = {
     de: false,
     "id-ID": false,
     "pt-BR": false,
+    ja: false,
   },
   "not-found": {
     en: true,
@@ -64,6 +69,7 @@ const aiLocaleContracts: Record<SiteSurfaceId, Record<Locale, boolean>> = {
     de: false,
     "id-ID": false,
     "pt-BR": false,
+    ja: false,
   },
 };
 

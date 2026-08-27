@@ -54,6 +54,13 @@ import brazilianPortugueseHodl from "../../messages/pt-BR/hodl.json" with { type
 import brazilianPortugueseHome from "../../messages/pt-BR/home.json" with { type: "json" };
 import brazilianPortugueseLore from "../../messages/pt-BR/lore.json" with { type: "json" };
 import brazilianPortugueseShared from "../../messages/pt-BR/shared.json" with { type: "json" };
+import japaneseAssets from "../../messages/ja/assets.json" with { type: "json" };
+import japaneseBuild from "../../messages/ja/build.json" with { type: "json" };
+import japaneseErrors from "../../messages/ja/errors.json" with { type: "json" };
+import japaneseHodl from "../../messages/ja/hodl.json" with { type: "json" };
+import japaneseHome from "../../messages/ja/home.json" with { type: "json" };
+import japaneseLore from "../../messages/ja/lore.json" with { type: "json" };
+import japaneseShared from "../../messages/ja/shared.json" with { type: "json" };
 
 import {
   brazilianPortugueseLocale,
@@ -61,6 +68,7 @@ import {
   frenchLocale,
   germanLocale,
   indonesianLocale,
+  japaneseLocale,
   russianLocale,
   spanishLocale,
   supportedLocaleCodes,
@@ -152,6 +160,16 @@ export const brazilianPortugueseMessages = {
   shared: brazilianPortugueseShared,
 } satisfies AppMessages;
 
+export const japaneseMessages = {
+  assets: japaneseAssets,
+  build: japaneseBuild,
+  errors: japaneseErrors,
+  hodl: japaneseHodl,
+  home: japaneseHome,
+  lore: japaneseLore,
+  shared: japaneseShared,
+} satisfies AppMessages;
+
 function assertNever(value: never): never {
   throw new Error(`Unsupported locale: ${String(value)}`);
 }
@@ -174,6 +192,8 @@ export function getMessages(locale: Locale): LocaleMessages {
       return indonesianMessages;
     case brazilianPortugueseLocale:
       return brazilianPortugueseMessages;
+    case japaneseLocale:
+      return japaneseMessages;
     default:
       return assertNever(locale);
   }

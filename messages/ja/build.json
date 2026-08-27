@@ -1,0 +1,417 @@
+{
+  "metadata": {
+    "title": "Kaspa 開発者向けドキュメント、SDK、API、ノードアクセス | Kaspa",
+    "description": "Kaspa 上で開発を始めるために必要なものがすべて揃っています。WASM SDK、Rust ライブラリ、ライブ API プレイグラウンド、ノード接続、開発者向けツール。"
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — リアルタイムの分散化"
+  },
+  "terms": {
+    "daa": "DAA",
+    "dag": "DAG",
+    "node": "ノード",
+    "publicNodeNetwork": "パブリックノードネットワーク",
+    "utxo": "UTXO"
+  },
+  "artifacts": {
+    "controls": {
+      "back": "戻る",
+      "network": "ネットワーク",
+      "disconnect": "切断",
+      "reconnect": "再接続",
+      "connecting": "| 接続中…"
+    },
+    "runtime": {
+      "connectingKaspaNetwork": "Kaspa ネットワークに接続中…",
+      "selectedNetwork": "選択中のネットワークは {network} です…",
+      "connectedTo": "接続先",
+      "disconnected": "切断しました…",
+      "disconnectedFrom": "切断した接続先：",
+      "connectingPublicNode": "パブリックノードに接続中…",
+      "disconnect": "切断",
+      "apiRequest": "{api} リクエスト…",
+      "apiResponse": "{api} レスポンス：",
+      "subscribingBlockAdded": "ブロック追加イベントを購読中…",
+      "registeringProtocolNotifications": "{protocol} 通知を登録中…",
+      "subscribingProtocolScore": "{protocol} スコアを購読中…",
+      "event": "イベント：",
+      "networkConsole": "ネットワーク"
+    },
+    "utxo": {
+      "receivedEvents": "| {count, plural, one {#件のイベントを受信} other {#件のイベントを受信}}",
+      "noticeManyUtxos": "アドレスによっては {term} が数千個に及ぶことがあり、ブラウザで一覧表示するのは現実的ではありません。この種のデータ出力にはページネーションが必要です。",
+      "noticeManualTesting": "このデモは、{api} が発行するイベントを示すための手動テスト用です。大量の {term} をレンダリングすると、ブラウザで問題が発生する場合があります。",
+      "addressPlaceholder": "{network} アドレスを入力…",
+      "monitorAddress": "クリックしてアドレスを監視",
+      "restart": "再起動",
+      "trackingAddress": "監視中のアドレス：",
+      "error": "エラー：",
+      "restarting": "再起動中…",
+      "stoppingProcessor": "プロセッサを停止中…",
+      "startingProcessor": "プロセッサを起動中…",
+      "processorStarted": "プロセッサが起動しました…"
+    }
+  },
+  "navigation": {
+    "current": "開発",
+    "sections": {
+      "start": {
+        "label": "はじめに",
+        "compactLabel": "開始",
+        "description": "概要と、技術スタックを使い始める最短ルート。"
+      },
+      "tryLive": {
+        "label": "ライブで試す",
+        "compactLabel": "ライブ",
+        "description": "アップストリームのブラウザ向けサンプルとライブデモ。"
+      },
+      "paths": {
+        "label": "開発方法を選ぶ",
+        "compactLabel": "方法",
+        "description": "{wasmSdk}、ネイティブ {rust}、またはフルノードのセットアップ。"
+      },
+      "runNode": {
+        "label": "ノードを動かす",
+        "compactLabel": "ノード",
+        "description": "1行の {docker} コマンドで {rustyKaspa} をローカル実行。"
+      },
+      "tooling": {
+        "label": "ツール",
+        "compactLabel": "ツール",
+        "description": "アップストリームのライブラリ、インフラ、エコシステムプロジェクト。"
+      },
+      "access": {
+        "label": "アクセス",
+        "compactLabel": "アクセス",
+        "description": "ドキュメント、クエリ手段、ノード資料、テストフロー。"
+      },
+      "developments": {
+        "label": "開発動向",
+        "compactLabel": "動向",
+        "description": "進行中の開発と公開 R&D の議論を追う。"
+      },
+      "help": {
+        "label": "ヘルプ",
+        "compactLabel": "ヘルプ",
+        "description": "困ったときに使えるドキュメントとコミュニティチャンネル。"
+      }
+    }
+  },
+  "start": {
+    "release": {
+      "version": "{version}",
+      "action": "リリースを見る"
+    },
+    "heading": "{kaspa} 上で開発する",
+    "description": "{kaspa} 上での開発に使える {wasmSdk}、ネイティブ {rust} ライブラリ、ノードインフラ。",
+    "actions": {
+      "openDocs": "ドキュメントを開く",
+      "viewGitHub": "{github} で見る"
+    },
+    "quickstart": {
+      "eyebrow": "最短ルート",
+      "title": "開発を始める",
+      "descriptionWithAi": "{kaspaAi} で方向性を確認し、目的に合うルートへ進みましょう。",
+      "descriptionWithoutAi": "目的に合うドキュメント、ライブサンプル、またはノードの実行方法から始めましょう。",
+      "aiTitle": "{kaspaAi} に質問",
+      "aiDescription": "適切な {sdk}、{api}、またはノードの実行方法を案内します。",
+      "jumpLabel": "すぐに移動",
+      "routes": {
+        "chainData": "チェーンデータを読む",
+        "stack": "技術スタックを選ぶ",
+        "node": "ノードを動かす"
+      }
+    }
+  },
+  "tryLive": {
+    "heading": {
+      "label": "ライブで試す",
+      "title": "{rustyKaspa} のブラウザ向けサンプルを実行",
+      "description": "以下のサンプルは {rustyKaspaVersion} のブラウザ向け {sdk} リリースから配信されています。ページを離れずに {sdk} の動作を確認できます。"
+    },
+    "upstream": "アップストリーム",
+    "actions": {
+      "openStandalone": "単独で開く",
+      "viewSource": "ソースを見る"
+    },
+    "networkNotice": "<network>{publicNodeNetwork}</network> に接続して動作します。これはコミュニティ運営ノードからなる分散型プールで、前段に {kaspaResolver} を置いています。初期化に数秒かかる場合があり、大規模な本番利用には推奨されません。",
+    "examples": {
+      "serverInfo": {
+        "title": "サーバー情報を取得",
+        "shortLabel": "サーバー情報",
+        "mobileTabLabel": "サーバー",
+        "description": "パブリックリゾルバー経由で接続し、ブラウザから基本的なノード情報を直接取得します。",
+        "runtime": "{rpc}"
+      },
+      "dagInfo": {
+        "title": "ブロック {dag} 情報を取得",
+        "shortLabel": "{dag} 情報",
+        "mobileTabLabel": "{dag}",
+        "description": "アップストリームのブラウザ向け {rpc} バインディングを使い、稼働中の {kaspa} ノードから {dag} の概要を読み取ります。",
+        "runtime": "{rpc}"
+      },
+      "blockAdded": {
+        "title": "新しいブロックを監視",
+        "shortLabel": "新規ブロック",
+        "mobileTabLabel": "ブロック",
+        "description": "ブロック追加イベントを購読し、ブラウザでブロックがリアルタイムに届く様子を確認します。",
+        "runtime": "{rpc}"
+      },
+      "daaChanged": {
+        "title": "{daa} の変化を監視",
+        "shortLabel": "{daa} の変化",
+        "mobileTabLabel": "{daa}",
+        "description": "{daa} スコアの更新を購読し、ストリームがリアルタイムに変化する様子を確認します。",
+        "runtime": "{rpc}"
+      },
+      "utxoContext": {
+        "title": "{utxo} コンテキストを追跡",
+        "shortLabel": "{utxo} コンテキスト",
+        "mobileTabLabel": "{utxo}",
+        "description": "コアのブラウザ向けバインディングを使ってアドレスを監視し、{utxo} イベントをリアルタイムに受信します。",
+        "runtime": "{core}"
+      }
+    }
+  },
+  "paths": {
+    "heading": {
+      "label": "開発方法",
+      "title": "開発方法を選ぶ",
+      "description": "開発するシステムに合う {sdk} またはインフラのルートから始めましょう。"
+    },
+    "cards": {
+      "wasm": {
+        "tier": "アプリ {sdk}",
+        "title": "{wasmSdk} で開発",
+        "description": "アップストリームのブラウザおよび {nodeJs} 向けバインディングを使い、ウォレットフロー、トランザクション、{rpc} 接続を実装します。",
+        "docs": "{wasmSdk} ドキュメント",
+        "examples": "アップストリームのサンプル"
+      },
+      "rust": {
+        "tier": "ネイティブ {rust}",
+        "title": "ネイティブ {rust} で開発",
+        "description": "{rustyKaspa} 内の {rust} クレートを、バックエンドサービス、システム連携、ウォレット内部処理、ノード周辺のワークロードに利用します。",
+        "repo": "{rustyKaspa} リポジトリ"
+      },
+      "node": {
+        "tier": "ノード",
+        "title": "ノードを動かす",
+        "description": "ネットワークへのフルアクセス、{utxo} インデックス作成、本番インフラには {rustyKaspa} を使います。",
+        "release": "最新リリース",
+        "repo": "{rustyKaspa} リポジトリ"
+      }
+    },
+    "communityApi": {
+      "label": "コミュニティ {api}",
+      "description": "手軽なデータ取得や制約のある環境向けに、コミュニティがホストする {api} を利用できます。ベストエフォートで、SLA はありません。",
+      "action": "{restApi} ドキュメント"
+    }
+  },
+  "runNode": {
+    "heading": {
+      "label": "ノード",
+      "title": "ノードを動かす",
+      "description": "{docker} で {rustyKaspa} をローカル起動します。永続的に運用する場合は、{dockerHub} を確認するか、ソースからビルドしてください。"
+    },
+    "quickstart": "{docker} クイックスタート",
+    "title": "最新の {rustyKaspa} イメージを実行",
+    "description": "ポート 16110 で {grpc} を公開し、開発マシンからノードに接続できるようにします。一時的なコンテナのため、永続ストレージとインバウンド {p2p} 接続はありません。",
+    "copyCommand": "{docker} コマンドをコピー",
+    "commandCopied": "{docker} コマンドをコピーしました",
+    "dockerHub": "{dockerHub}",
+    "compile": "ソースからコンパイル"
+  },
+  "tooling": {
+    "heading": {
+      "label": "ツール",
+      "title": "現在のツールチェーン",
+      "description": "現時点で開発者が利用できる安定したインターフェースと、個別に示した新しい取り組み。"
+    },
+    "stable": {
+      "rustyKaspa": {
+        "eyebrow": "ネイティブスタック",
+        "title": "{rustyKaspa}",
+        "description": "{rust} クレート、ウォレット内部処理、フルノード、{rpc}、インデックス作成、ネットワークへの直接接続。",
+        "tags": {
+          "rust": "ネイティブ {rust}",
+          "infra": "ノード＆インフラ"
+        },
+        "action": "リポジトリを開く"
+      },
+      "wasm": {
+        "eyebrow": "ライブラリ＆{sdks}",
+        "title": "{wasmSdk}",
+        "description": "アプリ、ウォレット、トランザクションフロー向けのアップストリームのブラウザおよび {node} バインディング。",
+        "tag": "ブラウザ + {node}",
+        "action": "ドキュメントを開く"
+      }
+    },
+    "emerging": {
+      "python": {
+        "status": "ベータ",
+        "title": "{pythonSdk}",
+        "description": "ほぼ完成しています。技術スタックに {python} を使っている場合は、現在でも利用できます。",
+        "action": "リポジトリを開く"
+      }
+    },
+    "community": {
+      "eyebrow": "コミュニティプロジェクト",
+      "title": "エコシステムのツールとインフラ",
+      "description": "アップストリームの {sdk} とノードスタックを補完する、幅広い {kaspa} エコシステムのオープンソースプロジェクト。",
+      "open": "開く",
+      "cards": {
+        "indexer": {
+          "type": "インデクサー",
+          "title": "{simplyKaspaIndexer}",
+          "description": "{kaspa} のブロックおよびトランザクションデータを単独でインデックス化します。"
+        },
+        "dnsSeeder": {
+          "type": "インフラ",
+          "title": "{dnsSeeder}",
+          "description": "{kaspa} のピアツーピアネットワークへの初期接続を支えるインフラ。"
+        },
+        "khost": {
+          "type": "ホスティング",
+          "title": "{khost}",
+          "description": "ノードを運用し、幅広いエコシステムにノード容量を提供するためのツール。"
+        },
+        "kaspaJs": {
+          "type": "ライブラリ",
+          "title": "{kaspaJs}",
+          "description": "{kaspa} スタック向けにコミュニティが保守する {javascript} ツール。"
+        }
+      }
+    }
+  },
+  "access": {
+    "heading": {
+      "label": "アクセス",
+      "title": "ネットワークへのアクセス",
+      "description": "開発者が実際に必要とする用途別にまとめたドキュメント、クエリ手段、ノード資料、テストフロー。"
+    },
+    "groups": {
+      "docs": {
+        "title": "ドキュメント",
+        "description": "ガイド、技術資料、公開中の提案から始めましょう。",
+        "links": {
+          "docs": "ドキュメントを開く",
+          "wasm": "{wasmSdk} ドキュメント",
+          "deepWiki": "{rustyKaspa} {deepWiki}",
+          "kips": "{kips}",
+          "research": "リサーチフォーラム",
+          "qa": "{kaspaQAndA}"
+        }
+      },
+      "query": {
+        "title": "クエリとアクセス",
+        "description": "公開ツールと、コミュニティがホストする軽量な {api} を通じてネットワークにクエリを実行します。コミュニティ {api} はベストエフォートで、SLA はありません。",
+        "links": {
+          "api": "コミュニティ {api} ドキュメント",
+          "explorer": "エクスプローラー",
+          "dag": "{dag} ビジュアライザー",
+          "dumps": "エクスプローラー / {api} DB ダンプ"
+        }
+      },
+      "node": {
+        "title": "ノードと {rpc}",
+        "description": "ノードインフラを一式運用するか、ノードスタックをさらに詳しく調べます。",
+        "links": {
+          "rustyKaspa": "{rustyKaspa}",
+          "release": "最新リリース"
+        }
+      },
+      "testnet": {
+        "title": "テストネット",
+        "description": "メインネットにリリースする前に、公開テスト用リソースを使いましょう。",
+        "faucet": "テストネットのフォーセット"
+      }
+    }
+  },
+  "developments": {
+    "heading": {
+      "label": "開発動向",
+      "title": "公開の場で進行中の開発を追う",
+      "description": "主要な議論チャンネルを確認し、{sdk}、プロトコル、試験的なプログラマビリティの開発を追いましょう。"
+    },
+    "liveDiscussion": "リアルタイムの議論",
+    "cards": {
+      "channel": {
+        "label": "チャンネル",
+        "title": "コア R&D {telegram}",
+        "description": "現在の {kaspa} 研究開発に関する主要な公開ストリームです。{discord} も引き続き使われていますが、コアの議論の多くは現在ここで行われています。"
+      },
+      "research": {
+        "label": "フォーラム",
+        "title": "{kaspaResearch}",
+        "description": "プロトコル、コンセンサス、経済、マイニングについて長文で議論するフォーラム。{kip} のドラフトや提案も扱います。"
+      },
+      "toccata": {
+        "label": "ハードフォーク",
+        "title": "{toccata}：コベナント＆{zk}",
+        "description": "拡張スクリプトオペコード（{kip17}）、コベナント ID（{kip20}）、検証器プリコンパイル・サブシステムを備えた {zk} オペコード（{kip16}）、シーケンシングコミットメント（{kip21}）をまとめたハードフォーク。現在、メインネットでの有効化に先立ち {tn12} で稼働中です。"
+      },
+      "silverscript": {
+        "label": "プログラマビリティ",
+        "title": "{silverscript}",
+        "description": "ネイティブの {kaspaScript} にコンパイルされる高水準スクリプト言語。コベナントと {zk} オペコードをメインネットに導入する {toccata} ハードフォークに先立ち、{tn12} でテスト中です。"
+      },
+      "vprogs": {
+        "label": "プログラマビリティ",
+        "title": "{vprogs}",
+        "description": "検証可能プログラムに関する初期研究。オンチェーンで順序を決め、オフチェーンで実行し、{zk} 証明を介して確定します。{toccata} で導入されるスクリプトプリミティブを基盤としています。"
+      },
+      "python": {
+        "label": "{sdk}",
+        "title": "{pythonSdk}",
+        "description": "ベータ版で、ほぼ完成しています。{python} ツールは公開の場で開発が進められ、開発者向け機能も拡充しています。"
+      },
+      "kips": {
+        "label": "プロトコル",
+        "title": "{kips}",
+        "description": "アプリやインフラとネットワークの連携方法を変える可能性がある提案を追跡します。"
+      }
+    }
+  },
+  "help": {
+    "eyebrow": "ヘルプ",
+    "title": "開発を続ける",
+    "descriptionWithAi": "まずはドキュメントまたは {kaspaAi} を使いましょう。さらに詳しいサポートが必要な場合は、{qa}、{github}、{discord}、R&D {telegram} を利用できます。",
+    "descriptionWithoutAi": "まずはドキュメントを使いましょう。さらに詳しいサポートが必要な場合は、{qa}、{github}、{discord}、R&D {telegram} を利用できます。",
+    "actions": {
+      "openDocs": "ドキュメントを開く",
+      "openAi": "AI を開く"
+    },
+    "links": {
+      "github": {
+        "eyebrow": "コード",
+        "title": "{github}"
+      },
+      "discord": {
+        "eyebrow": "チャット",
+        "title": "{discord}"
+      },
+      "qa": {
+        "eyebrow": "質問",
+        "title": "{kaspaQAndA}"
+      },
+      "telegram": {
+        "eyebrow": "最新の開発動向",
+        "title": "{telegram} R&D チャンネル"
+      }
+    },
+    "prompts": {
+      "gettingStarted": "{kaspa} 上での開発は、何から始めればよいですか？",
+      "choosePath": "{wasmSdk}、ネイティブ {rust}、ノード運用のどれを選べばよいですか？",
+      "nodeOrApi": "自分でノードを運用する必要がありますか？それともコミュニティ {api} を利用できますか？",
+      "smartContracts": "{kaspa} にスマートコントラクトはありますか？",
+      "wallet": "{wasmSdk} を使ってウォレットを構築するにはどうすればよいですか？",
+      "transaction": "トランザクションを作成して署名するにはどうすればよいですか？",
+      "runNode": "{kaspa} ノードを動かすにはどうすればよいですか？",
+      "hardware": "ノードにはどのようなハードウェアが必要ですか？",
+      "toccata": "{toccata} とは何ですか？何が変わりますか？",
+      "covenants": "{kaspa} のコベナントとは何ですか？",
+      "silverscript": "{silverscript} とは何ですか？",
+      "networks": "メインネットと {tn12} の違いは何ですか？"
+    }
+  }
+}
