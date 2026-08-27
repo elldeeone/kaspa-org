@@ -55,6 +55,8 @@ export function shouldBypassLocaleRouting(pathname: string): boolean {
   if (!normalizedPathname) return true;
 
   return (
+    (process.env.NODE_ENV !== "production" &&
+      normalizedPathname.startsWith("/mockup/")) ||
     normalizedPathname === "/api" ||
     normalizedPathname.startsWith("/api/") ||
     normalizedPathname === "/_next" ||
