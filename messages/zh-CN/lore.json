@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "title": "LORE | Kaspa",
+    "description": "Kaspa 是一种公平启动、专注于实时去中心化的工作量证明 blockDAG，无预挖、未向内部人士分配份额，主网性能达到 10 BPS。"
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — 实时去中心化"
+  },
+  "article": {
+    "heading": "Kaspa 是一个正在运行的工作量证明 blockDAG，每秒处理 10 个区块。",
+    "shift": {
+      "heading": "转变",
+      "body": "它采用了不同于早期工作量证明链的路径。并行区块不会被丢弃，而是被排序。许多被归因于工作量证明的限制，其实源自旧式链架构，而非工作量证明本身。<paper>PHANTOM / GHOSTDAG 论文</paper>"
+    },
+    "history": {
+      "heading": "简史",
+      "research": "Kaspa 源于耶路撒冷希伯来大学、后来延伸至哈佛大学的 blockDAG 研究。这条研究脉络可追溯至 <ghost>Ethereum 白皮书中的 GHOST 协议章节</ghost>，早期经由 Bitcoin 研究圈进入公众视野，随后从 SPECTRE 和 PHANTOM 一路发展至如今运行 Kaspa 的协议。<scaling>Scaling Bitcoin 2015</scaling> · <coindesk>CoinDesk，2017</coindesk>",
+      "launch": "主网于 2021 年 11 月以公平启动的工作量证明网络形式上线。无预挖、无内部人份额、无预售。流通中的每一枚币，从创世区块起都通过公开挖矿产生。这次公平启动为 Kaspa 带来了广泛而忠诚的社区，至今仍是其最重要的成就和核心优势之一。<launchPlan>启动计划</launchPlan> · <genesisProof>创世证明</genesisProof>"
+    },
+    "northStar": {
+      "heading": "北极星",
+      "intro": "实时去中心化是 Kaspa 的北极星。",
+      "urgency": "实时性绝不妥协。对等待的不耐烦，是 Kaspa 最原始的本能——它会因为等待而大发脾气，拒绝接受那些大人们习以为常的限制。而我们的要求不仅是速度，还有 Satoshi 式的硬核属性：抗审查、无需许可的结算、竞争性挖矿——所有这些都要实时实现，而不是最终才实现。没有工作量证明，就无法实时达成这一目标。<uniqueness>PoW 的独特性</uniqueness>",
+      "consensus": "Kaspa 实现 RTD，意味着协议会在每轮共识中对挖矿网络的诚实多数进行采样。因此，在 Bitcoin 上需要一小时才能安全确认的交易，在 Kaspa 上可于数秒内确认；同样，Bitcoin 需要一小时才实现的抗审查能力，Kaspa 能保证在数秒内实现。这不仅关乎结算速度，也关乎一切需要实时排序的场景——市场结果裁定、连环清算，以及任何由单一共识领导者自行决定交易顺序而使其获得过多权力的场合。",
+      "eventFeed": "对诚实多数进行实时采样，还可用于构建由挖矿网络治理、无需信任的实时数据与事件流。<post>RTD 帖文</post>",
+      "resilience": "RTD 也有防御性的一面。部分同步类协议（如即将到来的 DAGKnight）独有这种双重属性：网络健康时速度快，网络异常时变慢但仍保持安全。Kaspa 把速度卖给普通用户，把战时级货币卖给 cypherpunk 群体。"
+    },
+    "shipped": {
+      "heading": "已交付与下一步",
+      "rewrite": "最初的 Golang 节点从零开始用 Rust 重写。此次重写由社区提供的 1 亿 KAS 资助，并围绕 <code>rusty-kaspa</code> 发展成真正的开源协作，拥有广泛的贡献者基础。<github>Rusty Kaspa GitHub</github>",
+      "crescendo": "正是这次重写让 Crescendo 成为可能。没有它，Kaspa 就无法在主网上达到每秒 10 个区块。Crescendo 让这一理念真正投入运行。<reference>Crescendo 参考资料</reference> · <release>发布说明</release>"
+    },
+    "roadmap": {
+      "toccata": {
+        "heading": "Toccata 硬分叉",
+        "overview": "下一次硬分叉是 Toccata，它将引入基于契约的基础层可编程性。契约是递归的花费规则，用于限制币可以由谁、以何种方式花费，从而为保险库、智能钱包、原生资产和 ZK 辅助结构打开大门。",
+        "implementation": "在 Bitcoin 中，OP_CAT 是 Satoshi 当年禁用的旧操作码——如今再次被提议，仍有争议，也仍未纳入协议。Toccata 更接近 OP_CAT++，提供更广泛的契约能力，并配有专为在 Kaspa 上编写契约而设计的编译器 <silverscript>Silverscript</silverscript>。成熟的实现已在 <tn12>TN12</tn12> 上启动运行。"
+      },
+      "dagKnight": {
+        "heading": "DAGKnight 硬分叉",
+        "overview": "DAGKnight 是继 Toccata 之后的共识协议升级。它是工作量证明和无需许可共识的一次重大飞跃：在无需预知网络延迟上限的设定下，它是唯一能容忍 49% 拜占庭故障的部分同步 BFT 协议。它让工作量证明向抵御网络分裂更进一步。目标区块时间为 25 至 40 毫秒。<paper>DAGKnight 论文</paper>"
+      },
+      "hardfork2027": {
+        "heading": "2027 年硬分叉",
+        "performance": "10 毫秒区块时间——每秒 100 个区块——很可能需要调整 DAG 算法中矿工引用 DAG 尖端的方式，并进一步优化节点性能。目标是在 2027 年的硬分叉中实现。",
+        "resilience": "在共识层面，DAGKnight 已能在网络分裂时提供安全性：分裂前已确认的交易仍保持最终性。但它无法在网络分裂期间继续确认交易——交易必须等到分裂结束后才能真正确认。2027 年的工作旨在结合链上支付通道与哈希率自适应的最终性窗口，让交易在实际网络分裂中仍可继续确认。这将使 Kaspa 成为战时级硬通货，即使互联网连接中断，本地支付流仍可继续。"
+      }
+    },
+    "closing": {
+      "origin": "Kaspa 并非诞生于寻常的炒作周期。它源自深厚的研究积累、公平启动、开源实践，以及在大多数加密项目止步之处仍坚持推进的岁月。",
+      "summary": "一个正在运行的 blockDAG。主网达到 10 BPS。以实时去中心化为北极星。下一步是 Toccata，之后是 DAGKnight。",
+      "early": "如果读到这里觉得一切仍处于早期，那正是因为确实还早。"
+    }
+  },
+  "contributors": {
+    "viewOnGitHub": "在 GitHub 上查看 Rusty Kaspa 贡献者",
+    "more": "+{count, plural, one {# 位贡献者} other {# 位贡献者}}"
+  }
+}

@@ -1,8 +1,8 @@
 # Translation Contributions
 
 Kaspa.org accepts corrections to published translations, translator or reviewer
-volunteers, and requests for new site languages. English and Spanish are
-published.
+volunteers, and requests for new site languages. English, Spanish, and
+Simplified Chinese are published.
 
 ## Make a Request
 

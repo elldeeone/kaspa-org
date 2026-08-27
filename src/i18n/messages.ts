@@ -12,8 +12,16 @@ import spanishHodl from "../../messages/es/hodl.json" with { type: "json" };
 import spanishHome from "../../messages/es/home.json" with { type: "json" };
 import spanishLore from "../../messages/es/lore.json" with { type: "json" };
 import spanishShared from "../../messages/es/shared.json" with { type: "json" };
+import chineseAssets from "../../messages/zh-CN/assets.json" with { type: "json" };
+import chineseBuild from "../../messages/zh-CN/build.json" with { type: "json" };
+import chineseErrors from "../../messages/zh-CN/errors.json" with { type: "json" };
+import chineseHodl from "../../messages/zh-CN/hodl.json" with { type: "json" };
+import chineseHome from "../../messages/zh-CN/home.json" with { type: "json" };
+import chineseLore from "../../messages/zh-CN/lore.json" with { type: "json" };
+import chineseShared from "../../messages/zh-CN/shared.json" with { type: "json" };
 
 import {
+  chineseLocale,
   spanishLocale,
   supportedLocaleCodes,
   type Locale,
@@ -44,6 +52,16 @@ export const spanishMessages = {
   shared: spanishShared,
 } satisfies AppMessages;
 
+export const chineseMessages = {
+  assets: chineseAssets,
+  build: chineseBuild,
+  errors: chineseErrors,
+  hodl: chineseHodl,
+  home: chineseHome,
+  lore: chineseLore,
+  shared: chineseShared,
+} satisfies AppMessages;
+
 function assertNever(value: never): never {
   throw new Error(`Unsupported locale: ${String(value)}`);
 }
@@ -54,6 +72,8 @@ export function getMessages(locale: Locale): LocaleMessages {
       return englishMessages;
     case spanishLocale:
       return spanishMessages;
+    case chineseLocale:
+      return chineseMessages;
     default:
       return assertNever(locale);
   }

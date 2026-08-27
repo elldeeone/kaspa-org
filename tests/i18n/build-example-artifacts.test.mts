@@ -20,7 +20,10 @@ import {
   type BuildExampleCompilerInput,
 } from "../../scripts/i18n/build-example-artifact-compiler.mts";
 import { resolveBuildExampleReturnPath } from "../../scripts/i18n/build-example-return-path.mjs";
-import { buildExampleContract } from "../../src/i18n/build-example-contract.ts";
+import {
+  buildExampleContract,
+  type BuildArtifactLocale,
+} from "../../src/i18n/build-example-contract.ts";
 
 const repositoryRoot = process.cwd();
 const examplesRelativeDirectory =
@@ -71,7 +74,7 @@ async function loadCompilerInput(): Promise<BuildExampleCompilerInput> {
         [path, await readFile(join(examplesDirectory, path), "utf8")] as const,
     ),
   );
-  const messages = async (locale: "en" | "es") => {
+  const messages = async (locale: "en" | BuildArtifactLocale) => {
     const catalog = JSON.parse(
       await readFile(
         join(repositoryRoot, `messages/${locale}/build.json`),
@@ -80,14 +83,18 @@ async function loadCompilerInput(): Promise<BuildExampleCompilerInput> {
     ) as { artifacts: BuildArtifactMessages };
     return catalog.artifacts;
   };
-  const [englishMessages, spanishMessages] = await Promise.all([
+  const [englishMessages, ...targetMessages] = await Promise.all([
     messages("en"),
-    messages("es"),
+    ...manifest.locales.map(messages),
   ]);
   return {
     sources: Object.fromEntries(sourceEntries),
     englishMessages,
-    targets: [{ locale: "es", direction: "ltr", messages: spanishMessages }],
+    targets: manifest.locales.map((locale, index) => ({
+      locale,
+      direction: "ltr" as const,
+      messages: targetMessages[index],
+    })),
   };
 }
 
@@ -244,59 +251,80 @@ test("English UTXO artifact copy preserves its plural and notice contracts", asy
   assert.equal(messages.noticeManualTesting.split(".").length - 1, 1);
 });
 
-test("Spanish Build artifacts are deterministic, complete, and catalog-backed", async () => {
+test("localized Build artifacts are deterministic, complete, and catalog-backed", async () => {
   const first = await artifacts.compile();
   const second = await artifacts.compile();
+  const input = await loadCompilerInput();
 
   assert.deepEqual(first, second);
-  for (const name of exampleNames) {
-    const spanish = first[`${name}.es.html`];
-    assert.match(spanish, /<html lang="es" dir="ltr">/u);
-    assert.match(spanish, /from '\.\/resources\/utils\.es\.js'/u);
-    assert.match(spanish, /Conectando a la red de Kaspa/u);
-    assert.match(spanish, /<meta name="robots" content="noindex, nofollow">/u);
-    assert.doesNotMatch(spanish, /\[!! /u);
+  for (const target of input.targets) {
+    const { locale, messages } = target;
+    for (const name of exampleNames) {
+      const localized = first[`${name}.${locale}.html`];
+      assert.ok(localized.includes(`<html lang="${locale}" dir="ltr">`));
+      assert.ok(localized.includes(`from './resources/utils.${locale}.js'`));
+      assert.ok(localized.includes(messages.runtime.connectingKaspaNetwork));
+      assert.ok(
+        localized.includes('<meta name="robots" content="noindex, nofollow">'),
+      );
+      assert.doesNotMatch(localized, /\[!! /u);
+    }
+
+    assert.ok(
+      first[`get-server-info.${locale}.html`].includes(
+        messages.runtime.apiRequest.replace("{api}", "GetServerInfo"),
+      ),
+    );
+    assert.ok(
+      first[`get-block-dag-info.${locale}.html`].includes(
+        messages.runtime.apiResponse.replace("{api}", "GetBlockDagInfo"),
+      ),
+    );
+    assert.ok(
+      first[`subscribe-block-added.${locale}.html`].includes(
+        messages.runtime.subscribingBlockAdded,
+      ),
+    );
+
+    const controls = first[`resources/utils.${locale}.js`];
+    assert.ok(controls.includes(`href="/${locale}/build#try-live"`));
+    assert.ok(
+      controls.includes(
+        `<- ${messages.controls.back}</a> | ${messages.controls.network}:`,
+      ),
+    );
+    assert.ok(controls.includes(`>${messages.controls.disconnect}</a>`));
+    assert.ok(controls.includes(`>${messages.controls.reconnect}</a>`));
+    assert.ok(
+      controls.includes(`innerHTML = \` ${messages.controls.connecting}\`;`),
+    );
+    assert.match(controls, /mainnet/u);
+    assert.match(controls, /testnet-10/u);
+    assert.match(controls, /testnet-11/u);
   }
-
-  assert.match(first["get-server-info.es.html"], /Solicitud de GetServerInfo/u);
-  assert.match(
-    first["get-block-dag-info.es.html"],
-    /Respuesta de GetBlockDagInfo/u,
-  );
-  assert.match(
-    first["subscribe-block-added.es.html"],
-    /Suscribiéndose al evento de bloque añadido/u,
-  );
-  assert.doesNotMatch(first["subscribe-block-added.es.html"], /Block Added/u);
-  assert.match(first["subscribe-daa-changed.es.html"], /DAA/u);
-  assert.match(first["utxo-context.es.html"], /Se recibió/u);
-  assert.match(first["utxo-context.es.html"], /Se recibieron/u);
-  assert.match(first["utxo-context.es.html"], /UtxoProcessor/u);
-
-  const controls = first["resources/utils.es.js"];
-  assert.match(controls, /href="\/es\/build#try-live"/u);
-  assert.match(controls, /<- Volver<\/a> \| Red:/u);
-  assert.match(controls, />Desconectar<\/a>/u);
-  assert.match(controls, />Reconectar<\/a>/u);
-  assert.match(controls, /innerHTML = ` \| Conectando\.\.\.`;/u);
-  assert.match(controls, /mainnet/u);
-  assert.match(controls, /testnet-10/u);
-  assert.match(controls, /testnet-11/u);
 });
 
 test("Build artifacts use a locale's registered text direction", async () => {
   const input = await loadCompilerInput();
+  const testLocale = manifest.locales[0];
+  assert.ok(testLocale);
   const rtlArtifacts = compileBuildExampleArtifacts({
     ...input,
     targets: input.targets.map((target) =>
-      target.locale === "es" ? { ...target, direction: "rtl" } : target,
+      target.locale === testLocale ? { ...target, direction: "rtl" } : target,
     ),
   }).generated;
 
   for (const name of exampleNames) {
-    const spanish = rtlArtifacts[`${name}.es.html`];
-    assert.match(spanish, /<html lang="es" dir="rtl">/u);
-    assert.doesNotMatch(spanish, /<html lang="es" dir="ltr">/u);
+    const artifact = rtlArtifacts[`${name}.${testLocale}.html`];
+    assert.match(
+      artifact,
+      new RegExp(`<html lang="${testLocale}" dir="rtl">`, "u"),
+    );
+    assert.doesNotMatch(
+      artifact,
+      new RegExp(`<html lang="${testLocale}" dir="ltr">`, "u"),
+    );
   }
 });
 
@@ -518,7 +546,7 @@ test("artifact compiler preserves ICU exact-selector semantics", async () => {
 
   const compilation = compileBuildExampleArtifacts({
     ...input,
-    targets: [target],
+    targets: [target, ...input.targets.slice(1)],
   });
   const html = compilation.generated["utxo-context.es.html"];
   const assignment = html
@@ -571,7 +599,7 @@ test("workflow sync and check enforce the registered artifact set", async (t) =>
   await fixture.check();
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.es\.html$/u.test(path))
+      .filter((path) => manifest.localizedPaths.includes(path))
       .sort(),
     manifest.localizedPaths.filter((path) => path.endsWith(".html")).sort(),
   );

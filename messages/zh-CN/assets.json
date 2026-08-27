@@ -1,0 +1,93 @@
+{
+  "metadata": {
+    "title": "Kaspa 标志与品牌素材 | Kaspa",
+    "description": "下载 Kaspa 官方标志套件，包括横向和纵向组合标志、图标及品牌色。提供 SVG 和高分辨率 PNG 格式。"
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — 实时去中心化"
+  },
+  "page": {
+    "heading": "Kaspa 标志素材"
+  },
+  "groups": {
+    "lockup": "横向",
+    "stacked": "纵向",
+    "icon": "图标"
+  },
+  "logos": {
+    "lockupColor": {
+      "name": "全彩",
+      "imageAlt": "Kaspa 全彩标志",
+      "downloadAria": "下载 {format} 格式的 Kaspa 横向全彩标志"
+    },
+    "lockupReverse": {
+      "name": "反白",
+      "imageAlt": "Kaspa 反白标志",
+      "downloadAria": "下载 {format} 格式的 Kaspa 横向反白标志"
+    },
+    "lockupBlack": {
+      "name": "黑色",
+      "imageAlt": "Kaspa 黑色标志",
+      "downloadAria": "下载 {format} 格式的 Kaspa 横向黑色标志"
+    },
+    "lockupWhite": {
+      "name": "白色",
+      "imageAlt": "Kaspa 白色标志",
+      "downloadAria": "下载 {format} 格式的 Kaspa 横向白色标志"
+    },
+    "lockupOutline": {
+      "name": "轮廓",
+      "imageAlt": "Kaspa 轮廓标志",
+      "downloadAria": "下载 {format} 格式的 Kaspa 横向轮廓标志"
+    },
+    "stackedColor": {
+      "name": "全彩",
+      "imageAlt": "Kaspa 全彩标志",
+      "downloadAria": "下载 {format} 格式的 Kaspa 纵向全彩标志"
+    },
+    "stackedReverse": {
+      "name": "反白",
+      "imageAlt": "Kaspa 反白标志",
+      "downloadAria": "下载 {format} 格式的 Kaspa 纵向反白标志"
+    },
+    "stackedBlack": {
+      "name": "黑色",
+      "imageAlt": "Kaspa 黑色标志",
+      "downloadAria": "下载 {format} 格式的 Kaspa 纵向黑色标志"
+    },
+    "stackedWhite": {
+      "name": "白色",
+      "imageAlt": "Kaspa 白色标志",
+      "downloadAria": "下载 {format} 格式的 Kaspa 纵向白色标志"
+    },
+    "stackedOutline": {
+      "name": "轮廓",
+      "imageAlt": "Kaspa 轮廓标志",
+      "downloadAria": "下载 {format} 格式的 Kaspa 纵向轮廓标志"
+    },
+    "iconGreen": {
+      "name": "绿色",
+      "imageAlt": "Kaspa 绿色标志",
+      "downloadAria": "下载 {format} 格式的 Kaspa 绿色图标标志"
+    },
+    "iconGreenDark": {
+      "name": "深色背景上的绿色",
+      "imageAlt": "深色背景上的 Kaspa 绿色标志",
+      "downloadAria": "下载深色背景上的 Kaspa 绿色图标标志（{format} 格式）"
+    },
+    "iconBlack": {
+      "name": "黑色",
+      "imageAlt": "Kaspa 黑色标志",
+      "downloadAria": "下载 {format} 格式的 Kaspa 黑色图标标志"
+    },
+    "iconWhite": {
+      "name": "白色",
+      "imageAlt": "Kaspa 白色标志",
+      "downloadAria": "下载 {format} 格式的 Kaspa 白色图标标志"
+    }
+  },
+  "formats": {
+    "svg": "SVG",
+    "png": "PNG"
+  }
+}

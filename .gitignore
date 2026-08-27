@@ -50,8 +50,14 @@ next-env.d.ts
 
 # generated localized i18n Build examples
 /public/vendor/kaspa-wasm/2.0.0/examples/web/get-block-dag-info.es.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/get-block-dag-info.zh-CN.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/get-server-info.es.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/get-server-info.zh-CN.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-block-added.es.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-block-added.zh-CN.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-daa-changed.es.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-daa-changed.zh-CN.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/utxo-context.es.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/utxo-context.zh-CN.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/resources/utils.es.js
+/public/vendor/kaspa-wasm/2.0.0/examples/web/resources/utils.zh-CN.js

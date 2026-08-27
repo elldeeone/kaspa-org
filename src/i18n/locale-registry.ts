@@ -1,5 +1,10 @@
 export const spanishLocale = "es" as const;
-export const supportedLocaleCodes = ["en", spanishLocale] as const;
+export const chineseLocale = "zh-CN" as const;
+export const supportedLocaleCodes = [
+  "en",
+  spanishLocale,
+  chineseLocale,
+] as const;
 export type Locale = (typeof supportedLocaleCodes)[number];
 export type TextDirection = "ltr" | "rtl";
 
@@ -21,6 +26,12 @@ export const localeRegistry: Readonly<Record<Locale, LocaleDefinition>> = {
     code: "es",
     label: "Español",
     hrefLang: "es",
+    dir: "ltr",
+  },
+  "zh-CN": {
+    code: "zh-CN",
+    label: "简体中文",
+    hrefLang: "zh-CN",
     dir: "ltr",
   },
 };

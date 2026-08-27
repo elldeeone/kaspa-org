@@ -1,0 +1,112 @@
+{
+  "navigation": {
+    "homeAria": "Kaspa 首页",
+    "toggleMenu": "切换菜单",
+    "menu": "菜单",
+    "language": {
+      "label": "语言"
+    },
+    "links": {
+      "lore": "LORE",
+      "hodl": "HODL",
+      "build": "BUIDL",
+      "think": "THINK",
+      "dagviz": "DAGVIZ"
+    }
+  },
+  "theme": {
+    "switchMode": "切换至{mode}模式",
+    "light": "浅色",
+    "dark": "深色"
+  },
+  "logoMenu": {
+    "aria": "Kaspa 标志",
+    "viewAssets": "查看标志素材"
+  },
+  "pageSections": {
+    "onThisPage": "本页内容",
+    "openAria": "打开页面章节，当前章节为{section}",
+    "dialogAria": "页面章节",
+    "close": "关闭",
+    "current": "当前"
+  },
+  "footer": {
+    "glyphAria": "Kaspa 图形标志",
+    "operatedBy": "由 <operator>KasMedia.com</operator> 运营",
+    "links": {
+      "explorer": "区块浏览器",
+      "github": "GitHub",
+      "x": "X"
+    }
+  },
+  "structuredData": {
+    "organizationDescription": "Kaspa 是一种公平启动的工作量证明 blockDAG 加密货币，每秒处理 10 个区块，专为实时去中心化而构建。"
+  },
+  "ai": {
+    "externalPrompt": "阅读 {url}，我想就其内容提问。",
+    "genericError": "抱歉，出现了问题。请重试。",
+    "launcher": {
+      "askAnything": "有问必答",
+      "beta": "测试版",
+      "betaTitle": "此功能正在积极开发中，偶尔可能出现问题",
+      "betaAria": "测试版，偶尔可能出现问题",
+      "poweredBy": "由 <provider>kaspa.news/ask</provider> 提供支持",
+      "collapsePanel": "收起面板",
+      "expandPanel": "展开面板",
+      "closePanel": "关闭面板",
+      "placeholder": "请输入问题…",
+      "sendMessage": "发送消息",
+      "welcomeHeading": "关于 Kaspa，有问必答",
+      "welcomeBody": "可在下方快速获取答案，也可以使用您偏好的 AI 开启完整对话。",
+      "ownAiDivider": "或使用您自己的 AI",
+      "ownAiLabel": "使用您自己的 AI：",
+      "sources": "{count, plural, =0 {来源} other {来源（#）}}",
+      "copy": "复制",
+      "copied": "已复制"
+    },
+    "suggestions": {
+      "kaspaPurpose": "Kaspa 解决了什么问题？",
+      "blockTimes": "区块时间是多少？",
+      "decentralization": "实时去中心化为什么重要？",
+      "premine": "是否存在预挖？"
+    },
+    "providers": {
+      "chatgpt": "ChatGPT",
+      "claude": "Claude",
+      "perplexity": "Perplexity"
+    },
+    "loading": {
+      "atomicArc": "正在安全地执行 AtomicArc…",
+      "ibd": "正在对新节点执行 IBD…",
+      "ftr": "正在通过 FTR 中继区块…",
+      "kip": "正在激活 KIP…",
+      "template": "正在绑定模板…",
+      "commitment": "正在从承诺值启动…",
+      "blueSet": "正在编织蓝色集合…",
+      "mergeDepth": "正在计算合并深度…",
+      "silverscript": "正在说服 Silverscript 完成编译…",
+      "covenantId": "正在推导 covenant_id…",
+      "covenantState": "正在编码契约状态…",
+      "orphans": "正在清除孤块…",
+      "mempool": "正在填充内存池…",
+      "fees": "正在将手续费分档…",
+      "covenants": "正在与契约协商…",
+      "blocks": "正在并行分发区块…",
+      "pruning": "正在修剪历史数据…",
+      "dagLayer": "正在发布到 DAG 层…",
+      "stack": "正在推入技术栈…",
+      "bps": "正在重新平衡 10 BPS…",
+      "blueWork": "正在重新计算蓝色工作量…",
+      "l2": "正在过滤 L2 重组相关事件…",
+      "vprogBatch": "正在调度 vProg 批次…",
+      "schnorr": "正在生成 Schnorr 签名…",
+      "virtualState": "正在序列化虚拟状态…",
+      "utxoSet": "正在为 UTXO 集创建快照…",
+      "anticone": "正在遍历反锥…",
+      "transactions": "正在重新接纳孤立交易…",
+      "utxo": "正在解锁 UTXO…",
+      "vprogs": "正在将 vProgs 虚拟化…",
+      "crescendo": "正在等待 Crescendo…"
+    }
+  }
+}

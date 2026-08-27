@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 import type { Locale } from "./locale-registry.ts";
+import { getOpenGraphFontContract } from "./opengraph-font.ts";
 import {
   createOpenGraphRenderContract,
   openGraphContentType,
@@ -18,10 +19,12 @@ const fontDirectory = join(process.cwd(), "src", "app", "fonts");
 
 export async function renderOpenGraphImage(locale: Locale) {
   const contract = createOpenGraphRenderContract(locale);
-  const [geistBold, geistRegular] = await Promise.all([
-    readFile(join(fontDirectory, "Geist-Bold.ttf")),
-    readFile(join(fontDirectory, "Geist-Regular.ttf")),
-  ]);
+  const fontContract = getOpenGraphFontContract(locale);
+  const fontData = await Promise.all(
+    fontContract.assets.map(({ filename }) =>
+      readFile(join(fontDirectory, filename)),
+    ),
+  );
   return new ImageResponse(
     <div
       style={{
@@ -45,7 +48,7 @@ export async function renderOpenGraphImage(locale: Locale) {
             key={line}
             style={{
               width: "100%",
-              fontFamily: "Geist",
+              fontFamily: fontContract.family,
               fontWeight: 700,
               color: "#1a1a1e",
               ...contract.headingStyle,
@@ -61,7 +64,7 @@ export async function renderOpenGraphImage(locale: Locale) {
           flexDirection: "row",
           alignItems: "baseline",
           fontSize: SUB_SIZE,
-          fontFamily: "Geist",
+          fontFamily: fontContract.family,
           fontWeight: 400,
           color: "rgba(26, 26, 30, 0.65)",
           lineHeight: 1.3,
@@ -77,10 +80,12 @@ export async function renderOpenGraphImage(locale: Locale) {
     </div>,
     {
       ...openGraphSize,
-      fonts: [
-        { name: "Geist", data: geistBold, weight: 700, style: "normal" },
-        { name: "Geist", data: geistRegular, weight: 400, style: "normal" },
-      ],
+      fonts: fontContract.assets.map((font, index) => ({
+        name: fontContract.family,
+        data: fontData[index],
+        weight: font.weight,
+        style: "normal" as const,
+      })),
     },
   );
 }

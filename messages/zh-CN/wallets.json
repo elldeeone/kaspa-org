@@ -1,0 +1,9 @@
+{
+  "kaspa-cli-wallet": "面向习惯在终端中管理密钥和交易的用户的命令行钱包工具。",
+  "kaspacom-wallet": "一款基于浏览器的 KaspaCom 钱包，可用于创建、导入和使用自托管 Kaspa 钱包。",
+  "kaspium": "一款自托管移动钱包，可通过手机发送、接收和持有 KAS。",
+  "kastle": "支持 KAS、KRC-20、KNS 和 NFT 的 Kaspa 自托管钱包，提供 L2 桥接和应用内兑换功能。支持移动端和浏览器扩展。",
+  "kng-desktop": "一款现代化的 Kaspa 桌面钱包，默认界面友好，可选择运行完整节点，并为高级用户提供深入的配置选项。",
+  "kng-web": "Kaspa NG 的浏览器版本。默认界面友好，无需安装，并可选择进行高级配置。",
+  "tangem-wallet": "Tangem Wallet 是一款支持 Kaspa 和 14,000 多种数字资产的安全自托管硬件钱包，无需助记词。"
+}

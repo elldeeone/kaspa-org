@@ -14,28 +14,34 @@ import {
 
 const [
   config,
+  dagAnnotationFonts,
   manifest,
   site,
   siteValidation,
   messages,
+  openGraphFonts,
   proxyPolicy,
   walletData,
   walletLocalization,
 ] = await Promise.all([
   import("../../src/i18n/config.ts"),
+  import("../../src/i18n/dag-annotation-font.ts"),
   import("../../src/i18n/manifest.ts"),
   import("../../src/i18n/site.ts"),
   import("../../src/i18n/site-validation.ts"),
   import("../../src/i18n/messages.ts"),
+  import("../../src/i18n/opengraph-font.ts"),
   import("../../src/i18n/proxy-policy.ts"),
   import("../../src/data/wallets.ts"),
   import("../../src/i18n/wallets.ts"),
 ]);
 const { localeCodes } = config;
+const { getDagAnnotationFontContract } = dagAnnotationFonts;
 const { RESERVED_NOT_FOUND_PATHNAME, routeIds, stablePathnames } = manifest;
 const { getRouteDefinition, resolveLocalizedRoute } = site;
 const { assertLocaleComplete } = siteValidation;
-const { englishMessages } = messages;
+const { englishMessages, getHomeMessages } = messages;
+const { getOpenGraphFontContract } = openGraphFonts;
 const { shouldBypassLocaleRouting } = proxyPolicy;
 const { kaspaWallets } = walletData;
 const { getLocalizedWallets } = walletLocalization;
@@ -45,6 +51,24 @@ const errors: string[] = [];
 
 function fail(location: string, message: string) {
   errors.push(`${location}: ${message}`);
+}
+
+function validateCoveredCharacters(
+  location: string,
+  value: string,
+  coveredCharacters: string | undefined,
+): void {
+  if (coveredCharacters === undefined) return;
+  const covered = new Set(coveredCharacters);
+  const missing = [...new Set(value)].filter(
+    (character) => !/\s/u.test(character) && !covered.has(character),
+  );
+  if (missing.length > 0) {
+    fail(
+      location,
+      `font subset is missing ${JSON.stringify(missing.join(""))}`,
+    );
+  }
 }
 
 function listSourceFiles(directory: string): string[] {
@@ -258,6 +282,22 @@ for (const locale of localeCodes) {
       error instanceof Error ? error.message : String(error),
     );
   }
+}
+
+for (const locale of localeCodes) {
+  const homeMessages = getHomeMessages(locale);
+  const openGraphFont = getOpenGraphFontContract(locale);
+  const annotationFont = getDagAnnotationFontContract(locale);
+  validateCoveredCharacters(
+    `messages/${locale}/home.json: openGraph`,
+    `${homeMessages.openGraph.heading}${homeMessages.openGraph.tagline}`,
+    openGraphFont.coveredCharacters,
+  );
+  validateCoveredCharacters(
+    `messages/${locale}/home.json: hero.dagAnnotation`,
+    homeMessages.hero.dagAnnotation,
+    annotationFont.coveredCharacters,
+  );
 }
 
 for (const adapterPath of localizedAdapters) {

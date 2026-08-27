@@ -47,7 +47,10 @@ export default async function HomePage({
       <Nav />
 
       {/* ─── DAG Visualization — Desktop (Fixed Right) ─── */}
-      <LiveDagBackground annotation={clientLabels.dagAnnotation} />
+      <LiveDagBackground
+        annotation={clientLabels.dagAnnotation}
+        locale={locale}
+      />
 
       {/* ─── Main Content ─── */}
       <main className="relative z-10 flex-1">
