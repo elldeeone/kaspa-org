@@ -1,0 +1,417 @@
+{
+  "metadata": {
+    "title": "Kaspa 개발자 문서, SDK, API 및 노드 액세스 | Kaspa",
+    "description": "Kaspa에서 개발을 시작하는 데 필요한 모든 것을 확인하세요. WASM SDK, Rust 라이브러리, 실시간 API 플레이그라운드, 노드 액세스 및 개발자 도구를 제공합니다."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — 실시간 탈중앙화"
+  },
+  "terms": {
+    "daa": "DAA",
+    "dag": "DAG",
+    "node": "노드",
+    "publicNodeNetwork": "공개 노드 네트워크",
+    "utxo": "UTXO"
+  },
+  "artifacts": {
+    "controls": {
+      "back": "뒤로",
+      "network": "네트워크",
+      "disconnect": "연결 해제",
+      "reconnect": "다시 연결",
+      "connecting": "| 연결 중..."
+    },
+    "runtime": {
+      "connectingKaspaNetwork": "Kaspa 네트워크에 연결 중...",
+      "selectedNetwork": "선택한 네트워크: {network}...",
+      "connectedTo": "연결 대상:",
+      "disconnected": "연결이 해제되었습니다...",
+      "disconnectedFrom": "연결이 해제된 대상:",
+      "connectingPublicNode": "공개 노드에 연결 중...",
+      "disconnect": "연결 해제",
+      "apiRequest": "{api} 요청...",
+      "apiResponse": "{api} 응답:",
+      "subscribingBlockAdded": "블록 추가 이벤트 구독 중...",
+      "registeringProtocolNotifications": "{protocol} 알림 등록 중...",
+      "subscribingProtocolScore": "{protocol} 점수 구독 중...",
+      "event": "이벤트:",
+      "networkConsole": "네트워크"
+    },
+    "utxo": {
+      "receivedEvents": "| {count, plural, one {#개 이벤트 수신} other {#개 이벤트 수신}}",
+      "noticeManyUtxos": "일부 주소에는 수천 개의 {term}가 있을 수 있어 브라우저에서 목록으로 표시하기 어렵습니다. 이러한 유형의 데이터 출력에는 페이지 나누기를 적용해야 합니다.",
+      "noticeManualTesting": "이 데모는 {api}에서 발생하는 이벤트를 보여 주기 위한 수동 테스트용입니다. 많은 {term} 항목을 렌더링할 때 브라우저가 어려움을 겪을 수 있습니다.",
+      "addressPlaceholder": "{network} 주소 입력...",
+      "monitorAddress": "클릭하여 주소 모니터링",
+      "restart": "다시 시작",
+      "trackingAddress": "추적 중인 주소:",
+      "error": "오류:",
+      "restarting": "다시 시작 중...",
+      "stoppingProcessor": "프로세서 중지 중...",
+      "startingProcessor": "프로세서 시작 중...",
+      "processorStarted": "프로세서가 시작되었습니다..."
+    }
+  },
+  "navigation": {
+    "current": "개발",
+    "sections": {
+      "start": {
+        "label": "시작",
+        "compactLabel": "시작",
+        "description": "개요와 스택을 가장 빠르게 시작하는 방법입니다."
+      },
+      "tryLive": {
+        "label": "직접 실행",
+        "compactLabel": "실행",
+        "description": "업스트림 브라우저 예제와 실시간 데모입니다."
+      },
+      "paths": {
+        "label": "경로 선택",
+        "compactLabel": "경로",
+        "description": "{wasmSdk}, 네이티브 {rust} 또는 풀 노드 설정입니다."
+      },
+      "runNode": {
+        "label": "노드 실행",
+        "compactLabel": "노드",
+        "description": "{docker} 한 줄 명령으로 {rustyKaspa}를 로컬에서 실행합니다."
+      },
+      "tooling": {
+        "label": "도구",
+        "compactLabel": "도구",
+        "description": "업스트림 라이브러리, 인프라 및 생태계 프로젝트입니다."
+      },
+      "access": {
+        "label": "액세스",
+        "compactLabel": "액세스",
+        "description": "문서, 조회 인터페이스, 노드 참고 자료 및 테스트 흐름입니다."
+      },
+      "developments": {
+        "label": "개발 현황",
+        "compactLabel": "현황",
+        "description": "진행 중인 작업과 공개 R&D 논의를 확인하세요."
+      },
+      "help": {
+        "label": "도움말",
+        "compactLabel": "도움말",
+        "description": "문제가 생겼을 때 참고할 문서와 커뮤니티 채널입니다."
+      }
+    }
+  },
+  "start": {
+    "release": {
+      "version": "{version}",
+      "action": "릴리스 보기"
+    },
+    "heading": "{kaspa}에서 개발하기",
+    "description": "{kaspa}에서 개발하기 위한 {wasmSdk}, 네이티브 {rust} 라이브러리 및 노드 인프라입니다.",
+    "actions": {
+      "openDocs": "문서 열기",
+      "viewGitHub": "{github}에서 보기"
+    },
+    "quickstart": {
+      "eyebrow": "가장 빠른 시작 방법",
+      "title": "개발 시작하기",
+      "descriptionWithAi": "{kaspaAi}에서 방향을 확인한 뒤 필요한 경로로 바로 이동하세요.",
+      "descriptionWithoutAi": "필요에 맞는 문서, 실시간 예제 또는 노드 경로에서 시작하세요.",
+      "aiTitle": "{kaspaAi}에 질문하기",
+      "aiDescription": "알맞은 {sdk}, {api} 또는 노드 경로를 안내받으세요.",
+      "jumpLabel": "바로 이동",
+      "routes": {
+        "chainData": "체인 데이터 읽기",
+        "stack": "스택 선택",
+        "node": "노드 실행"
+      }
+    }
+  },
+  "tryLive": {
+    "heading": {
+      "label": "직접 실행",
+      "title": "{rustyKaspa} 브라우저 예제 실행",
+      "description": "아래 예제는 {rustyKaspaVersion} 브라우저 {sdk} 릴리스에서 제공되므로 페이지를 벗어나지 않고 {sdk}의 동작을 확인할 수 있습니다."
+    },
+    "upstream": "업스트림",
+    "actions": {
+      "openStandalone": "별도 창에서 열기",
+      "viewSource": "소스 보기"
+    },
+    "networkNotice": "커뮤니티가 운영하는 노드들로 구성되고 {kaspaResolver}를 통해 연결되는 탈중앙화 풀인 <network>{publicNodeNetwork}</network>에서 실행됩니다. 초기화에 몇 초가 걸릴 수 있으며 대규모 프로덕션 용도로는 권장하지 않습니다.",
+    "examples": {
+      "serverInfo": {
+        "title": "서버 정보 가져오기",
+        "shortLabel": "서버 정보",
+        "mobileTabLabel": "서버",
+        "description": "공개 리졸버를 통해 연결하고 브라우저에서 직접 기본 노드 정보를 가져옵니다.",
+        "runtime": "{rpc}"
+      },
+      "dagInfo": {
+        "title": "블록 {dag} 정보 가져오기",
+        "shortLabel": "{dag} 정보",
+        "mobileTabLabel": "{dag}",
+        "description": "업스트림 브라우저 {rpc} 바인딩을 사용해 가동 중인 {kaspa} 노드에서 상위 수준의 {dag} 상태를 읽습니다.",
+        "runtime": "{rpc}"
+      },
+      "blockAdded": {
+        "title": "새 블록 확인",
+        "shortLabel": "새 블록",
+        "mobileTabLabel": "블록",
+        "description": "블록 추가 이벤트를 구독하고 브라우저에서 블록이 실시간으로 들어오는 모습을 확인합니다.",
+        "runtime": "{rpc}"
+      },
+      "daaChanged": {
+        "title": "{daa} 변경 사항 확인",
+        "shortLabel": "{daa} 변경",
+        "mobileTabLabel": "{daa}",
+        "description": "{daa} 점수 업데이트를 구독하고 스트림의 변화를 실시간으로 확인합니다.",
+        "runtime": "{rpc}"
+      },
+      "utxoContext": {
+        "title": "{utxo} 컨텍스트 추적",
+        "shortLabel": "{utxo} 컨텍스트",
+        "mobileTabLabel": "{utxo}",
+        "description": "핵심 브라우저 바인딩을 사용해 주소를 모니터링하고 실시간 {utxo} 이벤트를 수신합니다.",
+        "runtime": "{core}"
+      }
+    }
+  },
+  "paths": {
+    "heading": {
+      "label": "경로",
+      "title": "개발 경로 선택",
+      "description": "구축하려는 시스템에 맞는 {sdk} 또는 인프라 경로에서 시작하세요."
+    },
+    "cards": {
+      "wasm": {
+        "tier": "앱 {sdk}",
+        "title": "{wasmSdk}로 개발",
+        "description": "지갑 흐름, 트랜잭션 및 {rpc} 액세스에 업스트림 브라우저와 {nodeJs} 바인딩을 사용합니다.",
+        "docs": "{wasmSdk} 문서",
+        "examples": "업스트림 예제"
+      },
+      "rust": {
+        "tier": "네이티브 {rust}",
+        "title": "네이티브 {rust}로 개발",
+        "description": "백엔드 서비스, 시스템 통합, 지갑 내부 구성 요소 및 노드 인접 워크로드에 {rustyKaspa}의 {rust} 크레이트를 사용합니다.",
+        "repo": "{rustyKaspa} 저장소"
+      },
+      "node": {
+        "tier": "노드",
+        "title": "노드 실행",
+        "description": "전체 액세스, {utxo} 인덱싱 및 프로덕션 인프라에 {rustyKaspa}를 사용합니다.",
+        "release": "최신 릴리스",
+        "repo": "{rustyKaspa} 저장소"
+      }
+    },
+    "communityApi": {
+      "label": "커뮤니티 {api}",
+      "description": "빠른 조회나 제약이 있는 환경에서는 커뮤니티 호스팅 {api}를 사용할 수 있습니다. 가용성을 보장하지 않는 최선 노력 방식으로 제공되며 SLA는 없습니다.",
+      "action": "{restApi} 문서"
+    }
+  },
+  "runNode": {
+    "heading": {
+      "label": "노드",
+      "title": "노드 실행",
+      "description": "{docker}로 {rustyKaspa}를 로컬에서 실행하세요. 영구적으로 설정하려면 {dockerHub}를 확인하거나 소스에서 빌드하세요."
+    },
+    "quickstart": "{docker} 빠른 시작",
+    "title": "최신 {rustyKaspa} 이미지 실행",
+    "description": "개발 머신에서 노드와 통신할 수 있도록 포트 16110에서 {grpc}를 노출합니다. 임시 컨테이너이므로 영구 저장소와 인바운드 {p2p}는 제공되지 않습니다.",
+    "copyCommand": "{docker} 명령 복사",
+    "commandCopied": "{docker} 명령이 복사되었습니다",
+    "dockerHub": "{dockerHub}",
+    "compile": "소스에서 컴파일"
+  },
+  "tooling": {
+    "heading": {
+      "label": "도구",
+      "title": "현재 툴체인",
+      "description": "개발자가 현재 안정적으로 사용할 수 있는 인터페이스이며, 새롭게 등장하는 작업은 별도로 표시합니다."
+    },
+    "stable": {
+      "rustyKaspa": {
+        "eyebrow": "네이티브 스택",
+        "title": "{rustyKaspa}",
+        "description": "{rust} 크레이트, 지갑 내부 구성 요소, 풀 노드, {rpc}, 인덱싱 및 직접 네트워크 액세스입니다.",
+        "tags": {
+          "rust": "네이티브 {rust}",
+          "infra": "노드 및 인프라"
+        },
+        "action": "저장소 열기"
+      },
+      "wasm": {
+        "eyebrow": "라이브러리 및 {sdks}",
+        "title": "{wasmSdk}",
+        "description": "애플리케이션, 지갑 및 트랜잭션 흐름을 위한 업스트림 브라우저와 {node} 바인딩입니다.",
+        "tag": "브라우저 + {node}",
+        "action": "문서 열기"
+      }
+    },
+    "emerging": {
+      "python": {
+        "status": "베타",
+        "title": "{pythonSdk}",
+        "description": "거의 완성되었습니다. {python}이 스택에 포함된다면 현재도 사용할 수 있습니다.",
+        "action": "저장소 열기"
+      }
+    },
+    "community": {
+      "eyebrow": "커뮤니티 프로젝트",
+      "title": "생태계 도구 및 인프라",
+      "description": "업스트림 {sdk}와 노드 스택을 보완하는 폭넓은 {kaspa} 생태계의 오픈 소스 프로젝트입니다.",
+      "open": "열기",
+      "cards": {
+        "indexer": {
+          "type": "인덱서",
+          "title": "{simplyKaspaIndexer}",
+          "description": "{kaspa} 블록 및 트랜잭션 데이터를 독립적으로 인덱싱합니다."
+        },
+        "dnsSeeder": {
+          "type": "인프라",
+          "title": "{dnsSeeder}",
+          "description": "{kaspa} P2P 네트워크를 위한 부트스트래핑 인프라입니다."
+        },
+        "khost": {
+          "type": "호스팅",
+          "title": "{khost}",
+          "description": "노드 용량을 운영하고 더 넓은 생태계에 기여하기 위한 도구입니다."
+        },
+        "kaspaJs": {
+          "type": "라이브러리",
+          "title": "{kaspaJs}",
+          "description": "{kaspa} 스택을 위한 커뮤니티 관리 {javascript} 도구입니다."
+        }
+      }
+    }
+  },
+  "access": {
+    "heading": {
+      "label": "액세스",
+      "title": "네트워크 액세스",
+      "description": "개발자에게 실제로 필요한 항목에 따라 문서, 조회 인터페이스, 노드 참고 자료 및 테스트 흐름을 묶었습니다."
+    },
+    "groups": {
+      "docs": {
+        "title": "문서",
+        "description": "가이드, 기술 참고 자료 및 공개 제안서부터 살펴보세요.",
+        "links": {
+          "docs": "문서 열기",
+          "wasm": "{wasmSdk} 문서",
+          "deepWiki": "{rustyKaspa} {deepWiki}",
+          "kips": "{kips}",
+          "research": "연구 포럼",
+          "qa": "{kaspaQAndA}"
+        }
+      },
+      "query": {
+        "title": "조회 및 액세스",
+        "description": "공개 도구와 경량 커뮤니티 호스팅 {api}를 통해 네트워크를 조회하세요. 커뮤니티 {api}는 가용성을 보장하지 않는 최선 노력 방식으로 제공되며 SLA는 없습니다.",
+        "links": {
+          "api": "커뮤니티 {api} 문서",
+          "explorer": "탐색기",
+          "dag": "{dag} 시각화 도구",
+          "dumps": "탐색기 / {api} DB 덤프"
+        }
+      },
+      "node": {
+        "title": "노드 및 {rpc}",
+        "description": "전체 인프라를 실행하거나 노드 스택을 더 깊이 살펴보세요.",
+        "links": {
+          "rustyKaspa": "{rustyKaspa}",
+          "release": "최신 릴리스"
+        }
+      },
+      "testnet": {
+        "title": "테스트넷",
+        "description": "메인넷에 출시하기 전에 공개 테스트 리소스를 사용하세요.",
+        "faucet": "테스트넷 파우셋"
+      }
+    }
+  },
+  "developments": {
+    "heading": {
+      "label": "개발 현황",
+      "title": "공개된 작업 현황 살펴보기",
+      "description": "주요 논의 채널을 확인하고 {sdk}, 프로토콜 및 실험적 프로그래머빌리티 작업의 진행 상황을 살펴보세요."
+    },
+    "liveDiscussion": "실시간 논의",
+    "cards": {
+      "channel": {
+        "label": "채널",
+        "title": "핵심 R&D {telegram}",
+        "description": "현재 {kaspa} 연구 및 개발 논의를 위한 주요 공개 채널입니다. {discord}도 계속 사용되지만 현재 핵심 논의는 대부분 이곳에서 이루어집니다."
+      },
+      "research": {
+        "label": "포럼",
+        "title": "{kaspaResearch}",
+        "description": "프로토콜, 합의, 경제학 및 채굴 논의와 {kip} 초안 및 제안서를 위한 장문 포럼입니다."
+      },
+      "toccata": {
+        "label": "하드포크",
+        "title": "{toccata}: 커버넌트 및 {zk}",
+        "description": "확장 스크립트 옵코드({kip17}), 커버넌트 ID({kip20}), 검증기 프리컴파일 서브시스템을 갖춘 {zk} 옵코드({kip16}), 시퀀싱 커밋먼트({kip21})를 묶은 하드포크입니다. 메인넷 활성화에 앞서 현재 {tn12}에서 가동 중입니다."
+      },
+      "silverscript": {
+        "label": "프로그래머빌리티",
+        "title": "{silverscript}",
+        "description": "네이티브 {kaspaScript}로 컴파일되는 고급 스크립팅 언어입니다. 커버넌트와 {zk} 옵코드를 메인넷에 도입하는 {toccata} 하드포크에 앞서 {tn12}에서 테스트 중입니다."
+      },
+      "vprogs": {
+        "label": "프로그래머빌리티",
+        "title": "{vprogs}",
+        "description": "검증 가능한 프로그램에 관한 초기 연구입니다. 온체인 시퀀싱과 오프체인 실행을 결합하고 {zk} 증명으로 정산합니다. {toccata}에 도입되는 스크립트 프리미티브를 기반으로 합니다."
+      },
+      "python": {
+        "label": "{sdk}",
+        "title": "{pythonSdk}",
+        "description": "베타 단계이며 거의 완성되었습니다. {python} 도구는 공개적으로 개발이 진행 중이며 개발자 영역을 넓혀 가고 있습니다."
+      },
+      "kips": {
+        "label": "프로토콜",
+        "title": "{kips}",
+        "description": "애플리케이션과 인프라의 네트워크 통합 방식을 바꿀 수 있는 제안을 확인하세요."
+      }
+    }
+  },
+  "help": {
+    "eyebrow": "도움말",
+    "title": "계속 진행하기",
+    "descriptionWithAi": "문서 또는 {kaspaAi}에서 시작하세요. 더 자세한 도움이 필요하면 {qa}, {github}, {discord} 또는 R&D {telegram}을 이용하세요.",
+    "descriptionWithoutAi": "문서에서 시작하세요. 더 자세한 도움이 필요하면 {qa}, {github}, {discord} 또는 R&D {telegram}을 이용하세요.",
+    "actions": {
+      "openDocs": "문서 열기",
+      "openAi": "AI 열기"
+    },
+    "links": {
+      "github": {
+        "eyebrow": "코드",
+        "title": "{github}"
+      },
+      "discord": {
+        "eyebrow": "채팅",
+        "title": "{discord}"
+      },
+      "qa": {
+        "eyebrow": "질문",
+        "title": "{kaspaQAndA}"
+      },
+      "telegram": {
+        "eyebrow": "최신 개발 소식",
+        "title": "{telegram} R&D"
+      }
+    },
+    "prompts": {
+      "gettingStarted": "{kaspa}에서 개발을 시작하려면 어떻게 해야 하나요?",
+      "choosePath": "{wasmSdk}, 네이티브 {rust}, 노드 실행 중 어떤 경로를 선택해야 하나요?",
+      "nodeOrApi": "자체 노드를 실행해야 하나요, 아니면 커뮤니티 {api}를 사용해도 되나요?",
+      "smartContracts": "{kaspa}에 스마트 컨트랙트가 있나요?",
+      "wallet": "{wasmSdk}로 지갑을 만들려면 어떻게 해야 하나요?",
+      "transaction": "트랜잭션을 생성하고 서명하려면 어떻게 해야 하나요?",
+      "runNode": "{kaspa} 노드를 실행하려면 어떻게 해야 하나요?",
+      "hardware": "노드에 어떤 하드웨어가 필요한가요?",
+      "toccata": "{toccata}란 무엇이며 어떤 변화가 생기나요?",
+      "covenants": "{kaspa}의 커버넌트란 무엇인가요?",
+      "silverscript": "{silverscript}란 무엇인가요?",
+      "networks": "메인넷과 {tn12}의 차이는 무엇인가요?"
+    }
+  }
+}

@@ -19,6 +19,17 @@ the Simplified Chinese DAG annotation. Its license is in
 [Yomogi](https://github.com/google/fonts/tree/main/ofl/yomogi) for the Japanese
 DAG annotation. Its license is in `Yomogi-OFL.txt`.
 
+`NotoSansKR-Regular.ttf` and `NotoSansKR-Bold.ttf` are Google Fonts CSS API
+subsets of [Noto Sans KR](https://github.com/google/fonts/tree/main/ofl/notosanskr)
+for the Korean Open Graph heading and tagline.
+`NotoSansKR-Body-Regular.ttf` and `NotoSansKR-Body-Bold.ttf` are subsets of the
+same family covering the Korean site catalogs. Their license is in
+`NotoSansKR-OFL.txt`.
+
+`NanumPenScript-Regular.ttf` is a Google Fonts CSS API subset of
+[Nanum Pen Script](https://github.com/google/fonts/tree/main/ofl/nanumpenscript)
+for the Korean DAG annotation. Its license is in `NanumPenScript-OFL.txt`.
+
 The locale font contracts declare the exact translated characters covered by
 these subsets. Regenerate a subset and update its contract when the associated
 copy changes.

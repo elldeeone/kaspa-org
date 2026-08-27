@@ -9,10 +9,12 @@ import {
 } from "./catalog-contract.mts";
 import {
   createLocaleCatalogValidator,
+  flattenCatalog,
   type LocaleCatalogValidator,
 } from "./locale-catalog-validation.mts";
 
 const [
+  bodyFonts,
   config,
   dagAnnotationFonts,
   manifest,
@@ -24,6 +26,7 @@ const [
   walletData,
   walletLocalization,
 ] = await Promise.all([
+  import("../../src/i18n/body-font.ts"),
   import("../../src/i18n/config.ts"),
   import("../../src/i18n/dag-annotation-font.ts"),
   import("../../src/i18n/manifest.ts"),
@@ -35,12 +38,13 @@ const [
   import("../../src/data/wallets.ts"),
   import("../../src/i18n/wallets.ts"),
 ]);
+const { getBodyFontContract } = bodyFonts;
 const { localeCodes } = config;
 const { getDagAnnotationFontContract } = dagAnnotationFonts;
 const { RESERVED_NOT_FOUND_PATHNAME, routeIds, stablePathnames } = manifest;
 const { getRouteDefinition, resolveLocalizedRoute } = site;
 const { assertLocaleComplete } = siteValidation;
-const { englishMessages, getHomeMessages } = messages;
+const { englishMessages, getHomeMessages, getMessages } = messages;
 const { getOpenGraphFontContract } = openGraphFonts;
 const { shouldBypassLocaleRouting } = proxyPolicy;
 const { kaspaWallets } = walletData;
@@ -57,11 +61,14 @@ function validateCoveredCharacters(
   location: string,
   value: string,
   coveredCharacters: string | undefined,
+  characterPattern?: RegExp,
 ): void {
   if (coveredCharacters === undefined) return;
   const covered = new Set(coveredCharacters);
   const missing = [...new Set(value)].filter(
-    (character) => !/\s/u.test(character) && !covered.has(character),
+    (character) =>
+      (characterPattern?.test(character) ?? !/\s/u.test(character)) &&
+      !covered.has(character),
   );
   if (missing.length > 0) {
     fail(
@@ -285,9 +292,20 @@ for (const locale of localeCodes) {
 }
 
 for (const locale of localeCodes) {
+  const localeMessages = getMessages(locale);
   const homeMessages = getHomeMessages(locale);
+  const bodyFont = getBodyFontContract(locale);
   const openGraphFont = getOpenGraphFontContract(locale);
   const annotationFont = getDagAnnotationFontContract(locale);
+  validateCoveredCharacters(
+    `messages/${locale}: body font`,
+    Object.values(localeMessages)
+      .flatMap((catalog) => [...flattenCatalog(catalog).values()])
+      .concat(getLocalizedWallets(locale).map(({ summary }) => summary))
+      .join(""),
+    bodyFont.coveredKoreanCharacters,
+    /[가-힣]/u,
+  );
   validateCoveredCharacters(
     `messages/${locale}/home.json: openGraph`,
     `${homeMessages.openGraph.heading}${homeMessages.openGraph.tagline}`,

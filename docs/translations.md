@@ -2,8 +2,8 @@
 
 Kaspa.org accepts corrections to published translations, translator or reviewer
 volunteers, and requests for new site languages. English, Spanish, French,
-Simplified Chinese, Russian, German, Bahasa Indonesia, Brazilian Portuguese, and
-Japanese are published.
+Simplified Chinese, Russian, German, Bahasa Indonesia, Brazilian Portuguese,
+Japanese, and Korean are published.
 
 ## Make a Request
 

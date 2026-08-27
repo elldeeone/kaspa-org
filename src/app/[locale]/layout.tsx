@@ -10,7 +10,7 @@ import { createStructuredData } from "@/i18n/site";
 import "../globals.css";
 import {
   SiteDocumentContent,
-  siteDocumentBodyClassName,
+  getSiteDocumentBodyClassName,
   StructuredDataScript,
 } from "../document-shell";
 
@@ -41,7 +41,7 @@ export default async function LocaleLayout({
       <head>
         <StructuredDataScript data={structuredData} />
       </head>
-      <body className={siteDocumentBodyClassName}>
+      <body className={getSiteDocumentBodyClassName(locale.code)}>
         <SiteDocumentContent locale={locale.code} messages={sharedMessages}>
           {children}
         </SiteDocumentContent>

@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "title": "Kaspa | 실시간 탈중앙화를 위한 작업 증명 blockDAG",
+    "description": "Kaspa는 공정하게 출시된 작업 증명 blockDAG 암호화폐로, 초당 10개의 블록을 처리하며 실시간 탈중앙화를 위해 설계되었습니다."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — 실시간 탈중앙화",
+    "heading": "실시간\n탈중앙화",
+    "tagline": "기다림 없는 bitcoin의 작업 증명."
+  },
+  "hero": {
+    "heading": "실시간\n탈중앙화",
+    "tagline": "기다림 없는 bitcoin의 작업 증명.",
+    "getStarted": "시작하기",
+    "getWallet": "지갑 받기",
+    "buyKaspa": "Kaspa 구매하기",
+    "dagAnnotation": "실시간 pow"
+  },
+  "verify": {
+    "heading": "믿지 말고, 검증하라.",
+    "history": "Kaspa 역사 속 모든 코인은 암호학적으로 공급량이 0인 제네시스까지 거슬러 올라갑니다.",
+    "fairLaunch": "사전 채굴 없음. 숨겨진 물량 배정 없음. 공정한 출시.",
+    "explanation": "제네시스 증명은 프루닝 포인트 블록 해시의 연결을 원래 제네시스까지 역추적하고, 그 UTXO 커밋먼트가 공집합과 일치하는지 검증합니다. 제네시스 코인베이스에 포함된 Bitcoin 블록 해시는 타임스탬프 역할을 하여 숨겨진 사전 채굴이 없었음을 입증합니다.",
+    "runProof": "증명 실행하기"
+  },
+  "proof": {
+    "trigger": "증명 검증하기",
+    "loader": {
+      "loading": "증명을 불러오는 중...",
+      "error": "증명을 불러올 수 없습니다.",
+      "retry": "다시 시도"
+    },
+    "chrome": {
+      "back": "뒤로",
+      "title": "증명 검증하기",
+      "sectionsAria": "증명 섹션",
+      "jumpToSection": "{section}(으)로 이동"
+    },
+    "sections": {
+      "live": "실시간",
+      "origin": "기원",
+      "runIt": "직접 실행"
+    },
+    "live": {
+      "eyebrow": "과거 · 현재 · 연속",
+      "title": "실시간 공급량과 발행 일정 비교",
+      "body": "Kaspa 네트워크의 유통량은 기본 원리부터 다시 계산할 수 있습니다. 가동 중인 노드는 현재 총량을 보고합니다. 2021년 11월 22일 체크포인트의 과거 총량은 하드코딩된 제네시스의 UTXO 집합에 커밋되어 있으며, 그 체크포인트 이후 발행된 모든 코인은 결정론적 발행 일정을 따릅니다."
+    },
+    "origin": {
+      "eyebrow": "기원",
+      "title": "공급량이 시작되는 곳",
+      "supplyBody": "모든 코인은 공급량이 <strong>0</strong>이었던 단 하나의 블록까지 거슬러 올라갑니다. 그 블록의 UTXO 커밋먼트는 공집합의 수학적 지문이며, 어떤 컴퓨터에서 계산해도 같은 상수가 나옵니다. 공급은 여기서 시작되며, 이후의 모든 코인은 물량 배정이 아니라 예정된 발행으로 생겨났습니다.",
+      "verseBody": "그 블록의 코인베이스에는 고대 페르시아 왕들이 장려한 자유의 가치를 기리는 아람어 구절인 <reference>에스라 7:18</reference>이 담겨 있습니다.",
+      "translatedQuotation": "“당신과 당신의 형제들이 남은 은과 금으로 무엇을 하는 것이 좋다고 여겨지든, 당신의 하나님의 뜻에 따라 행하십시오.”",
+      "quotationAttribution": "제네시스 코인베이스에 기록된 에스라 7:18",
+      "timestampBody": "코인베이스에는 <bitcoinBlock>Bitcoin 블록 #708,639</bitcoinBlock>의 해시도 담겨 있어, 제네시스 블록이 해당 시점 이후에 생성되었으며 사전 채굴이 없었음을 입증합니다."
+    },
+    "run": {
+      "eyebrow": "믿지 말고, 검증하라",
+      "title": "직접 실행해 보세요",
+      "intro": "제네시스부터 현재 팁까지 증명을 재현해 보세요. 노트북은 프루닝 포인트 블록 해시의 연결을 제네시스까지 역추적하고, UTXO 커밋먼트를 공집합 지문과 대조해 검증하며, 기준점 역할을 하는 Bitcoin 블록 해시를 확인합니다. 2021년 11월 22일 체크포인트의 과거 공급량을 숫자로 확인하려면, 증명에 커밋된 UTXO 집합을 합산하는 한 단계의 추가 계산이 필요합니다.",
+      "notebookTitle": "증명 노트북",
+      "notebookBody": "복제하고, 실행하고, 살펴보세요. 노트북은 제네시스와 체크포인트의 연결을 검증하지만 과거 공급량 수치 자체를 출력하지는 않습니다.",
+      "notebookAction": "GitHub 저장소에서 열기",
+      "checkpointTitle": "체크포인트 총량 검증하기",
+      "checkpointStep1": "노트북을 실행하여 하드코딩된 제네시스, 체크포인트 연결, 공집합 기원, Bitcoin 앵커를 검증합니다.",
+      "checkpointStep2": "이전 버전인 <kaspad>kaspad v0.11.5-2</kaspad>를 열고, <processor>블록 프로세서</processor>가 내장된 체크포인트 <code>utxos.gz</code>를 불러온 뒤 하드코딩된 제네시스 UTXO 커밋먼트와 대조하여 검증하는 과정을 확인합니다.",
+      "checkpointStep3": "<serialization>serialization.go</serialization>의 형식에 따라 <utxos>utxos.gz</utxos>를 파싱하고 모든 UTXO 금액을 합산합니다.",
+      "checkpointStep4": "그 합계가 체크포인트 DAA <daa>1,312,860</daa>(2021년 11월 22일)의 과거 공급량입니다. <supply>984,222,544.04487171 KAS</supply>",
+      "checkpointNote": "이 시점부터 발행량은 결정론적으로 정해집니다. 체크포인트 이후 예정된 발행량을 더하면 어떤 DAA에서든 예상 공급량을 구할 수 있으며, 이는 가동 중인 노드가 보고하는 값과 일치해야 합니다."
+    },
+    "supply": {
+      "intro": {
+        "eyebrow": "지속적 검증",
+        "title": "실시간 공급량과 발행 일정 비교",
+        "body": "가동 중인 노드의 유통량을 체크포인트에 기반한 예상 공급량과 비교합니다. 예상 공급량은 하드코딩된 제네시스에 커밋된 2021년 11월 22일 체크포인트 총량에 Kaspa 네트워크의 결정론적 발행 일정에 따른 물량을 더해 계산합니다."
+      },
+      "emissionHistory": "발행 내역",
+      "connection": {
+        "connectedTo": "{nodeUrl}에 연결됨",
+        "error": "연결 오류",
+        "connecting": "Kaspa 네트워크에 연결하는 중..."
+      },
+      "comparison": {
+        "nodeReported": "노드가 보고한 공급량",
+        "unit": "KAS",
+        "rpcSource": "getCoinSupply RPC 기준",
+        "expected": "예상 공급량",
+        "expectedBasis": "체크포인트 총량 + 2021년 11월 22일 이후 예정된 발행량"
+      },
+      "anchor": {
+        "label": "앵커",
+        "title": "2021년 11월 22일 체크포인트",
+        "body": "2021년 11월 22일 체크포인트의 과거 공급량은 하드코딩된 제네시스의 UTXO 집합에 커밋되어 있습니다. 그 이후 발행된 모든 코인은 결정론적 합의 일정을 따르므로, 노드가 보고한 공급량과 체크포인트에 기반한 예상 공급량은 일치해야 합니다. 수백 KAS 규모의 작은 차이는 Bitcoin 네트워크를 비롯한 다른 PoW 발행 방식과 마찬가지로 DAA와 블록 수 사이의 편차, 그리고 합의 보조금 표의 정수 반올림 때문에 발생합니다."
+      },
+      "timeline": {
+        "genesis": {
+          "label": "제네시스",
+          "date": "{date, date, medium}",
+          "description": "UTXO 집합이 비어 있으므로 존재하는 코인은 0개입니다. 원래 제네시스는 Bitcoin 블록 #708,639에 고정되어 있습니다."
+        },
+        "checkpoint": {
+          "label": "체크포인트",
+          "date": "{date, date, medium}",
+          "description": "메인넷 초기 약 2주 동안 블록 보상은 블록당 1~1,000 KAS 사이에서 무작위로 정해져 327,792,544 KAS가 추가 발행되었고, 이후 하드포크로 블록당 보상이 고정되었습니다. 이 과거 공급량은 하드코딩된 제네시스에 커밋되어 있습니다."
+        },
+        "preDeflationary": {
+          "label": "디플레이션 이전 단계",
+          "date": "{startDate, date, medium} – {endDate, date, medium}",
+          "description": "체크포인트 이후 약 6개월 동안 블록당 보상이 고정되며, 그 뒤 디플레이션 일정이 시작됩니다."
+        },
+        "chromatic": {
+          "label": "크로매틱 단계 시작",
+          "date": "~{date, date, medium}",
+          "description": "디플레이션 이전 단계가 끝납니다. 블록당 보상은 500 KAS에서 440 KAS로 줄고 이후 매월 기하급수적으로 감소합니다."
+        },
+        "crescendo": {
+          "label": "Crescendo",
+          "date": "~{date, date, medium}",
+          "description": "초당 10개의 블록을 처리하며 블록당 보상은 10분의 1로 줄어듭니다."
+        },
+        "now": "현재",
+        "live": "실시간",
+        "circulating": "유통 중인 KAS",
+        "expected": "예상 KAS",
+        "loading": "불러오는 중...",
+        "connecting": "노드에 연결하는 중..."
+      },
+      "stats": {
+        "mined": "채굴량",
+        "blockReward": "블록 보상",
+        "nodeDagBlocks": "노드 DAG 블록",
+        "daaScore": "DAA 점수",
+        "blockCountAccessible": "노드 DAG 블록: {count}"
+      }
+    }
+  }
+}

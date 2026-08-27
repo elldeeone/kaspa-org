@@ -57,6 +57,7 @@ next-env.d.ts
 /public/vendor/kaspa-wasm/2.0.0/examples/web/get-block-dag-info.id-ID.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/get-block-dag-info.pt-BR.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/get-block-dag-info.ja.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/get-block-dag-info.ko.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/get-server-info.es.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/get-server-info.fr.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/get-server-info.zh-CN.html
@@ -65,6 +66,7 @@ next-env.d.ts
 /public/vendor/kaspa-wasm/2.0.0/examples/web/get-server-info.id-ID.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/get-server-info.pt-BR.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/get-server-info.ja.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/get-server-info.ko.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-block-added.es.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-block-added.fr.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-block-added.zh-CN.html
@@ -73,6 +75,7 @@ next-env.d.ts
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-block-added.id-ID.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-block-added.pt-BR.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-block-added.ja.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-block-added.ko.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-daa-changed.es.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-daa-changed.fr.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-daa-changed.zh-CN.html
@@ -81,6 +84,7 @@ next-env.d.ts
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-daa-changed.id-ID.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-daa-changed.pt-BR.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-daa-changed.ja.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/subscribe-daa-changed.ko.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/utxo-context.es.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/utxo-context.fr.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/utxo-context.zh-CN.html
@@ -89,6 +93,7 @@ next-env.d.ts
 /public/vendor/kaspa-wasm/2.0.0/examples/web/utxo-context.id-ID.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/utxo-context.pt-BR.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/utxo-context.ja.html
+/public/vendor/kaspa-wasm/2.0.0/examples/web/utxo-context.ko.html
 /public/vendor/kaspa-wasm/2.0.0/examples/web/resources/utils.es.js
 /public/vendor/kaspa-wasm/2.0.0/examples/web/resources/utils.fr.js
 /public/vendor/kaspa-wasm/2.0.0/examples/web/resources/utils.zh-CN.js
@@ -97,3 +102,4 @@ next-env.d.ts
 /public/vendor/kaspa-wasm/2.0.0/examples/web/resources/utils.id-ID.js
 /public/vendor/kaspa-wasm/2.0.0/examples/web/resources/utils.pt-BR.js
 /public/vendor/kaspa-wasm/2.0.0/examples/web/resources/utils.ja.js
+/public/vendor/kaspa-wasm/2.0.0/examples/web/resources/utils.ko.js
