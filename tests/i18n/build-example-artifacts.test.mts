@@ -14,6 +14,11 @@ import test from "node:test";
 import { runInNewContext } from "node:vm";
 
 import { createBuildExampleArtifactWorkflow } from "../../scripts/i18n/build-example-artifacts.mts";
+import {
+  compileBuildExampleArtifacts,
+  type BuildArtifactMessages,
+  type BuildExampleCompilerInput,
+} from "../../scripts/i18n/build-example-artifact-compiler.mts";
 import { resolveBuildExampleReturnPath } from "../../scripts/i18n/build-example-return-path.mjs";
 import { buildExampleContract } from "../../src/i18n/build-example-contract.ts";
 
@@ -57,6 +62,33 @@ async function createWorkflowFixture(): Promise<string> {
     ),
   ]);
   return root;
+}
+
+async function loadCompilerInput(): Promise<BuildExampleCompilerInput> {
+  const sourceEntries = await Promise.all(
+    [...exampleNames.map((name) => `${name}.html`), "resources/utils.js"].map(
+      async (path) =>
+        [path, await readFile(join(examplesDirectory, path), "utf8")] as const,
+    ),
+  );
+  const messages = async (locale: "en" | "es") => {
+    const catalog = JSON.parse(
+      await readFile(
+        join(repositoryRoot, `messages/${locale}/build.json`),
+        "utf8",
+      ),
+    ) as { artifacts: BuildArtifactMessages };
+    return catalog.artifacts;
+  };
+  const [englishMessages, spanishMessages] = await Promise.all([
+    messages("en"),
+    messages("es"),
+  ]);
+  return {
+    sources: Object.fromEntries(sourceEntries),
+    englishMessages,
+    targets: [{ locale: "es", direction: "ltr", messages: spanishMessages }],
+  };
 }
 
 async function restoreUpstreamVendorInputs(root: string): Promise<void> {
@@ -122,11 +154,12 @@ test("artifact manifest follows the central Build-example contract", () => {
       `resources/utils.${locale}.js`,
     ]);
   }
-  assert.deepEqual(Object.keys(manifest.urlsByLocale), ["en-XA", "es"]);
-  assert.equal(manifest.pathsByLocale["en-XA"].length, 6);
-  assert.equal(manifest.pathsByLocale.es.length, 6);
-  assert.equal(manifest.localizedPaths.length, 12);
-  assert.equal(manifest.localizedUrls.length, 12);
+  assert.deepEqual(Object.keys(manifest.urlsByLocale), [...manifest.locales]);
+  assert.equal(
+    manifest.localizedPaths.length,
+    manifest.locales.length * (exampleNames.length + 1),
+  );
+  assert.equal(manifest.localizedUrls.length, manifest.localizedPaths.length);
   assert.ok(
     manifest.localizedUrls.every((path) =>
       path.startsWith(`${buildExampleContract.examplesPublicBasePath}/`),
@@ -134,7 +167,7 @@ test("artifact manifest follows the central Build-example contract", () => {
   );
 });
 
-test("git ignores exactly the generated localized artifact contract", async () => {
+test("git ignores only the registered generated artifacts", async () => {
   const generatedPrefix = `/${examplesRelativeDirectory}/`;
   const ignoredArtifacts = (
     await readFile(join(repositoryRoot, ".gitignore"), "utf8")
@@ -144,9 +177,7 @@ test("git ignores exactly the generated localized artifact contract", async () =
     .sort();
   assert.deepEqual(
     ignoredArtifacts,
-    manifest.localizedPaths
-      .map((pathname) => `${generatedPrefix}${pathname}`)
-      .sort(),
+    manifest.localizedPaths.map((path) => `${generatedPrefix}${path}`).sort(),
   );
 });
 
@@ -157,105 +188,36 @@ test("artifact manifest is deeply immutable and cannot change cleanup policy", (
     manifest,
     manifest.locales,
     manifest.pathsByLocale,
-    manifest.pathsByLocale["en-XA"],
-    manifest.pathsByLocale.es,
+    ...Object.values(manifest.pathsByLocale),
     manifest.localizedPaths,
     manifest.urlsByLocale,
-    manifest.urlsByLocale["en-XA"],
-    manifest.urlsByLocale.es,
+    ...Object.values(manifest.urlsByLocale),
     manifest.localizedUrls,
   ]) {
     assert.equal(Object.isFrozen(collection), true);
   }
 
+  const locale = manifest.locales[0];
+  assert.ok(locale);
   const expectedLocales = [...manifest.locales];
-  const expectedSpanishPaths = [...manifest.pathsByLocale.es];
+  const expectedPaths = [...manifest.pathsByLocale[locale]];
   assert.throws(
     () => (manifest.locales as unknown as string[]).push("pt-BR"),
     TypeError,
   );
   assert.throws(
     () =>
-      (manifest.pathsByLocale.es as unknown as string[]).push(
-        "unexpected.es.html",
+      (manifest.pathsByLocale[locale] as unknown as string[]).push(
+        `unexpected.${locale}.html`,
       ),
     TypeError,
   );
   assert.throws(
-    () => Object.defineProperty(manifest.pathsByLocale, "es", { value: [] }),
+    () => Object.defineProperty(manifest.pathsByLocale, locale, { value: [] }),
     TypeError,
   );
   assert.deepEqual(manifest.locales, expectedLocales);
-  assert.deepEqual(manifest.pathsByLocale.es, expectedSpanishPaths);
-});
-
-test("Build pseudo artifacts are deterministic, complete, and test-only", async () => {
-  const first = await artifacts.compile("test");
-  const second = await artifacts.compile("test");
-
-  assert.deepEqual(first, second);
-  assert.deepEqual(
-    Object.keys(first).sort(),
-    [...manifest.localizedPaths].sort(),
-  );
-
-  for (const name of exampleNames) {
-    const source = await readFile(
-      join(examplesDirectory, `${name}.html`),
-      "utf8",
-    );
-    const pseudo = first[`${name}.en-XA.html`];
-    assert.match(source, /<html lang="en" dir="ltr">/u);
-    assert.match(pseudo, /<html lang="en-XA" dir="ltr">/u);
-    assert.match(pseudo, /<meta name="robots" content="noindex, nofollow">/u);
-    assert.match(pseudo, /\[!! /u);
-    assert.doesNotMatch(pseudo, /rel=["'](?:canonical|alternate)["']/iu);
-    assert.doesNotMatch(pseudo, /property=["']og:/iu);
-  }
-});
-
-test("Build pseudo artifacts preserve technical and runtime interfaces", async () => {
-  const compiled = await artifacts.compile("test");
-
-  assert.match(
-    compiled["get-server-info.en-XA.html"],
-    /GetServerInfo řëëqüüëëšţ/u,
-  );
-  assert.match(
-    compiled["get-block-dag-info.en-XA.html"],
-    /GetBlockDagInfo řëëšþööńšëë/u,
-  );
-  assert.match(
-    compiled["subscribe-block-added.en-XA.html"],
-    /subscribeBlockAdded/u,
-  );
-  assert.match(
-    compiled["subscribe-block-added.en-XA.html"],
-    /Šüüƀšçřïïƀïïńĝ ţöö Ɓļööçķ ÅÅďďëëď/u,
-  );
-  assert.doesNotMatch(
-    compiled["subscribe-block-added.en-XA.html"],
-    /Subscribing to Block Added/u,
-  );
-  assert.match(
-    compiled["subscribe-daa-changed.en-XA.html"],
-    /subscribeVirtualDaaScoreChanged/u,
-  );
-  assert.match(compiled["utxo-context.en-XA.html"], /UtxoProcessor/u);
-  assert.match(
-    compiled["utxo-context.en-XA.html"],
-    /eventPluralRules\.select\(events\) === "one"/u,
-  );
-  assert.match(compiled["utxo-context.en-XA.html"], /ëëṽëëńţš/u);
-  assert.doesNotMatch(compiled["utxo-context.en-XA.html"], /event\(s\)/u);
-
-  const controls = compiled["resources/utils.en-XA.js"];
-  assert.match(controls, /\/en-XA\/build#try-live/u);
-  assert.match(controls, /\[!! Ďïïšçööńńëëçţ !!\]/u);
-  assert.match(controls, /innerHTML = ` \[!! \| Çööńńëëçţïïńĝ/u);
-  assert.match(controls, /mainnet/u);
-  assert.match(controls, /testnet-10/u);
-  assert.match(controls, /testnet-11/u);
+  assert.deepEqual(manifest.pathsByLocale[locale], expectedPaths);
 });
 
 test("English UTXO artifact copy preserves its plural and notice contracts", async () => {
@@ -283,8 +245,8 @@ test("English UTXO artifact copy preserves its plural and notice contracts", asy
 });
 
 test("Spanish Build artifacts are deterministic, complete, and catalog-backed", async () => {
-  const first = await artifacts.compile("test");
-  const second = await artifacts.compile("test");
+  const first = await artifacts.compile();
+  const second = await artifacts.compile();
 
   assert.deepEqual(first, second);
   for (const name of exampleNames) {
@@ -322,6 +284,22 @@ test("Spanish Build artifacts are deterministic, complete, and catalog-backed", 
   assert.match(controls, /testnet-11/u);
 });
 
+test("Build artifacts use a locale's registered text direction", async () => {
+  const input = await loadCompilerInput();
+  const rtlArtifacts = compileBuildExampleArtifacts({
+    ...input,
+    targets: input.targets.map((target) =>
+      target.locale === "es" ? { ...target, direction: "rtl" } : target,
+    ),
+  }).generated;
+
+  for (const name of exampleNames) {
+    const spanish = rtlArtifacts[`${name}.es.html`];
+    assert.match(spanish, /<html lang="es" dir="rtl">/u);
+    assert.doesNotMatch(spanish, /<html lang="es" dir="ltr">/u);
+  }
+});
+
 test("catalog interpolation text cannot execute in generated JavaScript", async (t) => {
   const root = await createWorkflowFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -333,8 +311,7 @@ test("catalog interpolation text cannot execute in generated JavaScript", async 
     "Red ${globalThis.catalogTextExecuted = true}: {network}";
   await writeFile(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`, "utf8");
 
-  const generated =
-    await createBuildExampleArtifactWorkflow(root).compile("production");
+  const generated = await createBuildExampleArtifactWorkflow(root).compile();
   const line = generated["get-server-info.es.html"]
     .split("\n")
     .find((candidate) => candidate.includes("catalogTextExecuted"));
@@ -358,8 +335,7 @@ test("catalog backticks remain text in generated JavaScript", async (t) => {
   catalog.artifacts.runtime.selectedNetwork = "Red `principal`: {network}";
   await writeFile(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`, "utf8");
 
-  const generated =
-    await createBuildExampleArtifactWorkflow(root).compile("production");
+  const generated = await createBuildExampleArtifactWorkflow(root).compile();
   const line = generated["get-server-info.es.html"]
     .split("\n")
     .find((candidate) => candidate.includes("principal"));
@@ -391,8 +367,7 @@ test("catalog quotes and tags cannot inject generated HTML", async (t) => {
     'Volver</a><img src=x onerror="catalogElementExecuted()"><a>';
   await writeFile(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`, "utf8");
 
-  const generated =
-    await createBuildExampleArtifactWorkflow(root).compile("production");
+  const generated = await createBuildExampleArtifactWorkflow(root).compile();
   const html = generated["utxo-context.es.html"];
   assert.match(
     html,
@@ -428,8 +403,7 @@ test("catalog text stays inert when generated JavaScript writes innerHTML", asyn
     "| {count, plural, one {'<img src=x onerror=globalThis.catalogPluralExecuted=true>' # evento} other {'<img src=x onerror=globalThis.catalogPluralExecuted=true>' # eventos}}";
   await writeFile(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`, "utf8");
 
-  const generated =
-    await createBuildExampleArtifactWorkflow(root).compile("production");
+  const generated = await createBuildExampleArtifactWorkflow(root).compile();
   const html = generated["utxo-context.es.html"];
   const logCall = html
     .split("\n")
@@ -478,7 +452,7 @@ test("English catalog text stays inert when preparing vendored innerHTML", async
   await writeFile(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`, "utf8");
 
   await assert.rejects(
-    createBuildExampleArtifactWorkflow(root).prepareVendor("production"),
+    createBuildExampleArtifactWorkflow(root).prepareVendor(),
     /utxo-context\.html changed; review its human-readable string inventory/u,
   );
   const html = await readFile(
@@ -527,13 +501,48 @@ test("workflow check rejects artifacts generated from a stale Spanish catalog", 
   const spanishCatalog = await readFile(spanishCatalogPath, "utf8");
 
   await writeFile(spanishCatalogPath, englishCatalog, "utf8");
-  await fixture.sync("production");
+  await fixture.sync();
   await writeFile(spanishCatalogPath, spanishCatalog, "utf8");
 
   await assert.rejects(
-    fixture.check("production"),
+    fixture.check(),
     /Stale generated localized artifact get-server-info\.es\.html/u,
   );
+});
+
+test("artifact compiler preserves ICU exact-selector semantics", async () => {
+  const input = await loadCompilerInput();
+  const target = structuredClone(input.targets[0]);
+  target.messages.utxo.receivedEvents =
+    "{count, plural, =01 {exact #} few {few #} other {other #}}";
+
+  const compilation = compileBuildExampleArtifacts({
+    ...input,
+    targets: [target],
+  });
+  const html = compilation.generated["utxo-context.es.html"];
+  const assignment = html
+    .split("\n")
+    .find((candidate) =>
+      candidate.includes('document.getElementById("actions").innerHTML'),
+    );
+  assert.ok(assignment);
+  assert.doesNotMatch(assignment, /=== 01/u);
+
+  const render = (events: number, category: string) => {
+    const actions = { innerHTML: "" };
+    runInNewContext(assignment.trim(), {
+      document: { getElementById: () => actions },
+      eventNumberFormat: { format: (value: number) => String(value) },
+      eventPluralRules: { select: () => category },
+      events,
+    });
+    return actions.innerHTML;
+  };
+
+  assert.equal(render(1, "other"), "other 1");
+  assert.equal(render(3, "few"), "few 3");
+  assert.equal(render(8, "many"), "other 8");
 });
 
 test("workflow compilation rejects a non-plural event message", async (t) => {
@@ -547,43 +556,32 @@ test("workflow compilation rejects a non-plural event message", async (t) => {
   await writeFile(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`, "utf8");
 
   await assert.rejects(
-    createBuildExampleArtifactWorkflow(root).compile("test"),
-    /must be a one\/other cardinal count plural/u,
+    createBuildExampleArtifactWorkflow(root).compile(),
+    /must be a cardinal count plural with an other branch/u,
   );
 });
 
-test("workflow sync and check enforce each target artifact set", async (t) => {
+test("workflow sync and check enforce the registered artifact set", async (t) => {
   const root = await createWorkflowFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const fixture = createBuildExampleArtifactWorkflow(root);
   const directory = join(root, examplesRelativeDirectory);
 
-  await fixture.sync("preview");
-  await fixture.check("preview");
+  await fixture.sync();
+  await fixture.check();
   assert.deepEqual(
     (await readdir(directory))
-      .filter((path) => /\.(?:en-XA|es)\.html$/u.test(path))
+      .filter((path) => /\.es\.html$/u.test(path))
       .sort(),
     manifest.localizedPaths.filter((path) => path.endsWith(".html")).sort(),
-  );
-
-  await fixture.sync("production");
-  await fixture.check("production");
-  assert.deepEqual(
-    (await readdir(directory))
-      .filter((path) => /\.(?:en-XA|es)\.html$/u.test(path))
-      .sort(),
-    manifest.pathsByLocale.es.filter((path) => path.endsWith(".html")).sort(),
   );
 });
 
 test("cleanup removes only the exact generated localized artifacts", async (t) => {
   const { root, directory } = await createArtifactFixture({
     "get-server-info.html": "English source",
-    "get-server-info.en-XA.html": "Test-only pseudo locale",
     "get-server-info.es.html": "Spanish locale",
     "resources/utils.js": "English controls",
-    "resources/utils.en-XA.js": "Test-only localized controls",
     "resources/utils.es.js": "Spanish localized controls",
   });
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -599,11 +597,9 @@ test("cleanup removes only the exact generated localized artifacts", async (t) =
 
 test("cleanup refuses every other locale-suffixed artifact without deleting files", async (t) => {
   const { root, directory } = await createArtifactFixture({
-    "get-server-info.en-XA.html": "Test-only pseudo locale",
     "get-server-info.en.html": "Duplicate source locale",
     "get-server-info.es.html": "Known localized sibling",
     "subscribe-block-added.pt-BR.html": "Regional localized sibling",
-    "resources/utils.en-XA.js": "Test-only localized controls",
     "resources/utils.es.js": "Localized controls",
     "resources/utils.min.js": "Plausible minified vendor asset",
     "unexpected.es.html": "Unknown localized artifact",
@@ -615,7 +611,6 @@ test("cleanup refuses every other locale-suffixed artifact without deleting file
     /Refusing to remove unexpected localized artifacts: get-server-info\.en\.html, resources\/utils\.min\.js, subscribe-block-added\.pt-BR\.html, unexpected\.es\.html/u,
   );
   assert.deepEqual((await readdir(directory)).sort(), [
-    "get-server-info.en-XA.html",
     "get-server-info.en.html",
     "get-server-info.es.html",
     "resources",
@@ -623,7 +618,6 @@ test("cleanup refuses every other locale-suffixed artifact without deleting file
     "unexpected.es.html",
   ]);
   assert.deepEqual((await readdir(join(directory, "resources"))).sort(), [
-    "utils.en-XA.js",
     "utils.es.js",
     "utils.min.js",
   ]);
@@ -632,7 +626,7 @@ test("cleanup refuses every other locale-suffixed artifact without deleting file
 test("cleanup rejects nested localized artifacts without deleting files", async (t) => {
   const nestedPath = "demos/archive/unexpected.es.html";
   const { root, directory } = await createArtifactFixture({
-    "get-server-info.en-XA.html": "Known generated artifact",
+    "get-server-info.es.html": "Known generated artifact",
     [nestedPath]: "Unexpected nested Spanish artifact",
   });
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -646,14 +640,14 @@ test("cleanup rejects nested localized artifacts without deleting files", async 
     "Unexpected nested Spanish artifact",
   );
   assert.equal(
-    await readFile(join(directory, "get-server-info.en-XA.html"), "utf8"),
+    await readFile(join(directory, "get-server-info.es.html"), "utf8"),
     "Known generated artifact",
   );
 });
 
 test("Build example return paths are restricted to each exact same-origin locale anchor", () => {
   const origin = "https://preview.example";
-  for (const locale of ["en-XA", "es"] as const) {
+  for (const locale of ["es"] as const) {
     const expectedPath = `/${locale}/build`;
     const fallback = `/${locale}/build#try-live`;
 

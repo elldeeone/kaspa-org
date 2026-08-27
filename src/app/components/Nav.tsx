@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Link, useIsPathnamePublished } from "@/i18n/link";
+import { Link, useIsKnownPathname } from "@/i18n/link";
 import { localizedDestinationInventory } from "@/i18n/manifest";
 import {
   KASPA_MARK_SIGNAL,
@@ -96,7 +96,7 @@ export default function Nav() {
   const isDark = isClient && resolvedTheme === "dark";
   const showGlyphLogo = isDark && logoReplaced;
   const activeLogoFlight = isDark ? logoFlight : null;
-  const assetsPublished = useIsPathnamePublished(
+  const assetsPublished = useIsKnownPathname(
     localizedDestinationInventory.logoAssets.pathname,
   );
 

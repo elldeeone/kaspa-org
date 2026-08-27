@@ -1,8 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import spanishWalletSummaries from "../../messages/es/wallets.json" with { type: "json" };
-import { validateSpanishCatalogContract } from "../../scripts/i18n/spanish-contract.mts";
 import {
   getRatingExplanationKey,
   ratingExplanations,
@@ -34,34 +32,13 @@ test("every supported locale returns the complete canonical wallet set", () => {
   }
 });
 
-test("English records are canonical and pseudo summaries derive from them", () => {
+test("English records are canonical", () => {
   assert.deepEqual(getLocalizedWallets("en"), kaspaWallets);
-
-  const pseudoWallets = getLocalizedWallets("en-XA");
-  for (const [index, wallet] of pseudoWallets.entries()) {
-    assert.notEqual(wallet.summary, kaspaWallets[index].summary);
-    assert.match(wallet.summary, /^\[!! /u);
-  }
 });
 
 test("route catalogs do not own wallet records", () => {
   assert.equal("wallets" in englishMessages.hodl.walletFinder, false);
   assert.equal("wallets" in spanishMessages.hodl.walletFinder, false);
-});
-
-test("Spanish wallet summaries satisfy the site translation contract", () => {
-  const englishWalletSummaries = Object.fromEntries(
-    kaspaWallets.map((wallet) => [wallet.id, wallet.summary]),
-  );
-
-  assert.deepEqual(
-    validateSpanishCatalogContract(
-      "wallets",
-      englishWalletSummaries,
-      spanishWalletSummaries,
-    ),
-    [],
-  );
 });
 
 test("every validator-approved rating resolves through the explanation map", () => {

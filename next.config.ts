@@ -1,12 +1,7 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
-import { defaultLocale } from "./src/i18n/locale-registry";
-import { installI18nPublicationProfile } from "./src/i18n/publication-profile-node";
-import {
-  I18N_PUBLICATION_PROFILE_ENV,
-  serializeI18nPublicationProfile,
-} from "./src/i18n/publication-profile-contract";
+import { supportedLocaleCodes } from "./src/i18n/locale-registry";
 
 const legacyRedirects = [
   { source: "/.well-known/llms.txt", destination: "/llms.txt" },
@@ -55,40 +50,15 @@ const withNextIntl = createNextIntlPlugin({
 });
 
 export default async function createNextConfig(): Promise<NextConfig> {
-  const { marker, profile } = installI18nPublicationProfile();
-  const serializedProfile = serializeI18nPublicationProfile(profile);
-  const [manifest, config, siteValidation] = await Promise.all([
+  const [manifest, siteValidation] = await Promise.all([
     import("./src/i18n/manifest.ts"),
-    import("./src/i18n/config.ts"),
     import("./src/i18n/site-validation.ts"),
   ]);
-  delete process.env[I18N_PUBLICATION_PROFILE_ENV];
-
-  const isProductionDeployment =
-    process.env.VERCEL_ENV === "production" ||
-    process.env.AWS_BRANCH?.trim().toLowerCase() === "main";
-
-  if (config.isPseudoLocaleEnabled && isProductionDeployment) {
-    throw new Error(
-      "The private en-XA pseudo-locale cannot be enabled in a production deployment.",
-    );
-  }
-
-  for (const locale of siteValidation.listProductionLocales()) {
-    if (locale === defaultLocale) continue;
-    siteValidation.assertProductionLocaleComplete(locale);
+  for (const locale of supportedLocaleCodes) {
+    siteValidation.assertLocaleComplete(locale);
   }
 
   const nextConfig: NextConfig = {
-    env: {
-      [I18N_PUBLICATION_PROFILE_ENV]: serializedProfile,
-    },
-    ...(marker
-      ? {
-          outputFileTracingRoot: marker.repositoryRoot,
-          turbopack: { root: marker.repositoryRoot },
-        }
-      : {}),
     allowedDevOrigins,
     // Use the request's original production-server origin for proxy rewrites.
     // Otherwise Next can emit default-locale rewrites against localhost even

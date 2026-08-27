@@ -3,27 +3,24 @@ import { join, relative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import {
-  pseudoLocale,
   resolveSupportedLocale,
   supportedLocaleCodes,
   type Locale,
 } from "../../src/i18n/locale-registry.ts";
 import type { RouteId } from "../../src/i18n/manifest.ts";
-import { installI18nPublicationProfile } from "../../src/i18n/publication-profile-node.ts";
 import {
   assertClientMessagePolicyCoverage,
   auditClientPayloadArtifacts,
   type ClientMessagePolicy,
 } from "./client-payload-policy.mts";
 
-installI18nPublicationProfile();
 const [manifest, site, siteCapabilities] = await Promise.all([
   import("../../src/i18n/manifest.ts"),
   import("../../src/i18n/site.ts"),
   import("../../src/i18n/site-capabilities.ts"),
 ]);
 const { getRouteIdForPathname, routeIds, routeManifest } = manifest;
-const { listPublishedRoutes } = site;
+const { listLocalizedRoutes } = site;
 const { isAiAvailable } = siteCapabilities;
 
 const repositoryRoot = process.cwd();
@@ -34,12 +31,6 @@ const sharedClientPaths = [
   "shared.logoMenu",
   "shared.navigation",
   "shared.theme",
-] as const;
-
-const serverOnlyValidationFingerprints = [
-  "fixture publication policy must be an object",
-  "fixture publication policy must contain an override",
-  "Fixture publication policy does not match its marker and nonce.",
 ] as const;
 
 const routeClientPaths: Readonly<
@@ -136,7 +127,7 @@ function isLocalizedOpenGraphRoute(internalPath: string): boolean {
 }
 
 export function listExpectedPrerenderedPageRoutes(): string[] {
-  return listPublishedRoutes()
+  return listLocalizedRoutes()
     .map(
       (route) =>
         `/${route.locale}${route.pathname === "/" ? "" : route.pathname}`,
@@ -162,7 +153,7 @@ export function validatePrerenderedPageRouteSet(
 
   for (const internalPath of [...expected].sort()) {
     if (!actual.has(internalPath)) {
-      errors.push(`${internalPath}: published route is not prerendered`);
+      errors.push(`${internalPath}: registered route is not prerendered`);
     }
   }
   for (const internalPath of [...actual].sort()) {
@@ -289,12 +280,9 @@ function readCatalogMessage(catalog: unknown, path: string): string {
 export async function readServerOnlyCatalogFingerprints(
   root = repositoryRoot,
 ): Promise<string[]> {
-  const catalogLocales = supportedLocaleCodes.filter(
-    (locale) => locale !== pseudoLocale,
-  );
   const fingerprints = new Set<string>();
 
-  for (const locale of catalogLocales) {
+  for (const locale of supportedLocaleCodes) {
     const [errorsCatalog, sharedCatalog, ...routeCatalogs] = await Promise.all([
       readJson(join(root, `messages/${locale}/errors.json`)),
       readJson(join(root, `messages/${locale}/shared.json`)),
@@ -335,13 +323,6 @@ async function validateStaticChunks(): Promise<string[]> {
       if (source.includes(fingerprint)) {
         errors.push(
           `${relative(repositoryRoot, chunk)}: contains a server-only catalog fingerprint`,
-        );
-      }
-    }
-    for (const fingerprint of serverOnlyValidationFingerprints) {
-      if (source.includes(fingerprint)) {
-        errors.push(
-          `${relative(repositoryRoot, chunk)}: contains server-only fixture-policy validation code`,
         );
       }
     }

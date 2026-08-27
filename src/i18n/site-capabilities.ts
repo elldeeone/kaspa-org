@@ -5,12 +5,12 @@ import type { RouteId } from "./manifest.ts";
 export type SiteSurfaceId = RouteId | "not-found";
 
 const aiLocaleContracts: Record<SiteSurfaceId, Record<Locale, boolean>> = {
-  home: { en: true, "en-XA": false, es: false },
-  lore: { en: true, "en-XA": false, es: false },
-  build: { en: true, "en-XA": false, es: false },
-  assets: { en: false, "en-XA": false, es: false },
-  hodl: { en: true, "en-XA": false, es: false },
-  "not-found": { en: true, "en-XA": false, es: false },
+  home: { en: true, es: false },
+  lore: { en: true, es: false },
+  build: { en: true, es: false },
+  assets: { en: false, es: false },
+  hodl: { en: true, es: false },
+  "not-found": { en: true, es: false },
 };
 
 export function isAiAvailable(

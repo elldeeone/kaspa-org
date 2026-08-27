@@ -1,5 +1,5 @@
 export const RESERVED_NOT_FOUND_PATHNAME =
-  "/__kaspa_i18n_unpublished__/not/found";
+  "/__kaspa_i18n_not_found__/not/found";
 export const ROUTE_MISS_HEADER = "x-kaspa-i18n-route-miss";
 
 export type RouteDefinition<Id extends string = string> = {
@@ -69,7 +69,7 @@ export type LocalizedDestination = {
   hash?: string;
 };
 
-// Internal links that must remain valid for every production locale. UI
+// Internal links that must remain valid for every registered locale. UI
 // surfaces consume this inventory directly so their hrefs cannot drift from
 // the fixed route manifest or adopt translated slugs independently.
 export const localizedDestinationInventory = {

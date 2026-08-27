@@ -135,7 +135,7 @@ test("client payload audit accepts direct and referenced Flight props", async ()
 
 test("client payload audit reads embedded Flight chunks from HTML", async () => {
   const first = 'a:I[77,[],"default"]\n';
-  const second = 'b:["$","$La",null,{"locale":"en-XA","messages":null}]\n';
+  const second = 'b:["$","$La",null,{"locale":"fr","messages":null}]\n';
   const html = `<script>self.__next_f.push([1,${JSON.stringify(first)}])</script><script>self.__next_f.push([1,${JSON.stringify(second)}])</script>`;
 
   assert.deepEqual(
@@ -151,7 +151,7 @@ test("client payload audit reads embedded Flight chunks from HTML", async () => 
         },
       ],
       policy: emptyPolicy,
-      expectedLocale: "en-XA",
+      expectedLocale: "fr",
     }),
     [],
   );
@@ -468,19 +468,19 @@ test("prerender validation requires the exact localized page set", () => {
   const expected = ["/en", "/en/lore"];
   assert.deepEqual(
     validatePrerenderedPageRouteSet(
-      ["/en", "/en/lore", "/en-XA/opengraph-image", "/sitemap.xml"],
+      ["/en", "/en/lore", "/fr/opengraph-image", "/sitemap.xml"],
       expected,
     ),
     [],
   );
   assert.deepEqual(
     validatePrerenderedPageRouteSet(
-      ["/en", "/en-XA/historia", "/en-XA/opengraph-image"],
+      ["/en", "/es/historia", "/es/opengraph-image"],
       expected,
     ),
     [
-      "/en/lore: published route is not prerendered",
-      "/en-XA/historia: unexpected localized page is prerendered",
+      "/en/lore: registered route is not prerendered",
+      "/es/historia: unexpected localized page is prerendered",
     ],
   );
 });

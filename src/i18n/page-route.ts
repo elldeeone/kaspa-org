@@ -2,12 +2,11 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 
 import { isLocale } from "./config.ts";
-import type { Locale } from "./locale-registry.ts";
+import { supportedLocaleCodes, type Locale } from "./locale-registry.ts";
 import type { RouteId } from "./manifest.ts";
 import {
   createRouteMetadata,
-  listPublishedLocales,
-  resolvePublishedRoute,
+  resolveLocalizedRoute,
   type RouteContext,
 } from "./site.ts";
 
@@ -35,27 +34,18 @@ export function createLocalizedPageAdapter(
       );
     }
 
-    const route = resolvePublishedRoute(routeId, locale);
-    if (!route) {
-      throw new Error(`Publication invariant failed for ${routeId}:${locale}`);
-    }
+    const route = resolveLocalizedRoute(routeId, locale);
     activateLocale(route.locale);
     return route;
   }
 
   return {
     generateStaticParams() {
-      return listPublishedLocales(routeId).map((locale) => ({ locale }));
+      return supportedLocaleCodes.map((locale) => ({ locale }));
     },
     async generateMetadata(props) {
       const route = await resolve(props.params);
-      const metadata = createRouteMetadata(routeId, route.locale);
-      if (!metadata) {
-        throw new Error(
-          `Metadata invariant failed for ${routeId}:${route.locale}`,
-        );
-      }
-      return metadata;
+      return createRouteMetadata(routeId, route.locale);
     },
     resolve,
   };

@@ -1,17 +1,3 @@
-import {
-  isArgumentElement,
-  isDateElement,
-  isLiteralElement,
-  isNumberElement,
-  isPluralElement,
-  isPoundElement,
-  isSelectElement,
-  isTagElement,
-  isTimeElement,
-  parse as parseIcuMessage,
-  type MessageFormatElement,
-} from "@formatjs/icu-messageformat-parser";
-
 export type MessageCatalog = {
   readonly [key: string]: MessageCatalog | string;
 };
@@ -165,13 +151,7 @@ function validateCatalogValue(
       report(`${displayPath} must not be empty`);
       return false;
     }
-    try {
-      parseIcuMessage(value);
-      return true;
-    } catch (error) {
-      report(`${displayPath} has invalid ICU syntax: ${String(error)}`);
-      return false;
-    }
+    return true;
   }
 
   if (!value || Array.isArray(value) || typeof value !== "object") {
@@ -232,123 +212,4 @@ export function validateCatalogSource(
     catalog: valid ? (value as MessageCatalog) : null,
     errors,
   };
-}
-
-export function flattenCatalog(
-  catalog: MessageCatalog,
-  prefix: readonly string[] = [],
-  entries = new Map<string, string>(),
-): ReadonlyMap<string, string> {
-  for (const [key, value] of Object.entries(catalog)) {
-    const path = [...prefix, key];
-    if (typeof value === "string") entries.set(path.join("."), value);
-    else flattenCatalog(value, path, entries);
-  }
-  return entries;
-}
-
-function stableValue(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(stableValue);
-  if (!value || typeof value !== "object") return value;
-  return Object.fromEntries(
-    Object.entries(value)
-      .filter(([key]) => key !== "location")
-      .sort(([left], [right]) => left.localeCompare(right))
-      .map(([key, child]) => [key, stableValue(child)]),
-  );
-}
-
-function signatureForElements(
-  elements: readonly MessageFormatElement[],
-): unknown[] {
-  const signatures = elements.flatMap((element): unknown[] => {
-    if (isLiteralElement(element)) return [];
-    if (isArgumentElement(element)) return [["argument", element.value]];
-    if (isNumberElement(element)) {
-      return [["number", element.value, stableValue(element.style ?? null)]];
-    }
-    if (isDateElement(element)) {
-      return [["date", element.value, stableValue(element.style ?? null)]];
-    }
-    if (isTimeElement(element)) {
-      return [["time", element.value, stableValue(element.style ?? null)]];
-    }
-    if (isPoundElement(element)) return [["pound"]];
-    if (isTagElement(element)) {
-      return [["tag", element.value, signatureForElements(element.children)]];
-    }
-    if (isSelectElement(element)) {
-      return [
-        [
-          "select",
-          element.value,
-          Object.fromEntries(
-            Object.entries(element.options)
-              .sort(([left], [right]) => left.localeCompare(right))
-              .map(([key, option]) => [
-                key,
-                signatureForElements(option.value),
-              ]),
-          ),
-        ],
-      ];
-    }
-    if (isPluralElement(element)) {
-      return [
-        [
-          "plural",
-          element.value,
-          element.pluralType,
-          element.offset,
-          Object.fromEntries(
-            Object.entries(element.options)
-              .sort(([left], [right]) => left.localeCompare(right))
-              .map(([key, option]) => [
-                key,
-                signatureForElements(option.value),
-              ]),
-          ),
-        ],
-      ];
-    }
-    return [];
-  });
-  return signatures.sort((left, right) =>
-    JSON.stringify(left).localeCompare(JSON.stringify(right)),
-  );
-}
-
-export function getIcuInterfaceSignature(message: string): string {
-  return JSON.stringify(signatureForElements(parseIcuMessage(message)));
-}
-
-export function compareCatalogs(
-  sourceCatalog: MessageCatalog,
-  targetCatalog: MessageCatalog,
-): string[] {
-  const errors: string[] = [];
-  const source = flattenCatalog(sourceCatalog);
-  const target = flattenCatalog(targetCatalog);
-  const sourceKeys = [...source.keys()].sort();
-  const targetKeys = [...target.keys()].sort();
-
-  for (const key of sourceKeys) {
-    if (!target.has(key)) errors.push(`missing key ${key}`);
-  }
-  for (const key of targetKeys) {
-    if (!source.has(key)) errors.push(`extra key ${key}`);
-  }
-  for (const key of sourceKeys) {
-    const sourceMessage = source.get(key);
-    const targetMessage = target.get(key);
-    if (sourceMessage === undefined || targetMessage === undefined) continue;
-    if (
-      getIcuInterfaceSignature(sourceMessage) !==
-      getIcuInterfaceSignature(targetMessage)
-    ) {
-      errors.push(`${key} has a different ICU interface`);
-    }
-  }
-
-  return errors;
 }

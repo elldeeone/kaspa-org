@@ -112,41 +112,25 @@ npm run test:e2e:headed
 npm run test:e2e:ui
 ```
 
-Production publishes the complete Spanish site atomically. The `en-XA`
-pseudo-locale is test-only and no-index. Run both full browser gates with:
+Every locale registered in `src/i18n/locale-registry.ts` is included in the
+build. Run the full translated-locale browser gate with:
 
 ```bash
-npm run i18n:pseudo:generate
-npm run test:e2e:i18n:pseudo
-npm run test:e2e:i18n:production-locales
+npm run test:e2e:i18n:locales
 ```
 
-For a manual test build, use the preview target to include `en-XA`, then inspect
-all five routes beginning at `http://localhost:3000/en-XA` and the public
-Spanish routes beginning at `http://localhost:3000/es`:
+To review a new translation, add and register it on its own branch, deploy that
+branch through Vercel Preview, and inspect every localized route on desktop and
+mobile. Merging the branch publishes the locale; there is no separate locale
+lifecycle or build mode.
 
-```bash
-NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview npm run build
-NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET=preview npm start
-```
-
-The Preview build generates ignored `en-XA` and `es` Build-example siblings
-under `public/vendor/kaspa-wasm`. Production generates only the approved `es`
-siblings. After stopping the server, remove those derived files with:
+Builds generate ignored localized Build-example siblings under
+`public/vendor/kaspa-wasm`. After stopping a local server, remove those derived
+files with:
 
 ```bash
 npm run -s i18n:artifacts -- --clean
 ```
-
-Browser-test fixtures generate the same files only inside their isolated
-disposable copies.
-
-`NEXT_PUBLIC_KASPA_I18N_BUILD_TARGET` selects which locales exist in a build; it
-cannot change an already-built site. Set it to `preview` only in Vercel Preview.
-Leave it unset or set it to `production` in Vercel Production; the production
-build fails closed if the test-only pseudo-locale is enabled there. Locale
-launch state lives in `src/i18n/locale-registry.ts`: a real locale becomes
-public across every route only when its lifecycle changes to `production`.
 
 ## Language Contributions
 
@@ -169,8 +153,7 @@ GitHub Actions lives at `.github/workflows/ci.yml` and runs:
 - `npm run types:check`
 - `npm run build`
 - `npm run test:e2e`
-- `npm run test:e2e:i18n:pseudo`
-- `npm run test:e2e:i18n:production-locales`
+- `npm run test:e2e:i18n:locales`
 - `npm run test:e2e:ai`
 
 The Playwright jobs upload `playwright-report/` and `test-results/` as artifacts
@@ -179,14 +162,10 @@ when a browser suite fails.
 ## Project Notes
 
 - Route topology, namespaces, and sitemap settings live in
-  `src/i18n/manifest.ts`; locale lifecycle lives in
-  `src/i18n/locale-registry.ts`, and localized metadata is created in
+  `src/i18n/manifest.ts`; registered locales live in
+  `src/i18n/locale-registry.ts`; and localized metadata is created in
   `src/i18n/site.ts`. Guarded `[locale]` page adapters in
   `src/i18n/page-route.ts` expose metadata through `generateMetadata`.
-- `src/i18n/publication-profile-node.ts` is the only marker-backed fixture
-  adapter. It installs the normalized `publication-profile-contract.ts` shape,
-  `publication-profile.ts` reads it, and browser-safe runtime queries live in
-  `src/i18n/publication.ts`.
 - Build-example SDK versions, names, paths, source URLs, and localized artifact
   inventory live in `src/i18n/build-example-contract.ts`; Bash reads that
   contract through `scripts/i18n/print-build-example-contract.mts`.

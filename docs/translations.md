@@ -2,8 +2,7 @@
 
 Kaspa.org accepts corrections to published translations, translator or reviewer
 volunteers, and requests for new site languages. English and Spanish are
-published. `en-XA` is a test-only, no-index pseudo-locale used for quality
-assurance.
+published.
 
 ## Make a Request
 
@@ -25,5 +24,5 @@ through wallet submissions or partial-page translation pull requests.
 
 Before publication, a locale must be complete and reviewed across the full site,
 including supporting content such as metadata and error pages. Maintainers
-publish the approved locale atomically so visitors never receive a partially
-translated site.
+review each locale on its own Vercel Preview branch, then merge that branch to
+publish the complete translation.

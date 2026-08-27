@@ -14,13 +14,11 @@ import spanishLore from "../../messages/es/lore.json" with { type: "json" };
 import spanishShared from "../../messages/es/shared.json" with { type: "json" };
 
 import {
-  isLocaleEnabled,
-  isPseudoLocaleEnabled,
-  listSelectableLocales,
-} from "./config.ts";
-import { pseudoLocale, spanishLocale, type Locale } from "./locale-registry.ts";
+  spanishLocale,
+  supportedLocaleCodes,
+  type Locale,
+} from "./locale-registry.ts";
 import type { RouteId } from "./manifest.ts";
-import { pseudoLocalizeCatalog } from "./pseudo.ts";
 
 export const englishMessages = {
   assets,
@@ -46,8 +44,6 @@ export const spanishMessages = {
   shared: spanishShared,
 } satisfies AppMessages;
 
-let generatedPseudoMessages: AppMessages | null = null;
-
 function assertNever(value: never): never {
   throw new Error(`Unsupported locale: ${String(value)}`);
 }
@@ -56,20 +52,7 @@ export function getMessages(locale: Locale): LocaleMessages {
   switch (locale) {
     case "en":
       return englishMessages;
-    case pseudoLocale:
-      if (!isPseudoLocaleEnabled) {
-        throw new Error(
-          `${pseudoLocale} messages are unavailable in production builds`,
-        );
-      }
-      generatedPseudoMessages ??= pseudoLocalizeCatalog(englishMessages);
-      return generatedPseudoMessages;
     case spanishLocale:
-      if (!isLocaleEnabled(spanishLocale)) {
-        throw new Error(
-          `${spanishLocale} messages are unavailable in this build target`,
-        );
-      }
       return spanishMessages;
     default:
       return assertNever(locale);
@@ -103,7 +86,7 @@ export function getRouteMessages<Route extends RouteId>(
 
 export function getSharedClientMessages(locale: Locale) {
   const { footer, logoMenu, navigation, theme } = getMessages(locale).shared;
-  if (listSelectableLocales().length <= 1) {
+  if (supportedLocaleCodes.length <= 1) {
     return {
       shared: {
         footer,

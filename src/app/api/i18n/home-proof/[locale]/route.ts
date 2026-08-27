@@ -1,12 +1,12 @@
 import { isLocale } from "@/i18n/config";
+import { supportedLocaleCodes } from "@/i18n/locale-registry";
 import { getHomeProofClientMessages } from "@/i18n/messages";
-import { listPublishedLocales } from "@/i18n/site";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return listPublishedLocales("home").map((locale) => ({ locale }));
+  return supportedLocaleCodes.map((locale) => ({ locale }));
 }
 
 export async function GET(
@@ -14,7 +14,7 @@ export async function GET(
   { params }: { params: Promise<{ locale: string }> },
 ) {
   const { locale } = await params;
-  if (!isLocale(locale) || !listPublishedLocales("home").includes(locale)) {
+  if (!isLocale(locale) || !supportedLocaleCodes.includes(locale)) {
     return new Response(null, { status: 404 });
   }
 

@@ -6,16 +6,6 @@ export const standaloneExampleNames = Object.freeze(
   buildExampleContract.examples.map(({ name }) => name),
 );
 
-export const standaloneRuntimeFingerprints: Readonly<
-  Record<(typeof standaloneExampleNames)[number], string>
-> = {
-  "get-server-info": "GetServerInfo",
-  "get-block-dag-info": "GetBlockDagInfo",
-  "subscribe-block-added": "Ɓļööçķ ÅÅďďëëď",
-  "subscribe-daa-changed": "DAA",
-  "utxo-context": "UtxoProcessor",
-};
-
 export const standaloneBasePath = buildExampleContract.examplesPublicBasePath;
 
 export async function waitForStableLayout(page: Page) {
@@ -95,101 +85,6 @@ export async function measureOpenGraphImage(page: Page, pathname: string) {
       maxY,
     };
   }, pathname);
-}
-
-export async function installStandaloneExampleMocks(page: Page) {
-  const interceptedModules = new Set<"core" | "rpc">();
-
-  await page.route(
-    `**${buildExampleContract.runtimeModulePaths.rpc}`,
-    async (route) => {
-      interceptedModules.add("rpc");
-      await route.fulfill({
-        contentType: "text/javascript",
-        body: `
-          export default async function initialize() {}
-
-          export class Resolver {}
-
-          export class RpcClient {
-            constructor() {
-              this.url = "mock://local-rpc";
-              this.listeners = new Map();
-            }
-
-            addEventListener(name, listener) {
-              const listeners = this.listeners.get(name) ?? [];
-              listeners.push(listener);
-              this.listeners.set(name, listeners);
-            }
-
-            async emit(name) {
-              for (const listener of this.listeners.get(name) ?? []) {
-                await listener({ type: name });
-              }
-            }
-
-            async connect() {
-              await this.emit("connect");
-            }
-
-            async disconnect() {
-              await this.emit("disconnect");
-            }
-
-            async getServerInfo() {
-              return { serverVersion: "mock-server" };
-            }
-
-            async getBlockDagInfo() {
-              return { blockCount: 1 };
-            }
-
-            async subscribeBlockAdded() {}
-            async subscribeVirtualDaaScoreChanged() {}
-          }
-
-          export const Encoding = { Borsh: "borsh" };
-        `,
-      });
-    },
-  );
-
-  await page.route(
-    `**${buildExampleContract.runtimeModulePaths.core}`,
-    async (route) => {
-      interceptedModules.add("core");
-      await route.fulfill({
-        contentType: "text/javascript",
-        body: `
-          export default async function initialize() {}
-
-          export class Resolver {
-            async connect() {
-              return { url: "mock://local-core" };
-            }
-          }
-
-          export class RpcClient {}
-
-          export class UtxoProcessor {
-            async start() {}
-            async stop() {}
-            addEventListener() {}
-          }
-
-          export class UtxoContext {
-            async clear() {}
-            async trackAddresses() {}
-          }
-
-          export const Encoding = { Borsh: "borsh" };
-        `,
-      });
-    },
-  );
-
-  return interceptedModules;
 }
 
 export async function assertNoHorizontalOverflow(

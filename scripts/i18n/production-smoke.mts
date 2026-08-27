@@ -1,15 +1,20 @@
 import assert from "node:assert/strict";
 
+import {
+  defaultLocale,
+  localeRegistry,
+  supportedLocaleCodes,
+} from "../../src/i18n/locale-registry.ts";
 import { buildExampleContract } from "../../src/i18n/build-example-contract.ts";
-import { I18N_PUBLICATION_PROFILE_ENV } from "../../src/i18n/publication-profile-contract.ts";
-import { installI18nPublicationProfile } from "../../src/i18n/publication-profile-node.ts";
 import { NEXT_INTL_LOCALE_HEADER } from "../../src/i18n/route-request.ts";
 import { startProductionServer } from "./production-server.mts";
 
-installI18nPublicationProfile();
 const manifest = await import("../../src/i18n/manifest.ts");
-delete process.env[I18N_PUBLICATION_PROFILE_ENV];
-const { RESERVED_NOT_FOUND_PATHNAME, ROUTE_MISS_HEADER } = manifest;
+const { RESERVED_NOT_FOUND_PATHNAME, ROUTE_MISS_HEADER, stablePathnames } =
+  manifest;
+const translatedLocales = supportedLocaleCodes.filter(
+  (locale) => locale !== defaultLocale,
+);
 
 function delay(milliseconds: number) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -40,32 +45,38 @@ async function main() {
       assert.equal(response.headers.get("link"), null, pathname);
     }
 
-    for (const pathname of [
-      "/es",
-      "/es/lore",
-      "/es/build",
-      "/es/assets",
-      "/es/hodl",
-    ]) {
-      const response = await request(pathname, 200);
-      assert.equal(response.headers.get("link"), null, pathname);
-      assert.match(await response.text(), /<html lang="es" dir="ltr"/u);
+    for (const locale of translatedLocales) {
+      for (const stablePathname of stablePathnames) {
+        const pathname = `/${locale}${stablePathname === "/" ? "" : stablePathname}`;
+        const response = await request(pathname, 200);
+        assert.equal(response.headers.get("link"), null, pathname);
+        assert.match(
+          await response.text(),
+          new RegExp(
+            `<html lang="${locale}" dir="${localeRegistry[locale].dir}"`,
+            "u",
+          ),
+        );
+      }
     }
 
     const prefixed = await request("/en/lore", 307);
     assert.equal(prefixed.headers.get("location"), "/lore");
 
-    for (const pathname of buildExampleContract.artifactManifest.urlsByLocale[
-      "en-XA"
-    ]) {
-      await request(pathname, 404);
-    }
-
-    for (const pathname of buildExampleContract.artifactManifest.urlsByLocale
-      .es) {
-      const response = await request(pathname, 200);
-      if (pathname.endsWith(".html")) {
-        assert.match(await response.text(), /<html lang="es" dir="ltr">/u);
+    for (const locale of buildExampleContract.artifactManifest.locales) {
+      for (const pathname of buildExampleContract.artifactManifest.urlsByLocale[
+        locale
+      ]) {
+        const response = await request(pathname, 200);
+        if (pathname.endsWith(".html")) {
+          assert.match(
+            await response.text(),
+            new RegExp(
+              `<html lang="${locale}" dir="${localeRegistry[locale].dir}">`,
+              "u",
+            ),
+          );
+        }
       }
     }
 
@@ -77,13 +88,6 @@ async function main() {
       "/_vercel/missing",
       RESERVED_NOT_FOUND_PATHNAME,
       "/en/opengraph-image",
-      "/en-XA",
-      "/en-XA/lore",
-      "/en-XA/build",
-      "/en-XA/assets",
-      "/en-XA/hodl",
-      "/en-XA/missing",
-      "/en-XA/opengraph-image",
     ]) {
       const response = await request(pathname, 404, {
         [ROUTE_MISS_HEADER]: "1",
@@ -94,26 +98,34 @@ async function main() {
       assert.match(html, /data-kaspa-global-not-found="true"/u, pathname);
     }
 
-    const spanishMissing = await request("/es/missing", 404, {
-      [ROUTE_MISS_HEADER]: "1",
-      [NEXT_INTL_LOCALE_HEADER]: "en",
-    });
-    const spanishMissingHtml = await spanishMissing.text();
-    assert.match(spanishMissingHtml, /<html lang="es" dir="ltr"/u);
-    assert.match(spanishMissingHtml, /data-kaspa-global-not-found="true"/u);
+    for (const locale of translatedLocales) {
+      const localizedMissing = await request(`/${locale}/missing`, 404, {
+        [ROUTE_MISS_HEADER]: "1",
+        [NEXT_INTL_LOCALE_HEADER]: defaultLocale,
+      });
+      const localizedMissingHtml = await localizedMissing.text();
+      assert.match(
+        localizedMissingHtml,
+        new RegExp(
+          `<html lang="${locale}" dir="${localeRegistry[locale].dir}"`,
+          "u",
+        ),
+      );
+      assert.match(localizedMissingHtml, /data-kaspa-global-not-found="true"/u);
+    }
 
     await request("/api/ask", 405);
     const proofCatalog = await request("/api/i18n/home-proof/en", 200);
     assert.match(await proofCatalog.text(), /"trigger":"Verify the proof"/u);
-    await request("/api/i18n/home-proof/en-XA", 404);
-    const spanishProofCatalog = await request("/api/i18n/home-proof/es", 200);
-    assert.match(
-      await spanishProofCatalog.text(),
-      /"trigger":"Verificar la prueba"/u,
-    );
+    for (const locale of translatedLocales) {
+      const proofCatalog = await request(`/api/i18n/home-proof/${locale}`, 200);
+      assert.match(await proofCatalog.text(), /"trigger":"[^"]+"/u);
+    }
     await request("/icon.svg", 200);
     await request("/opengraph-image", 200);
-    await request("/es/opengraph-image", 200);
+    for (const locale of translatedLocales) {
+      await request(`/${locale}/opengraph-image`, 200);
+    }
     await delay(250);
 
     for (const forbidden of [

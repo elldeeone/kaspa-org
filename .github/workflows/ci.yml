@@ -74,11 +74,8 @@ jobs:
       - name: Run smoke suite
         run: npm run test:e2e
 
-      - name: Run test-only pseudo-locale suite
-        run: npm run test:e2e:i18n:pseudo
-
-      - name: Run production locale suite
-        run: npm run test:e2e:i18n:production-locales
+      - name: Run registered locale suite
+        run: npm run test:e2e:i18n:locales
 
       - name: Upload Playwright artifacts
         if: failure()

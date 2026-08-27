@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { supportedLocaleCodes } from "../../src/i18n/locale-registry.ts";
 import { stablePathnameMap } from "../../src/i18n/manifest.ts";
 import { createLocalizedPageAdapter } from "../../src/i18n/page-route.ts";
 import { routing } from "../../src/i18n/routing.ts";
-import { listPublishedLocales } from "../../src/i18n/site.ts";
 
 test("the route manifest drives next-intl pathnames", () => {
   assert.deepEqual(stablePathnameMap, {
@@ -25,7 +25,7 @@ test("localized page adapters own static params, validation, and metadata", asyn
 
   assert.deepEqual(
     pageRoute.generateStaticParams(),
-    listPublishedLocales("home").map((locale) => ({ locale })),
+    supportedLocaleCodes.map((locale) => ({ locale })),
   );
   const route = await pageRoute.resolve(Promise.resolve({ locale: "es" }));
   assert.equal(route.routeId, "home");

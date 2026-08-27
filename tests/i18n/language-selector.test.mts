@@ -8,28 +8,23 @@ import {
 } from "../../src/app/components/language-selector-model.ts";
 import {
   defaultLocale,
-  pseudoLocale,
+  localeRegistry,
   spanishLocale,
+  supportedLocaleCodes,
 } from "../../src/i18n/locale-registry.ts";
 import { localizePathname } from "../../src/i18n/pathname.ts";
 
-test("selector options use registry endonyms and exclude the pseudo locale", () => {
+test("selector options use registry endonyms", () => {
   assert.deepEqual(
     LANGUAGE_SELECTOR_OPTIONS.map(({ code, label }) => ({ code, label })),
-    [
-      { code: defaultLocale, label: "English" },
-      { code: spanishLocale, label: "Español" },
-    ],
-  );
-  assert.equal(
-    LANGUAGE_SELECTOR_OPTIONS.map(({ code }) => String(code)).includes(
-      pseudoLocale,
-    ),
-    false,
+    supportedLocaleCodes.map((code) => ({
+      code,
+      label: localeRegistry[code].label,
+    })),
   );
   assert.equal(isLanguageSelectorLocale(defaultLocale), true);
   assert.equal(isLanguageSelectorLocale(spanishLocale), true);
-  assert.equal(isLanguageSelectorLocale("en-XA"), false);
+  assert.equal(isLanguageSelectorLocale("fr"), false);
 });
 
 test("the selector is enabled only for the complete published locale set", () => {
@@ -53,8 +48,4 @@ test("locale path fallback preserves slugs and encoded path segments", () => {
   assert.equal(localizePathname("/%65%73/lore", spanishLocale), "/es/lore");
   assert.equal(localizePathname("/es/%256core", defaultLocale), "/%256core");
   assert.equal(localizePathname("/es/%256core", spanishLocale), "/es/%256core");
-  assert.equal(
-    localizePathname(`/${pseudoLocale}/build`, spanishLocale),
-    "/es/build",
-  );
 });

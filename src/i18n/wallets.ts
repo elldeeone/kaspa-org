@@ -3,8 +3,7 @@ import spanishWalletSummariesSource from "../../messages/es/wallets.json" with {
 import type { KaspaWallet } from "../app/hodl/wallet-finder/types.ts";
 import { kaspaWallets, type WalletId } from "../data/wallets.ts";
 
-import { pseudoLocale, spanishLocale, type Locale } from "./locale-registry.ts";
-import { hasSameIcuStructure, pseudoLocalizeMessage } from "./pseudo.ts";
+import { spanishLocale, type Locale } from "./locale-registry.ts";
 
 type WalletSummaryCatalog = Readonly<Record<WalletId, string>>;
 
@@ -35,11 +34,6 @@ function assertCompleteCatalog(
         `Wallet summary for ${wallet.id}:${locale} must be a non-empty string`,
       );
     }
-    if (!hasSameIcuStructure(wallet.summary, summary)) {
-      throw new Error(
-        `Wallet summary for ${wallet.id}:${locale} changed its ICU interface`,
-      );
-    }
   }
 }
 
@@ -47,11 +41,6 @@ export function getLocalizedWallets(locale: Locale): KaspaWallet[] {
   switch (locale) {
     case "en":
       return kaspaWallets.map((wallet) => ({ ...wallet }));
-    case pseudoLocale:
-      return kaspaWallets.map((wallet) => ({
-        ...wallet,
-        summary: pseudoLocalizeMessage(wallet.summary),
-      }));
     case spanishLocale:
       assertCompleteCatalog(spanishLocale, spanishWalletSummaries);
       return kaspaWallets.map((wallet) => ({

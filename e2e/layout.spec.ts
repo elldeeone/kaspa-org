@@ -5,7 +5,7 @@ import {
   assertHeadingUsesResponsiveWrapping,
   assertWordsStayOnSingleLine,
   waitForStableLayout,
-} from "./i18n-preview-helpers";
+} from "./i18n-helpers";
 
 test("home hero stays within a 320px mobile viewport", async ({
   browser,

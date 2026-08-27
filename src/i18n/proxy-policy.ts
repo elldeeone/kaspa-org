@@ -1,5 +1,6 @@
 import { RESERVED_NOT_FOUND_PATHNAME, ROUTE_MISS_HEADER } from "./manifest.ts";
-import { isRoutePublished } from "./publication.ts";
+import type { Locale } from "./locale-registry.ts";
+import type { RouteId } from "./manifest.ts";
 import {
   NEXT_INTL_LOCALE_HEADER,
   resolveRouteRequest,
@@ -31,7 +32,7 @@ export function isNextAsset(pathname: string): boolean {
 
 export function isRouteMiss(
   pathname: string,
-  resolvePublication: typeof isRoutePublished = isRoutePublished,
+  isRouteAvailable: (routeId: RouteId, locale: Locale) => boolean = () => true,
 ): boolean {
   if (
     pathname === RESERVED_NOT_FOUND_PATHNAME ||
@@ -42,7 +43,7 @@ export function isRouteMiss(
   }
 
   const route = resolveRouteRequest(pathname);
-  return !route || !resolvePublication(route.routeId, route.locale);
+  return !route || !isRouteAvailable(route.routeId, route.locale);
 }
 
 export function isStaticStylePathname(pathname: string): boolean {
