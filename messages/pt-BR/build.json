@@ -1,0 +1,417 @@
+{
+  "metadata": {
+    "title": "Documentação para desenvolvedores, SDKs, APIs e acesso a nós | Kaspa",
+    "description": "Tudo o que você precisa para começar a desenvolver na Kaspa. WASM SDK, bibliotecas Rust, playground de API ao vivo, acesso a nós e ferramentas para desenvolvedores."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Descentralização em tempo real"
+  },
+  "terms": {
+    "daa": "DAA",
+    "dag": "DAG",
+    "node": "nó",
+    "publicNodeNetwork": "Rede pública de nós",
+    "utxo": "UTXO"
+  },
+  "artifacts": {
+    "controls": {
+      "back": "Voltar",
+      "network": "Rede",
+      "disconnect": "Desconectar",
+      "reconnect": "Reconectar",
+      "connecting": "| Conectando..."
+    },
+    "runtime": {
+      "connectingKaspaNetwork": "Conectando à rede Kaspa...",
+      "selectedNetwork": "A rede selecionada é {network}...",
+      "connectedTo": "Conectado a",
+      "disconnected": "Desconectado...",
+      "disconnectedFrom": "Desconectado de",
+      "connectingPublicNode": "Conectando ao nó público...",
+      "disconnect": "Desconectar",
+      "apiRequest": "Requisição a {api}...",
+      "apiResponse": "Resposta de {api}:",
+      "subscribingBlockAdded": "Assinando eventos de adição de bloco...",
+      "registeringProtocolNotifications": "Registrando notificações de {protocol}...",
+      "subscribingProtocolScore": "Assinando atualizações de pontuação de {protocol}...",
+      "event": "evento:",
+      "networkConsole": "rede"
+    },
+    "utxo": {
+      "receivedEvents": "| {count, plural, one {# evento recebido} other {# eventos recebidos}}",
+      "noticeManyUtxos": "Observe que alguns endereços podem ter milhares de {term}, o que torna inviável exibi-los como uma lista no navegador. Esse tipo de saída de dados deve ser paginado.",
+      "noticeManualTesting": "Esta demonstração foi criada para testes manuais dos eventos emitidos por {api}; seu navegador pode ter dificuldade para renderizar grandes conjuntos de {term}.",
+      "addressPlaceholder": "Digite um endereço da rede {network}...",
+      "monitorAddress": "Clique para monitorar o endereço",
+      "restart": "Reiniciar",
+      "trackingAddress": "Endereço monitorado:",
+      "error": "Erro:",
+      "restarting": "Reiniciando...",
+      "stoppingProcessor": "Parando o processador...",
+      "startingProcessor": "Iniciando o processador...",
+      "processorStarted": "Processador iniciado..."
+    }
+  },
+  "navigation": {
+    "current": "Desenvolver",
+    "sections": {
+      "start": {
+        "label": "Começar",
+        "compactLabel": "Início",
+        "description": "Visão geral e o caminho mais rápido para entrar na stack."
+      },
+      "tryLive": {
+        "label": "Testar ao vivo",
+        "compactLabel": "Ao vivo",
+        "description": "Exemplos upstream para navegador e demonstrações ao vivo."
+      },
+      "paths": {
+        "label": "Escolher caminho",
+        "compactLabel": "Caminhos",
+        "description": "{wasmSdk}, {rust} nativo ou configuração de nó completo."
+      },
+      "runNode": {
+        "label": "Executar nó",
+        "compactLabel": "Nó",
+        "description": "Comando de uma linha do {docker} para executar o {rustyKaspa} localmente."
+      },
+      "tooling": {
+        "label": "Ferramentas",
+        "compactLabel": "Ferramentas",
+        "description": "Bibliotecas upstream, infraestrutura e projetos do ecossistema."
+      },
+      "access": {
+        "label": "Acesso",
+        "compactLabel": "Acesso",
+        "description": "Documentação, interfaces de consulta, referências de nós e fluxos de teste."
+      },
+      "developments": {
+        "label": "Desenvolvimentos",
+        "compactLabel": "Desenv.",
+        "description": "Acompanhe o trabalho em andamento e as discussões públicas de P&D."
+      },
+      "help": {
+        "label": "Ajuda",
+        "compactLabel": "Ajuda",
+        "description": "Documentação e canais da comunidade para quando você precisar de ajuda."
+      }
+    }
+  },
+  "start": {
+    "release": {
+      "version": "{version}",
+      "action": "Ver versão"
+    },
+    "heading": "Desenvolva na {kaspa}",
+    "description": "{wasmSdk}, bibliotecas nativas de {rust} e infraestrutura de nós para desenvolver na {kaspa}.",
+    "actions": {
+      "openDocs": "Abrir documentação",
+      "viewGitHub": "Ver no {github}"
+    },
+    "quickstart": {
+      "eyebrow": "O jeito mais rápido de começar",
+      "title": "Comece a desenvolver",
+      "descriptionWithAi": "Use {kaspaAi} para se orientar e vá direto ao caminho que atende ao que você precisa.",
+      "descriptionWithoutAi": "Comece pela documentação, pelos exemplos ao vivo ou pela opção de executar um nó, conforme sua necessidade.",
+      "aiTitle": "Pergunte à {kaspaAi}",
+      "aiDescription": "Encontre o caminho certo para {sdk}, {api} ou a execução de um nó.",
+      "jumpLabel": "Ir direto para",
+      "routes": {
+        "chainData": "Ler dados da cadeia",
+        "stack": "Escolher sua stack",
+        "node": "Executar um nó"
+      }
+    }
+  },
+  "tryLive": {
+    "heading": {
+      "label": "Testar ao vivo",
+      "title": "Execute os exemplos de navegador do {rustyKaspa}",
+      "description": "Os exemplos abaixo são servidos a partir da versão {rustyKaspaVersion} do {sdk} para navegador, para que você veja o {sdk} em funcionamento sem sair da página."
+    },
+    "upstream": "upstream",
+    "actions": {
+      "openStandalone": "Abrir separadamente",
+      "viewSource": "Ver código-fonte"
+    },
+    "networkNotice": "Funciona na <network>{publicNodeNetwork}</network>, um conjunto descentralizado de nós operados pela comunidade e acessado por meio do {kaspaResolver}. A inicialização pode levar alguns segundos, e seu uso em produção de grande escala não é recomendado.",
+    "examples": {
+      "serverInfo": {
+        "title": "Obter informações do servidor",
+        "shortLabel": "Info do servidor",
+        "mobileTabLabel": "Servidor",
+        "description": "Conecte-se pelo resolver público e obtenha informações básicas do nó diretamente no navegador.",
+        "runtime": "{rpc}"
+      },
+      "dagInfo": {
+        "title": "Obter informações do {dag} de blocos",
+        "shortLabel": "Info do {dag}",
+        "mobileTabLabel": "{dag}",
+        "description": "Leia o estado geral do {dag} em um nó da {kaspa} ao vivo usando os bindings upstream de {rpc} para navegador.",
+        "runtime": "{rpc}"
+      },
+      "blockAdded": {
+        "title": "Acompanhar novos blocos",
+        "shortLabel": "Novos blocos",
+        "mobileTabLabel": "Blocos",
+        "description": "Assine eventos de adição de bloco e acompanhe a chegada de blocos em tempo real pelo navegador.",
+        "runtime": "{rpc}"
+      },
+      "daaChanged": {
+        "title": "Acompanhar mudanças na pontuação {daa}",
+        "shortLabel": "Mudanças na pontuação {daa}",
+        "mobileTabLabel": "{daa}",
+        "description": "Assine as atualizações da pontuação {daa} e acompanhe as mudanças no fluxo em tempo real.",
+        "runtime": "{rpc}"
+      },
+      "utxoContext": {
+        "title": "Acompanhar um contexto de {utxo}",
+        "shortLabel": "Contexto de {utxo}",
+        "mobileTabLabel": "{utxo}",
+        "description": "Use os bindings do Core para navegador para monitorar um endereço e receber eventos de {utxo} ao vivo.",
+        "runtime": "{core}"
+      }
+    }
+  },
+  "paths": {
+    "heading": {
+      "label": "Caminhos",
+      "title": "Escolha seu caminho",
+      "description": "Comece pelo caminho de {sdk} ou de infraestrutura adequado ao sistema que você está desenvolvendo."
+    },
+    "cards": {
+      "wasm": {
+        "tier": "{sdk} para aplicativos",
+        "title": "Desenvolva com o {wasmSdk}",
+        "description": "Use os bindings upstream para navegador e {nodeJs} em fluxos de carteiras, transações e acesso a {rpc}.",
+        "docs": "Documentação do {wasmSdk}",
+        "examples": "Exemplos upstream"
+      },
+      "rust": {
+        "tier": "{rust} nativo",
+        "title": "Desenvolva com {rust} nativo",
+        "description": "Use os crates de {rust} do {rustyKaspa} em serviços de backend, integrações de sistemas, componentes internos de carteiras e cargas de trabalho integradas a nós.",
+        "repo": "Repositório do {rustyKaspa}"
+      },
+      "node": {
+        "tier": "Nó",
+        "title": "Execute um nó",
+        "description": "Use o {rustyKaspa} para obter acesso completo, indexação de {utxo} e infraestrutura de produção.",
+        "release": "Versão mais recente",
+        "repo": "Repositório do {rustyKaspa}"
+      }
+    },
+    "communityApi": {
+      "label": "{api} da comunidade",
+      "description": "Para consultas rápidas ou ambientes restritos, há uma {api} hospedada pela comunidade. Serviço sem garantia, sem SLA.",
+      "action": "Documentação da {restApi}"
+    }
+  },
+  "runNode": {
+    "heading": {
+      "label": "Nó",
+      "title": "Execute um nó",
+      "description": "Inicie o {rustyKaspa} localmente com o {docker}. Para uma configuração persistente, consulte o {dockerHub} ou compile a partir do código-fonte."
+    },
+    "quickstart": "Início rápido com {docker}",
+    "title": "Execute a imagem mais recente do {rustyKaspa}",
+    "description": "Expõe o {grpc} na porta 16110 para que você possa se comunicar com o nó a partir da sua máquina de desenvolvimento. Contêiner efêmero — sem armazenamento persistente nem conexões {p2p} de entrada.",
+    "copyCommand": "Copiar comando do {docker}",
+    "commandCopied": "Comando do {docker} copiado",
+    "dockerHub": "{dockerHub}",
+    "compile": "Compilar a partir do código-fonte"
+  },
+  "tooling": {
+    "heading": {
+      "label": "Ferramentas",
+      "title": "Conjunto de ferramentas atual",
+      "description": "As interfaces estáveis em que os desenvolvedores podem confiar hoje, com os trabalhos emergentes indicados separadamente."
+    },
+    "stable": {
+      "rustyKaspa": {
+        "eyebrow": "Stack nativa",
+        "title": "{rustyKaspa}",
+        "description": "Crates de {rust}, componentes internos de carteiras, nó completo, {rpc}, indexação e acesso direto à rede.",
+        "tags": {
+          "rust": "{rust} nativo",
+          "infra": "Nó e infraestrutura"
+        },
+        "action": "Abrir repositório"
+      },
+      "wasm": {
+        "eyebrow": "Bibliotecas e {sdks}",
+        "title": "{wasmSdk}",
+        "description": "Bindings upstream para navegador e {node} voltados a aplicativos, carteiras e fluxos de transações.",
+        "tag": "Navegador + {node}",
+        "action": "Abrir documentação"
+      }
+    },
+    "emerging": {
+      "python": {
+        "status": "Em beta",
+        "title": "{pythonSdk}",
+        "description": "Quase completo. Já pode ser usado hoje se {python} fizer parte da sua stack.",
+        "action": "Abrir repositório"
+      }
+    },
+    "community": {
+      "eyebrow": "Projetos da comunidade",
+      "title": "Ferramentas e infraestrutura do ecossistema",
+      "description": "Projetos de código aberto do ecossistema mais amplo da {kaspa} que complementam o {sdk} upstream e a stack de nós.",
+      "open": "Abrir",
+      "cards": {
+        "indexer": {
+          "type": "Indexador",
+          "title": "{simplyKaspaIndexer}",
+          "description": "Indexação independente de dados de blocos e transações da {kaspa}."
+        },
+        "dnsSeeder": {
+          "type": "Infraestrutura",
+          "title": "{dnsSeeder}",
+          "description": "Infraestrutura de inicialização para a rede peer-to-peer da {kaspa}."
+        },
+        "khost": {
+          "type": "Hospedagem",
+          "title": "{khost}",
+          "description": "Ferramentas para executar nós e contribuir com capacidade de nós para o ecossistema mais amplo."
+        },
+        "kaspaJs": {
+          "type": "Biblioteca",
+          "title": "{kaspaJs}",
+          "description": "Ferramentas de {javascript} mantidas pela comunidade para a stack da {kaspa}."
+        }
+      }
+    }
+  },
+  "access": {
+    "heading": {
+      "label": "Acesso",
+      "title": "Acesso à rede",
+      "description": "Documentação, interfaces de consulta, referências de nós e fluxos de teste agrupados conforme as necessidades reais dos desenvolvedores."
+    },
+    "groups": {
+      "docs": {
+        "title": "Documentação",
+        "description": "Comece pelos guias, referências técnicas e propostas abertas.",
+        "links": {
+          "docs": "Abrir documentação",
+          "wasm": "Documentação do {wasmSdk}",
+          "deepWiki": "{deepWiki} do {rustyKaspa}",
+          "kips": "{kips}",
+          "research": "Fórum de pesquisa",
+          "qa": "{kaspaQAndA}"
+        }
+      },
+      "query": {
+        "title": "Consultas e acesso",
+        "description": "Consulte a rede por meio de ferramentas públicas e da {api} leve hospedada pela comunidade. A {api} da comunidade é oferecida conforme a disponibilidade, sem SLA.",
+        "links": {
+          "api": "Documentação da {api} da comunidade",
+          "explorer": "Explorador",
+          "dag": "Visualizador do {dag}",
+          "dumps": "Dumps de DB do Explorador / {api}"
+        }
+      },
+      "node": {
+        "title": "Nó e {rpc}",
+        "description": "Execute uma infraestrutura completa ou explore a stack de nós mais a fundo.",
+        "links": {
+          "rustyKaspa": "{rustyKaspa}",
+          "release": "Versão mais recente"
+        }
+      },
+      "testnet": {
+        "title": "Rede de testes",
+        "description": "Use recursos públicos de teste antes de lançar na mainnet.",
+        "faucet": "Faucet da testnet"
+      }
+    }
+  },
+  "developments": {
+    "heading": {
+      "label": "Desenvolvimentos",
+      "title": "Acompanhe o trabalho desenvolvido em público",
+      "description": "Acompanhe o principal canal de discussões e depois siga os avanços em {sdk}, protocolo e programabilidade experimental."
+    },
+    "liveDiscussion": "Discussão ao vivo",
+    "cards": {
+      "channel": {
+        "label": "Canal",
+        "title": "P&D principal no {telegram}",
+        "description": "O principal fluxo público das discussões atuais de pesquisa e desenvolvimento da {kaspa}. O {discord} continua sendo usado, mas hoje a maior parte das discussões centrais acontece aqui."
+      },
+      "research": {
+        "label": "Fórum",
+        "title": "{kaspaResearch}",
+        "description": "Fórum para discussões aprofundadas sobre protocolo, consenso, economia e mineração, além de minutas e propostas de {kip}."
+      },
+      "toccata": {
+        "label": "Hard fork",
+        "title": "{toccata}: covenants e {zk}",
+        "description": "Hard fork que reúne opcodes de script estendidos ({kip17}), IDs de covenant ({kip20}), opcodes de {zk} com um subsistema de pré-compilados de verificação ({kip16}) e compromissos de sequenciamento ({kip21}). Atualmente ativo na {tn12}, antes da ativação na mainnet."
+      },
+      "silverscript": {
+        "label": "Programabilidade",
+        "title": "{silverscript}",
+        "description": "Linguagem de script de alto nível que compila para o {kaspaScript} nativo. Em testes na {tn12} antes do hard fork {toccata}, que levará covenants e opcodes de {zk} à mainnet."
+      },
+      "vprogs": {
+        "label": "Programabilidade",
+        "title": "{vprogs}",
+        "description": "Pesquisa inicial sobre programas verificáveis: sequenciamento on-chain com execução off-chain liquidada por provas {zk}. Baseia-se nas primitivas de script que chegarão com o {toccata}."
+      },
+      "python": {
+        "label": "{sdk}",
+        "title": "{pythonSdk}",
+        "description": "Em beta e quase completo. As ferramentas de {python} avançam de forma aberta e ampliam os recursos para desenvolvedores."
+      },
+      "kips": {
+        "label": "Protocolo",
+        "title": "{kips}",
+        "description": "Acompanhe propostas que podem mudar a forma como aplicativos e infraestrutura se integram à rede."
+      }
+    }
+  },
+  "help": {
+    "eyebrow": "Ajuda",
+    "title": "Continue avançando",
+    "descriptionWithAi": "Comece pela documentação ou pela {kaspaAi}. Para ajuda mais aprofundada, consulte o {qa}, o {github}, o {discord} ou o {telegram} de P&D.",
+    "descriptionWithoutAi": "Comece pela documentação. Para ajuda mais aprofundada, consulte o {qa}, o {github}, o {discord} ou o {telegram} de P&D.",
+    "actions": {
+      "openDocs": "Abrir documentação",
+      "openAi": "Abrir IA"
+    },
+    "links": {
+      "github": {
+        "eyebrow": "Código",
+        "title": "{github}"
+      },
+      "discord": {
+        "eyebrow": "Chat",
+        "title": "{discord}"
+      },
+      "qa": {
+        "eyebrow": "Perguntas",
+        "title": "{kaspaQAndA}"
+      },
+      "telegram": {
+        "eyebrow": "Desenvolvimento mais recente",
+        "title": "P&D no {telegram}"
+      }
+    },
+    "prompts": {
+      "gettingStarted": "Como começo a desenvolver na {kaspa}?",
+      "choosePath": "Qual caminho devo escolher — {wasmSdk}, {rust} nativo ou executar um nó?",
+      "nodeOrApi": "Preciso executar meu próprio nó ou posso usar a {api} da comunidade?",
+      "smartContracts": "A {kaspa} tem contratos inteligentes?",
+      "wallet": "Como criar uma carteira com o {wasmSdk}?",
+      "transaction": "Como criar e assinar uma transação?",
+      "runNode": "Como executar um nó da {kaspa}?",
+      "hardware": "De qual hardware preciso para um nó?",
+      "toccata": "O que é o {toccata} e quais mudanças ele traz?",
+      "covenants": "O que são covenants na {kaspa}?",
+      "silverscript": "O que é {silverscript}?",
+      "networks": "Qual é a diferença entre a mainnet e a {tn12}?"
+    }
+  }
+}

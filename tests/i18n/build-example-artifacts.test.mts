@@ -627,7 +627,7 @@ test("cleanup refuses every other locale-suffixed artifact without deleting file
   const { root, directory } = await createArtifactFixture({
     "get-server-info.en.html": "Duplicate source locale",
     "get-server-info.es.html": "Known localized sibling",
-    "subscribe-block-added.pt-BR.html": "Regional localized sibling",
+    "subscribe-block-added.pt-PT.html": "Regional localized sibling",
     "resources/utils.es.js": "Localized controls",
     "resources/utils.min.js": "Plausible minified vendor asset",
     "unexpected.es.html": "Unknown localized artifact",
@@ -636,13 +636,13 @@ test("cleanup refuses every other locale-suffixed artifact without deleting file
 
   await assert.rejects(
     createBuildExampleArtifactWorkflow(root).clean(),
-    /Refusing to remove unexpected localized artifacts: get-server-info\.en\.html, resources\/utils\.min\.js, subscribe-block-added\.pt-BR\.html, unexpected\.es\.html/u,
+    /Refusing to remove unexpected localized artifacts: get-server-info\.en\.html, resources\/utils\.min\.js, subscribe-block-added\.pt-PT\.html, unexpected\.es\.html/u,
   );
   assert.deepEqual((await readdir(directory)).sort(), [
     "get-server-info.en.html",
     "get-server-info.es.html",
     "resources",
-    "subscribe-block-added.pt-BR.html",
+    "subscribe-block-added.pt-PT.html",
     "unexpected.es.html",
   ]);
   assert.deepEqual((await readdir(join(directory, "resources"))).sort(), [

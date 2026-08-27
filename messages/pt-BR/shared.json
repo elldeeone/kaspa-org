@@ -1,0 +1,112 @@
+{
+  "navigation": {
+    "homeAria": "Início da Kaspa",
+    "toggleMenu": "Alternar menu",
+    "menu": "Menu",
+    "language": {
+      "label": "Idioma"
+    },
+    "links": {
+      "lore": "LORE",
+      "hodl": "HODL",
+      "build": "BUIDL",
+      "think": "THINK",
+      "dagviz": "DAGVIZ"
+    }
+  },
+  "theme": {
+    "switchMode": "Mudar para o modo {mode}",
+    "light": "claro",
+    "dark": "escuro"
+  },
+  "logoMenu": {
+    "aria": "Logotipo da Kaspa",
+    "viewAssets": "Ver materiais do logotipo"
+  },
+  "pageSections": {
+    "onThisPage": "Nesta página",
+    "openAria": "Abrir seções da página, seção atual: {section}",
+    "dialogAria": "Seções da página",
+    "close": "Fechar",
+    "current": "Atual"
+  },
+  "footer": {
+    "glyphAria": "Símbolo da Kaspa",
+    "operatedBy": "Operado por <operator>KasMedia.com</operator>",
+    "links": {
+      "explorer": "Explorador",
+      "github": "GitHub",
+      "x": "X"
+    }
+  },
+  "structuredData": {
+    "organizationDescription": "Kaspa é uma criptomoeda blockDAG de prova de trabalho, lançada de forma justa, que opera a 10 blocos por segundo e foi criada para a descentralização em tempo real."
+  },
+  "ai": {
+    "externalPrompt": "Leia {url}; quero fazer perguntas sobre esse conteúdo.",
+    "genericError": "Desculpe, algo deu errado. Tente novamente.",
+    "launcher": {
+      "askAnything": "Pergunte o que quiser",
+      "beta": "Beta",
+      "betaTitle": "Este recurso está em desenvolvimento ativo — podem ocorrer problemas ocasionais",
+      "betaAria": "Beta — podem ocorrer problemas ocasionais",
+      "poweredBy": "Com tecnologia de <provider>kaspa.news/ask</provider>",
+      "collapsePanel": "Recolher painel",
+      "expandPanel": "Expandir painel",
+      "closePanel": "Fechar painel",
+      "placeholder": "Pergunte o que quiser...",
+      "sendMessage": "Enviar mensagem",
+      "welcomeHeading": "Pergunte o que quiser sobre a Kaspa",
+      "welcomeBody": "Receba respostas rápidas abaixo ou inicie uma conversa completa com a IA de sua preferência.",
+      "ownAiDivider": "ou use sua própria IA",
+      "ownAiLabel": "Use sua própria IA:",
+      "sources": "{count, plural, =0 {Fontes} one {Fonte (#)} other {Fontes (#)}}",
+      "copy": "copiar",
+      "copied": "copiado"
+    },
+    "suggestions": {
+      "kaspaPurpose": "Que problema a Kaspa resolve?",
+      "blockTimes": "Quais são os tempos de bloco?",
+      "decentralization": "Por que a descentralização em tempo real é importante?",
+      "premine": "Houve pré-mineração?"
+    },
+    "providers": {
+      "chatgpt": "ChatGPT",
+      "claude": "Claude",
+      "perplexity": "Perplexity"
+    },
+    "loading": {
+      "atomicArc": "processando o AtomicArc com segurança...",
+      "ibd": "sincronizando o novo nó por IBD...",
+      "ftr": "retransmitindo o bloco por FTR...",
+      "kip": "ativando o KIP...",
+      "template": "vinculando o modelo...",
+      "commitment": "inicializando a partir do compromisso...",
+      "blueSet": "entrelaçando o conjunto azul...",
+      "mergeDepth": "calculando a profundidade de mesclagem...",
+      "silverscript": "convencendo o silverscript a compilar...",
+      "covenantId": "derivando o covenant_id...",
+      "covenantState": "codificando o estado do covenant...",
+      "orphans": "removendo os órfãos...",
+      "mempool": "preenchendo a mempool...",
+      "fees": "distribuindo as taxas por faixa...",
+      "covenants": "negociando com os covenants...",
+      "blocks": "despachando blocos em paralelo...",
+      "pruning": "podando o passado...",
+      "dagLayer": "publicando na camada DAG...",
+      "stack": "enviando para a pilha...",
+      "bps": "reequilibrando os 10 BPS...",
+      "blueWork": "recalculando o trabalho azul...",
+      "l2": "filtrando reorganizações dos eventos de L2...",
+      "vprogBatch": "agendando o lote de vProgs...",
+      "schnorr": "aplicando Schnorr à assinatura...",
+      "virtualState": "serializando o estado virtual...",
+      "utxoSet": "criando um snapshot do conjunto UTXO...",
+      "anticone": "percorrendo o anticone...",
+      "transactions": "reintegrando transações órfãs...",
+      "utxo": "desbloqueando o UTXO...",
+      "vprogs": "virtualizando os vProgs...",
+      "crescendo": "aguardando o Crescendo..."
+    }
+  }
+}

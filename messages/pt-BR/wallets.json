@@ -1,0 +1,9 @@
+{
+  "kaspa-cli-wallet": "Ferramentas de carteira por linha de comando para usuários habituados a gerenciar chaves e transações em um terminal.",
+  "kaspacom-wallet": "Uma carteira KaspaCom para navegador que permite criar, importar e usar carteiras Kaspa de autocustódia.",
+  "kaspium": "Uma carteira móvel de autocustódia para enviar, receber e guardar KAS pelo celular.",
+  "kastle": "Carteira Kaspa de autocustódia para KAS, KRC-20, KNS e NFTs, com ponte para L2 e swaps no aplicativo. Disponível para dispositivos móveis e como extensão de navegador.",
+  "kng-desktop": "Uma carteira Kaspa moderna para desktop, com interface amigável por padrão, operação opcional como nó completo e configuração avançada.",
+  "kng-web": "A versão para navegador da Kaspa NG. Amigável por padrão, sem instalação e com configuração avançada opcional.",
+  "tangem-wallet": "A Tangem Wallet é uma carteira de hardware segura e de autocustódia para Kaspa e mais de 14.000 ativos digitais. Não exige frase-semente."
+}

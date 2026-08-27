@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "title": "Kaspa | blockDAG de prova de trabalho para descentralização em tempo real",
+    "description": "Kaspa é uma criptomoeda blockDAG de prova de trabalho, com lançamento justo, que opera a 10 blocos por segundo e foi criada para a descentralização em tempo real."
+  },
+  "openGraph": {
+    "imageAlt": "Kaspa — Descentralização em tempo real",
+    "heading": "Descentralização\nem tempo real",
+    "tagline": "prova de trabalho do bitcoin sem espera."
+  },
+  "hero": {
+    "heading": "Descentralização\nem tempo real",
+    "tagline": "prova de trabalho do bitcoin sem espera.",
+    "getStarted": "Começar",
+    "getWallet": "Obter uma carteira",
+    "buyKaspa": "Comprar Kaspa",
+    "dagAnnotation": "pow em tempo real"
+  },
+  "verify": {
+    "heading": "não confie, verifique.",
+    "history": "Todas as moedas da história da Kaspa remontam criptograficamente a um bloco gênese vazio.",
+    "fairLaunch": "Sem pré-mineração. Sem alocação oculta. Lançamento justo.",
+    "explanation": "A prova do bloco gênese percorre para trás a cadeia de hashes de blocos dos pontos de poda até o bloco gênese original e verifica se o compromisso UTXO corresponde a um conjunto vazio. Os hashes de blocos do Bitcoin incorporados à coinbase do bloco gênese servem como registros de data e hora, descartando a possibilidade de pré-mineração oculta.",
+    "runProof": "Executar a prova"
+  },
+  "proof": {
+    "trigger": "Verificar a prova",
+    "loader": {
+      "loading": "Carregando a prova...",
+      "error": "Não foi possível carregar a prova.",
+      "retry": "Tentar novamente"
+    },
+    "chrome": {
+      "back": "Voltar",
+      "title": "Verificar a prova",
+      "sectionsAria": "Seções da prova",
+      "jumpToSection": "Ir para {section}"
+    },
+    "sections": {
+      "live": "Ao vivo",
+      "origin": "Origem",
+      "runIt": "Execute"
+    },
+    "live": {
+      "eyebrow": "Histórico · Atual · Contínuo",
+      "title": "Oferta em tempo real vs. cronograma de emissão",
+      "body": "A oferta em circulação da Kaspa pode ser recalculada a partir de princípios fundamentais. Um nó ativo informa o total atual. O total histórico no ponto de controle de 22 de novembro de 2021 está criptograficamente vinculado ao bloco gênese fixado no código por meio de seu conjunto UTXO, e todas as moedas emitidas depois desse ponto de controle seguem o cronograma determinístico de emissão."
+    },
+    "origin": {
+      "eyebrow": "Origem",
+      "title": "Onde a oferta começa",
+      "supplyBody": "Todas as moedas remontam a um único bloco em que a oferta era <strong>zero</strong>. Seu compromisso UTXO é a impressão digital matemática de um conjunto vazio, a mesma constante em qualquer máquina que a calcule. A oferta começa aqui, e todas as moedas desde então são emissões programadas, não alocações.",
+      "verseBody": "Dentro da coinbase desse bloco há um versículo de <reference>Esdras 7:18</reference>, escrito em aramaico, que celebra os valores de liberdade promovidos pelos antigos reis persas.",
+      "translatedQuotation": "“E tudo o que parecer bom a você e a seus irmãos fazer com o restante da prata e do ouro, façam conforme a vontade de seu Deus.”",
+      "quotationAttribution": "Esdras 7:18, na coinbase do bloco gênese",
+      "timestampBody": "A coinbase também contém o hash do <bitcoinBlock>bloco #708.639 do Bitcoin</bitcoinBlock>, comprovando que o bloco gênese foi produzido depois daquele momento, sem pré-mineração."
+    },
+    "run": {
+      "eyebrow": "Não confie, verifique",
+      "title": "Execute você mesmo",
+      "intro": "Reproduza a prova desde o bloco gênese até a ponta atual. O notebook percorre para trás a cadeia de hashes de blocos dos pontos de poda até o bloco gênese, verifica o compromisso UTXO em relação à impressão digital do conjunto vazio e confere os hashes de blocos do Bitcoin usados como âncoras. Para obter como número a oferta histórica no ponto de controle de 22 de novembro de 2021, uma etapa adicional de derivação soma o conjunto UTXO vinculado criptograficamente pela prova.",
+      "notebookTitle": "O notebook da prova",
+      "notebookBody": "Clone, execute e inspecione. O notebook verifica o vínculo entre o bloco gênese e o ponto de controle, mas não exibe por si só o valor da oferta histórica.",
+      "notebookAction": "Abrir no GitHub",
+      "checkpointTitle": "Verifique o total do ponto de controle",
+      "checkpointStep1": "Execute o notebook para verificar o bloco gênese fixado no código, o vínculo com o ponto de controle, a origem no conjunto vazio e as âncoras do Bitcoin.",
+      "checkpointStep2": "Abra a versão histórica <kaspad>kaspad v0.11.5-2</kaspad> e observe que <processor>o processador de blocos</processor> carrega e verifica o ponto de controle <code>utxos.gz</code> incorporado em relação ao compromisso UTXO do bloco gênese fixado no código.",
+      "checkpointStep3": "Analise <utxos>utxos.gz</utxos> usando o formato de <serialization>serialization.go</serialization> e some o valor de cada UTXO.",
+      "checkpointStep4": "Essa soma é a oferta histórica no ponto de controle DAA <daa>1.312.860</daa> (22 de novembro de 2021): <supply>984.222.544,04487171 KAS</supply>",
+      "checkpointNote": "A partir desse ponto, a emissão é determinística. Somar a emissão programada desde o ponto de controle fornece a oferta esperada em qualquer DAA, que deve corresponder ao valor informado por um nó ativo."
+    },
+    "supply": {
+      "intro": {
+        "eyebrow": "Verificação contínua",
+        "title": "Oferta em tempo real vs. cronograma de emissão",
+        "body": "Compare a oferta em circulação informada por um nó ativo com a oferta esperada ancorada no ponto de controle — o total do ponto de controle de 22 de novembro de 2021, criptograficamente vinculado ao bloco gênese fixado no código, acrescido conforme o cronograma determinístico de emissão da Kaspa."
+      },
+      "emissionHistory": "Histórico de emissão",
+      "connection": {
+        "connectedTo": "Conectado a {nodeUrl}",
+        "error": "Erro de conexão",
+        "connecting": "Conectando à rede Kaspa..."
+      },
+      "comparison": {
+        "nodeReported": "Oferta informada pelo nó",
+        "unit": "KAS",
+        "rpcSource": "via RPC getCoinSupply",
+        "expected": "Oferta esperada",
+        "expectedBasis": "total do ponto de controle + emissão programada desde 22 de novembro de 2021"
+      },
+      "anchor": {
+        "label": "Âncora",
+        "title": "Ponto de controle de 22 de novembro de 2021",
+        "body": "A oferta histórica no ponto de controle de 22 de novembro de 2021 está criptograficamente vinculada ao bloco gênese fixado no código por meio de seu conjunto UTXO. Todas as moedas emitidas depois desse ponto seguem um cronograma determinístico de consenso, portanto a oferta informada pelo nó e a oferta esperada ancorada no ponto de controle devem coincidir. Pequenas diferenças da ordem de centenas de KAS decorrem do desvio entre a pontuação DAA e a contagem de blocos, além do arredondamento de números inteiros na tabela de subsídios do consenso, de forma semelhante ao Bitcoin e a outras emissões por PoW."
+      },
+      "timeline": {
+        "genesis": {
+          "label": "Gênese",
+          "date": "{date, date, medium}",
+          "description": "O conjunto UTXO está vazio, portanto existem zero moedas. O bloco gênese original está ancorado no bloco #708.639 do Bitcoin."
+        },
+        "checkpoint": {
+          "label": "Ponto de controle",
+          "date": "{date, date, medium}",
+          "description": "As recompensas por bloco variaram aleatoriamente entre 1 e 1.000 KAS por bloco durante as primeiras ~2 semanas da mainnet, emitindo +327.792.544 KAS antes que um hard fork fixasse a recompensa por bloco. A oferta histórica está criptograficamente vinculada ao bloco gênese fixado no código."
+        },
+        "preDeflationary": {
+          "label": "Fase pré-deflacionária",
+          "date": "{startDate, date, medium} – {endDate, date, medium}",
+          "description": "Recompensa fixa por bloco durante cerca de 6 meses após o ponto de controle, antes do início do cronograma deflacionário."
+        },
+        "chromatic": {
+          "label": "Início da fase cromática",
+          "date": "~{date, date, medium}",
+          "description": "A fase pré-deflacionária termina. A recompensa cai de 500 para 440 KAS por bloco e diminui geometricamente a cada mês."
+        },
+        "crescendo": {
+          "label": "Crescendo",
+          "date": "~{date, date, medium}",
+          "description": "10 blocos por segundo, com a recompensa por bloco dividida por 10."
+        },
+        "now": "Agora",
+        "live": "ao vivo",
+        "circulating": "KAS em circulação",
+        "expected": "KAS esperados",
+        "loading": "Carregando...",
+        "connecting": "Conectando ao nó..."
+      },
+      "stats": {
+        "mined": "Minerado",
+        "blockReward": "Recompensa por bloco",
+        "nodeDagBlocks": "Blocos do DAG no nó",
+        "daaScore": "Pontuação DAA",
+        "blockCountAccessible": "Blocos do DAG no nó: {count}"
+      }
+    }
+  }
+}
