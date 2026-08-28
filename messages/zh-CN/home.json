@@ -14,7 +14,9 @@
     "getStarted": "开始了解",
     "getWallet": "获取钱包",
     "buyKaspa": "购买 Kaspa",
-    "dagAnnotation": "实时 pow"
+    "dagAnnotation": "实时 pow",
+    "dagPlay": "播放 DAG 动画",
+    "dagPause": "暂停 DAG 动画"
   },
   "verify": {
     "heading": "别信，去验证。",

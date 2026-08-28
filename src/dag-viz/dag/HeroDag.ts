@@ -22,7 +22,9 @@ export default class HeroDag {
   private currentWidth: number = 0;
   private currentHeight: number = 0;
   private isVisible: boolean = true;
+  private isPaused: boolean;
   private observer: IntersectionObserver | undefined;
+  private resizeObserver: ResizeObserver | undefined;
 
   private backgroundAlpha: number;
   private maxDpr: number;
@@ -31,11 +33,13 @@ export default class HeroDag {
     scale: number = 0.4,
     backgroundAlpha: number = 1,
     maxDpr: number = 2,
+    paused: boolean = false,
   ) {
     this.currentScale =
       Math.round(Math.max(0.2, Math.min(scale, 1.2)) * 10) / 10;
     this.backgroundAlpha = backgroundAlpha;
     this.maxDpr = maxDpr;
+    this.isPaused = paused;
     Ticker.timingMode = Ticker.RAF;
   }
 
@@ -75,7 +79,7 @@ export default class HeroDag {
       (entries) => {
         for (const entry of entries) {
           this.isVisible = entry.isIntersecting;
-          if (this.isVisible) {
+          if (this.isVisible && !this.isPaused) {
             this.application?.start();
           } else {
             this.application?.stop();
@@ -86,7 +90,11 @@ export default class HeroDag {
     );
     this.observer.observe(canvas);
 
+    this.resizeObserver = new ResizeObserver(this.resize);
+    this.resizeObserver.observe(parentElement);
+
     this.resize();
+    if (this.isPaused) this.application.stop();
   }
 
   loadAPI(apiUrl: string) {
@@ -135,24 +143,37 @@ export default class HeroDag {
     }
 
     const replayData = await resp.json();
-    this.dataSource = new SnapshotReplayDataSource(replayData, playbackRate);
+    this.dataSource = new SnapshotReplayDataSource(
+      replayData,
+      playbackRate,
+      this.isPaused,
+    );
     this.run();
   }
 
-  private resize() {
+  private resize = () => {
     const dpr = Math.min(window.devicePixelRatio || 1, this.maxDpr);
     const renderer = this.application?.renderer;
     if (!renderer) return;
 
     const resizeTo = this.application?.resizeTo as HTMLDivElement;
+    const width = resizeTo.clientWidth;
+    const height = resizeTo.clientHeight;
 
-    if (renderer.resolution !== dpr) {
+    if (
+      renderer.resolution !== dpr ||
+      renderer.screen.width !== width ||
+      renderer.screen.height !== height
+    ) {
       renderer.resolution = dpr;
-      renderer.resize(resizeTo.clientWidth, resizeTo.clientHeight);
+      renderer.resize(width, height);
     }
 
+    this.currentWidth = renderer.screen.width;
+    this.currentHeight = renderer.screen.height;
     this.timeline?.recalculatePositions();
-  }
+    if (this.isPaused) this.application?.render();
+  };
 
   private resizeIfRequired = () => {
     const w = this.getDisplayWidth();
@@ -197,11 +218,16 @@ export default class HeroDag {
       }
 
       const targetHeight = Math.max(0, maxHeight - heightDifference);
-      this.timeline.setTargetHeight(targetHeight);
-      this.timeline.setBlocksAndEdgesAndHeightGroups(data);
+      this.timeline.setTargetHeight(targetHeight, !this.isPaused);
+      this.timeline.setBlocksAndEdgesAndHeightGroups(data, !this.isPaused);
     }
 
-    this.scheduleNextTick();
+    if (this.isPaused) {
+      this.timeline.recalculatePositions();
+      this.application?.render();
+    } else {
+      this.scheduleNextTick();
+    }
   };
 
   private scheduleNextTick() {
@@ -209,11 +235,36 @@ export default class HeroDag {
     this.tickId = window.setTimeout(this.tick, interval);
   }
 
+  setPaused(paused: boolean) {
+    if (this.isPaused === paused) return;
+    this.isPaused = paused;
+
+    if (paused) {
+      window.clearTimeout(this.tickId);
+      this.tickId = undefined;
+      if (this.dataSource instanceof SnapshotReplayDataSource) {
+        this.dataSource.pause();
+      }
+      Tween.removeAllTweens();
+      this.timeline?.settleAnimations();
+      this.application?.render();
+      this.application?.stop();
+      return;
+    }
+
+    if (this.dataSource instanceof SnapshotReplayDataSource) {
+      this.dataSource.resume();
+    }
+    if (this.isVisible) this.application?.start();
+    this.tick();
+  }
+
   stop() {
     window.clearTimeout(this.tickId);
     this.tickId = undefined;
     this.lastRenderedData = null;
     this.observer?.disconnect();
+    this.resizeObserver?.disconnect();
     this.dataSource?.destroy();
     this.dataSource = undefined;
     // Kill all active tweens before destroying sprites.

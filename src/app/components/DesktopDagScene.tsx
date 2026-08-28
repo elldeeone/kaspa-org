@@ -9,12 +9,14 @@ interface DesktopDagSceneProps {
   annotation: string;
   locale: Locale;
   maskColor: string;
+  paused: boolean;
 }
 
 export default function DesktopDagScene({
   annotation,
   locale,
   maskColor,
+  paused,
 }: DesktopDagSceneProps) {
   return (
     <>
@@ -22,6 +24,7 @@ export default function DesktopDagScene({
       <DagHero
         snapshotReplayUrl="/replay/mainnet-60s-compressed.json"
         snapshotPlaybackRate={1}
+        paused={paused}
         scale={0.4}
         style={{
           position: "absolute",

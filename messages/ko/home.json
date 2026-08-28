@@ -14,7 +14,9 @@
     "getStarted": "시작하기",
     "getWallet": "지갑 받기",
     "buyKaspa": "Kaspa 구매하기",
-    "dagAnnotation": "실시간 pow"
+    "dagAnnotation": "실시간 pow",
+    "dagPlay": "DAG 애니메이션 재생",
+    "dagPause": "DAG 애니메이션 일시 정지"
   },
   "verify": {
     "heading": "믿지 말고, 검증하라.",

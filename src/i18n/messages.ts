@@ -335,6 +335,10 @@ export function getHomeClientLabels(locale: Locale) {
   const { hero, proof } = getHomeMessages(locale);
   return {
     dagAnnotation: hero.dagAnnotation,
+    dagPlayback: {
+      play: hero.dagPlay,
+      pause: hero.dagPause,
+    },
     proof: {
       trigger: proof.trigger,
       loading: proof.loader.loading,

@@ -14,7 +14,9 @@
     "getStarted": "Mulai",
     "getWallet": "Dapatkan dompet",
     "buyKaspa": "Beli Kaspa",
-    "dagAnnotation": "pow secara real-time"
+    "dagAnnotation": "pow secara real-time",
+    "dagPlay": "Putar animasi DAG",
+    "dagPause": "Jeda animasi DAG"
   },
   "verify": {
     "heading": "jangan percaya, verifikasi.",

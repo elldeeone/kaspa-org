@@ -3,19 +3,23 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
+import { DagPlaybackControl, useDagPlayback } from "./DagPlayback";
+
 const DagHero = dynamic(() => import("@/dag-viz/DagHero"), { ssr: false });
 
-export default function MobileDagLive() {
+export default function MobileDagLive({
+  playbackLabels,
+}: {
+  playbackLabels: { play: string; pause: string };
+}) {
   const [showDag, setShowDag] = useState(false);
+  const { paused, preferenceReady } = useDagPlayback();
 
   useEffect(() => {
     const mobileQuery = window.matchMedia("(max-width: 1279px)");
-    const reducedMotionQuery = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    );
 
     const update = () => {
-      setShowDag(mobileQuery.matches && !reducedMotionQuery.matches);
+      setShowDag(mobileQuery.matches);
     };
 
     update();
@@ -31,17 +35,15 @@ export default function MobileDagLive() {
     };
 
     const removeMobileListener = addListener(mobileQuery);
-    const removeReducedMotionListener = addListener(reducedMotionQuery);
 
     return () => {
       removeMobileListener();
-      removeReducedMotionListener();
     };
   }, []);
 
   return (
-    <div className="home-hero-dag-viewport relative w-full overflow-hidden motion-reduce:hidden xl:hidden">
-      {showDag ? (
+    <div className="home-hero-dag-viewport relative w-full overflow-hidden xl:hidden">
+      {showDag && preferenceReady ? (
         <>
           {/* Right offset ramps from 0 below 768px to ~170px at 1280px so the
               newest block lands ~78–84vw of the viewport at every width. Below
@@ -55,6 +57,7 @@ export default function MobileDagLive() {
             <DagHero
               snapshotReplayUrl="/replay/mainnet-60s-compressed.json"
               snapshotPlaybackRate={1}
+              paused={paused}
               scale={0.5}
               maxDpr={3}
               style={{
@@ -81,6 +84,11 @@ export default function MobileDagLive() {
               background:
                 "radial-gradient(ellipse 90% 85% at 50% 45%, transparent 0%, var(--dag-mask-color) 100%)",
             }}
+          />
+
+          <DagPlaybackControl
+            labels={playbackLabels}
+            className="absolute right-3 bottom-[15%] z-20 sm:right-4 sm:bottom-4"
           />
         </>
       ) : null}
