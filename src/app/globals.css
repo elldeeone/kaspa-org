@@ -154,6 +154,17 @@ body {
   }
 }
 
+@media (max-width: 39.999rem) and (prefers-reduced-motion: reduce) {
+  .home-hero-viewport {
+    justify-content: center;
+    padding-block-start: 0;
+  }
+
+  .home-hero-copy {
+    margin-block-start: 0;
+  }
+}
+
 .korean-body-font {
   --font-sans: var(--font-korean-sans);
   font-family: var(--font-korean-sans), var(--font-geist-sans), sans-serif;

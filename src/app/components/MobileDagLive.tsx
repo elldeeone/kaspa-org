@@ -39,49 +39,51 @@ export default function MobileDagLive() {
     };
   }, []);
 
-  if (!showDag) return null;
-
   return (
     <div className="home-hero-dag-viewport relative w-full overflow-hidden motion-reduce:hidden xl:hidden">
-      {/* Right offset ramps from 0 below 768px to ~170px at 1280px so the
-          newest block lands ~78–84vw of the viewport at every width. Below
-          md the canvas hits viewport-right; at wider widths it pulls back
-          enough that the DAG content (even at min snapshot span of 16) still
-          overflows canvas-left and bleeds off the viewport's left edge. */}
-      <div
-        className="absolute top-0 bottom-0 w-[110%]"
-        style={{ right: "max(0px, calc((100vw - 768px) / 3))" }}
-      >
-        <DagHero
-          snapshotReplayUrl="/replay/mainnet-60s-compressed.json"
-          snapshotPlaybackRate={1}
-          scale={0.5}
-          maxDpr={3}
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "var(--dag-mask-color)",
-          }}
-        />
-      </div>
+      {showDag ? (
+        <>
+          {/* Right offset ramps from 0 below 768px to ~170px at 1280px so the
+              newest block lands ~78–84vw of the viewport at every width. Below
+              md the canvas hits viewport-right; at wider widths it pulls back
+              enough that the DAG content (even at min snapshot span of 16) still
+              overflows canvas-left and bleeds off the viewport's left edge. */}
+          <div
+            className="absolute top-0 bottom-0 w-[110%]"
+            style={{ right: "max(0px, calc((100vw - 768px) / 3))" }}
+          >
+            <DagHero
+              snapshotReplayUrl="/replay/mainnet-60s-compressed.json"
+              snapshotPlaybackRate={1}
+              scale={0.5}
+              maxDpr={3}
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "var(--dag-mask-color)",
+              }}
+            />
+          </div>
 
-      {/* Bottom fade — stronger to keep hero text area clear */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(to bottom, transparent 50%, color-mix(in srgb, var(--dag-mask-color) 80%, transparent) 80%, var(--dag-mask-color) 100%)",
-        }}
-      />
+          {/* Bottom fade — stronger to keep hero text area clear */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, transparent 50%, color-mix(in srgb, var(--dag-mask-color) 80%, transparent) 80%, var(--dag-mask-color) 100%)",
+            }}
+          />
 
-      {/* Soft edge vignette */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 90% 85% at 50% 45%, transparent 0%, var(--dag-mask-color) 100%)",
-        }}
-      />
+          {/* Soft edge vignette */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 90% 85% at 50% 45%, transparent 0%, var(--dag-mask-color) 100%)",
+            }}
+          />
+        </>
+      ) : null}
     </div>
   );
 }
