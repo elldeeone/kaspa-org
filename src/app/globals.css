@@ -119,6 +119,41 @@ body {
   overflow-x: clip;
 }
 
+/* Stable full-screen home composition across mobile browser chrome states. */
+.home-hero-viewport {
+  min-block-size: 100vh;
+  min-block-size: 100svh;
+  padding-block-start: 2vh;
+  padding-block-start: 2svh;
+}
+
+.home-hero-dag-viewport {
+  block-size: 55vh;
+  block-size: 55svh;
+}
+
+.home-hero-copy {
+  margin-block-start: clamp(-6rem, -8vh, -3rem);
+  margin-block-start: clamp(-6rem, -8svh, -3rem);
+}
+
+@media (min-width: 40rem) {
+  .home-hero-viewport {
+    padding-block-start: 0;
+  }
+
+  .home-hero-copy {
+    margin-block-start: 0;
+  }
+}
+
+@media (min-width: 48rem) {
+  .home-hero-dag-viewport {
+    block-size: 45vh;
+    block-size: 45svh;
+  }
+}
+
 .korean-body-font {
   --font-sans: var(--font-korean-sans);
   font-family: var(--font-korean-sans), var(--font-geist-sans), sans-serif;

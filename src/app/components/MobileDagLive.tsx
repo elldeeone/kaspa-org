@@ -42,7 +42,7 @@ export default function MobileDagLive() {
   if (!showDag) return null;
 
   return (
-    <div className="relative h-[55vh] w-full overflow-hidden motion-reduce:hidden md:h-[45vh] xl:hidden">
+    <div className="home-hero-dag-viewport relative w-full overflow-hidden motion-reduce:hidden xl:hidden">
       {/* Right offset ramps from 0 below 768px to ~170px at 1280px so the
           newest block lands ~78–84vw of the viewport at every width. Below
           md the canvas hits viewport-right; at wider widths it pulls back

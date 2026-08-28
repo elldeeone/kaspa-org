@@ -55,11 +55,11 @@ export default async function HomePage({
       {/* ─── Main Content ─── */}
       <main className="relative z-10 flex-1">
         {/* ── Hero ── */}
-        <section className="flex min-h-screen flex-col items-center pt-[2vh] sm:justify-center sm:pt-0 xl:flex-row xl:justify-start">
+        <section className="home-hero-viewport flex flex-col items-center sm:justify-center xl:flex-row xl:justify-start">
           {/* ─── DAG Visualization — Mobile ─── */}
           <MobileDagLive />
 
-          <div className="@container relative z-10 mx-auto -mt-[20vh] w-full px-6 text-center sm:mt-0 sm:pt-8 md:px-12 md:pt-10 xl:mx-0 xl:max-w-[55vw] xl:px-20 xl:pt-20 xl:text-left">
+          <div className="home-hero-copy @container relative z-10 mx-auto w-full px-6 text-center sm:pt-8 md:px-12 md:pt-10 xl:mx-0 xl:max-w-[55vw] xl:px-20 xl:pt-20 xl:text-left">
             <h1 className="text-[clamp(1.75rem,10cqw,6rem)] leading-[0.9] font-bold tracking-[-0.03em] text-balance wrap-break-word md:tracking-[-0.04em]">
               {heroLines.map((line, index) => (
                 <Fragment key={`${line}-${index}`}>
