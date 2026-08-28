@@ -170,6 +170,10 @@ body {
   font-family: var(--font-korean-sans), var(--font-geist-sans), sans-serif;
 }
 
+.korean-body-font .home-hero-copy > h1 {
+  line-height: 1.05;
+}
+
 ::selection {
   background: var(--selection-bg);
 }
