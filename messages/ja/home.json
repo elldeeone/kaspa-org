@@ -14,7 +14,9 @@
     "getStarted": "Kaspaを始める",
     "getWallet": "ウォレットを入手",
     "buyKaspa": "Kaspaを購入",
-    "dagAnnotation": "リアルタイムの pow"
+    "dagAnnotation": "リアルタイムの pow",
+    "dagPlay": "DAGアニメーションを再生",
+    "dagPause": "DAGアニメーションを一時停止"
   },
   "verify": {
     "heading": "信じるな、検証せよ。",

@@ -14,7 +14,9 @@
     "getStarted": "Loslegen",
     "getWallet": "Wallet holen",
     "buyKaspa": "Kaspa kaufen",
-    "dagAnnotation": "pow in Echtzeit"
+    "dagAnnotation": "pow in Echtzeit",
+    "dagPlay": "DAG-Animation abspielen",
+    "dagPause": "DAG-Animation pausieren"
   },
   "verify": {
     "heading": "vertrau nicht, verifiziere.",

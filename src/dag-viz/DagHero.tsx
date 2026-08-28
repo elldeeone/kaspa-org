@@ -41,6 +41,7 @@ interface DagHeroProps {
   scale?: number;
   backgroundAlpha?: number;
   maxDpr?: number;
+  paused?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -53,12 +54,18 @@ export default function DagHero({
   scale = 0.4,
   backgroundAlpha = 0,
   maxDpr = 2,
+  paused = false,
   className,
   style,
 }: DagHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const dagRef = useRef<HeroDag | null>(null);
+  const pausedRef = useRef(paused);
   const normalizedApiUrl = apiUrl ? normalizeApiUrl(apiUrl) : undefined;
+
+  useEffect(() => {
+    pausedRef.current = paused;
+  }, [paused]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -67,7 +74,7 @@ export default function DagHero({
     let rafId = 0;
     let delayedRafId = 0;
     let canvas: HTMLCanvasElement | null = null;
-    const dag = new HeroDag(scale, backgroundAlpha, maxDpr);
+    const dag = new HeroDag(scale, backgroundAlpha, maxDpr, pausedRef.current);
     dagRef.current = dag;
     let isCancelled = false;
 
@@ -142,6 +149,10 @@ export default function DagHero({
     backgroundAlpha,
     maxDpr,
   ]);
+
+  useEffect(() => {
+    dagRef.current?.setPaused(paused);
+  }, [paused]);
 
   return (
     <div

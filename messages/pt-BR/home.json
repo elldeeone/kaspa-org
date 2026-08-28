@@ -14,7 +14,9 @@
     "getStarted": "Começar",
     "getWallet": "Obter uma carteira",
     "buyKaspa": "Comprar Kaspa",
-    "dagAnnotation": "pow em tempo real"
+    "dagAnnotation": "pow em tempo real",
+    "dagPlay": "Reproduzir animação do DAG",
+    "dagPause": "Pausar animação do DAG"
   },
   "verify": {
     "heading": "não confie, verifique.",

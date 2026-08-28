@@ -14,6 +14,7 @@ import MobileDagLive from "./components/MobileDagLive";
 import TypeWriter from "./components/TypeWriter";
 import ProofTrigger from "./components/ProofTrigger";
 import { ArrowUpRightIcon, ChevronRightIcon } from "./components/icons";
+import { DagPlaybackProvider } from "./components/DagPlayback";
 
 function HeroCta({
   children,
@@ -43,96 +44,100 @@ export default async function HomePage({
   const clientLabels = getHomeClientLabels(locale);
 
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <Nav />
+    <DagPlaybackProvider>
+      <div className="relative flex min-h-screen flex-col">
+        <Nav />
 
-      {/* ─── DAG Visualization — Desktop (Fixed Right) ─── */}
-      <LiveDagBackground
-        annotation={clientLabels.dagAnnotation}
-        locale={locale}
-      />
+        {/* ─── DAG Visualization — Desktop (Fixed Right) ─── */}
+        <LiveDagBackground
+          reserveLauncherSpace={aiAvailable}
+          annotation={clientLabels.dagAnnotation}
+          locale={locale}
+          playbackLabels={clientLabels.dagPlayback}
+        />
 
-      {/* ─── Main Content ─── */}
-      <main className="relative z-10 flex-1">
-        {/* ── Hero ── */}
-        <section className="home-hero-viewport flex flex-col items-center sm:justify-center xl:flex-row xl:justify-start">
-          {/* ─── DAG Visualization — Mobile ─── */}
-          <MobileDagLive />
+        {/* ─── Main Content ─── */}
+        <main className="relative z-10 flex-1">
+          {/* ── Hero ── */}
+          <section className="home-hero-viewport flex flex-col items-center sm:justify-center xl:flex-row xl:justify-start">
+            {/* ─── DAG Visualization — Mobile ─── */}
+            <MobileDagLive playbackLabels={clientLabels.dagPlayback} />
 
-          <div className="home-hero-copy @container relative z-10 mx-auto w-full px-6 text-center sm:pt-8 md:px-12 md:pt-10 xl:mx-0 xl:max-w-[55vw] xl:px-20 xl:pt-20 xl:text-left">
-            <h1 className="text-[clamp(1.75rem,10cqw,6rem)] leading-[0.9] font-bold tracking-[-0.03em] text-balance wrap-break-word md:tracking-[-0.04em]">
-              {heroLines.map((line, index) => (
-                <Fragment key={`${line}-${index}`}>
-                  {index > 0 ? <br /> : null}
-                  {line}
-                </Fragment>
-              ))}
-            </h1>
-            <p className="text-secondary mx-auto mt-5 max-w-[20rem] text-[20px] leading-[1.3] tracking-[-0.01em] md:text-[24px] xl:mx-0 xl:ml-1.25 xl:max-w-none xl:text-[28px]">
-              {t("hero.tagline")}
-            </p>
+            <div className="home-hero-copy @container relative z-10 mx-auto w-full px-6 text-center sm:pt-8 md:px-12 md:pt-10 xl:mx-0 xl:max-w-[55vw] xl:px-20 xl:pt-20 xl:text-left">
+              <h1 className="text-[clamp(1.75rem,10cqw,6rem)] leading-[0.9] font-bold tracking-[-0.03em] text-balance wrap-break-word md:tracking-[-0.04em]">
+                {heroLines.map((line, index) => (
+                  <Fragment key={`${line}-${index}`}>
+                    {index > 0 ? <br /> : null}
+                    {line}
+                  </Fragment>
+                ))}
+              </h1>
+              <p className="text-secondary mx-auto mt-5 max-w-[20rem] text-[20px] leading-[1.3] tracking-[-0.01em] md:text-[24px] xl:mx-0 xl:ml-1.25 xl:max-w-none xl:text-[28px]">
+                {t("hero.tagline")}
+              </p>
 
-            <div className="mt-10 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:justify-center sm:gap-4 xl:justify-start">
-              <HeroCta
-                href={localizedDestinationInventory.homeGetStarted}
-                className="btn-primary w-full justify-center py-5 text-[18px] sm:w-auto sm:justify-start sm:py-3 sm:text-[15px]"
-              >
-                {t("hero.getStarted")} <ChevronRightIcon />
-              </HeroCta>
-              <HeroCta
-                href={localizedDestinationInventory.homeGetWallet}
-                className="btn-ghost w-full justify-center py-5 text-[18px] sm:w-auto sm:justify-start sm:py-3 sm:text-[15px]"
-              >
-                {t("hero.getWallet")} <ChevronRightIcon />
-              </HeroCta>
-              <HeroCta
-                href={localizedDestinationInventory.homeBuyKaspa}
-                className="btn-ghost w-full justify-center py-5 text-[18px] sm:w-auto sm:justify-start sm:py-3 sm:text-[15px]"
-              >
-                {t("hero.buyKaspa")} <ChevronRightIcon />
-              </HeroCta>
+              <div className="mt-10 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:justify-center sm:gap-4 xl:justify-start">
+                <HeroCta
+                  href={localizedDestinationInventory.homeGetStarted}
+                  className="btn-primary w-full justify-center py-5 text-[18px] sm:w-auto sm:justify-start sm:py-3 sm:text-[15px]"
+                >
+                  {t("hero.getStarted")} <ChevronRightIcon />
+                </HeroCta>
+                <HeroCta
+                  href={localizedDestinationInventory.homeGetWallet}
+                  className="btn-ghost w-full justify-center py-5 text-[18px] sm:w-auto sm:justify-start sm:py-3 sm:text-[15px]"
+                >
+                  {t("hero.getWallet")} <ChevronRightIcon />
+                </HeroCta>
+                <HeroCta
+                  href={localizedDestinationInventory.homeBuyKaspa}
+                  className="btn-ghost w-full justify-center py-5 text-[18px] sm:w-auto sm:justify-start sm:py-3 sm:text-[15px]"
+                >
+                  {t("hero.buyKaspa")} <ChevronRightIcon />
+                </HeroCta>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* ── Verify Section ── */}
-        <section id="verify" className="py-24 lg:py-40">
-          <div className="px-6 md:px-12 lg:max-w-[55vw] lg:px-20">
-            <h2 className="text-[32px] leading-[0.98] font-medium tracking-[-0.02em] md:text-[40px] lg:text-[44px]">
-              <TypeWriter text={t("verify.heading")} speed={55} />
-            </h2>
+          {/* ── Verify Section ── */}
+          <section id="verify" className="py-24 lg:py-40">
+            <div className="px-6 md:px-12 lg:max-w-[55vw] lg:px-20">
+              <h2 className="text-[32px] leading-[0.98] font-medium tracking-[-0.02em] md:text-[40px] lg:text-[44px]">
+                <TypeWriter text={t("verify.heading")} speed={55} />
+              </h2>
 
-            <p className="text-tertiary mt-10 max-w-md text-[16px] leading-[1.7]">
-              {t("verify.history")}
-              <br />
-              <br />
-              {t("verify.fairLaunch")}
-            </p>
+              <p className="text-tertiary mt-10 max-w-md text-[16px] leading-[1.7]">
+                {t("verify.history")}
+                <br />
+                <br />
+                {t("verify.fairLaunch")}
+              </p>
 
-            <p className="text-tertiary mt-6 max-w-md text-[16px] leading-[1.7]">
-              {t("verify.explanation")}
-            </p>
+              <p className="text-tertiary mt-6 max-w-md text-[16px] leading-[1.7]">
+                {t("verify.explanation")}
+              </p>
 
-            <div className="mt-10 grid w-full grid-cols-2 gap-3 sm:flex sm:w-auto sm:flex-wrap">
-              <ProofTrigger
-                labels={clientLabels.proof}
-                className="btn-proof-action"
-              />
-              <a
-                href="https://github.com/kaspagang/kaspad-py-explorer/blob/main/src/genesis_proof.ipynb"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-ghost btn-proof-action"
-              >
-                {t("verify.runProof")} <ArrowUpRightIcon size={14} />
-              </a>
+              <div className="mt-10 grid w-full grid-cols-2 gap-3 sm:flex sm:w-auto sm:flex-wrap">
+                <ProofTrigger
+                  labels={clientLabels.proof}
+                  className="btn-proof-action"
+                />
+                <a
+                  href="https://github.com/kaspagang/kaspad-py-explorer/blob/main/src/genesis_proof.ipynb"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-ghost btn-proof-action"
+                >
+                  {t("verify.runProof")} <ArrowUpRightIcon size={14} />
+                </a>
+              </div>
             </div>
-          </div>
-        </section>
-      </main>
+          </section>
+        </main>
 
-      <Footer reserveLauncherSpace={aiAvailable} />
-      {aiAvailable ? <LocalizedAiLauncherEntry locale={locale} /> : null}
-    </div>
+        <Footer reserveLauncherSpace={aiAvailable} />
+        {aiAvailable ? <LocalizedAiLauncherEntry locale={locale} /> : null}
+      </div>
+    </DagPlaybackProvider>
   );
 }

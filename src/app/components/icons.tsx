@@ -44,6 +44,32 @@ export function ChevronRightIcon({ size = 12 }: IconProps): React.JSX.Element {
   );
 }
 
+export function PauseIcon({ size = 14 }: IconProps): React.JSX.Element {
+  return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill="none">
+      <path
+        d="M4.5 2.5v9M9.5 2.5v9"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function PlayIcon({ size = 14 }: IconProps): React.JSX.Element {
+  return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill="none">
+      <path
+        d="M4 2.75 11 7l-7 4.25v-8.5Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function ClipboardIcon({ size = 14 }: IconProps): React.JSX.Element {
   return (
     <svg width={size} height={size} viewBox="0 0 16 16" fill="none">

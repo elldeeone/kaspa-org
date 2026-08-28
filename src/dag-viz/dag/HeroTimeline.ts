@@ -54,7 +54,10 @@ export default class HeroTimeline extends PIXI.Container {
     this.scaleGetter = getter;
   }
 
-  setBlocksAndEdgesAndHeightGroups(data: BlocksAndEdgesAndHeightGroups) {
+  setBlocksAndEdgesAndHeightGroups(
+    data: BlocksAndEdgesAndHeightGroups,
+    animate: boolean = true,
+  ) {
     this.currentData = data;
 
     if (this.targetHeight < 0) {
@@ -110,8 +113,10 @@ export default class HeroTimeline extends PIXI.Container {
         const sprite = new HeroBlockSprite(this.application, block);
         this.blockKeysToBlockSprites[key] = sprite;
         this.blockContainer.addChild(sprite);
-        sprite.alpha = 0.0;
-        Tween.get(sprite).to({ alpha: 1.0 }, SPRITE_FADE_MS);
+        sprite.alpha = animate ? 0.0 : 1.0;
+        if (animate) {
+          Tween.get(sprite).to({ alpha: 1.0 }, SPRITE_FADE_MS);
+        }
       }
     }
 
@@ -136,12 +141,14 @@ export default class HeroTimeline extends PIXI.Container {
         this.assignEdgeState(sprite, edge);
         this.edgeKeysToEdgeSprites[edgeKey] = sprite;
         this.edgeContainer.addChild(sprite);
-        sprite.alpha = 0.0;
-        Tween.get(sprite).to({ alpha: 1.0 }, SPRITE_FADE_MS);
+        sprite.alpha = animate ? 0.0 : 1.0;
+        if (animate) {
+          Tween.get(sprite).to({ alpha: 1.0 }, SPRITE_FADE_MS);
+        }
       }
     }
 
-    this.recalculateSpritePositions(true);
+    this.recalculateSpritePositions(animate);
   }
 
   private assignEdgeState(sprite: HeroEdgeSprite, edge: Edge) {
@@ -195,11 +202,23 @@ export default class HeroTimeline extends PIXI.Container {
   }
 
   recalculatePositions() {
-    this.moveTimeline();
+    this.moveTimeline(false);
     this.recalculateSpritePositions(false);
   }
 
-  private moveTimeline() {
+  settleAnimations() {
+    this.recalculatePositions();
+    this.edgeFollowUntilMs = 0;
+
+    for (const sprite of Object.values(this.blockKeysToBlockSprites)) {
+      sprite.alpha = 1;
+    }
+    for (const sprite of Object.values(this.edgeKeysToEdgeSprites)) {
+      sprite.alpha = 1;
+    }
+  }
+
+  private moveTimeline(animate: boolean = true) {
     const rendererWidth = this.getDisplayWidth();
     const rendererHeight = this.getDisplayHeight();
     const blockSize = this.calculateBlockSize(rendererHeight);
@@ -215,7 +234,7 @@ export default class HeroTimeline extends PIXI.Container {
 
     if (this.targetHeight >= 0) {
       const targetX = rendererWidth / 2 - blockSpriteXForTarget;
-      if (Math.abs(this.x - targetX) < rendererWidth) {
+      if (animate && Math.abs(this.x - targetX) < rendererWidth) {
         Tween.get(this as PIXI.Container).to(
           { x: targetX },
           BLOCK_MOVE_MS,
@@ -227,9 +246,9 @@ export default class HeroTimeline extends PIXI.Container {
     }
   }
 
-  setTargetHeight(targetHeight: number) {
+  setTargetHeight(targetHeight: number, animate: boolean = true) {
     this.targetHeight = targetHeight;
-    this.moveTimeline();
+    this.moveTimeline(animate);
   }
 
   private recalculateTargetHeight() {

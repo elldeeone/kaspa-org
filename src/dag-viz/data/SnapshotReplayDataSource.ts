@@ -256,20 +256,25 @@ export default class SnapshotReplayDataSource {
   private readonly loopGapMs: number;
   private currentIndex: number = 0;
   private timeoutId: number | undefined;
+  private isPaused: boolean;
 
   constructor(
     replay: SnapshotReplayData | CompressedSnapshotReplayData,
     playbackRate: number = 1,
+    paused: boolean = false,
   ) {
     this.replay = normalizeReplay(replay);
     this.playbackRate =
       Number.isFinite(playbackRate) && playbackRate > 0 ? playbackRate : 1;
     this.meanFrameDeltaMs = this.calculateMeanFrameDeltaMs();
     this.loopGapMs = this.calculateLoopGapMs();
-    this.scheduleNext();
+    this.isPaused = paused;
+    if (!this.isPaused) this.scheduleNext();
   }
 
   private scheduleNext = () => {
+    if (this.isPaused) return;
+
     const frameCount = this.replay.frames.length;
     if (frameCount <= 1) return;
 
@@ -343,10 +348,21 @@ export default class SnapshotReplayDataSource {
     return Math.max(16, this.meanFrameDeltaMs / this.playbackRate);
   }
 
-  destroy() {
+  pause() {
+    this.isPaused = true;
     if (this.timeoutId !== undefined) {
       window.clearTimeout(this.timeoutId);
     }
     this.timeoutId = undefined;
+  }
+
+  resume() {
+    if (!this.isPaused) return;
+    this.isPaused = false;
+    this.scheduleNext();
+  }
+
+  destroy() {
+    this.pause();
   }
 }

@@ -14,7 +14,9 @@
     "getStarted": "Начать",
     "getWallet": "Получить кошелёк",
     "buyKaspa": "Купить Kaspa",
-    "dagAnnotation": "pow в реальном времени"
+    "dagAnnotation": "pow в реальном времени",
+    "dagPlay": "Воспроизвести анимацию DAG",
+    "dagPause": "Приостановить анимацию DAG"
   },
   "verify": {
     "heading": "не доверяй, проверяй.",

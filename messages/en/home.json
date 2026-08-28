@@ -14,7 +14,9 @@
     "getStarted": "Get started",
     "getWallet": "Get a wallet",
     "buyKaspa": "Buy Kaspa",
-    "dagAnnotation": "pow in real-time"
+    "dagAnnotation": "pow in real-time",
+    "dagPlay": "Play DAG animation",
+    "dagPause": "Pause DAG animation"
   },
   "verify": {
     "heading": "don't trust, verify.",

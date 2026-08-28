@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 
 import type { Locale } from "@/i18n/locale-registry";
 
+import { DagPlaybackControl, useDagPlayback } from "./DagPlayback";
+
 const DesktopDagScene = dynamic(() => import("./DesktopDagScene"), {
   ssr: false,
 });
@@ -13,21 +15,23 @@ const DesktopDagScene = dynamic(() => import("./DesktopDagScene"), {
 export default function LiveDagBackground({
   annotation,
   locale,
+  playbackLabels,
+  reserveLauncherSpace,
 }: {
   annotation: string;
   locale: Locale;
+  playbackLabels: { play: string; pause: string };
+  reserveLauncherSpace: boolean;
 }) {
   const { resolvedTheme } = useTheme();
   const [showDag, setShowDag] = useState(false);
+  const { paused, preferenceReady } = useDagPlayback();
 
   useEffect(() => {
     const desktopQuery = window.matchMedia("(min-width: 1280px)");
-    const reducedMotionQuery = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    );
 
     const update = () => {
-      setShowDag(desktopQuery.matches && !reducedMotionQuery.matches);
+      setShowDag(desktopQuery.matches);
     };
 
     // Initial check on mount
@@ -44,26 +48,33 @@ export default function LiveDagBackground({
     };
 
     const removeDesktopListener = addListener(desktopQuery);
-    const removeReducedMotionListener = addListener(reducedMotionQuery);
 
     return () => {
       removeDesktopListener();
-      removeReducedMotionListener();
     };
   }, []);
 
-  if (!showDag) return null;
+  if (!showDag || !preferenceReady) return null;
 
   const isDark = resolvedTheme === "dark";
   const maskColor = isDark ? "#16161a" : "#f5f5f7";
 
   return (
-    <div className="pointer-events-none fixed top-0 right-0 z-0 h-screen w-[56vw] overflow-hidden 2xl:-right-[5vw] 2xl:w-[70vw]">
-      <DesktopDagScene
-        annotation={annotation}
-        locale={locale}
-        maskColor={maskColor}
+    <>
+      <div className="pointer-events-none fixed top-0 right-0 z-0 h-screen w-[56vw] overflow-hidden 2xl:-right-[5vw] 2xl:w-[70vw]">
+        <DesktopDagScene
+          annotation={annotation}
+          locale={locale}
+          maskColor={maskColor}
+          paused={paused}
+        />
+      </div>
+      <DagPlaybackControl
+        labels={playbackLabels}
+        className={`fixed right-4 z-20 hidden xl:inline-flex 2xl:right-6 ${
+          reserveLauncherSpace ? "bottom-20" : "bottom-4 2xl:bottom-6"
+        }`}
       />
-    </div>
+    </>
   );
 }
