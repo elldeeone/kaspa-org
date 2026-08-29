@@ -77,21 +77,22 @@ export function DagPlaybackControl({
       onClick={toggle}
       aria-label={label}
       title={label}
-      className={`group pointer-events-auto relative inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-[var(--text-secondary)] focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2 focus-visible:outline-none ${className ?? ""}`}
+      className={`group pointer-events-auto inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-[var(--text-secondary)] focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2 focus-visible:outline-none ${className ?? ""}`}
     >
       <span
         aria-hidden="true"
-        className="absolute h-7 w-7 rounded-full border border-[var(--btn-ghost-border)] opacity-[0.35] shadow-sm backdrop-blur-sm transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
-        style={{
-          background:
-            "color-mix(in srgb, var(--dag-mask-color) 78%, transparent)",
-        }}
-      />
-      <span
-        aria-hidden="true"
-        className="relative inline-flex h-7 w-7 items-center justify-center opacity-[0.65] transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+        className="relative inline-flex h-7 w-7 items-center justify-center"
       >
-        {paused ? <PlayIcon size={11} /> : <PauseIcon size={11} />}
+        <span
+          className="absolute inset-0 rounded-full border border-[var(--btn-ghost-border)] opacity-[0.35] shadow-sm backdrop-blur-sm transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+          style={{
+            background:
+              "color-mix(in srgb, var(--dag-mask-color) 78%, transparent)",
+          }}
+        />
+        <span className="relative inline-flex items-center justify-center opacity-[0.65] transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+          {paused ? <PlayIcon size={11} /> : <PauseIcon size={11} />}
+        </span>
       </span>
     </button>
   );
