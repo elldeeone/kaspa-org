@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Kaspa 开发者文档、SDK、API 与节点访问 | Kaspa",
-    "description": "在 Kaspa 上开始构建所需的一切：WASM SDK、Rust 库、在线 API 体验区、节点访问及开发者工具。"
+    "description": "在 Kaspa 上开始构建所需的一切：主网可编程能力、WASM SDK、Rust 库、在线 API 体验区、节点访问及开发者工具。"
   },
   "openGraph": {
     "imageAlt": "Kaspa — 实时去中心化"
@@ -68,7 +68,7 @@
       "paths": {
         "label": "选择路径",
         "compactLabel": "路径",
-        "description": "选择 {wasmSdk}、原生 {rust} 或完整节点设置。"
+        "description": "选择集成技术栈或可编程模型。"
       },
       "runNode": {
         "label": "运行节点",
@@ -103,7 +103,7 @@
       "action": "查看版本"
     },
     "heading": "在 {kaspa} 上构建",
-    "description": "使用 {wasmSdk}、原生 {rust} 库和节点基础设施，在 {kaspa} 上进行构建。",
+    "description": "使用主网可编程能力、{wasmSdk}、原生 {rust} 库和节点基础设施，在 {kaspa} 上进行构建。",
     "actions": {
       "openDocs": "打开文档",
       "viewGitHub": "在 {github} 上查看"
@@ -114,11 +114,11 @@
       "descriptionWithAi": "先向 {kaspaAi} 获取方向，再进入符合您需求的路径。",
       "descriptionWithoutAi": "从文档、在线示例或符合您需求的节点路径开始。",
       "aiTitle": "询问 {kaspaAi}",
-      "aiDescription": "找到合适的 {sdk}、{api} 或节点路径。",
+      "aiDescription": "找到合适的 {sdk}、{api}、节点或可编程路径。",
       "jumpLabel": "直接跳转至",
       "routes": {
         "chainData": "读取链上数据",
-        "stack": "选择技术栈",
+        "stack": "选择构建路径",
         "node": "运行节点"
       }
     }
@@ -177,7 +177,7 @@
     "heading": {
       "label": "路径",
       "title": "选择您的路径",
-      "description": "从符合您所构建系统的 {sdk} 或基础设施路径开始。"
+      "description": "根据正在构建的系统，选择集成技术栈、节点配置或可编程模型。"
     },
     "cards": {
       "wasm": {
@@ -192,6 +192,13 @@
         "title": "使用原生 {rust} 构建",
         "description": "使用 {rustyKaspa} 中的 {rust} crate 构建后端服务、系统集成、钱包内部功能及节点周边工作负载。",
         "repo": "{rustyKaspa} 代码仓库"
+      },
+      "programmability": {
+        "tier": "可编程应用",
+        "title": "构建可编程应用",
+        "description": "比较 {covenants}、{basedApps} 和专用的 {inlineZk}。{fullVprogs} 仍是独立应用之间实现组合性的未来方向。",
+        "guide": "选择模型",
+        "toccata": "Toccata 开发者指南"
       },
       "node": {
         "tier": "节点",
@@ -331,7 +338,7 @@
     "heading": {
       "label": "开发动态",
       "title": "公开关注研发进展",
-      "description": "跟踪主要讨论频道，并持续关注 {sdk}、协议和实验性可编程技术的开发进展。"
+      "description": "区分已在主网上线的共识能力与仍在演进的开发者工具和研究。"
     },
     "liveDiscussion": "实时讨论",
     "cards": {
@@ -345,20 +352,25 @@
         "title": "{kaspaResearch}",
         "description": "围绕协议、共识、经济学和挖矿进行长篇讨论的论坛，也包括 {kip} 草案和提案。"
       },
+      "kasSmiths": {
+        "label": "社区",
+        "title": "{kasSmiths}：开发者工坊",
+        "description": "与其他开发者共同讨论和完善 {kaspa} 标准、协议、工具、共享基础设施及产品构想。"
+      },
       "toccata": {
-        "label": "硬分叉",
-        "title": "{toccata}：契约与 {zk}",
-        "description": "一次硬分叉，将扩展脚本操作码（{kip17}）、契约 ID（{kip20}）、带验证器预编译子系统的 {zk} 操作码（{kip16}）以及排序承诺（{kip21}）整合在一起。目前已在 {tn12} 上运行，先于主网激活。"
+        "label": "已在主网上线",
+        "title": "{toccata} 可编程能力",
+        "description": "{toccata} 通过契约、交易内省、ZK 验证和面向 Based Apps 的排序支持，为 {kaspa} 引入了可编程 UTXO。该功能自 2026 年 6 月 30 日起已在主网上线。"
       },
       "silverscript": {
-        "label": "可编程性",
+        "label": "契约工具",
         "title": "{silverscript}",
-        "description": "一种可编译为原生 {kaspaScript} 的高级脚本语言。目前正在 {tn12} 上测试，为 {toccata} 硬分叉做准备；该分叉将在主网上引入契约和 {zk} 操作码。"
+        "description": "面向主网契约的主要高级编写路径，可编译为原生 {kaspaScript}。工具仍处于早期阶段；用于生产环境前请检查最新版本和审计状态。"
       },
       "vprogs": {
-        "label": "可编程性",
-        "title": "{vprogs}",
-        "description": "关于可验证程序的早期研究：链上排序，链下执行，再通过 {zk} 证明完成结算。它建立在 {toccata} 即将引入的脚本原语之上。"
+        "label": "建设中",
+        "title": "{vprogs}：Based Apps",
+        "description": "共享状态应用路径仍在建设中。vProgs 运行时是不断演进的模式参考，尚未成为稳定的外部开发者 API；Full vProgs 仍是未来方向。"
       },
       "python": {
         "label": "{sdk}",
@@ -401,17 +413,18 @@
     },
     "prompts": {
       "gettingStarted": "如何开始在 {kaspa} 上构建？",
-      "choosePath": "我应该选择哪条路径——{wasmSdk}、原生 {rust}，还是运行节点？",
+      "choosePath": "我应该集成 {wasmSdk}、使用原生 {rust}、运行节点，还是构建可编程应用？",
       "nodeOrApi": "我需要运行自己的节点，还是可以使用社区 {api}？",
-      "smartContracts": "{kaspa} 有智能合约吗？",
+      "smartContracts": "{kaspa} 的 UTXO 原生可编程能力与 EVM 智能合约有何不同？",
       "wallet": "如何使用 {wasmSdk} 构建钱包？",
       "transaction": "如何构建并签署交易？",
       "runNode": "如何运行 {kaspa} 节点？",
       "hardware": "运行节点需要什么硬件？",
-      "toccata": "什么是 {toccata}，它会带来哪些变化？",
+      "toccata": "{toccata} 带来了哪些变化，主网上已启用哪些功能？",
       "covenants": "{kaspa} 中的契约是什么？",
+      "programmability": "我应该使用 {covenants}、{basedApps} 还是 {inlineZk}？",
       "silverscript": "什么是 {silverscript}？",
-      "networks": "主网与 {tn12} 有什么区别？"
+      "testing": "部署可编程 Kaspa 应用前应该如何测试？"
     }
   }
 }

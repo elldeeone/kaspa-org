@@ -25,10 +25,10 @@ export default function PathsSection({
         <SectionHeading
           label={t("heading.label")}
           title={t("heading.title")}
-          description={t("heading.description", { sdk: BUILD_TERMS.sdk })}
+          description={t("heading.description")}
         />
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
+        <div className="mt-10 grid gap-5 md:grid-cols-2">
           {choosePathCards.map((card) => (
             <div
               key={card.title}

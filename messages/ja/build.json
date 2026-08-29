@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Kaspa 開発者向けドキュメント、SDK、API、ノードアクセス | Kaspa",
-    "description": "Kaspa 上で開発を始めるために必要なものがすべて揃っています。WASM SDK、Rust ライブラリ、ライブ API プレイグラウンド、ノード接続、開発者向けツール。"
+    "description": "Kaspa 上で開発を始めるために必要なものがすべて揃っています。メインネットのプログラマビリティ、WASM SDK、Rust ライブラリ、ライブ API プレイグラウンド、ノード接続、開発者向けツール。"
   },
   "openGraph": {
     "imageAlt": "Kaspa — リアルタイムの分散化"
@@ -68,7 +68,7 @@
       "paths": {
         "label": "開発方法を選ぶ",
         "compactLabel": "方法",
-        "description": "{wasmSdk}、ネイティブ {rust}、またはフルノードのセットアップ。"
+        "description": "連携スタックまたはプログラマビリティモデルを選びます。"
       },
       "runNode": {
         "label": "ノードを動かす",
@@ -103,7 +103,7 @@
       "action": "リリースを見る"
     },
     "heading": "{kaspa} 上で開発する",
-    "description": "{kaspa} 上での開発に使える {wasmSdk}、ネイティブ {rust} ライブラリ、ノードインフラ。",
+    "description": "{kaspa} 上での開発に使えるメインネットのプログラマビリティ、{wasmSdk}、ネイティブ {rust} ライブラリ、ノードインフラ。",
     "actions": {
       "openDocs": "ドキュメントを開く",
       "viewGitHub": "{github} で見る"
@@ -114,11 +114,11 @@
       "descriptionWithAi": "{kaspaAi} で方向性を確認し、目的に合うルートへ進みましょう。",
       "descriptionWithoutAi": "目的に合うドキュメント、ライブサンプル、またはノードの実行方法から始めましょう。",
       "aiTitle": "{kaspaAi} に質問",
-      "aiDescription": "適切な {sdk}、{api}、またはノードの実行方法を案内します。",
+      "aiDescription": "適切な {sdk}、{api}、ノード、プログラマビリティの経路を案内します。",
       "jumpLabel": "すぐに移動",
       "routes": {
         "chainData": "チェーンデータを読む",
-        "stack": "技術スタックを選ぶ",
+        "stack": "開発ルートを選ぶ",
         "node": "ノードを動かす"
       }
     }
@@ -177,7 +177,7 @@
     "heading": {
       "label": "開発方法",
       "title": "開発方法を選ぶ",
-      "description": "開発するシステムに合う {sdk} またはインフラのルートから始めましょう。"
+      "description": "構築するシステムに合う連携スタック、ノード構成、またはプログラマビリティモデルを選びます。"
     },
     "cards": {
       "wasm": {
@@ -192,6 +192,13 @@
         "title": "ネイティブ {rust} で開発",
         "description": "{rustyKaspa} 内の {rust} クレートを、バックエンドサービス、システム連携、ウォレット内部処理、ノード周辺のワークロードに利用します。",
         "repo": "{rustyKaspa} リポジトリ"
+      },
+      "programmability": {
+        "tier": "プログラマブルアプリ",
+        "title": "プログラマブルアプリを構築",
+        "description": "{covenants}、{basedApps}、専門的な {inlineZk} を比較できます。{fullVprogs} は、独立したアプリ間のコンポジションに向けた将来の方向性です。",
+        "guide": "モデルを選ぶ",
+        "toccata": "Toccata 開発者ガイド"
       },
       "node": {
         "tier": "ノード",
@@ -331,7 +338,7 @@
     "heading": {
       "label": "開発動向",
       "title": "公開の場で進行中の開発を追う",
-      "description": "主要な議論チャンネルを確認し、{sdk}、プロトコル、試験的なプログラマビリティの開発を追いましょう。"
+      "description": "メインネットで稼働中のコンセンサス機能と、現在も進化中の開発ツールや研究を区別して確認できます。"
     },
     "liveDiscussion": "リアルタイムの議論",
     "cards": {
@@ -345,20 +352,25 @@
         "title": "{kaspaResearch}",
         "description": "プロトコル、コンセンサス、経済、マイニングについて長文で議論するフォーラム。{kip} のドラフトや提案も扱います。"
       },
+      "kasSmiths": {
+        "label": "コミュニティ",
+        "title": "{kasSmiths}：開発者ワークショップ",
+        "description": "他の開発者とともに、{kaspa} の標準、プロトコル、ツール、共有インフラ、プロダクトのアイデアについて議論し、磨き上げる場です。"
+      },
       "toccata": {
-        "label": "ハードフォーク",
-        "title": "{toccata}：コベナント＆{zk}",
-        "description": "拡張スクリプトオペコード（{kip17}）、コベナント ID（{kip20}）、検証器プリコンパイル・サブシステムを備えた {zk} オペコード（{kip16}）、シーケンシングコミットメント（{kip21}）をまとめたハードフォーク。現在、メインネットでの有効化に先立ち {tn12} で稼働中です。"
+        "label": "メインネットで稼働中",
+        "title": "{toccata} プログラマビリティ",
+        "description": "{toccata} は、コベナント、トランザクションのイントロスペクション、ZK 検証、Based Apps 向けシーケンシング対応を通じて、{kaspa} にプログラマブル UTXO を追加しました。2026年6月30日からメインネットで稼働しています。"
       },
       "silverscript": {
-        "label": "プログラマビリティ",
+        "label": "コベナントツール",
         "title": "{silverscript}",
-        "description": "ネイティブの {kaspaScript} にコンパイルされる高水準スクリプト言語。コベナントと {zk} オペコードをメインネットに導入する {toccata} ハードフォークに先立ち、{tn12} でテスト中です。"
+        "description": "メインネットのコベナントを記述するための主要な高水準パスで、ネイティブの {kaspaScript} にコンパイルされます。ツールはまだ初期段階のため、本番利用前に最新のリリース状況と監査状況を確認してください。"
       },
       "vprogs": {
-        "label": "プログラマビリティ",
-        "title": "{vprogs}",
-        "description": "検証可能プログラムに関する初期研究。オンチェーンで順序を決め、オフチェーンで実行し、{zk} 証明を介して確定します。{toccata} で導入されるスクリプトプリミティブを基盤としています。"
+        "label": "構築中",
+        "title": "{vprogs}: 共有状態アプリ",
+        "description": "共有状態アプリケーションのパスは構築中です。vProgs ランタイムは進化中のパターン集であり、安定した外部向け開発者 API ではありません。Full vProgs は将来の方向性です。"
       },
       "python": {
         "label": "{sdk}",
@@ -401,17 +413,18 @@
     },
     "prompts": {
       "gettingStarted": "{kaspa} 上での開発は、何から始めればよいですか？",
-      "choosePath": "{wasmSdk}、ネイティブ {rust}、ノード運用のどれを選べばよいですか？",
+      "choosePath": "{wasmSdk} を連携する、ネイティブ {rust} を使う、ノードを運用する、プログラマブルアプリを構築する場合のどれを選ぶべきですか？",
       "nodeOrApi": "自分でノードを運用する必要がありますか？それともコミュニティ {api} を利用できますか？",
-      "smartContracts": "{kaspa} にスマートコントラクトはありますか？",
+      "smartContracts": "{kaspa} の UTXO ネイティブなプログラマビリティは EVM スマートコントラクトとどう違いますか？",
       "wallet": "{wasmSdk} を使ってウォレットを構築するにはどうすればよいですか？",
       "transaction": "トランザクションを作成して署名するにはどうすればよいですか？",
       "runNode": "{kaspa} ノードを動かすにはどうすればよいですか？",
       "hardware": "ノードにはどのようなハードウェアが必要ですか？",
-      "toccata": "{toccata} とは何ですか？何が変わりますか？",
+      "toccata": "{toccata} で何が変わり、メインネットでは何が有効になっていますか？",
       "covenants": "{kaspa} のコベナントとは何ですか？",
+      "programmability": "{covenants}、{basedApps}、{inlineZk} のどれを使うべきですか？",
       "silverscript": "{silverscript} とは何ですか？",
-      "networks": "メインネットと {tn12} の違いは何ですか？"
+      "testing": "プログラマブルな Kaspa アプリはデプロイ前にどのようにテストすればよいですか？"
     }
   }
 }

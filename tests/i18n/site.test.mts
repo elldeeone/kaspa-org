@@ -227,7 +227,7 @@ test("published route contexts and English metadata share one authority", () => 
       pathname: "/build",
       title: "Kaspa Developer Docs, SDKs, APIs, and Node Access | Kaspa",
       description:
-        "Everything you need to start building on Kaspa. WASM SDK, Rust libraries, live API playground, node access, and developer tooling.",
+        "Everything you need to start building on Kaspa. Mainnet programmability, WASM SDK, Rust libraries, live API playground, node access, and developer tooling.",
     },
     assets: {
       pathname: "/assets",

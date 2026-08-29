@@ -562,7 +562,6 @@ const translationPolicies = {
       "build.terms.dag",
       "build.terms.utxo",
       "build.tryLive.upstream",
-      "build.developments.cards.toccata.label",
       "build.help.links.discord.eyebrow",
       "errors.page.code",
       "hodl.navigation.current",
@@ -698,7 +697,6 @@ const translationPolicies = {
     allowedUnchangedKeys: [
       "assets.formats.png",
       "assets.formats.svg",
-      "build.developments.cards.toccata.label",
       "build.terms.daa",
       "build.terms.dag",
       "build.terms.utxo",

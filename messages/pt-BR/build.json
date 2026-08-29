@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Documentação para desenvolvedores, SDKs, APIs e acesso a nós | Kaspa",
-    "description": "Tudo o que você precisa para começar a desenvolver na Kaspa. WASM SDK, bibliotecas Rust, playground de API ao vivo, acesso a nós e ferramentas para desenvolvedores."
+    "description": "Tudo o que você precisa para começar a desenvolver na Kaspa. Programabilidade na mainnet, WASM SDK, bibliotecas Rust, playground de API ao vivo, acesso a nós e ferramentas para desenvolvedores."
   },
   "openGraph": {
     "imageAlt": "Kaspa — Descentralização em tempo real"
@@ -68,7 +68,7 @@
       "paths": {
         "label": "Escolher caminho",
         "compactLabel": "Caminhos",
-        "description": "{wasmSdk}, {rust} nativo ou configuração de nó completo."
+        "description": "Escolha uma stack de integração ou um modelo de programabilidade."
       },
       "runNode": {
         "label": "Executar nó",
@@ -103,7 +103,7 @@
       "action": "Ver versão"
     },
     "heading": "Desenvolva na {kaspa}",
-    "description": "{wasmSdk}, bibliotecas nativas de {rust} e infraestrutura de nós para desenvolver na {kaspa}.",
+    "description": "Programabilidade na mainnet, {wasmSdk}, bibliotecas nativas de {rust} e infraestrutura de nós para desenvolver na {kaspa}.",
     "actions": {
       "openDocs": "Abrir documentação",
       "viewGitHub": "Ver no {github}"
@@ -114,11 +114,11 @@
       "descriptionWithAi": "Use {kaspaAi} para se orientar e vá direto ao caminho que atende ao que você precisa.",
       "descriptionWithoutAi": "Comece pela documentação, pelos exemplos ao vivo ou pela opção de executar um nó, conforme sua necessidade.",
       "aiTitle": "Pergunte à {kaspaAi}",
-      "aiDescription": "Encontre o caminho certo para {sdk}, {api} ou a execução de um nó.",
+      "aiDescription": "Encontre o caminho certo de {sdk}, {api}, nó ou programabilidade.",
       "jumpLabel": "Ir direto para",
       "routes": {
         "chainData": "Ler dados da cadeia",
-        "stack": "Escolher sua stack",
+        "stack": "Escolher seu caminho",
         "node": "Executar um nó"
       }
     }
@@ -177,7 +177,7 @@
     "heading": {
       "label": "Caminhos",
       "title": "Escolha seu caminho",
-      "description": "Comece pelo caminho de {sdk} ou de infraestrutura adequado ao sistema que você está desenvolvendo."
+      "description": "Escolha a stack de integração, a configuração de nó ou o modelo de programabilidade adequado ao sistema que você está desenvolvendo."
     },
     "cards": {
       "wasm": {
@@ -192,6 +192,13 @@
         "title": "Desenvolva com {rust} nativo",
         "description": "Use os crates de {rust} do {rustyKaspa} em serviços de backend, integrações de sistemas, componentes internos de carteiras e cargas de trabalho integradas a nós.",
         "repo": "Repositório do {rustyKaspa}"
+      },
+      "programmability": {
+        "tier": "Aplicativos programáveis",
+        "title": "Desenvolva aplicativos programáveis",
+        "description": "Compare {covenants}, {basedApps} e a opção especializada {inlineZk}. {fullVprogs} continua sendo a direção futura para a composição entre aplicativos independentes.",
+        "guide": "Escolher um modelo",
+        "toccata": "Guia de desenvolvimento do Toccata"
       },
       "node": {
         "tier": "Nó",
@@ -331,7 +338,7 @@
     "heading": {
       "label": "Desenvolvimentos",
       "title": "Acompanhe o trabalho desenvolvido em público",
-      "description": "Acompanhe o principal canal de discussões e depois siga os avanços em {sdk}, protocolo e programabilidade experimental."
+      "description": "Diferencie os recursos de consenso ativos na mainnet das ferramentas para desenvolvedores e pesquisas que ainda estão evoluindo."
     },
     "liveDiscussion": "Discussão ao vivo",
     "cards": {
@@ -345,20 +352,25 @@
         "title": "{kaspaResearch}",
         "description": "Fórum para discussões aprofundadas sobre protocolo, consenso, economia e mineração, além de minutas e propostas de {kip}."
       },
+      "kasSmiths": {
+        "label": "Comunidade",
+        "title": "{kasSmiths}: oficina de desenvolvedores",
+        "description": "Discuta e refine com outros desenvolvedores os padrões, protocolos, ferramentas, infraestrutura compartilhada e ideias de produtos da {kaspa}."
+      },
       "toccata": {
-        "label": "Hard fork",
-        "title": "{toccata}: covenants e {zk}",
-        "description": "Hard fork que reúne opcodes de script estendidos ({kip17}), IDs de covenant ({kip20}), opcodes de {zk} com um subsistema de pré-compilados de verificação ({kip16}) e compromissos de sequenciamento ({kip21}). Atualmente ativo na {tn12}, antes da ativação na mainnet."
+        "label": "Ativo na mainnet",
+        "title": "Programabilidade do {toccata}",
+        "description": "O {toccata} adicionou UTXOs programáveis à {kaspa} por meio de covenants, introspecção de transações, verificação ZK e suporte de sequenciamento para Based Apps. Está ativo na mainnet desde 30 de junho de 2026."
       },
       "silverscript": {
-        "label": "Programabilidade",
+        "label": "Ferramentas de covenant",
         "title": "{silverscript}",
-        "description": "Linguagem de script de alto nível que compila para o {kaspaScript} nativo. Em testes na {tn12} antes do hard fork {toccata}, que levará covenants e opcodes de {zk} à mainnet."
+        "description": "O principal caminho de alto nível para criar covenants na mainnet, compilando para o {kaspaScript} nativo. As ferramentas ainda estão no início; confira o status atual de versões e auditorias antes do uso em produção."
       },
       "vprogs": {
-        "label": "Programabilidade",
-        "title": "{vprogs}",
-        "description": "Pesquisa inicial sobre programas verificáveis: sequenciamento on-chain com execução off-chain liquidada por provas {zk}. Baseia-se nas primitivas de script que chegarão com o {toccata}."
+        "label": "Em construção",
+        "title": "{vprogs}: aplicativos com estado compartilhado",
+        "description": "O caminho de aplicativos com estado compartilhado está em construção. O runtime vProgs é uma fonte de padrões em evolução, ainda não uma API externa estável para desenvolvedores; Full vProgs continua sendo uma direção futura."
       },
       "python": {
         "label": "{sdk}",
@@ -401,17 +413,18 @@
     },
     "prompts": {
       "gettingStarted": "Como começo a desenvolver na {kaspa}?",
-      "choosePath": "Qual caminho devo escolher — {wasmSdk}, {rust} nativo ou executar um nó?",
+      "choosePath": "Devo integrar o {wasmSdk}, usar {rust} nativo, executar um nó ou desenvolver um aplicativo programável?",
       "nodeOrApi": "Preciso executar meu próprio nó ou posso usar a {api} da comunidade?",
-      "smartContracts": "A {kaspa} tem contratos inteligentes?",
+      "smartContracts": "Como a programabilidade nativa de UTXO da {kaspa} difere dos contratos inteligentes da EVM?",
       "wallet": "Como criar uma carteira com o {wasmSdk}?",
       "transaction": "Como criar e assinar uma transação?",
       "runNode": "Como executar um nó da {kaspa}?",
       "hardware": "De qual hardware preciso para um nó?",
-      "toccata": "O que é o {toccata} e quais mudanças ele traz?",
+      "toccata": "O que mudou com o {toccata} e o que está ativo na mainnet?",
       "covenants": "O que são covenants na {kaspa}?",
+      "programmability": "Devo usar {covenants}, {basedApps} ou {inlineZk}?",
       "silverscript": "O que é {silverscript}?",
-      "networks": "Qual é a diferença entre a mainnet e a {tn12}?"
+      "testing": "Como devo testar um aplicativo programável da Kaspa antes de implantá-lo?"
     }
   }
 }

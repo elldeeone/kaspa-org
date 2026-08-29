@@ -21,8 +21,13 @@ export function useAiPrompts(): string[] {
       t("hardware"),
       t("toccata", { toccata: BUILD_TERMS.toccata }),
       t("covenants", { kaspa: BUILD_TERMS.kaspa }),
+      t("programmability", {
+        basedApps: BUILD_TERMS.basedApps,
+        covenants: BUILD_TERMS.covenants,
+        inlineZk: BUILD_TERMS.inlineZk,
+      }),
       t("silverscript", { silverscript: BUILD_TERMS.silverscript }),
-      t("networks", { tn12: BUILD_TERMS.tn12 }),
+      t("testing"),
     ],
     [t],
   );

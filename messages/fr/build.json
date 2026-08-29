@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Documentation, SDK, API et accès aux nœuds pour les développeurs Kaspa | Kaspa",
-    "description": "Tout ce dont vous avez besoin pour commencer à développer sur Kaspa : SDK WASM, bibliothèques Rust, espace d’essai d’API en direct, accès aux nœuds et outils de développement."
+    "description": "Tout ce dont vous avez besoin pour commencer à développer sur Kaspa : programmabilité sur le réseau principal, SDK WASM, bibliothèques Rust, espace d’essai d’API en direct, accès aux nœuds et outils de développement."
   },
   "openGraph": {
     "imageAlt": "Kaspa — La décentralisation en temps réel"
@@ -68,7 +68,7 @@
       "paths": {
         "label": "Choisir une voie",
         "compactLabel": "Voies",
-        "description": "{wasmSdk}, {rust} natif ou configuration d’un nœud complet."
+        "description": "Choisissez une pile d’intégration ou un modèle de programmabilité."
       },
       "runNode": {
         "label": "Exécuter un nœud",
@@ -103,7 +103,7 @@
       "action": "Voir la version"
     },
     "heading": "Développer sur {kaspa}",
-    "description": "{wasmSdk}, bibliothèques {rust} natives et infrastructure de nœuds pour développer sur {kaspa}.",
+    "description": "Programmabilité sur le réseau principal, {wasmSdk}, bibliothèques {rust} natives et infrastructure de nœuds pour développer sur {kaspa}.",
     "actions": {
       "openDocs": "Ouvrir la documentation",
       "viewGitHub": "Voir sur {github}"
@@ -114,11 +114,11 @@
       "descriptionWithAi": "Demandez conseil à {kaspaAi}, puis accédez à la voie qui correspond à votre besoin.",
       "descriptionWithoutAi": "Commencez par la documentation, les exemples en direct ou la voie des nœuds qui correspond à votre besoin.",
       "aiTitle": "Interroger {kaspaAi}",
-      "aiDescription": "Trouvez le bon {sdk}, la bonne {api} ou la bonne voie de nœud.",
+      "aiDescription": "Trouvez la bonne voie pour le {sdk}, l’{api}, les nœuds ou la programmabilité.",
       "jumpLabel": "Accéder directement à",
       "routes": {
         "chainData": "Lire les données de la chaîne",
-        "stack": "Choisir votre pile",
+        "stack": "Choisir votre voie",
         "node": "Exécuter un nœud"
       }
     }
@@ -177,7 +177,7 @@
     "heading": {
       "label": "Voies",
       "title": "Choisissez votre voie",
-      "description": "Commencez par le {sdk} ou la voie d’infrastructure qui correspond au système que vous développez."
+      "description": "Choisissez la pile d’intégration, la configuration de nœud ou le modèle de programmabilité adapté au système que vous développez."
     },
     "cards": {
       "wasm": {
@@ -192,6 +192,13 @@
         "title": "Développer en {rust} natif",
         "description": "Utilisez les crates {rust} de {rustyKaspa} pour les services backend, les intégrations système, les mécanismes internes des portefeuilles et les charges de travail proches des nœuds.",
         "repo": "Dépôt {rustyKaspa}"
+      },
+      "programmability": {
+        "tier": "Applications programmables",
+        "title": "Développer des applications programmables",
+        "description": "Comparez {covenants}, {basedApps} et l’option spécialisée {inlineZk}. {fullVprogs} reste l’orientation future pour la composition entre applications indépendantes.",
+        "guide": "Choisir un modèle",
+        "toccata": "Guide de développement Toccata"
       },
       "node": {
         "tier": "Nœud",
@@ -331,7 +338,7 @@
     "heading": {
       "label": "Développements",
       "title": "Suivre les travaux en public",
-      "description": "Suivez le principal canal de discussion, puis l’évolution du {sdk}, du protocole et des travaux expérimentaux sur la programmabilité."
+      "description": "Distinguez les capacités de consensus actives sur le réseau principal des outils de développement et des recherches qui continuent d’évoluer."
     },
     "liveDiscussion": "Discussion en direct",
     "cards": {
@@ -345,20 +352,25 @@
         "title": "{kaspaResearch}",
         "description": "Forum de discussions approfondies sur le protocole, le consensus, l’économie et le minage, ainsi que sur les ébauches et propositions de {kip}."
       },
+      "kasSmiths": {
+        "label": "Communauté",
+        "title": "{kasSmiths} : atelier des développeurs",
+        "description": "Discutez et affinez avec d’autres développeurs les normes, protocoles, outils, infrastructures partagées et idées de produits de {kaspa}."
+      },
       "toccata": {
-        "label": "Hard fork",
-        "title": "{toccata} : covenants et {zk}",
-        "description": "Hard fork regroupant des codes opération de script étendus ({kip17}), des identifiants de covenant ({kip20}), des codes opération {zk} avec un sous-système de précompilation du vérificateur ({kip16}) et des engagements d’ordonnancement ({kip21}). Actuellement actif sur {tn12} avant son activation sur le réseau principal."
+        "label": "Actif sur le réseau principal",
+        "title": "Programmabilité de {toccata}",
+        "description": "{toccata} a ajouté des UTXO programmables à {kaspa} grâce aux covenants, à l’introspection des transactions, à la vérification ZK et à la prise en charge de l’ordonnancement pour les Based Apps. Il est actif sur le réseau principal depuis le 30 juin 2026."
       },
       "silverscript": {
-        "label": "Programmabilité",
+        "label": "Outils de covenant",
         "title": "{silverscript}",
-        "description": "Langage de script de haut niveau compilé en {kaspaScript} natif. En cours de test sur {tn12} avant le hard fork {toccata}, qui ajoutera les covenants et les codes opération {zk} au réseau principal."
+        "description": "La principale voie de haut niveau pour créer des covenants sur le réseau principal, compilée en {kaspaScript} natif. Les outils sont encore jeunes ; vérifiez l’état des versions et des audits avant toute utilisation en production."
       },
       "vprogs": {
-        "label": "Programmabilité",
-        "title": "{vprogs}",
-        "description": "Premières recherches sur les programmes vérifiables : ordonnancement en chaîne, exécution hors chaîne et règlement au moyen de preuves {zk}. Ces travaux s’appuient sur les primitives de script introduites par {toccata}."
+        "label": "En construction",
+        "title": "{vprogs} : Based Apps",
+        "description": "La voie des applications à état partagé est en construction. Le moteur vProgs est une source de modèles en évolution, pas encore une API développeur externe stable ; Full vProgs reste une orientation future."
       },
       "python": {
         "label": "{sdk}",
@@ -401,17 +413,18 @@
     },
     "prompts": {
       "gettingStarted": "Comment commencer à développer sur {kaspa} ?",
-      "choosePath": "Quelle voie choisir : {wasmSdk}, {rust} natif ou exécution d’un nœud ?",
+      "choosePath": "Dois-je intégrer le {wasmSdk}, utiliser {rust} natif, exécuter un nœud ou développer une application programmable ?",
       "nodeOrApi": "Dois-je exécuter mon propre nœud ou puis-je utiliser l’{api} communautaire ?",
-      "smartContracts": "{kaspa} dispose-t-il de contrats intelligents ?",
+      "smartContracts": "En quoi la programmabilité native UTXO de {kaspa} diffère-t-elle des contrats intelligents EVM ?",
       "wallet": "Comment créer un portefeuille avec le {wasmSdk} ?",
       "transaction": "Comment créer et signer une transaction ?",
       "runNode": "Comment exécuter un nœud {kaspa} ?",
       "hardware": "De quel matériel ai-je besoin pour un nœud ?",
-      "toccata": "Qu’est-ce que {toccata} et quels changements apporte-t-il ?",
+      "toccata": "Quels changements {toccata} a-t-il apportés et qu’est-ce qui est actif sur le réseau principal ?",
       "covenants": "Que sont les covenants dans {kaspa} ?",
+      "programmability": "Dois-je utiliser {covenants}, {basedApps} ou {inlineZk} ?",
       "silverscript": "Qu’est-ce que {silverscript} ?",
-      "networks": "Quelle est la différence entre le réseau principal et {tn12} ?"
+      "testing": "Comment tester une application Kaspa programmable avant son déploiement ?"
     }
   }
 }

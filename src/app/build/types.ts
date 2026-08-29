@@ -65,6 +65,7 @@ export type DevelopmentCard = {
   id:
     | "channel"
     | "research"
+    | "kasSmiths"
     | "toccata"
     | "silverscript"
     | "vprogs"

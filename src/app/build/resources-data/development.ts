@@ -1,7 +1,12 @@
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 
-import { BUILD_TERMS, TELEGRAM_RND_URL } from "../constants";
+import {
+  BUILD_TERMS,
+  PROGRAMMABILITY_URL,
+  TELEGRAM_RND_URL,
+  TOCCATA_DOCS_URL,
+} from "../constants";
 import type { DevelopmentCard } from "../types";
 
 export function useDevelopmentCards(): DevelopmentCard[] {
@@ -29,21 +34,25 @@ export function useDevelopmentCards(): DevelopmentCard[] {
         href: "https://research.kas.pa/",
       },
       {
+        id: "kasSmiths",
+        label: t("kasSmiths.label"),
+        title: t("kasSmiths.title", {
+          kasSmiths: BUILD_TERMS.kasSmiths,
+        }),
+        desc: t("kasSmiths.description", { kaspa: BUILD_TERMS.kaspa }),
+        href: "https://kas-smiths.org/",
+      },
+      {
         id: "toccata",
         label: t("toccata.label"),
         title: t("toccata.title", {
           toccata: BUILD_TERMS.toccata,
-          zk: BUILD_TERMS.zk,
         }),
         desc: t("toccata.description", {
-          kip16: BUILD_TERMS.kip16,
-          kip17: BUILD_TERMS.kip17,
-          kip20: BUILD_TERMS.kip20,
-          kip21: BUILD_TERMS.kip21,
-          tn12: BUILD_TERMS.tn12,
-          zk: BUILD_TERMS.zk,
+          kaspa: BUILD_TERMS.kaspa,
+          toccata: BUILD_TERMS.toccata,
         }),
-        href: "https://medium.com/@michaelsuttonil/kaspa-covenants-toccata-hard-fork-outlook-a4d81a40900c",
+        href: TOCCATA_DOCS_URL,
       },
       {
         id: "silverscript",
@@ -53,9 +62,6 @@ export function useDevelopmentCards(): DevelopmentCard[] {
         }),
         desc: t("silverscript.description", {
           kaspaScript: BUILD_TERMS.kaspaScript,
-          tn12: BUILD_TERMS.tn12,
-          toccata: BUILD_TERMS.toccata,
-          zk: BUILD_TERMS.zk,
         }),
         href: "https://github.com/kaspanet/silverscript",
       },
@@ -63,11 +69,8 @@ export function useDevelopmentCards(): DevelopmentCard[] {
         id: "vprogs",
         label: t("vprogs.label"),
         title: t("vprogs.title", { vprogs: BUILD_TERMS.vprogs }),
-        desc: t("vprogs.description", {
-          toccata: BUILD_TERMS.toccata,
-          zk: BUILD_TERMS.zk,
-        }),
-        href: "https://github.com/kaspanet/vprogs",
+        desc: t("vprogs.description"),
+        href: `${PROGRAMMABILITY_URL}/based-apps`,
       },
       {
         id: "python",

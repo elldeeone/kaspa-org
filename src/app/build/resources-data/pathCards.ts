@@ -3,7 +3,12 @@ import { useTranslations } from "next-intl";
 
 import { buildExampleContract } from "@/i18n/build-example-contract";
 
-import { RUSTY_KASPA_URL, RUSTY_RELEASE_URL } from "../constants";
+import {
+  PROGRAMMABILITY_URL,
+  RUSTY_KASPA_URL,
+  RUSTY_RELEASE_URL,
+  TOCCATA_DOCS_URL,
+} from "../constants";
 import type { PathCard } from "../types";
 import { useBuildTerms } from "../useBuildTerms";
 
@@ -42,6 +47,26 @@ export function useChoosePathCards(): PathCard[] {
           {
             label: t("rust.repo", { rustyKaspa: terms.rustyKaspa }),
             href: RUSTY_KASPA_URL,
+          },
+        ],
+      },
+      {
+        tier: t("programmability.tier"),
+        title: t("programmability.title"),
+        desc: t("programmability.description", {
+          basedApps: terms.basedApps,
+          covenants: terms.covenants,
+          fullVprogs: terms.fullVprogs,
+          inlineZk: terms.inlineZk,
+        }),
+        links: [
+          {
+            label: t("programmability.guide"),
+            href: PROGRAMMABILITY_URL,
+          },
+          {
+            label: t("programmability.toccata"),
+            href: TOCCATA_DOCS_URL,
           },
         ],
       },

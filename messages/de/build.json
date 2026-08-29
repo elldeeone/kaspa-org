@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Kaspa-Entwicklerdokumentation, SDKs, APIs und Node-Zugriff | Kaspa",
-    "description": "Alles, was du zum Entwickeln auf Kaspa brauchst: WASM SDK, Rust-Bibliotheken, interaktive API-Beispiele, Node-Zugriff und Entwicklerwerkzeuge."
+    "description": "Alles, was du zum Entwickeln auf Kaspa brauchst: Mainnet-Programmierbarkeit, WASM SDK, Rust-Bibliotheken, interaktive API-Beispiele, Node-Zugriff und Entwicklerwerkzeuge."
   },
   "openGraph": {
     "imageAlt": "Kaspa – Echtzeit-Dezentralisierung"
@@ -68,7 +68,7 @@
       "paths": {
         "label": "Pfad wählen",
         "compactLabel": "Pfade",
-        "description": "{wasmSdk}, natives {rust} oder Full-Node-Einrichtung."
+        "description": "Integrations-Stack oder Programmierbarkeitsmodell auswählen."
       },
       "runNode": {
         "label": "Node betreiben",
@@ -103,7 +103,7 @@
       "action": "Version ansehen"
     },
     "heading": "Auf {kaspa} entwickeln",
-    "description": "{wasmSdk}, native {rust}-Bibliotheken und Node-Infrastruktur für die Entwicklung auf {kaspa}.",
+    "description": "Mainnet-Programmierbarkeit, {wasmSdk}, native {rust}-Bibliotheken und Node-Infrastruktur für die Entwicklung auf {kaspa}.",
     "actions": {
       "openDocs": "Dokumentation öffnen",
       "viewGitHub": "Auf {github} ansehen"
@@ -114,11 +114,11 @@
       "descriptionWithAi": "Nutze {kaspaAi} zur Orientierung und springe dann direkt zu dem Pfad, der zu deinem Vorhaben passt.",
       "descriptionWithoutAi": "Beginne mit der Dokumentation, den Live-Beispielen oder dem Node-Pfad, der zu deinem Vorhaben passt.",
       "aiTitle": "{kaspaAi} fragen",
-      "aiDescription": "Finde den richtigen {sdk}-, {api}- oder Node-Pfad.",
+      "aiDescription": "Finde den richtigen {sdk}-, {api}-, Node- oder Programmierbarkeitspfad.",
       "jumpLabel": "Direkt zu",
       "routes": {
         "chainData": "Chain-Daten lesen",
-        "stack": "Stack auswählen",
+        "stack": "Pfad auswählen",
         "node": "Node betreiben"
       }
     }
@@ -177,7 +177,7 @@
     "heading": {
       "label": "Pfade",
       "title": "Wähle deinen Pfad",
-      "description": "Beginne mit dem {sdk}- oder Infrastrukturpfad, der zu deinem System passt."
+      "description": "Wähle den Integrations-Stack, die Node-Einrichtung oder das Programmierbarkeitsmodell, das zu deinem System passt."
     },
     "cards": {
       "wasm": {
@@ -192,6 +192,13 @@
         "title": "Mit nativem {rust} entwickeln",
         "description": "Nutze die {rust}-Crates in {rustyKaspa} für Backend-Dienste, Systemintegrationen, Wallet-Kernfunktionen und Node-nahe Workloads.",
         "repo": "{rustyKaspa}-Repository"
+      },
+      "programmability": {
+        "tier": "Programmierbare Anwendungen",
+        "title": "Programmierbare Anwendungen entwickeln",
+        "description": "Vergleiche {covenants}, {basedApps} und das spezialisierte {inlineZk}. {fullVprogs} bleiben die zukünftige Richtung für die Verknüpfung unabhängiger Anwendungen.",
+        "guide": "Modell auswählen",
+        "toccata": "Toccata-Entwicklerleitfaden"
       },
       "node": {
         "tier": "Node",
@@ -331,7 +338,7 @@
     "heading": {
       "label": "Entwicklungen",
       "title": "Verfolge die öffentliche Entwicklung",
-      "description": "Verfolge zuerst den zentralen Diskussionskanal und anschließend die Entwicklung von {sdk}, Protokoll und experimenteller Programmierbarkeit."
+      "description": "Unterscheide die im Mainnet aktiven Konsensfunktionen von den Entwicklerwerkzeugen und Forschungsarbeiten, die sich noch weiterentwickeln."
     },
     "liveDiscussion": "Live-Diskussion",
     "cards": {
@@ -345,20 +352,25 @@
         "title": "{kaspaResearch}",
         "description": "Forum für ausführliche Diskussionen über Protokoll, Konsens, Ökonomie und Mining sowie {kip}-Entwürfe und -Vorschläge."
       },
+      "kasSmiths": {
+        "label": "Gemeinschaft",
+        "title": "{kasSmiths}: Werkstatt für Entwickler",
+        "description": "Diskutiere und verfeinere mit anderen Entwicklern {kaspa}-Standards, Protokolle, Werkzeuge, gemeinsame Infrastruktur und Produktideen."
+      },
       "toccata": {
-        "label": "Hardfork",
-        "title": "{toccata}: Covenants und {zk}",
-        "description": "Hardfork mit erweiterten Script-Opcodes ({kip17}), Covenant-IDs ({kip20}), {zk}-Opcodes samt Verifier-Precompile-Subsystem ({kip16}) und Sequenzierungs-Commitments ({kip21}). Läuft derzeit auf {tn12}, bevor die Aktivierung im Mainnet erfolgt."
+        "label": "Im Mainnet aktiv",
+        "title": "{toccata}-Programmierbarkeit",
+        "description": "{toccata} hat {kaspa} durch Covenants, Transaktions-Introspektion, ZK-Verifizierung und Sequenzierungsunterstützung für Based Apps um programmierbare UTXOs erweitert. Seit dem 30. Juni 2026 ist es im Mainnet aktiv."
       },
       "silverscript": {
-        "label": "Programmierbarkeit",
+        "label": "Covenant-Werkzeuge",
         "title": "{silverscript}",
-        "description": "Höhere Skriptsprache, die zu nativem {kaspaScript} kompiliert. Tests auf {tn12} vor dem {toccata}-Hardfork, der Covenants und {zk}-Opcodes ins Mainnet bringt."
+        "description": "Der wichtigste höhere Autorenpfad für Mainnet-Covenants, der zu nativem {kaspaScript} kompiliert. Die Werkzeuge sind noch jung; prüfe vor dem Produktionseinsatz den aktuellen Release- und Auditstatus."
       },
       "vprogs": {
-        "label": "Programmierbarkeit",
-        "title": "{vprogs}",
-        "description": "Frühe Forschung zu verifizierbaren Programmen: On-Chain-Sequenzierung mit Off-Chain-Ausführung, die über {zk}-Nachweise abgewickelt wird. Baut auf den Script-Primitiven auf, die mit {toccata} eingeführt werden."
+        "label": "Im Aufbau",
+        "title": "{vprogs}: Anwendungen mit gemeinsamem Zustand",
+        "description": "Der Anwendungspfad für gemeinsamen Zustand befindet sich im Aufbau. Die vProgs-Laufzeit ist eine wachsende Mustersammlung, noch keine stabile externe Entwickler-API; Full vProgs bleiben eine zukünftige Richtung."
       },
       "python": {
         "label": "{sdk}",
@@ -401,17 +413,18 @@
     },
     "prompts": {
       "gettingStarted": "Wie beginne ich mit der Entwicklung auf {kaspa}?",
-      "choosePath": "Welchen Pfad sollte ich wählen – {wasmSdk}, natives {rust} oder den Betrieb eines eigenen Nodes?",
+      "choosePath": "Sollte ich das {wasmSdk} integrieren, natives {rust} verwenden, einen Node betreiben oder eine programmierbare Anwendung entwickeln?",
       "nodeOrApi": "Muss ich einen eigenen Node betreiben oder kann ich die Community-{api} verwenden?",
-      "smartContracts": "Unterstützt {kaspa} Smart Contracts?",
+      "smartContracts": "Wie unterscheidet sich die UTXO-native Programmierbarkeit von {kaspa} von EVM-Smart-Contracts?",
       "wallet": "Wie entwickle ich mit dem {wasmSdk} eine Wallet?",
       "transaction": "Wie erstelle und signiere ich eine Transaktion?",
       "runNode": "Wie betreibe ich einen {kaspa}-Node?",
       "hardware": "Welche Hardware benötige ich für einen Node?",
-      "toccata": "Was ist {toccata} und welche Änderungen bringt es?",
+      "toccata": "Was hat sich mit {toccata} geändert und was ist im Mainnet aktiv?",
       "covenants": "Was sind Covenants in {kaspa}?",
+      "programmability": "Sollte ich {covenants}, {basedApps} oder {inlineZk} verwenden?",
       "silverscript": "Was ist {silverscript}?",
-      "networks": "Was ist der Unterschied zwischen Mainnet und {tn12}?"
+      "testing": "Wie sollte ich eine programmierbare Kaspa-Anwendung vor der Bereitstellung testen?"
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Kaspa Developer Docs, SDKs, APIs, and Node Access | Kaspa",
-    "description": "Everything you need to start building on Kaspa. WASM SDK, Rust libraries, live API playground, node access, and developer tooling."
+    "description": "Everything you need to start building on Kaspa. Mainnet programmability, WASM SDK, Rust libraries, live API playground, node access, and developer tooling."
   },
   "openGraph": {
     "imageAlt": "Kaspa — Real-time Decentralization"
@@ -68,7 +68,7 @@
       "paths": {
         "label": "Choose path",
         "compactLabel": "Paths",
-        "description": "{wasmSdk}, native {rust}, or full-node setup."
+        "description": "Choose an integration stack or programmability model."
       },
       "runNode": {
         "label": "Run node",
@@ -103,7 +103,7 @@
       "action": "View release"
     },
     "heading": "Build on {kaspa}",
-    "description": "{wasmSdk}, native {rust} libraries, and node infrastructure for building on {kaspa}.",
+    "description": "Mainnet programmability, {wasmSdk}, native {rust} libraries, and node infrastructure for building on {kaspa}.",
     "actions": {
       "openDocs": "Open docs",
       "viewGitHub": "View on {github}"
@@ -114,11 +114,11 @@
       "descriptionWithAi": "Use {kaspaAi} for direction, then jump into the route that matches what you need.",
       "descriptionWithoutAi": "Start with the docs, live examples, or node route that matches what you need.",
       "aiTitle": "Ask {kaspaAi}",
-      "aiDescription": "Get pointed to the right {sdk}, {api}, or node path.",
+      "aiDescription": "Get pointed to the right {sdk}, {api}, node, or programmability path.",
       "jumpLabel": "Jump straight to",
       "routes": {
         "chainData": "Read chain data",
-        "stack": "Pick your stack",
+        "stack": "Choose your path",
         "node": "Run a node"
       }
     }
@@ -177,7 +177,7 @@
     "heading": {
       "label": "Paths",
       "title": "Choose your path",
-      "description": "Start with the {sdk} or infrastructure path that matches the system you're building."
+      "description": "Choose an integration stack, node setup, or programmability model for the system you're building."
     },
     "cards": {
       "wasm": {
@@ -192,6 +192,13 @@
         "title": "Build with native {rust}",
         "description": "Use the {rust} crates inside {rustyKaspa} for backend services, systems integrations, wallet internals, and node-adjacent workloads.",
         "repo": "{rustyKaspa} repo"
+      },
+      "programmability": {
+        "tier": "Programmable apps",
+        "title": "Build programmable apps",
+        "description": "Compare {covenants}, {basedApps}, and specialist {inlineZk}. {fullVprogs} remain the future direction for composition between independent apps.",
+        "guide": "Choose a model",
+        "toccata": "Toccata developer guide"
       },
       "node": {
         "tier": "Node",
@@ -331,7 +338,7 @@
     "heading": {
       "label": "Developments",
       "title": "Follow the work in public",
-      "description": "Track the main discussion channel, then follow {sdk}, protocol, and experimental programmability work as it develops."
+      "description": "Separate the consensus capabilities live on mainnet from the builder tooling and research that are still evolving."
     },
     "liveDiscussion": "Live discussion",
     "cards": {
@@ -345,20 +352,25 @@
         "title": "{kaspaResearch}",
         "description": "Long-form forum for protocol, consensus, economics, and mining discussion, plus {kip} drafts and proposals."
       },
+      "kasSmiths": {
+        "label": "Community",
+        "title": "{kasSmiths}: builders' workshop",
+        "description": "Discuss and refine {kaspa} standards, protocols, tooling, shared infrastructure, and product ideas with other builders."
+      },
       "toccata": {
-        "label": "Hard fork",
-        "title": "{toccata}: covenants & {zk}",
-        "description": "Hard fork bundling extended script opcodes ({kip17}), covenant IDs ({kip20}), {zk} opcodes with a verifier precompile subsystem ({kip16}), and sequencing commitments ({kip21}). Currently live on {tn12} ahead of mainnet activation."
+        "label": "Live on mainnet",
+        "title": "{toccata} programmability",
+        "description": "{toccata} added programmable UTXOs to {kaspa} through covenants, transaction introspection, ZK verification, and sequencing support for based apps. It has been live on mainnet since June 30, 2026."
       },
       "silverscript": {
-        "label": "Programmability",
+        "label": "Covenant tooling",
         "title": "{silverscript}",
-        "description": "High-level scripting language that compiles to native {kaspaScript}. Testing on {tn12} ahead of the {toccata} hard fork that lands covenants and {zk} opcodes on mainnet."
+        "description": "The primary higher-level authoring path for mainnet covenants, compiling to native {kaspaScript}. Tooling is still early; check current release and audit status before production use."
       },
       "vprogs": {
-        "label": "Programmability",
-        "title": "{vprogs}",
-        "description": "Early research on verifiable programs: on-chain sequencing with off-chain execution settled via {zk} proofs. Builds on the script primitives landing in {toccata}."
+        "label": "In construction",
+        "title": "{vprogs}: Based Apps",
+        "description": "The shared-state application path is under construction. The vProgs runtime is an evolving source of patterns, not yet a stable external developer API; Full vProgs remain a future direction."
       },
       "python": {
         "label": "{sdk}",
@@ -401,17 +413,18 @@
     },
     "prompts": {
       "gettingStarted": "How do I get started building on {kaspa}?",
-      "choosePath": "Which path should I pick — {wasmSdk}, native {rust}, or running a node?",
+      "choosePath": "Should I integrate with the {wasmSdk}, use native {rust}, run a node, or build a programmable app?",
       "nodeOrApi": "Do I need to run my own node, or can I use the community {api}?",
-      "smartContracts": "Does {kaspa} have smart contracts?",
+      "smartContracts": "How does {kaspa}'s UTXO-native programmability differ from EVM smart contracts?",
       "wallet": "How do I build a wallet with the {wasmSdk}?",
       "transaction": "How do I build and sign a transaction?",
       "runNode": "How do I run a {kaspa} node?",
       "hardware": "What hardware do I need for a node?",
-      "toccata": "What is {toccata} and what changes does it bring?",
+      "toccata": "What changed with {toccata}, and what is live on mainnet?",
       "covenants": "What are covenants in {kaspa}?",
+      "programmability": "Should I use {covenants}, {basedApps}, or {inlineZk}?",
       "silverscript": "What is {silverscript}?",
-      "networks": "What is the difference between mainnet and {tn12}?"
+      "testing": "How should I test a programmable Kaspa app before deploying it?"
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Documentación, SDKs, APIs y acceso a nodos para desarrolladores | Kaspa",
-    "description": "Todo lo que necesitas para empezar a desarrollar en Kaspa. WASM SDK, bibliotecas de Rust, entorno interactivo de API en vivo, acceso a nodos y herramientas para desarrolladores."
+    "description": "Todo lo que necesitas para empezar a desarrollar en Kaspa. Programabilidad en la red principal, WASM SDK, bibliotecas de Rust, entorno interactivo de API en vivo, acceso a nodos y herramientas para desarrolladores."
   },
   "openGraph": {
     "imageAlt": "Kaspa — Descentralización en tiempo real"
@@ -68,7 +68,7 @@
       "paths": {
         "label": "Elegir ruta",
         "compactLabel": "Rutas",
-        "description": "{wasmSdk}, {rust} nativo o configuración de nodo completo."
+        "description": "Elige una pila de integración o un modelo de programabilidad."
       },
       "runNode": {
         "label": "Ejecutar nodo",
@@ -103,7 +103,7 @@
       "action": "Ver versión"
     },
     "heading": "Desarrolla en {kaspa}",
-    "description": "{wasmSdk}, bibliotecas nativas de {rust} e infraestructura de nodos para desarrollar en {kaspa}.",
+    "description": "Programabilidad en la red principal, {wasmSdk}, bibliotecas nativas de {rust} e infraestructura de nodos para desarrollar en {kaspa}.",
     "actions": {
       "openDocs": "Abrir documentación",
       "viewGitHub": "Ver en {github}"
@@ -114,11 +114,11 @@
       "descriptionWithAi": "Usa {kaspaAi} para orientarte y ve directamente a la ruta que se ajuste a lo que necesitas.",
       "descriptionWithoutAi": "Empieza por la documentación, los ejemplos en vivo o la ruta para ejecutar un nodo, según lo que necesites.",
       "aiTitle": "Pregunta a {kaspaAi}",
-      "aiDescription": "Encuentra el {sdk}, la {api} o la ruta de nodos adecuados.",
+      "aiDescription": "Encuentra la ruta adecuada de {sdk}, {api}, nodo o programabilidad.",
       "jumpLabel": "Ir directamente a",
       "routes": {
         "chainData": "Consultar datos de la cadena",
-        "stack": "Elegir tu pila tecnológica",
+        "stack": "Elegir tu ruta",
         "node": "Ejecutar un nodo"
       }
     }
@@ -177,7 +177,7 @@
     "heading": {
       "label": "Rutas",
       "title": "Elige tu ruta",
-      "description": "Empieza por la ruta de {sdk} o de infraestructura que se ajuste al sistema que estás desarrollando."
+      "description": "Elige la pila de integración, la configuración de nodo o el modelo de programabilidad que se ajuste al sistema que estás desarrollando."
     },
     "cards": {
       "wasm": {
@@ -192,6 +192,13 @@
         "title": "Desarrolla con {rust} nativo",
         "description": "Usa los crates de {rust} de {rustyKaspa} para servicios de backend, integraciones de sistemas, componentes internos de billeteras y cargas de trabajo relacionadas con nodos.",
         "repo": "Repositorio de {rustyKaspa}"
+      },
+      "programmability": {
+        "tier": "Aplicaciones programables",
+        "title": "Desarrolla aplicaciones programables",
+        "description": "Compara {covenants}, {basedApps} y la opción especializada {inlineZk}. {fullVprogs} sigue siendo la dirección futura para la composición entre aplicaciones independientes.",
+        "guide": "Elegir un modelo",
+        "toccata": "Guía de desarrollo de Toccata"
       },
       "node": {
         "tier": "Nodo",
@@ -331,7 +338,7 @@
     "heading": {
       "label": "Desarrollos",
       "title": "Sigue el trabajo en público",
-      "description": "Sigue el canal principal de conversación y después los trabajos de {sdk}, protocolo y programabilidad experimental a medida que avanzan."
+      "description": "Distingue las funciones de consenso activas en la red principal de las herramientas para desarrolladores y la investigación que aún están evolucionando."
     },
     "liveDiscussion": "Conversación en vivo",
     "cards": {
@@ -345,20 +352,25 @@
         "title": "{kaspaResearch}",
         "description": "Foro para debates en profundidad sobre protocolo, consenso, economía y minería, además de borradores y propuestas de {kip}."
       },
+      "kasSmiths": {
+        "label": "Comunidad",
+        "title": "{kasSmiths}: taller de desarrolladores",
+        "description": "Debate y perfecciona estándares, protocolos, herramientas, infraestructura compartida e ideas de productos de {kaspa} con otros desarrolladores."
+      },
       "toccata": {
-        "label": "Bifurcación dura",
-        "title": "{toccata}: covenants y {zk}",
-        "description": "Bifurcación dura que agrupa códigos de operación de script ampliados ({kip17}), identificadores de covenant ({kip20}), códigos de operación {zk} con un subsistema de precompilados de verificación ({kip16}) y compromisos de secuenciación ({kip21}). Actualmente está activa en {tn12} antes de su activación en la red principal."
+        "label": "Activa en la red principal",
+        "title": "Programabilidad de {toccata}",
+        "description": "{toccata} añadió UTXO programables a {kaspa} mediante covenants, introspección de transacciones, verificación ZK y soporte de secuenciación para Based Apps. Está activa en la red principal desde el 30 de junio de 2026."
       },
       "silverscript": {
-        "label": "Programabilidad",
+        "label": "Herramientas de covenant",
         "title": "{silverscript}",
-        "description": "Lenguaje de scripting de alto nivel que compila a {kaspaScript} nativo. Se está probando en {tn12} antes de la bifurcación dura {toccata}, que incorporará covenants y códigos de operación {zk} a la red principal."
+        "description": "La principal vía de alto nivel para crear covenants en la red principal, que compila a {kaspaScript} nativo. Las herramientas aún son incipientes; comprueba el estado de las versiones y auditorías antes de usarlas en producción."
       },
       "vprogs": {
-        "label": "Programabilidad",
-        "title": "{vprogs}",
-        "description": "Investigación inicial sobre programas verificables: secuenciación en cadena con ejecución fuera de la cadena y liquidación de sus resultados mediante pruebas {zk}. Se basa en las primitivas de script que llegarán con {toccata}."
+        "label": "En construcción",
+        "title": "{vprogs}: Based Apps",
+        "description": "La vía de aplicaciones con estado compartido está en construcción. El entorno de ejecución vProgs es una fuente de patrones en evolución, todavía no una API externa estable; Full vProgs sigue siendo una dirección futura."
       },
       "python": {
         "label": "{sdk}",
@@ -401,17 +413,18 @@
     },
     "prompts": {
       "gettingStarted": "¿Cómo empiezo a desarrollar en {kaspa}?",
-      "choosePath": "¿Qué ruta debería elegir: {wasmSdk}, {rust} nativo o ejecutar un nodo?",
+      "choosePath": "¿Debería integrar {wasmSdk}, usar {rust} nativo, ejecutar un nodo o desarrollar una aplicación programable?",
       "nodeOrApi": "¿Necesito ejecutar mi propio nodo o puedo usar la {api} comunitaria?",
-      "smartContracts": "¿Tiene {kaspa} contratos inteligentes?",
+      "smartContracts": "¿En qué se diferencia la programabilidad nativa de UTXO de {kaspa} de los contratos inteligentes de EVM?",
       "wallet": "¿Cómo desarrollo una billetera con {wasmSdk}?",
       "transaction": "¿Cómo creo y firmo una transacción?",
       "runNode": "¿Cómo ejecuto un nodo de {kaspa}?",
       "hardware": "¿Qué hardware necesito para un nodo?",
-      "toccata": "¿Qué es {toccata} y qué cambios aporta?",
+      "toccata": "¿Qué cambió con {toccata} y qué está activo en la red principal?",
       "covenants": "¿Qué son los covenants en {kaspa}?",
+      "programmability": "¿Debería usar {covenants}, {basedApps} o {inlineZk}?",
       "silverscript": "¿Qué es {silverscript}?",
-      "networks": "¿Cuál es la diferencia entre la red principal y {tn12}?"
+      "testing": "¿Cómo debo probar una aplicación programable de Kaspa antes de desplegarla?"
     }
   }
 }

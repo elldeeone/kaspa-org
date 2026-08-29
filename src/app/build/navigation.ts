@@ -34,10 +34,7 @@ export function useBuildNavigation(): {
         label: t("navigation.sections.paths.label"),
         compactLabel: t("navigation.sections.paths.compactLabel"),
         href: "#paths",
-        description: t("navigation.sections.paths.description", {
-          rust: BUILD_TERMS.rust,
-          wasmSdk: BUILD_TERMS.wasmSdk,
-        }),
+        description: t("navigation.sections.paths.description"),
       },
       {
         id: "run-a-node",

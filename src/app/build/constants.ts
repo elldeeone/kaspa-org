@@ -1,5 +1,7 @@
 export const KASPA_VERSION = "Rusty Kaspa v2.0.1";
 export const DOCS_URL = "https://docs.kaspa.org";
+export const PROGRAMMABILITY_URL = `${DOCS_URL}/programmability`;
+export const TOCCATA_DOCS_URL = `${DOCS_URL}/toccata`;
 export const REST_API_URL = "https://api.kaspa.org/docs";
 export const RUSTY_KASPA_URL = "https://github.com/kaspanet/rusty-kaspa";
 export const TELEGRAM_RND_URL = "https://t.me/kasparnd";
@@ -12,6 +14,7 @@ export const DOCKER_RUN_COMMAND =
 
 export const BUILD_TERMS = {
   api: "API",
+  basedApps: "Based Apps",
   core: "Core",
   daa: "DAA",
   dag: "DAG",
@@ -28,6 +31,7 @@ export const BUILD_TERMS = {
   kaspaJs: "kaspa-js",
   kaspaQAndA: "Kaspa Q&A",
   kaspaResearch: "Kaspa Research",
+  kasSmiths: "Kas Smiths",
   kaspaResolver: "Kaspa Resolver",
   kaspaScript: "Kaspa Script",
   khost: "kHost",
@@ -39,6 +43,7 @@ export const BUILD_TERMS = {
   kips: "KIPs",
   node: "Node",
   nodeJs: "Node.js",
+  inlineZk: "Inline ZK",
   p2p: "P2P",
   publicNodeNetwork: "Public Node Network",
   python: "Python",
@@ -57,6 +62,8 @@ export const BUILD_TERMS = {
   toccata: "Toccata",
   utxo: "UTXO",
   vprogs: "vProgs",
+  fullVprogs: "Full vProgs",
+  covenants: "Covenants",
   wasmSdk: "WASM SDK",
   zk: "zk",
 } as const;
