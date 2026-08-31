@@ -155,20 +155,6 @@ export default class HeroDag {
     this.run(animateInitialFrame);
   }
 
-  async loadSnapshotReplay(
-    url: string,
-    playbackRate: number = 1,
-    animateInitialFrame: boolean = true,
-  ) {
-    if (process.env.NODE_ENV !== "production") {
-      console.info(
-        `[DAG Hero] Snapshot replay mode: ${url} (speed=${playbackRate}x)`,
-      );
-    }
-    const replayData = await this.fetchSnapshotReplay(url);
-    this.setSnapshotReplay(replayData, playbackRate, animateInitialFrame);
-  }
-
   private resize = () => {
     const dpr = Math.min(window.devicePixelRatio || 1, this.maxDpr);
     const renderer = this.application?.renderer;

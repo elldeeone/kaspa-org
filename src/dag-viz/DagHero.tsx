@@ -84,6 +84,18 @@ export default function DagHero({
       const firstFramePromise = snapshotFirstFrameUrl
         ? dag.fetchSnapshotReplay(snapshotFirstFrameUrl)
         : null;
+      const fullReplayPromise =
+        snapshotReplayUrl && firstFramePromise
+          ? dag.fetchSnapshotReplay(snapshotReplayUrl)
+          : null;
+      const firstAvailablePromise =
+        firstFramePromise && fullReplayPromise
+          ? Promise.any([
+              firstFramePromise.then((data) => ({ data, isFull: false })),
+              fullReplayPromise.then((data) => ({ data, isFull: true })),
+            ])
+          : null;
+      void firstAvailablePromise?.catch(() => undefined);
 
       // Create canvas dynamically so StrictMode re-mounts work cleanly.
       canvas = document.createElement("canvas");
@@ -109,26 +121,27 @@ export default function DagHero({
       }
 
       if (snapshotReplayUrl) {
-        if (firstFramePromise) {
-          try {
-            const firstFrame = await firstFramePromise;
+        try {
+          if (firstAvailablePromise) {
+            const firstAvailable = await firstAvailablePromise;
             if (isCancelled) return;
-            dag.setSnapshotReplay(firstFrame, snapshotPlaybackRate, false);
-          } catch (error) {
-            if (!isCancelled) {
-              console.error("[DAG Hero] First frame failed", error);
-            }
+            dag.setSnapshotReplay(
+              firstAvailable.data,
+              snapshotPlaybackRate,
+              false,
+            );
+            if (firstAvailable.isFull) return;
+          }
+
+          const fullReplay = await (fullReplayPromise ??
+            dag.fetchSnapshotReplay(snapshotReplayUrl));
+          if (isCancelled) return;
+          dag.setSnapshotReplay(fullReplay, snapshotPlaybackRate, false);
+        } catch (error) {
+          if (!isCancelled) {
+            console.error("[DAG Hero] Snapshot replay failed", error);
           }
         }
-
-        if (isCancelled) return;
-        dag
-          .loadSnapshotReplay(snapshotReplayUrl, snapshotPlaybackRate, false)
-          .catch((error) => {
-            if (!isCancelled) {
-              console.error("[DAG Hero] Snapshot replay failed", error);
-            }
-          });
       } else if (replayUrl) {
         dag.loadReplay(replayUrl).catch((error) => {
           if (!isCancelled) {
