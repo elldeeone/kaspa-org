@@ -50,6 +50,10 @@ type CompressedSnapshotReplayData = {
   frames: CompressedSnapshotReplayFrame[];
 };
 
+export type SnapshotReplayInput =
+  | SnapshotReplayData
+  | CompressedSnapshotReplayData;
+
 const colorByCode: Record<CompressedColor, BlockColor> = {
   0: "blue",
   1: "red",
@@ -240,9 +244,7 @@ const decodeCompressedReplay = (
   };
 };
 
-const normalizeReplay = (
-  replay: SnapshotReplayData | CompressedSnapshotReplayData,
-): SnapshotReplayData => {
+const normalizeReplay = (replay: SnapshotReplayInput): SnapshotReplayData => {
   if (isSnapshotReplayData(replay)) return replay;
   if (isCompressedSnapshotReplayData(replay))
     return decodeCompressedReplay(replay);
@@ -259,7 +261,7 @@ export default class SnapshotReplayDataSource {
   private isPaused: boolean;
 
   constructor(
-    replay: SnapshotReplayData | CompressedSnapshotReplayData,
+    replay: SnapshotReplayInput,
     playbackRate: number = 1,
     paused: boolean = false,
   ) {

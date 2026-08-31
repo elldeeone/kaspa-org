@@ -23,6 +23,7 @@ export default function DesktopDagScene({
       {/* Live DAG canvas */}
       <DagHero
         snapshotReplayUrl="/replay/mainnet-60s-compressed.json"
+        snapshotFirstFrameUrl="/replay/mainnet-first-frame.json"
         snapshotPlaybackRate={1}
         paused={paused}
         scale={0.4}

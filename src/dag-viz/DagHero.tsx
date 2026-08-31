@@ -37,6 +37,7 @@ interface DagHeroProps {
   apiUrl?: string;
   replayUrl?: string;
   snapshotReplayUrl?: string;
+  snapshotFirstFrameUrl?: string;
   snapshotPlaybackRate?: number;
   scale?: number;
   backgroundAlpha?: number;
@@ -50,6 +51,7 @@ export default function DagHero({
   apiUrl = DEFAULT_API_URL,
   replayUrl,
   snapshotReplayUrl,
+  snapshotFirstFrameUrl,
   snapshotPlaybackRate = 1,
   scale = 0.4,
   backgroundAlpha = 0,
@@ -71,8 +73,6 @@ export default function DagHero({
     const container = containerRef.current;
     if (!container) return;
 
-    let rafId = 0;
-    let delayedRafId = 0;
     let canvas: HTMLCanvasElement | null = null;
     const dag = new HeroDag(scale, backgroundAlpha, maxDpr, pausedRef.current);
     dagRef.current = dag;
@@ -80,6 +80,10 @@ export default function DagHero({
 
     const startDag = async () => {
       if (isCancelled) return;
+
+      const firstFramePromise = snapshotFirstFrameUrl
+        ? dag.fetchSnapshotReplay(snapshotFirstFrameUrl)
+        : null;
 
       // Create canvas dynamically so StrictMode re-mounts work cleanly.
       canvas = document.createElement("canvas");
@@ -105,8 +109,21 @@ export default function DagHero({
       }
 
       if (snapshotReplayUrl) {
+        if (firstFramePromise) {
+          try {
+            const firstFrame = await firstFramePromise;
+            if (isCancelled) return;
+            dag.setSnapshotReplay(firstFrame, snapshotPlaybackRate, false);
+          } catch (error) {
+            if (!isCancelled) {
+              console.error("[DAG Hero] First frame failed", error);
+            }
+          }
+        }
+
+        if (isCancelled) return;
         dag
-          .loadSnapshotReplay(snapshotReplayUrl, snapshotPlaybackRate)
+          .loadSnapshotReplay(snapshotReplayUrl, snapshotPlaybackRate, false)
           .catch((error) => {
             if (!isCancelled) {
               console.error("[DAG Hero] Snapshot replay failed", error);
@@ -123,17 +140,10 @@ export default function DagHero({
       }
     };
 
-    // Let the hero text/layout paint before the decorative DAG bootstraps.
-    rafId = window.requestAnimationFrame(() => {
-      delayedRafId = window.requestAnimationFrame(() => {
-        void startDag();
-      });
-    });
+    void startDag();
 
     return () => {
       isCancelled = true;
-      window.cancelAnimationFrame(rafId);
-      window.cancelAnimationFrame(delayedRafId);
       dag.stop();
       dagRef.current = null;
       if (canvas?.parentNode) {
@@ -143,6 +153,7 @@ export default function DagHero({
   }, [
     normalizedApiUrl,
     replayUrl,
+    snapshotFirstFrameUrl,
     snapshotPlaybackRate,
     snapshotReplayUrl,
     scale,

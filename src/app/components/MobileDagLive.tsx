@@ -1,11 +1,10 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
-import { DagPlaybackControl, useDagPlayback } from "./DagPlayback";
+import DagHero from "@/dag-viz/DagHero";
 
-const DagHero = dynamic(() => import("@/dag-viz/DagHero"), { ssr: false });
+import { DagPlaybackControl, useDagPlayback } from "./DagPlayback";
 
 export default function MobileDagLive({
   playbackLabels,
@@ -13,7 +12,7 @@ export default function MobileDagLive({
   playbackLabels: { play: string; pause: string };
 }) {
   const [showDag, setShowDag] = useState(false);
-  const { paused, preferenceReady } = useDagPlayback();
+  const { paused } = useDagPlayback();
 
   useEffect(() => {
     const mobileQuery = window.matchMedia("(max-width: 1279px)");
@@ -43,7 +42,7 @@ export default function MobileDagLive({
 
   return (
     <div className="home-hero-dag-viewport relative w-full overflow-hidden xl:hidden">
-      {showDag && preferenceReady ? (
+      {showDag ? (
         <>
           {/* Right offset ramps from 0 below 768px to ~170px at 1280px so the
               newest block lands ~78–84vw of the viewport at every width. Below
@@ -56,10 +55,11 @@ export default function MobileDagLive({
           >
             <DagHero
               snapshotReplayUrl="/replay/mainnet-60s-compressed.json"
+              snapshotFirstFrameUrl="/replay/mainnet-first-frame.json"
               snapshotPlaybackRate={1}
               paused={paused}
               scale={0.5}
-              maxDpr={3}
+              maxDpr={2}
               style={{
                 position: "absolute",
                 inset: 0,

@@ -5,6 +5,7 @@ import HeroTimeline from "./HeroTimeline";
 import ReplayDataSource from "../data/ReplayDataSource";
 import APIDataSource from "../data/APIDataSource";
 import SnapshotReplayDataSource from "../data/SnapshotReplayDataSource";
+import type { SnapshotReplayInput } from "../data/SnapshotReplayDataSource";
 import { heroTheme } from "./theme";
 import { destroyBlockTexturesForRenderer } from "./BlockSprite";
 import type { BlocksAndEdgesAndHeightGroups, ReplayData } from "../data/types";
@@ -129,12 +130,7 @@ export default class HeroDag {
     this.run();
   }
 
-  async loadSnapshotReplay(url: string, playbackRate: number = 1) {
-    if (process.env.NODE_ENV !== "production") {
-      console.info(
-        `[DAG Hero] Snapshot replay mode: ${url} (speed=${playbackRate}x)`,
-      );
-    }
+  async fetchSnapshotReplay(url: string): Promise<SnapshotReplayInput> {
     const resp = await fetch(url);
     if (!resp.ok) {
       throw new Error(
@@ -142,13 +138,35 @@ export default class HeroDag {
       );
     }
 
-    const replayData = await resp.json();
+    return resp.json();
+  }
+
+  setSnapshotReplay(
+    replayData: SnapshotReplayInput,
+    playbackRate: number = 1,
+    animateInitialFrame: boolean = true,
+  ) {
+    this.dataSource?.destroy();
     this.dataSource = new SnapshotReplayDataSource(
       replayData,
       playbackRate,
       this.isPaused,
     );
-    this.run();
+    this.run(animateInitialFrame);
+  }
+
+  async loadSnapshotReplay(
+    url: string,
+    playbackRate: number = 1,
+    animateInitialFrame: boolean = true,
+  ) {
+    if (process.env.NODE_ENV !== "production") {
+      console.info(
+        `[DAG Hero] Snapshot replay mode: ${url} (speed=${playbackRate}x)`,
+      );
+    }
+    const replayData = await this.fetchSnapshotReplay(url);
+    this.setSnapshotReplay(replayData, playbackRate, animateInitialFrame);
   }
 
   private resize = () => {
@@ -193,13 +211,13 @@ export default class HeroDag {
     return this.application?.renderer.screen.width ?? 0;
   }
 
-  private run() {
+  private run(animateInitialFrame: boolean = true) {
     window.clearTimeout(this.tickId);
     this.lastRenderedData = null;
-    this.tick();
+    this.tick(animateInitialFrame);
   }
 
-  private tick = () => {
+  private tick = (animate: boolean = true) => {
     if (!this.dataSource || !this.timeline) return;
 
     const maxBlockAmountOnHalfTheScreen =
@@ -218,8 +236,9 @@ export default class HeroDag {
       }
 
       const targetHeight = Math.max(0, maxHeight - heightDifference);
-      this.timeline.setTargetHeight(targetHeight, !this.isPaused);
-      this.timeline.setBlocksAndEdgesAndHeightGroups(data, !this.isPaused);
+      const shouldAnimate = animate && !this.isPaused;
+      this.timeline.setTargetHeight(targetHeight, shouldAnimate);
+      this.timeline.setBlocksAndEdgesAndHeightGroups(data, shouldAnimate);
     }
 
     if (this.isPaused) {

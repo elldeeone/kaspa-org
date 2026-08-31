@@ -25,7 +25,7 @@ export default function LiveDagBackground({
 }) {
   const { resolvedTheme } = useTheme();
   const [showDag, setShowDag] = useState(false);
-  const { paused, preferenceReady } = useDagPlayback();
+  const { paused } = useDagPlayback();
 
   useEffect(() => {
     const desktopQuery = window.matchMedia("(min-width: 1280px)");
@@ -54,7 +54,7 @@ export default function LiveDagBackground({
     };
   }, []);
 
-  if (!showDag || !preferenceReady) return null;
+  if (!showDag) return null;
 
   const isDark = resolvedTheme === "dark";
   const maskColor = isDark ? "#16161a" : "#f5f5f7";
