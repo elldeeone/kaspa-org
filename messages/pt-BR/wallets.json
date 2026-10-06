@@ -28,6 +28,10 @@
     "summary": "Carteiras de hardware para Kaspa com o aplicativo OneKey.",
     "compatibilityNote": "A compatibilidade com celulares e computadores varia conforme o modelo de hardware."
   },
+  "safepal": {
+    "summary": "Carteiras de hardware para Kaspa com o aplicativo móvel SafePal.",
+    "compatibilityNote": "Para usar Kaspa, é necessário um X1 ou S1/S1 Pro com chip EAL6+, pareado com o aplicativo para iOS ou Android. Os dispositivos S1/S1 Pro antigos não são compatíveis."
+  },
   "tangem-wallet": {
     "summary": "A Tangem Wallet é uma carteira de hardware segura e de autocustódia para Kaspa e mais de 14.000 ativos digitais. Não exige frase-semente."
   }

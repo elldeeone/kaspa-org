@@ -28,6 +28,10 @@
     "summary": "Portefeuilles matériels pour Kaspa avec l’application OneKey.",
     "compatibilityNote": "La compatibilité avec les téléphones et ordinateurs varie selon le modèle matériel."
   },
+  "safepal": {
+    "summary": "Portefeuilles matériels pour Kaspa avec l’application mobile SafePal.",
+    "compatibilityNote": "Kaspa nécessite un X1 ou un S1/S1 Pro doté d’une puce EAL6+, associé à l’application iOS ou Android. Les anciens appareils S1/S1 Pro ne sont pas compatibles."
+  },
   "tangem-wallet": {
     "summary": "Tangem Wallet est un portefeuille matériel sécurisé en autocustodie pour Kaspa et plus de 14 000 actifs numériques. Aucune phrase de récupération requise."
   }

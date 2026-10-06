@@ -28,6 +28,10 @@
     "summary": "OneKeyアプリと組み合わせて使うKaspa用ハードウェアウォレット。",
     "compatibilityNote": "対応するスマートフォンやパソコンはハードウェアのモデルによって異なります。"
   },
+  "safepal": {
+    "summary": "SafePalモバイルアプリと組み合わせて使うKaspa用ハードウェアウォレット。",
+    "compatibilityNote": "Kaspaの利用には、X1またはEAL6+チップ搭載のS1/S1 ProをiOSまたはAndroidアプリとペアリングする必要があります。旧型のS1/S1 Proは対応していません。"
+  },
   "tangem-wallet": {
     "summary": "Tangem Wallet は、Kaspa と14,000種類以上のデジタル資産に対応する、安全なセルフカストディ型ハードウェアウォレットです。シードフレーズは不要です。"
   }

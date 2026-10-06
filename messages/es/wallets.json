@@ -28,6 +28,10 @@
     "summary": "Billeteras de hardware para Kaspa con la aplicación OneKey.",
     "compatibilityNote": "La compatibilidad con teléfonos y ordenadores varía según el modelo de hardware."
   },
+  "safepal": {
+    "summary": "Billeteras de hardware para Kaspa con la aplicación móvil SafePal.",
+    "compatibilityNote": "Para usar Kaspa se necesita un X1 o un S1/S1 Pro con chip EAL6+, vinculado a la aplicación para iOS o Android. Los S1/S1 Pro antiguos no son compatibles."
+  },
   "tangem-wallet": {
     "summary": "Tangem Wallet es una billetera de hardware de autocustodia segura para Kaspa y más de 14 000 activos digitales. Sin frases semilla."
   }

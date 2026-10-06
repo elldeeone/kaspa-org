@@ -28,6 +28,10 @@
     "summary": "OneKey 앱과 함께 사용하는 Kaspa 하드웨어 지갑입니다.",
     "compatibilityNote": "휴대폰 및 컴퓨터 호환성은 하드웨어 모델에 따라 다릅니다."
   },
+  "safepal": {
+    "summary": "SafePal 모바일 앱과 함께 사용하는 Kaspa 하드웨어 지갑입니다.",
+    "compatibilityNote": "Kaspa를 사용하려면 X1 또는 EAL6+ S1/S1 Pro를 iOS나 Android 앱과 연결해야 합니다. 구형 S1/S1 Pro 기기는 지원되지 않습니다."
+  },
   "tangem-wallet": {
     "summary": "Tangem Wallet은 Kaspa와 14,000개 이상의 디지털 자산을 지원하는 안전한 자기 보관형 하드웨어 지갑입니다. 시드 문구가 필요하지 않습니다."
   }

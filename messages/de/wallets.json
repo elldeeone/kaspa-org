@@ -28,6 +28,10 @@
     "summary": "Hardware-Wallets für Kaspa mit der OneKey-App.",
     "compatibilityNote": "Die Kompatibilität mit Smartphones und Computern hängt vom Hardware-Modell ab."
   },
+  "safepal": {
+    "summary": "Hardware-Wallets für Kaspa mit der mobilen SafePal-App.",
+    "compatibilityNote": "Kaspa erfordert ein X1 oder ein S1/S1 Pro mit EAL6+-Chip, gekoppelt mit der iOS- oder Android-App. Ältere S1/S1 Pro werden nicht unterstützt."
+  },
   "tangem-wallet": {
     "summary": "Tangem Wallet ist eine sichere selbstverwahrte Hardware-Wallet für Kaspa und mehr als 14.000 digitale Vermögenswerte. Keine Seed-Phrase erforderlich."
   }

@@ -28,6 +28,10 @@
     "summary": "搭配 OneKey 应用使用的 Kaspa 硬件钱包。",
     "compatibilityNote": "支持的手机和电脑因硬件型号而异。"
   },
+  "safepal": {
+    "summary": "搭配 SafePal 移动应用使用的 Kaspa 硬件钱包。",
+    "compatibilityNote": "Kaspa 需要 X1 或配备 EAL6+ 芯片的 S1/S1 Pro，并与 iOS 或 Android 应用配对。旧款 S1/S1 Pro 设备不受支持。"
+  },
   "tangem-wallet": {
     "summary": "Tangem Wallet 是一款支持 Kaspa 和 14,000 多种数字资产的安全自托管硬件钱包，无需助记词。"
   }

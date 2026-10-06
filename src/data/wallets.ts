@@ -29,6 +29,70 @@ function defineWallet<const Id extends string>(
 
 const walletRecords = [
   defineWallet({
+    id: "safepal",
+    title: "SafePal",
+    icon: "/hodl/wallets/safepal/icon.svg",
+    user: "beginner",
+    summary: "Hardware wallets for Kaspa with the SafePal mobile app.",
+    compatibility: {
+      note: "Kaspa requires X1 or an EAL6+ S1/S1 Pro, paired with the iOS or Android app. Older S1/S1 Pro devices are unsupported.",
+      link: "https://www.safepal.com/en/coin/lists",
+    },
+    paths: [
+      { platforms: ["hardware", "ios"] },
+      { platforms: ["hardware", "android"] },
+    ],
+    features: ["hardware_wallet"],
+    check: {
+      control: "good",
+      validation: "caution",
+      transparency: "caution",
+      fees: "caution",
+    },
+    platformOverrides: {
+      hardware: {
+        check: {
+          validation: "not_applicable",
+        },
+      },
+    },
+    actions: [
+      {
+        action: "open",
+        link: "https://www.safepal.com/en/products",
+      },
+      {
+        action: "app_store",
+        link: "https://apps.apple.com/app/id1548297139",
+        platforms: ["ios"],
+      },
+      {
+        action: "google_play",
+        link: "https://play.google.com/store/apps/details?id=io.safepal.wallet",
+        platforms: ["android"],
+      },
+      {
+        action: "download",
+        link: "https://www.safepal.com/en/download",
+      },
+      {
+        action: "view_source",
+        link: "https://github.com/SafePalWallet/safepal-app",
+        platforms: ["ios", "android"],
+      },
+      {
+        action: "view_source",
+        link: "https://github.com/SafePalWallet/safepal-s1",
+        platforms: ["hardware"],
+      },
+      {
+        action: "view_source",
+        link: "https://github.com/SafePalWallet/safepal-x1",
+        platforms: ["hardware"],
+      },
+    ],
+  }),
+  defineWallet({
     id: "onekey",
     title: "OneKey",
     icon: "/hodl/wallets/onekey/icon.svg",

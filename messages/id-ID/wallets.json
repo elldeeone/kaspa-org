@@ -28,6 +28,10 @@
     "summary": "Dompet perangkat keras untuk Kaspa dengan aplikasi OneKey.",
     "compatibilityNote": "Kompatibilitas ponsel dan komputer bergantung pada model perangkat keras."
   },
+  "safepal": {
+    "summary": "Dompet perangkat keras untuk Kaspa dengan aplikasi seluler SafePal.",
+    "compatibilityNote": "Kaspa memerlukan X1 atau S1/S1 Pro dengan chip EAL6+, yang dipasangkan dengan aplikasi iOS atau Android. Perangkat S1/S1 Pro lama tidak didukung."
+  },
   "tangem-wallet": {
     "summary": "Tangem Wallet adalah dompet perangkat keras nonkustodial yang aman untuk Kaspa dan lebih dari 14.000 aset digital. Tidak memerlukan frasa pemulihan."
   }
