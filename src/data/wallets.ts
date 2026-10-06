@@ -35,7 +35,7 @@ const walletRecords = [
     user: "beginner",
     summary: "Hardware wallets for Kaspa with the SafePal mobile app.",
     compatibility: {
-      note: "Kaspa requires X1 or an EAL6+ S1/S1 Pro, paired with the iOS or Android app. Older S1/S1 Pro devices are unsupported.",
+      note: "Phone and computer compatibility varies by hardware model.",
       link: "https://www.safepal.com/en/coin/lists",
     },
     paths: [
