@@ -113,14 +113,15 @@ const walletRecords = [
     check: {
       control: "good",
       validation: "caution",
-      transparency: "caution",
+      transparency: "acceptable",
       fees: "good",
     },
     platformOverrides: {
       hardware: {
         check: {
           validation: "not_applicable",
-          transparency: "acceptable",
+          // Required secure-element signing firmware is not publicly available.
+          transparency: "caution",
         },
       },
     },

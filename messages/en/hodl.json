@@ -253,24 +253,24 @@
       "explanations": {
         "control": {
           "good": "Self-custodial. You hold your private keys, so no third party can freeze or seize your funds.",
-          "caution": "Custodial. A third party holds your keys and can freeze or seize your funds."
+          "caution": "A third party holds the private keys, or user control over them has not been verified."
         },
         "validation": {
           "good": "Runs its own full Kaspa node by default, so it validates transactions independently.",
           "acceptable": "Lets you point it at any Kaspa node you trust, but cannot run as a node itself.",
-          "caution": "Connects only to fixed centralised infrastructure, so you have to trust the wallet's chosen node.",
+          "caution": "Uses wallet-selected Kaspa nodes, or user-selectable nodes have not been verified.",
           "not_applicable": "The hardware device signs transactions, while companion software handles network access and validation."
         },
         "transparency": {
           "good": "The code is public, and independent checks can verify that the released software was built from it.",
-          "acceptable": "The code is public, but there is no reliable way to verify that the released software was built from it.",
+          "acceptable": "The required source is public, but independent reproduction of the released build has not been verified.",
           "mixed": "Required parts of this wallet have different transparency levels.",
-          "caution": "Closed source. The code cannot be independently audited."
+          "caution": "Full source for the required app or firmware is unavailable, incomplete, or has not been verified."
         },
         "fees": {
           "good": "Lets you set an arbitrary custom fee on each transaction.",
           "acceptable": "Offers preset fee tiers, but does not let you set a fully custom fee.",
-          "caution": "Fees are forced or hidden, with no user control."
+          "caution": "Kaspa fee choices are unavailable, unclear, or have not been verified."
         }
       }
     },

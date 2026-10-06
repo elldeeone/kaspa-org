@@ -253,24 +253,24 @@
       "explanations": {
         "control": {
           "good": "Autocustódia. Você mantém suas chaves privadas, portanto nenhuma empresa ou pessoa pode bloquear ou confiscar seus fundos.",
-          "caution": "Custódia por terceiros. Um terceiro mantém suas chaves e pode bloquear ou confiscar seus fundos."
+          "caution": "Um terceiro mantém as chaves privadas, ou o controle do usuário sobre elas não foi verificado."
         },
         "validation": {
           "good": "Executa por padrão seu próprio nó completo da Kaspa, portanto valida transações de forma independente.",
           "acceptable": "Permite apontar para qualquer nó da Kaspa em que você confie, mas não pode funcionar como nó por conta própria.",
-          "caution": "Conecta-se somente a uma infraestrutura centralizada e predefinida, por isso você precisa confiar no nó escolhido pela carteira.",
+          "caution": "Usa nós Kaspa escolhidos pela carteira, ou a possibilidade de o usuário escolher os nós não foi verificada.",
           "not_applicable": "O dispositivo de hardware assina as transações, enquanto o software complementar cuida do acesso à rede e da validação."
         },
         "transparency": {
           "good": "O código é público, e verificações independentes podem confirmar que o software disponibilizado foi compilado a partir dele.",
-          "acceptable": "O código é público, mas não há uma forma confiável de verificar se o software disponibilizado foi compilado a partir dele.",
+          "acceptable": "O código-fonte necessário é público, mas a reprodução independente da versão publicada não foi verificada.",
           "mixed": "Os componentes necessários desta carteira têm diferentes níveis de transparência.",
-          "caution": "Código fechado. O código não pode ser auditado de forma independente."
+          "caution": "O código-fonte completo do aplicativo ou firmware necessário está indisponível, incompleto ou não foi verificado."
         },
         "fees": {
           "good": "Permite definir uma taxa personalizada de qualquer valor em cada transação.",
           "acceptable": "Oferece níveis predefinidos de taxas, mas não permite definir uma taxa totalmente personalizada.",
-          "caution": "As taxas são impostas ou ocultas, sem controle do usuário."
+          "caution": "As opções de taxas Kaspa estão indisponíveis, pouco claras ou não foram verificadas."
         }
       }
     },

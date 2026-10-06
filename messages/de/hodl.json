@@ -253,24 +253,24 @@
       "explanations": {
         "control": {
           "good": "Selbstverwahrt. Du hältst deine privaten Schlüssel, sodass Dritte dein Guthaben weder einfrieren noch beschlagnahmen können.",
-          "caution": "Fremdverwahrt. Ein Dritter hält deine Schlüssel und kann dein Guthaben einfrieren oder beschlagnahmen."
+          "caution": "Ein Dritter hält die privaten Schlüssel, oder die Kontrolle des Nutzers darüber wurde nicht bestätigt."
         },
         "validation": {
           "good": "Betreibt standardmäßig einen eigenen vollständigen Kaspa-Node und validiert Transaktionen daher unabhängig.",
           "acceptable": "Erlaubt die Verbindung zu einem beliebigen Kaspa-Node deines Vertrauens, kann aber nicht selbst als Node betrieben werden.",
-          "caution": "Verbindet sich nur mit fest vorgegebener zentralisierter Infrastruktur. Du musst daher dem von der Wallet ausgewählten Node vertrauen.",
+          "caution": "Verwendet von der Wallet gewählte Kaspa-Nodes, oder die freie Node-Auswahl wurde nicht bestätigt.",
           "not_applicable": "Das Hardwaregerät signiert Transaktionen, während die Begleitsoftware den Netzwerkzugriff und die Validierung übernimmt."
         },
         "transparency": {
           "good": "Der Code ist öffentlich, und unabhängige Prüfungen können bestätigen, dass die veröffentlichte Software daraus erstellt wurde.",
-          "acceptable": "Der Code ist öffentlich, aber es gibt keine zuverlässige Möglichkeit zu überprüfen, ob die veröffentlichte Software daraus erstellt wurde.",
+          "acceptable": "Der erforderliche Quellcode ist öffentlich, aber die unabhängige Reproduzierbarkeit des veröffentlichten Builds wurde nicht bestätigt.",
           "mixed": "Erforderliche Bestandteile dieser Wallet haben unterschiedliche Transparenzstufen.",
-          "caution": "Geschlossener Quellcode. Der Code kann nicht unabhängig geprüft werden."
+          "caution": "Der vollständige Quellcode der erforderlichen App oder Firmware ist nicht verfügbar, unvollständig oder nicht bestätigt."
         },
         "fees": {
           "good": "Erlaubt dir, für jede Transaktion eine beliebige eigene Gebühr festzulegen.",
           "acceptable": "Bietet voreingestellte Gebührenstufen, erlaubt aber keine vollständig frei gewählte Gebühr.",
-          "caution": "Gebühren sind fest vorgegeben oder verborgen; Nutzer haben keine Kontrolle darüber."
+          "caution": "Die Auswahlmöglichkeiten für Kaspa-Gebühren fehlen, sind unklar oder wurden nicht bestätigt."
         }
       }
     },

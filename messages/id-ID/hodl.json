@@ -253,24 +253,24 @@
       "explanations": {
         "control": {
           "good": "Kustodi mandiri. Anda memegang kunci privat, sehingga tidak ada pihak ketiga yang dapat membekukan atau menyita dana Anda.",
-          "caution": "Kustodial. Pihak ketiga memegang kunci Anda dan dapat membekukan atau menyita dana Anda."
+          "caution": "Pihak ketiga memegang kunci pribadi, atau kendali pengguna atas kunci tersebut belum diverifikasi."
         },
         "validation": {
           "good": "Secara default menjalankan node penuh Kaspa sendiri, sehingga memvalidasi transaksi secara mandiri.",
           "acceptable": "Memungkinkan Anda mengarahkannya ke node Kaspa mana pun yang Anda percayai, tetapi tidak dapat berjalan sebagai node itu sendiri.",
-          "caution": "Hanya terhubung ke infrastruktur terpusat yang tetap, sehingga Anda harus memercayai node pilihan dompet.",
+          "caution": "Menggunakan node Kaspa pilihan dompet, atau kemampuan pengguna untuk memilih node belum diverifikasi.",
           "not_applicable": "Perangkat keras menandatangani transaksi, sementara perangkat lunak pendamping menangani akses jaringan dan validasi."
         },
         "transparency": {
           "good": "Kodenya tersedia untuk publik, dan pemeriksaan independen dapat memverifikasi bahwa perangkat lunak yang dirilis dibuat dari kode tersebut.",
-          "acceptable": "Kodenya tersedia untuk publik, tetapi tidak ada cara yang andal untuk memverifikasi bahwa perangkat lunak yang dirilis dibuat dari kode tersebut.",
+          "acceptable": "Kode sumber yang diperlukan tersedia untuk publik, tetapi reproduksi versi rilis secara mandiri belum diverifikasi.",
           "mixed": "Komponen wajib dompet ini memiliki tingkat transparansi yang berbeda.",
-          "caution": "Sumber tertutup. Kodenya tidak dapat diaudit secara mandiri."
+          "caution": "Kode sumber lengkap aplikasi atau firmware yang diperlukan tidak tersedia, tidak lengkap, atau belum diverifikasi."
         },
         "fees": {
           "good": "Memungkinkan Anda menetapkan biaya khusus apa pun untuk setiap transaksi.",
           "acceptable": "Menawarkan tingkatan biaya yang telah ditentukan, tetapi tidak memungkinkan biaya yang sepenuhnya khusus.",
-          "caution": "Biaya dipaksakan atau disembunyikan, tanpa kendali pengguna."
+          "caution": "Pilihan biaya Kaspa tidak tersedia, tidak jelas, atau belum diverifikasi."
         }
       }
     },

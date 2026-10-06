@@ -35,9 +35,9 @@ Wallets should meet these expectations:
 - Is open source, or has a clear reason for being listed despite closed-source
   code.
 
-Open-source software wallets are preferred. Closed-source wallets may still be
-listed when there is strong evidence of maturity or community usage, but they
-must use `check.transparency: "caution"`.
+Open-source software wallets are preferred. Wallets with closed or incomplete
+source may still be listed when there is strong evidence of maturity or
+community usage, but they must use `check.transparency: "caution"`.
 
 ## Submission Rules
 
@@ -131,14 +131,31 @@ Use these values in `check` and provide evidence in the pull request. Evidence
 can be official docs, source repositories, app store listings, release notes, or
 screenshots.
 
-| Criterion      | `good`                                 | `acceptable`                       | `caution`                              | `not_applicable`                                                             |
-| -------------- | -------------------------------------- | ---------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------- |
-| `control`      | User controls the private keys.        | Do not use.                        | A custodian or third party holds keys. | Do not use.                                                                  |
-| `validation`   | Runs a Kaspa node by default.          | Lets users choose a Kaspa node.    | Uses fixed wallet-controlled nodes.    | Signing-only hardware device; companion software handles network validation. |
-| `transparency` | Open source with reproducible builds.  | Open source, but not reproducible. | Closed source.                         | Do not use.                                                                  |
-| `fees`         | User can set a custom transaction fee. | User can choose from preset fees.  | Fees are hidden or forced.             | Do not use.                                                                  |
+| Criterion      | `good`                                       | `acceptable`                                              | `caution`                                                 | `not_applicable`                                                             |
+| -------------- | -------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `control`      | User controls the private keys.              | Do not use.                                               | A third party holds keys, or user control is unverified.  | Do not use.                                                                  |
+| `validation`   | Runs a Kaspa node by default.                | Lets users choose a Kaspa node.                           | Uses wallet-selected nodes, or node choice is unverified. | Signing-only hardware device; companion software handles network validation. |
+| `transparency` | Complete public source; reproducible builds. | Complete public source; reproducible releases unverified. | Required source is closed, incomplete, or unverified.     | Do not use.                                                                  |
+| `fees`         | User can set a custom transaction fee.       | User can choose from preset fees.                         | Fee choices are unavailable, unclear, or unverified.      | Do not use.                                                                  |
 
-If you are unsure, choose the cautious rating and explain why.
+If you are unsure, choose the cautious rating and explain why. Record the
+specific limitation or evidence gap in the pull request. A cautious rating
+does not by itself establish third-party custody, fully closed source, or
+hidden fees.
+
+Transparency measures whether the relevant code can be inspected and whether
+the released build can be independently reproduced. Public source under a
+restrictive license can support `acceptable` when it covers the required
+implementation; this does not make the license open source or grant permission
+to redistribute the software. Open-source licensing remains an acceptance
+preference, separate from this rating.
+
+Check the complete Kaspa implementation and its required runtime components,
+not just the presence of a repository or a source link. A sample app, selected
+source files, or an open coin app on otherwise closed firmware does not establish
+complete source availability. Missing API credentials alone do not establish
+missing source code. Comparing a downloaded binary's checksum with a published
+checksum does not establish a reproducible build from source.
 
 ### Calculated display ratings
 
@@ -224,6 +241,13 @@ platformOverrides: {
 For transparency, the `hardware` rating describes device firmware; Android,
 iOS, Windows, macOS, and Linux ratings describe the corresponding companion
 application. The tooltip labels those parts automatically.
+
+Apply the same completeness check to every hardware family. Include required
+main-processor and secure-element application firmware that handles keys or
+signing. An unpublished required firmware component makes the hardware rating
+`caution`, even when other firmware components are public. This scope does not
+require the source for the chip manufacturer's underlying silicon or immutable
+boot ROM. Independent security audits do not replace source availability.
 
 Each entry in `platforms` is independently usable. Each entry in `paths` is a
 combination whose components must be used together.

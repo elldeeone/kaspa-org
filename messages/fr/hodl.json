@@ -253,24 +253,24 @@
       "explanations": {
         "control": {
           "good": "En autocustodie. Vous détenez vos clés privées : aucun tiers ne peut bloquer ou saisir vos fonds.",
-          "caution": "Sous la garde d’un tiers. Un tiers détient vos clés et peut bloquer ou saisir vos fonds."
+          "caution": "Un tiers détient les clés privées, ou le contrôle de ces clés par l’utilisateur n’a pas été vérifié."
         },
         "validation": {
           "good": "Exécute son propre nœud Kaspa complet par défaut et valide donc les transactions de façon indépendante.",
           "acceptable": "Permet de choisir n’importe quel nœud Kaspa de confiance, mais ne peut pas fonctionner lui-même comme nœud.",
-          "caution": "Se connecte uniquement à une infrastructure centralisée prédéfinie : vous devez donc faire confiance au nœud choisi par le portefeuille.",
+          "caution": "Utilise des nœuds Kaspa choisis par le portefeuille, ou le libre choix des nœuds n’a pas été vérifié.",
           "not_applicable": "Le dispositif matériel signe les transactions, tandis que le logiciel compagnon assure l’accès au réseau et la validation."
         },
         "transparency": {
           "good": "Le code est public, et des vérifications indépendantes permettent de confirmer que le logiciel publié a bien été compilé à partir de celui-ci.",
-          "acceptable": "Le code est public, mais il n’existe aucun moyen fiable de vérifier que le logiciel publié a été compilé à partir de celui-ci.",
+          "acceptable": "Le code source requis est public, mais la reproduction indépendante de la version publiée n’a pas été vérifiée.",
           "mixed": "Les composants requis de ce portefeuille présentent différents niveaux de transparence.",
-          "caution": "Code source fermé. Le code ne peut pas faire l’objet d’un audit indépendant."
+          "caution": "Le code source complet de l’application ou du micrologiciel requis est indisponible, incomplet ou n’a pas été vérifié."
         },
         "fees": {
           "good": "Permet de définir librement des frais personnalisés pour chaque transaction.",
           "acceptable": "Propose des niveaux de frais prédéfinis, sans permettre de définir des frais entièrement personnalisés.",
-          "caution": "Les frais sont imposés ou masqués, sans aucun contrôle de l’utilisateur."
+          "caution": "Les choix de frais Kaspa sont indisponibles, peu clairs ou n’ont pas été vérifiés."
         }
       }
     },
